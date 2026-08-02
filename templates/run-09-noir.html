@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOIR 01 — 리퀴드 크롬 (이머시브 다크 템플릿)</title>
+<style>
+/* ── 무드: 이머시브 다크 + 리퀴드 크롬 · 아카이타입: 프리미엄 제품 쇼케이스 · 구조 P7 Immersive Dark ── */
+:root{
+--font:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+--bg:#060709;--ink:#eef1f5;--mut:#7b8494;--line:rgba(255,255,255,.1);--chrome:#cfd8e3;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1240px;margin:0 auto;padding:0 44px}
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:overlay;z-index:1;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.rise{opacity:0;transform:translateY(24px);transition:1s cubic-bezier(.2,.7,.2,1)}.rise.vis{opacity:1;transform:none}
+.chrometext{background:linear-gradient(180deg,#ffffff,#c8d2de 45%,#7f8a99 55%,#eef3f8);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;align-items:center;height:76px;padding:0 44px;transition:.3s}
+.nav.solid{background:rgba(6,7,9,.7);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .lg{font-size:20px;font-weight:800;letter-spacing:5px}
+.nav .sp{flex:1}
+.nav a.m{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin-left:26px}.nav a.m:hover{color:var(--ink)}
+/* hero — fullbleed with liquid chrome orb */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;z-index:2;overflow:hidden}
+.orb{position:relative;width:340px;height:340px;margin-bottom:-40px;filter:drop-shadow(0 40px 80px rgba(120,160,220,.25))}
+.orb .metal{position:absolute;inset:0;border-radius:47% 53% 51% 49%/48% 46% 54% 52%;
+  background:conic-gradient(from 0deg,#eef4fa,#8e9bab,#ffffff,#5c6675,#c3cdd9,#7c8a9b,#f2f6fb,#6f7d8e,#eef4fa);
+  animation:spin 14s linear infinite, morph 9s ease-in-out infinite;}
+.orb .hi{position:absolute;inset:0;border-radius:inherit;background:radial-gradient(40% 30% at 34% 26%,rgba(255,255,255,.9),transparent 60%);mix-blend-mode:screen}
+.orb .sh{position:absolute;inset:0;border-radius:inherit;box-shadow:inset -20px -30px 60px rgba(0,0,0,.5),inset 20px 20px 40px rgba(255,255,255,.25)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes morph{0%,100%{border-radius:47% 53% 51% 49%/48% 46% 54% 52%}50%{border-radius:53% 47% 44% 56%/54% 52% 48% 46%}}
+.hero h1{font-size:clamp(60px,12vw,160px);font-weight:800;letter-spacing:-4px;line-height:.9;margin:0;position:relative}
+.hero .ey{font-size:13px;letter-spacing:.35em;text-transform:uppercase;color:var(--mut);margin:30px 0 0}
+.hero .lead{margin:20px auto 0;max-width:440px;color:var(--mut);font-size:16px;line-height:1.7}
+.hero .cta{margin-top:34px;display:flex;gap:14px;justify-content:center}
+.btn{display:inline-flex;gap:8px;align-items:center;font-weight:800;font-size:14px;padding:15px 30px;border-radius:3px;cursor:pointer;text-transform:uppercase;letter-spacing:.03em}
+.btn-c{background:linear-gradient(180deg,#eef4fa,#9aa7b6);color:#0a0d12}.btn-c:hover{filter:brightness(1.1)}
+.btn-o{border:1px solid var(--line);color:var(--ink)}.btn-o:hover{border-color:var(--chrome)}
+/* text band */
+.band{padding:130px 0;text-align:center;position:relative;z-index:2;border-top:1px solid var(--line)}
+.band p{font-size:clamp(26px,4vw,50px);font-weight:700;letter-spacing:-1.5px;line-height:1.25;max-width:900px;margin:0 auto;color:var(--ink)}
+.band p em{font-style:normal}
+/* specs full-bleed */
+.specs{position:relative;z-index:2;border-top:1px solid var(--line);padding:110px 0}
+.specs .g{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--line);border:1px solid var(--line)}
+.specs .g>*{min-width:0}
+.specs .c{background:var(--bg);padding:34px 26px}
+.specs .c .v{font-size:40px;font-weight:800;letter-spacing:-1.5px}
+.specs .c .l{font-size:12px;color:var(--mut);margin-top:8px;letter-spacing:.06em;text-transform:uppercase}
+/* collection minimal */
+.coll{padding:110px 0;position:relative;z-index:2;border-top:1px solid var(--line)}
+.coll .sh{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut);margin-bottom:40px}
+.crow{display:grid;grid-template-columns:70px 1fr 160px 130px;align-items:center;padding:26px 0;border-top:1px solid var(--line);cursor:pointer;transition:.2s}
+.crow:hover{padding-left:12px}
+.crow .no{color:var(--mut);font-size:13px}
+.crow .nm{font-size:22px;font-weight:700;letter-spacing:-.5px}
+.crow .no2{color:var(--mut);font-size:13px}
+.crow .pr{text-align:right;font-weight:700}
+/* cta */
+.cta-s{min-height:80vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;z-index:2;border-top:1px solid var(--line)}
+.cta-s h2{font-size:clamp(44px,8vw,120px);font-weight:800;letter-spacing:-3px;line-height:.92;margin:0 0 34px}
+footer{border-top:1px solid var(--line);padding:40px 0;color:var(--mut);font-size:12.5px;position:relative;z-index:2}
+footer .in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media(max-width:820px){.specs .g{grid-template-columns:1fr 1fr}.crow{grid-template-columns:40px 1fr 90px}.crow .no2{display:none}.orb{width:240px;height:240px}}
+</style></head><body>
+<div class="grain"></div>
+
+<div class="nav" id="nav"><span class="lg">NOIR</span><span class="sp"></span><a class="m" href="#coll">Collection</a><a class="m" href="#band">Story</a><a class="m" href="#buy">Buy</a></div>
+
+<section class="hero">
+<div class="orb rise"><div class="metal"></div><div class="hi"></div><div class="sh"></div></div>
+<h1 class="chrometext rise">NOIR 01</h1>
+<p class="ey rise">Liquid Metal Eau de Parfum</p>
+<p class="lead rise">금속처럼 차갑게 시작해 살결 위에서 따뜻하게 무너지는 향. 한정 999병.</p>
+<div class="cta rise"><a class="btn btn-c" href="#buy">지금 구매 →</a><a class="btn btn-o" href="#band">향 알아보기</a></div>
+</section>
+
+<section class="band" id="band"><div class="wrap">
+<p class="rise">향은 <em class="chrometext">기억을 금속에 새기는 일</em>이다. NOIR 01은 24시간, 당신의 온도로 계속 변한다.</p>
+</div></section>
+
+<section class="specs"><div class="wrap"><div class="g">
+<div class="c rise"><div class="v chrometext">14h</div><div class="l">지속력</div></div>
+<div class="c rise"><div class="v chrometext">3</div><div class="l">노트 레이어</div></div>
+<div class="c rise"><div class="v chrometext">999</div><div class="l">한정 수량</div></div>
+<div class="c rise"><div class="v chrometext">50ml</div><div class="l">리필 가능</div></div>
+</div></div></section>
+
+<section class="coll" id="coll"><div class="wrap">
+<div class="sh rise">The Collection</div>
+<div class="crow rise"><span class="no">01</span><span class="nm chrometext">NOIR — Liquid Metal</span><span class="no2">Metallic · Amber</span><span class="pr">₩ 210,000</span></div>
+<div class="crow rise"><span class="no">02</span><span class="nm">BLANC — Cold Musk</span><span class="no2">Musk · Iris</span><span class="pr">₩ 190,000</span></div>
+<div class="crow rise"><span class="no">03</span><span class="nm">FUMÉ — Burnt Cedar</span><span class="no2">Woody · Smoke</span><span class="pr">₩ 220,000</span></div>
+</div></section>
+
+<section class="cta-s" id="buy"><div class="wrap">
+<h2 class="chrometext rise">차갑게,<br>오래.</h2>
+<a class="btn btn-c rise" href="#">999병 중 한 병 →</a>
+</div></section>
+
+<footer><div class="wrap in"><span>© 2026 NOIR · 발명된 프래그런스</span><span>MUDS · 이머시브 다크/리퀴드 크롬 무드 · 구조 P7 · RUN 09</span></div></footer>
+
+<script>
+if('scrollRestoration' in history)history.scrollRestoration='manual';window.scrollTo(0,0);
+const nav=document.getElementById('nav');addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>40),{passive:true});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.rise').forEach((el,i)=>{el.style.transitionDelay=(i%3*60)+'ms';io.observe(el)});
+addEventListener('load',()=>requestAnimationFrame(()=>document.querySelectorAll('.rise').forEach(el=>{if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis')})));
+</script>
+</body></html>

@@ -1,439 +1,453 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flowly — 팀을 위한 디자인 협업 플랫폼</title>
-  <meta name="description" content="아이디어부터 배포까지, 한 공간에서. Flowly로 팀의 디자인 워크플로우를 하나로 연결하세요." />
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>이미지 → 랜딩 · 실행 기록</title>
+<style>
+:root{
+--font:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+--mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+--ink:#16181c;--body:#3c4149;--mut:#727781;--line:#e6e8eb;--soft:#f4f5f7;--paper:#fff;--acc:#2f7d4c;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font);color:var(--body);background:#fbfbfc;-webkit-font-smoothing:antialiased;line-height:1.6}
+a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+/* header */
+.top{border-bottom:1px solid var(--line);background:var(--paper);position:sticky;top:0;z-index:10}
+.top .in{display:flex;align-items:center;gap:16px;height:64px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--acc)}
+.top b{color:var(--ink);font-size:15px;font-weight:800;letter-spacing:-.2px}
+.top .meta{margin-left:auto;font-size:12.5px;color:var(--mut);font-family:var(--mono)}
+/* hero intro */
+.intro{padding:56px 0 40px}
+.kick{font-size:12px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)}
+.intro h1{font-size:34px;font-weight:800;letter-spacing:-1px;color:var(--ink);margin:14px 0 14px;line-height:1.25}
+.intro p{font-size:16px;color:var(--body);max-width:720px;margin:0}
+.goal{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px}
+.goal div{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.goal .n{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--mut);text-transform:uppercase}
+.goal .t{font-size:14px;color:var(--ink);font-weight:600;margin-top:6px;line-height:1.5}
+/* section title */
+.sec-h{display:flex;align-items:baseline;gap:12px;margin:46px 0 20px}
+.sec-h h2{font-size:15px;font-weight:800;color:var(--ink);letter-spacing:.02em;margin:0}
+.sec-h .c{font-family:var(--mono);font-size:12px;color:var(--mut);background:var(--soft);padding:3px 9px;border-radius:20px}
+.sec-h .line{flex:1;height:1px;background:var(--line)}
+/* run card */
+.run{background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:22px}
+.run .bar{display:flex;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line);background:linear-gradient(var(--paper),var(--soft))}
+.run .id{font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;background:var(--ink);padding:4px 10px;border-radius:6px}
+.run .name{font-size:15px;font-weight:800;color:var(--ink)}
+.run .date{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--mut)}
+.run .grid{display:grid;grid-template-columns:230px 1fr;gap:0}
+.run .left{border-right:1px solid var(--line);padding:22px}
+.run .right{padding:22px}
+.lbl{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 10px}
+/* image thumb (css mock of chosen instagram tile) */
+.thumb{position:relative;height:200px;border-radius:12px;overflow:hidden;background:radial-gradient(120% 100% at 30% 20%,#3a4a3c,#26301f 55%,#171f16);border:1px solid var(--line)}
+.thumb .grain{position:absolute;inset:0;opacity:.4;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.thumb .pouch{position:absolute;width:96px;height:110px;border-radius:10px;background:radial-gradient(circle at 42% 34%,#efe7d6,#d8ccb2);left:26px;top:64px;transform:rotate(-6deg);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+.thumb .box{position:absolute;width:64px;height:86px;border-radius:6px;background:linear-gradient(160deg,#3a9e5e,#256b3c);right:34px;top:40px;transform:rotate(5deg);box-shadow:0 12px 26px rgba(0,0,0,.45)}
+.thumb .cap{position:absolute;left:12px;bottom:10px;color:rgba(255,255,255,.8);font-size:10px;letter-spacing:.12em;font-family:var(--mono)}
+.src{font-size:12.5px;color:var(--mut);margin:10px 0 0;line-height:1.55}
+.src b{color:var(--body)}
+.why{font-size:13px;color:var(--body);margin:14px 0 0;padding:12px 14px;background:var(--soft);border-radius:10px;line-height:1.6}
+/* change table */
+.change{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:6px}
+.change .row{display:grid;grid-template-columns:96px 1fr 1fr;border-bottom:1px solid var(--line)}
+.change .row:last-child{border-bottom:0}
+.change .h{background:var(--soft);font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--mut);text-transform:uppercase}
+.change .c{padding:11px 14px;font-size:13px;border-left:1px solid var(--line)}
+.change .c:first-child{border-left:0;font-weight:700;color:var(--ink);display:flex;align-items:center}
+.sw{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12px}
+.sw i{width:15px;height:15px;border-radius:4px;border:1px solid rgba(0,0,0,.12);display:inline-block}
+.arrow{color:var(--mut)}
+.kw{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.kw span{font-size:12px;font-weight:600;color:var(--body);background:var(--soft);border:1px solid var(--line);padding:5px 11px;border-radius:20px}
+/* result */
+.result{margin-top:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 16px;border:1px dashed var(--line);border-radius:12px;background:#fbfdfb}
+.result .ok{font-size:12px;font-weight:800;color:var(--acc);letter-spacing:.06em}
+.result a.btn{font-size:13px;font-weight:700;color:#fff;background:var(--acc);padding:9px 16px;border-radius:8px}
+.result a.btn:hover{text-decoration:none;background:#27663f}
+.result .path{font-family:var(--mono);font-size:12px;color:var(--mut)}
+/* human-likeness checklist */
+.human{margin-top:16px}
+.human ul{list-style:none;padding:0;margin:8px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.human li{font-size:12.5px;color:var(--body);padding-left:20px;position:relative;line-height:1.5}
+.human li::before{content:'✓';position:absolute;left:0;color:var(--acc);font-weight:800}
+.human li.todo::before{content:'○';color:var(--mut)}
+footer{margin:50px 0 40px;text-align:center;font-size:12px;color:var(--mut);font-family:var(--mono)}
+@media(max-width:720px){.run .grid{grid-template-columns:1fr}.run .left{border-right:0;border-bottom:1px solid var(--line)}.goal,.human ul{grid-template-columns:1fr}}
+</style></head><body>
 
-  <!-- Tailwind CSS (CDN) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Pretendard', 'Inter', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            ink: '#0d0d12',
-            brand: {
-              50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe',
-              400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca',
-            },
-          },
-          keyframes: {
-            float: {
-              '0%,100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-14px)' },
-            },
-            'fade-up': {
-              '0%': { opacity: '0', transform: 'translateY(24px)' },
-              '100%': { opacity: '1', transform: 'translateY(0)' },
-            },
-          },
-          animation: {
-            float: 'float 6s ease-in-out infinite',
-            'fade-up': 'fade-up 0.7s ease forwards',
-          },
-        },
-      },
-    };
-  </script>
+<div class="top"><div class="wrap in"><span class="dot"></span><b>이미지 → 랜딩 · 실행 기록</b><span class="meta">image-driven landing / build log</span></div></div>
 
-  <!-- Pretendard 폰트 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="./css/styles.css" />
-</head>
+<div class="wrap">
+<section class="intro">
+<span class="kick">Project Log</span>
+<h1>이미지 한 장으로,<br>사람이 만든 것처럼 그럴싸한 랜딩을 뽑는다</h1>
+<p>매 실행마다 <b>어떤 사진을 채택했는지 · 어떤 MUDS를 썼는지 · 무엇을 어떻게 바꿨는지 · 결과물이 무엇인지</b>를 이 메인에 누적 기록합니다. 목표는 "AI가 찍어낸 티"가 아니라 <b>디자이너가 손으로 만든 듯한 완성도</b>.</p>
+<div class="goal">
+<div><div class="n">Input</div><div class="t">Instagram #디자인 사진 1장</div></div>
+<div><div class="n">Engine</div><div class="t">MUDS 디자인 시스템 (토큰 전부 재설정)</div></div>
+<div><div class="n">Output</div><div class="t">고정 규격 랜딩 + 무드 이식</div></div>
+</div>
+</section>
 
-<body class="bg-white text-ink antialiased selection:bg-brand-200/60">
+<div class="sec-h"><h2>실행 기록</h2><span class="c">13 runs</span><span class="line"></span></div>
 
-  <!-- ===== NAVBAR ===== -->
-  <header id="navbar" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
-    <nav class="mx-auto max-w-7xl px-6">
-      <div class="mt-4 flex items-center justify-between rounded-2xl border border-black/5 bg-white/70 px-5 py-3 backdrop-blur-xl shadow-sm">
-        <a href="#" class="flex items-center gap-2 font-bold text-lg">
-          <span class="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-white">F</span>
-          Flowly
-        </a>
-        <ul class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
-          <li><a href="#features" class="hover:text-ink transition">기능</a></li>
-          <li><a href="#showcase" class="hover:text-ink transition">쇼케이스</a></li>
-          <li><a href="#pricing" class="hover:text-ink transition">가격</a></li>
-          <li><a href="#faq" class="hover:text-ink transition">FAQ</a></li>
-        </ul>
-        <div class="flex items-center gap-3">
-          <a href="#" class="hidden sm:inline text-sm font-medium text-gray-600 hover:text-ink transition">로그인</a>
-          <a href="#" class="rounded-xl bg-ink px-4 py-2 text-sm font-semibold text-white hover:bg-brand-600 transition">시작하기</a>
-        </div>
-      </div>
-    </nav>
-  </header>
+<!-- ── RUN 13 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 13</span><span class="name">SIGNAL · 스플릿 다이프틱 (T2)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#ff2d78;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px;letter-spacing:.02em">30/40</b>2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:linear-gradient(90deg,#0d0d10 50%,#ff2d78 50%)"><span class="cap" style="color:#fff;font-weight:900">SIGNAL</span></div>
+    <p class="why"><b>아카이타입 = 리포트/데이터.</b> 발명: "SIGNAL 2026 디자인 트렌드 리포트". 신호별 스플릿 패널·데이터 지표.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">잉크 <span class="sw"><i style="background:#0d0d10"></i></span> + <span class="sw"><i style="background:#ff2d78"></i>마젠타</span>. <b>신규 구조 P11 Split Diptych</b> — 세로 스플릿 히어로 → 교차 스플릿 패널 → 데이터 밴드(카운트업 차트) → 풀쿼트 → 마그네틱 CTA. <b>티어 T2 이펙트: 커스텀 커서·글자 리빌·카운트업·마그네틱 버튼(5종).</b></div>
+    <div class="kw"><span>데이터 리포트</span><span>마젠타</span><span>스플릿</span><span>T2 모션</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 크리틱 (적대적 심사) → 30/40</p>
+      <ul><li>강점: 스플릿 임팩트·응집력 / T2 모션 5종</li><li>약점→수정: 마그네틱 트리거 스코핑 · footer 메타 제거</li><li class="todo">챔피언 RUN 09(34) 미달 — 다음 RUN 오리지널리티↑로 재도전</li></ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 진화 루프 · 채점됨</span><a class="btn" href="templates/run-13-signal.html">랜딩 열기 →</a><span class="path">templates/run-13-signal.html</span></div>
+  </div>
+</div>
+</article>
 
-  <!-- ===== HERO ===== -->
-  <section class="relative overflow-hidden pt-40 pb-24">
-    <!-- 배경 그라데이션 blob -->
-    <div class="pointer-events-none absolute inset-0 -z-10">
-      <div class="absolute -top-32 left-1/2 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-brand-400/40 via-fuchsia-300/30 to-sky-300/30 blur-3xl"></div>
+<!-- ── RUN 12 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 12</span><span class="name">PULSE · SaaS 랜딩</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:#f7f8fa"><span class="cap" style="color:#0e9f8e;font-weight:800">Pulse</span></div>
+    <p class="why"><b>아카이타입 = 서비스/소프트웨어.</b> 발명: 팀 성과 대시보드 SaaS "Pulse". 기능·연동·요금·FAQ.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">클린 라이트 + <span class="sw"><i style="background:#0e9f8e"></i>틸</span>. <b>구조 P6 SaaS</b> — Hero split-L(<b>CSS 대시보드 목업</b>) → 로고 클라우드 → 기능 교차 2행 → 메트릭 밴드 → 요금 3티어 → <b>FAQ 아코디언</b> → CTA. 이미지 의존 0(CSS UI 목업).</div>
+    <div class="kw"><span>SaaS</span><span>틸</span><span>대시보드</span><span>클린</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료 (자율 루프)</span><a class="btn" href="templates/run-12-pulse.html">랜딩 열기 →</a><span class="path">templates/run-12-pulse.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 11 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 11</span><span class="name">SLOW · 스크롤리텔링</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:radial-gradient(circle at 40% 35%,#8a5a2e,#231710 72%)"><span class="cap" style="color:#c56a3f;font-weight:900;letter-spacing:2px">SLOW</span></div>
+    <p class="why"><b>아카이타입 = 스토리/저널.</b> 발명: 싱글 오리진 커피 "SLOW". 농장→가공→로스팅→한 잔 스크롤 내러티브.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">에스프레소 다크 <span class="sw"><i style="background:#231710"></i></span> + <span class="sw"><i style="background:#c56a3f"></i>테라코타</span> · 세리프·그레인. <b>구조 P4 Scrollytelling</b> — 다크 히어로 → <b>sticky 비주얼 + 4스텝 스크롤 서사</b> → 스탯 밴드 → 인용 → 다크 CTA. <b>이펙트: 스텝별 sticky disc 색/번호 전환.</b></div>
+    <div class="kw"><span>커피</span><span>내러티브</span><span>느림</span><span>세리프</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료 (자율 루프)</span><a class="btn" href="templates/run-11-slow.html">랜딩 열기 →</a><span class="path">templates/run-11-slow.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 10 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 10</span><span class="name">MONO · 벤토 카탈로그</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:#2b45e6"><span class="cap" style="color:#fff;font-weight:900">MONO</span></div>
+    <p class="why"><b>아카이타입 = 제품 카탈로그.</b> 발명: 데스크 오브젝트 편집샵 "MONO". 벤토 카탈로그·비교표·멤버십.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">크림 + <span class="sw"><i style="background:#2b45e6"></i>코발트</span> · 볼드 클린. <b>구조 P3 Bento</b> — 중앙 히어로 → 로고 스트립 → <b>혼합 벤토 카탈로그</b> → 비교표 → 리뷰 3열 → <b>sticky CTA</b> → Footer. 컬러 블록 타일(이미지 의존 0).</div>
+    <div class="kw"><span>문구</span><span>코발트</span><span>벤토</span><span>플레이풀 클린</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료 (자율 루프)</span><a class="btn" href="templates/run-10-mono.html">랜딩 열기 →</a><span class="path">templates/run-10-mono.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 09 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 09</span><span class="name">NOIR 01 · 이머시브 다크 + 리퀴드 크롬</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:radial-gradient(circle at 50% 45%,#cfd8e3,#8a97a6 40%,#12151b 75%)"><span class="cap" style="color:#eef4fa;font-weight:800;letter-spacing:3px">NOIR</span></div>
+    <p class="why"><b>아카이타입 = 프리미엄 제품 쇼케이스.</b> 발명: 리퀴드 메탈 향수 "NOIR 01 · 한정 999병".</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">이머시브 다크 <span class="sw"><i style="background:#060709"></i></span> + <b>리퀴드 크롬</b> <span class="sw"><i style="background:#cfd8e3;border-color:#ccc"></i></span>. <b>구조 P7 Immersive Dark</b> — 풀블리드 히어로(크롬 오브 센터피스) → 텍스트 밴드 → 스펙 4열 → 컬렉션 인덱스 → 풀스크린 CTA. <b>이펙트: CSS 애니메이션 리퀴드 크롬 오브(회전+모프) — 외부 레포 0.</b></div>
+    <div class="kw"><span>다크 럭셔리</span><span>메탈 크롬</span><span>미니멀</span><span>한정판</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 렌더 검증됨</span><a class="btn" href="templates/run-09-noir.html">랜딩 열기 →</a><span class="path">templates/run-09-noir.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 08 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 08</span><span class="name">FORM · 매니페스토</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:#0c0b0a"><span class="cap" style="color:#ff4d26;font-weight:900">FORM</span></div>
+    <p class="why"><b>아카이타입 = 매니페스토/선언.</b> 발명: 디자인 스튜디오 "FORM — 우리는 형태로 말한다". 초대형 선언문·원칙·구호.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">니어블랙 <span class="sw"><i style="background:#ff4d26"></i>버밀리언</span> · 초대형 타이포. <b>구조 P10 Manifesto</b> — 풀스크린 선언 섹션 ×3 → 원칙 → 구호 마퀴 → CTA. <b>이미지 0 · 단어 분할 스크롤 리빌.</b></div>
+    <div class="kw"><span>선언</span><span>고대비</span><span>타이포 중심</span><span>버밀리언</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 렌더 검증됨</span><a class="btn" href="templates/run-08-form.html">랜딩 열기 →</a><span class="path">templates/run-08-form.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 07 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 07</span><span class="name">NOON · 룩북</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:#efece5"><span class="cap" style="color:#181613;font-weight:600;letter-spacing:3px">NOON</span></div>
+    <p class="why"><b>아카이타입 = 룩북/갤러리.</b> 발명: 오브제 스튜디오 "NOON — Still Life No.03". 이미지 중심·룩 넘버.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">본 화이트 <span class="sw"><i style="background:#efece5;border-color:#ccc"></i>#efece5</span> · 극미니멀 산세리프(웨이트 300). <b>구조 P5 Showcase</b> — 콜라주 히어로 → <b>마소니 갤러리</b> → 피처 split → 인덱스 → 컨택트. 카피 최소.</div>
+    <div class="kw"><span>미니멀</span><span>이미지 중심</span><span>여백</span><span>정적</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료</span><a class="btn" href="templates/run-07-noon.html">랜딩 열기 →</a><span class="path">templates/run-07-noon.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 06 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 06</span><span class="name">MARGIN · 에디토리얼</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:#f4f0e6"><span class="cap" style="color:#a8432e;font-family:Georgia,serif;font-style:italic">MARGIN</span></div>
+    <p class="why"><b>아카이타입 = 에디토리얼/매거진.</b> 발명: 디자인 저널 피처 "여백이 말한다". 기사 본문·드롭캡·풀쿼트.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">웜 페이퍼 <span class="sw"><i style="background:#f4f0e6;border-color:#ccc"></i></span> + <span class="sw"><i style="background:#a8432e"></i>벽돌 레드</span> · 세리프·그레인. <b>구조 P2 Magazine</b> — 마스트헤드 → 기사 헤드/바이라인 → 커버 → 본문(드롭캡·풀쿼트·피규어) → 관련기사 → 레터.</div>
+    <div class="kw"><span>잡지</span><span>세리프</span><span>롱폼</span><span>그레인</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료</span><a class="btn" href="templates/run-06-margin.html">랜딩 열기 →</a><span class="path">templates/run-06-margin.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 05 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 05</span><span class="name">LOUD 2026 · 이벤트</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 채택 사진 · 컨셉</p>
+    <div class="thumb" style="background:#0e1016"><span class="cap" style="color:#d8ff33;font-weight:900">LOUD.26</span></div>
+    <p class="src">영감 — Instagram "레몬 코어" 라임 포스터</p>
+    <p class="why"><b>아카이타입 = 이벤트/런칭.</b> 발명: 크리에이티브 컨퍼런스 "LOUD 2026". 카운트다운·라인업·일정·티켓.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">잉크 <span class="sw"><i style="background:#0e1016"></i></span> + <span class="sw"><i style="background:#d8ff33;border-color:#ccc"></i>일렉트릭 라임</span> · 포스터 타이포. <b>구조 P9 Event</b> — 풀블리드 히어로+카운트다운 → 라임 티커 → 스피커 라인업 → 3일 일정표 → 티켓 3티어 → 베뉴 → 빅 CTA. <b>이미지 0(CSS 아바타).</b></div>
+    <div class="kw"><span>이벤트</span><span>라임/잉크</span><span>포스터</span><span>카운트다운</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료</span><a class="btn" href="templates/run-05-loud.html">랜딩 열기 →</a><span class="path">templates/run-05-loud.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 04 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 04</span><span class="name">LUMEN · 프리미엄 글래스</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 채택한 사진 · 컨셉</p>
+    <div class="thumb" style="background:radial-gradient(45% 45% at 15% 12%,#c7b6ff,transparent 60%),radial-gradient(50% 45% at 85% 8%,#ffc9e3,transparent 60%),radial-gradient(55% 55% at 80% 85%,#b6e3ff,transparent 60%),linear-gradient(160deg,#f4f2ff,#eaf3ff)">
+      <span class="cap" style="color:#5b5bd6;font-weight:800">soft mesh</span></div>
+    <p class="src">홀로그래픽/글래스모피즘 무드에서 <b>발명한 컨셉</b></p>
+    <p class="why"><b>발명한 콘텐츠:</b> "LUMEN — 피부를 데이터로 읽는 홈 뷰티 디바이스". 콘텐츠 아카이타입 = <b>제품+가격(SaaS형)</b> (이전 RUN들과 다른 종류).</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② MUDS를 이렇게 바꿨다</p>
+    <div class="change">
+      <div class="row"><div class="c h">항목</div><div class="c h">Before</div><div class="c h">After</div></div>
+      <div class="row"><div class="c">브랜드</div><div class="c">단색 포인트</div><div class="c"><span class="sw"><i style="background:#5b5bd6"></i>#5b5bd6 인디고</span></div></div>
+      <div class="row"><div class="c">배경</div><div class="c">단색/크림</div><div class="c">소프트 <b>메시 그라데이션</b>(라일락·핑크·민트)</div></div>
+      <div class="row"><div class="c">표면</div><div class="c">불투명 카드</div><div class="c"><b>Liquid Glass</b>(backdrop-blur+굴절)</div></div>
+      <div class="row"><div class="c">헤드라인</div><div class="c">-</div><div class="c">그라데이션 텍스트 · 중앙 정렬</div></div>
+    </div>
+    <div class="kw"><span>프리미엄</span><span>글래스모피즘</span><span>소프트</span><span>뷰티테크</span><span>미래적</span></div>
+
+    <div class="human">
+      <p class="lbl" style="margin-top:18px">③ 구조 레시피 (§A-5)</p>
+      <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6"><b>P8 · Glass Premium</b> — Header(glass) → Hero:<b>centered</b> → glass <b>bento</b> → <b>pricing</b> 3-tier → testimonial → glass CTA → Footer. <b>이전 P1(split→grid-3)과 완전히 다른 뼈대.</b></div>
     </div>
 
-    <div class="mx-auto max-w-7xl px-6 text-center">
-      <div data-reveal class="inline-flex items-center gap-2 rounded-full border border-black/5 bg-white px-4 py-1.5 text-sm font-medium text-gray-600 shadow-sm">
-        <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-        새로운 실시간 협업 캔버스 출시
-      </div>
-
-      <h1 data-reveal class="mx-auto mt-6 max-w-4xl text-5xl md:text-7xl font-extrabold leading-[1.05] tracking-tight">
-        아이디어부터 배포까지,<br />
-        <span class="bg-gradient-to-r from-brand-600 via-fuchsia-500 to-sky-500 bg-clip-text text-transparent">하나의 공간에서.</span>
-      </h1>
-
-      <p data-reveal class="mx-auto mt-6 max-w-2xl text-lg text-gray-500">
-        Flowly는 팀의 디자인, 프로토타이핑, 핸드오프를 하나로 연결합니다.
-        더 이상 흩어진 도구 사이를 오갈 필요가 없어요.
-      </p>
-
-      <div data-reveal class="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3">
-        <a href="#" class="w-full sm:w-auto rounded-xl bg-ink px-7 py-3.5 font-semibold text-white shadow-lg shadow-ink/20 hover:bg-brand-600 transition">무료로 시작하기</a>
-        <a href="#showcase" class="w-full sm:w-auto rounded-xl border border-black/10 bg-white px-7 py-3.5 font-semibold text-ink hover:bg-gray-50 transition">데모 보기 →</a>
-      </div>
-
-      <!-- 히어로 목업 -->
-      <div data-reveal class="relative mx-auto mt-16 max-w-5xl">
-        <div class="animate-float rounded-2xl border border-black/5 bg-white p-3 shadow-2xl shadow-brand-500/10">
-          <div class="overflow-hidden rounded-xl bg-gradient-to-br from-gray-50 to-gray-100">
-            <!-- 목업 상단바 -->
-            <div class="flex items-center gap-1.5 border-b border-black/5 bg-white/60 px-4 py-3">
-              <span class="h-3 w-3 rounded-full bg-red-400"></span>
-              <span class="h-3 w-3 rounded-full bg-yellow-400"></span>
-              <span class="h-3 w-3 rounded-full bg-green-400"></span>
-            </div>
-            <!-- 목업 본문 -->
-            <div class="grid grid-cols-12 gap-4 p-6">
-              <div class="col-span-3 space-y-3">
-                <div class="h-8 rounded-lg bg-brand-100"></div>
-                <div class="h-24 rounded-lg bg-white shadow-sm"></div>
-                <div class="h-24 rounded-lg bg-white shadow-sm"></div>
-              </div>
-              <div class="col-span-6 rounded-xl bg-white shadow-sm p-4">
-                <div class="h-40 rounded-lg bg-gradient-to-tr from-brand-400/30 to-fuchsia-300/30"></div>
-                <div class="mt-4 flex gap-3">
-                  <div class="h-16 flex-1 rounded-lg bg-gray-100"></div>
-                  <div class="h-16 flex-1 rounded-lg bg-gray-100"></div>
-                </div>
-              </div>
-              <div class="col-span-3 space-y-3">
-                <div class="h-20 rounded-lg bg-white shadow-sm"></div>
-                <div class="h-32 rounded-lg bg-white shadow-sm"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- 떠다니는 커서 -->
-        <div class="absolute -left-4 top-1/3 hidden md:flex items-center gap-1.5 rounded-full bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white shadow-lg">지수</div>
-        <div class="absolute -right-2 top-2/3 hidden md:flex items-center gap-1.5 rounded-full bg-fuchsia-500 px-3 py-1.5 text-xs font-semibold text-white shadow-lg">민준</div>
-      </div>
+    <div class="human">
+      <p class="lbl" style="margin-top:16px">④ 이펙트 · 체크</p>
+      <ul>
+        <li>Liquid Glass (CSS backdrop-filter)</li>
+        <li>메시 그라데이션 배경</li>
+        <li>스크롤 리빌 (scrollRestoration 폴백 적용)</li>
+        <li>중앙 히어로 + 벤토 + 가격표 = 신규 구조</li>
+      </ul>
     </div>
-  </section>
 
-  <!-- ===== 로고 스트립 ===== -->
-  <section class="border-y border-black/5 bg-gray-50/50 py-10">
-    <div class="mx-auto max-w-7xl px-6">
-      <p class="text-center text-sm font-medium text-gray-400">전 세계 12,000+ 팀이 Flowly를 사용합니다</p>
-      <div class="mt-6 flex flex-wrap items-center justify-center gap-x-12 gap-y-6 opacity-60">
-        <span class="text-xl font-bold text-gray-500">Nebula</span>
-        <span class="text-xl font-bold text-gray-500">Orbit</span>
-        <span class="text-xl font-bold text-gray-500">Kite</span>
-        <span class="text-xl font-bold text-gray-500">Vertex</span>
-        <span class="text-xl font-bold text-gray-500">Lumen</span>
-        <span class="text-xl font-bold text-gray-500">Pulse</span>
-      </div>
+    <p class="lbl" style="margin-top:16px">⑤ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료</span><a class="btn" href="templates/run-04-lumen.html">랜딩 열기 →</a><span class="path">templates/run-04-lumen.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 03 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 03</span><span class="name">APEX · 다크 크롬 퍼포먼스</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 채택한 사진</p>
+    <div class="thumb" style="background:linear-gradient(180deg,#0a0d12,#12303a)"><div class="grain"></div>
+      <div class="pouch" style="width:110px;height:70px;border-radius:8px;background:linear-gradient(120deg,#5b6b7a,#c7d3dd);left:60px;top:70px;transform:rotate(-4deg);opacity:.85"></div>
+      <span class="cap" style="color:#22d3d8;font-weight:800">2026 트렌드</span></div>
+    <p class="src">출처 — Instagram <b>#디자인</b> 피드<br>"2026 디자인 트렌드" (크롬 말 + 시안)</p>
+    <p class="why"><b>왜 이 사진?</b> 니어블랙 배경 + 메탈 크롬 + 시안 네온 + 속도감. 앞선 두 RUN(밝은 자연)과 정반대인 다크 테마로 재현성 확인용.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② MUDS를 이렇게 바꿨다</p>
+    <div style="font-size:12.5px;color:var(--mut);margin:-2px 0 12px">base: <b style="color:var(--body)">깨끗한 MUDS 복제</b> · <b style="color:var(--body)">라이트 → 다크 테마 반전</b></div>
+    <div class="change">
+      <div class="row"><div class="c h">항목</div><div class="c h">Before (base)</div><div class="c h">After (사진 무드)</div></div>
+      <div class="row"><div class="c">브랜드</div><div class="c"><span class="sw"><i style="background:#3a9e4e"></i>#3a9e4e 그린</span></div><div class="c"><span class="sw"><i style="background:#22d3d8"></i>#22d3d8 시안</span></div></div>
+      <div class="row"><div class="c">배경(surface)</div><div class="c"><span class="sw"><i style="background:#f5f8f5"></i>#f5f8f5 라이트</span></div><div class="c"><span class="sw"><i style="background:#0a0d12;border-color:#333"></i>#0a0d12 니어블랙</span></div></div>
+      <div class="row"><div class="c">본문 텍스트</div><div class="c"><span class="sw"><i style="background:#182119"></i>#182119 진한글씨</span></div><div class="c"><span class="sw"><i style="background:#aab6c2"></i>#aab6c2 라이트</span></div></div>
+      <div class="row"><div class="c">헤드라인</div><div class="c">세리프 / 산세리프</div><div class="c">헤비 산세리프 · 크롬 그라데이션 · 대문자</div></div>
+      <div class="row"><div class="c">라운드</div><div class="c">둥근 26~32px (RUN02)</div><div class="c">샤프 6~16px · 테크</div></div>
     </div>
-  </section>
+    <div class="kw"><span>다크</span><span>미래적</span><span>크롬/메탈</span><span>시안 네온</span><span>속도감</span><span>하이컨트라스트</span></div>
 
-  <!-- ===== FEATURES ===== -->
-  <section id="features" class="py-28">
-    <div class="mx-auto max-w-7xl px-6">
-      <div data-reveal class="mx-auto max-w-2xl text-center">
-        <span class="text-sm font-semibold uppercase tracking-widest text-brand-600">기능</span>
-        <h2 class="mt-3 text-4xl md:text-5xl font-extrabold tracking-tight">팀워크를 위한 모든 것</h2>
-        <p class="mt-4 text-lg text-gray-500">디자인부터 개발 핸드오프까지, 필요한 도구를 한 곳에 담았습니다.</p>
-      </div>
-
-      <div class="mt-16 grid gap-6 md:grid-cols-3">
-        <!-- card -->
-        <div data-reveal class="group rounded-3xl border border-black/5 bg-white p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300">
-          <div class="grid h-12 w-12 place-items-center rounded-2xl bg-brand-100 text-brand-600 text-2xl">⚡</div>
-          <h3 class="mt-5 text-xl font-bold">실시간 협업</h3>
-          <p class="mt-2 text-gray-500">여러 명이 동시에 편집하고, 커서와 코멘트로 즉시 소통하세요.</p>
-        </div>
-        <div data-reveal class="group rounded-3xl border border-black/5 bg-white p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300">
-          <div class="grid h-12 w-12 place-items-center rounded-2xl bg-fuchsia-100 text-fuchsia-600 text-2xl">🎨</div>
-          <h3 class="mt-5 text-xl font-bold">디자인 시스템</h3>
-          <p class="mt-2 text-gray-500">컴포넌트와 토큰을 팀 전체가 공유하고 일관되게 유지합니다.</p>
-        </div>
-        <div data-reveal class="group rounded-3xl border border-black/5 bg-white p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300">
-          <div class="grid h-12 w-12 place-items-center rounded-2xl bg-sky-100 text-sky-600 text-2xl">🚀</div>
-          <h3 class="mt-5 text-xl font-bold">개발자 핸드오프</h3>
-          <p class="mt-2 text-gray-500">CSS·토큰·에셋을 자동 생성해 개발까지 매끄럽게 이어집니다.</p>
-        </div>
-        <div data-reveal class="group rounded-3xl border border-black/5 bg-white p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300">
-          <div class="grid h-12 w-12 place-items-center rounded-2xl bg-amber-100 text-amber-600 text-2xl">🔗</div>
-          <h3 class="mt-5 text-xl font-bold">프로토타이핑</h3>
-          <p class="mt-2 text-gray-500">인터랙션을 연결해 실제 앱처럼 동작하는 시안을 만드세요.</p>
-        </div>
-        <div data-reveal class="group rounded-3xl border border-black/5 bg-white p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300">
-          <div class="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-100 text-emerald-600 text-2xl">🔒</div>
-          <h3 class="mt-5 text-xl font-bold">버전 관리</h3>
-          <p class="mt-2 text-gray-500">모든 변경 이력을 저장하고 언제든 이전 버전으로 되돌립니다.</p>
-        </div>
-        <div data-reveal class="group rounded-3xl border border-black/5 bg-white p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300">
-          <div class="grid h-12 w-12 place-items-center rounded-2xl bg-rose-100 text-rose-600 text-2xl">🧩</div>
-          <h3 class="mt-5 text-xl font-bold">플러그인</h3>
-          <p class="mt-2 text-gray-500">수백 개의 플러그인으로 워크플로우를 자유롭게 확장하세요.</p>
-        </div>
-      </div>
+    <div class="human">
+      <p class="lbl" style="margin-top:18px">③ "사람이 만든 티" 체크</p>
+      <ul>
+        <li>실사 애슬레틱컷 6컷 + 다크-시안 톤 오버레이</li>
+        <li>크롬 그라데이션·시안 글로우·스피드라인</li>
+        <li>스크롤 리빌·카드 보더 글로우 모션</li>
+        <li class="todo">히어로컷 Brooks 로고 희미하게 노출 → 교체</li>
+      </ul>
     </div>
-  </section>
 
-  <!-- ===== SHOWCASE (좌우 배치) ===== -->
-  <section id="showcase" class="py-28 bg-gray-50/60">
-    <div class="mx-auto max-w-7xl px-6 space-y-28">
-      <!-- row 1 -->
-      <div class="grid items-center gap-12 md:grid-cols-2">
-        <div data-reveal>
-          <span class="text-sm font-semibold uppercase tracking-widest text-brand-600">캔버스</span>
-          <h2 class="mt-3 text-4xl font-extrabold tracking-tight">무한한 캔버스 위에서<br />자유롭게 생각하세요</h2>
-          <p class="mt-4 text-lg text-gray-500">제약 없는 작업 공간에서 아이디어를 펼치고, 팀과 함께 구조를 잡아가세요. 모든 변경은 실시간으로 동기화됩니다.</p>
-          <ul class="mt-6 space-y-3 text-gray-600">
-            <li class="flex gap-3"><span class="text-brand-600">✓</span> 60fps 부드러운 렌더링</li>
-            <li class="flex gap-3"><span class="text-brand-600">✓</span> 오프라인 편집 지원</li>
-            <li class="flex gap-3"><span class="text-brand-600">✓</span> 무제한 프로젝트</li>
-          </ul>
-        </div>
-        <div data-reveal class="rounded-3xl border border-black/5 bg-white p-4 shadow-xl">
-          <div class="aspect-[4/3] rounded-2xl bg-gradient-to-br from-brand-400/20 via-fuchsia-300/20 to-sky-300/20 grid place-items-center">
-            <div class="grid grid-cols-2 gap-3 p-6 w-full">
-              <div class="h-24 rounded-xl bg-white shadow-sm"></div>
-              <div class="h-24 rounded-xl bg-white shadow-sm"></div>
-              <div class="h-24 rounded-xl bg-white shadow-sm"></div>
-              <div class="h-24 rounded-xl bg-white shadow-sm"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <p class="lbl" style="margin-top:18px">④ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료</span><a class="btn" href="templates/run-03-apex.html">랜딩 열기 →</a><span class="path">templates/run-03-apex.html</span></div>
+  </div>
+</div>
+</article>
 
-      <!-- row 2 (역방향) -->
-      <div class="grid items-center gap-12 md:grid-cols-2">
-        <div data-reveal class="order-2 md:order-1 rounded-3xl border border-black/5 bg-white p-4 shadow-xl">
-          <div class="aspect-[4/3] rounded-2xl bg-gradient-to-tr from-sky-300/20 to-brand-400/20 p-6 space-y-3">
-            <div class="h-6 w-1/2 rounded bg-white shadow-sm"></div>
-            <div class="h-32 rounded-xl bg-white shadow-sm"></div>
-            <div class="flex gap-3">
-              <div class="h-10 flex-1 rounded-lg bg-brand-100"></div>
-              <div class="h-10 flex-1 rounded-lg bg-white shadow-sm"></div>
-            </div>
-          </div>
-        </div>
-        <div data-reveal class="order-1 md:order-2">
-          <span class="text-sm font-semibold uppercase tracking-widest text-fuchsia-600">핸드오프</span>
-          <h2 class="mt-3 text-4xl font-extrabold tracking-tight">디자인이 곧<br />개발 명세가 됩니다</h2>
-          <p class="mt-4 text-lg text-gray-500">개발자는 클릭 한 번으로 정확한 수치와 코드를 확인합니다. 커뮤니케이션 비용을 줄이고 구현 속도를 높이세요.</p>
-          <a href="#" class="mt-6 inline-flex items-center gap-2 font-semibold text-fuchsia-600 hover:gap-3 transition-all">자세히 보기 →</a>
-        </div>
-      </div>
+<!-- ── RUN 02 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 02</span><span class="name">RIPE · 제철 프레시</span><span class="date">2026-08-02</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 채택한 사진</p>
+    <div class="thumb" style="background:radial-gradient(120% 100% at 40% 20%,#f7d9d0,#ec5b45 70%,#d8392a)"><div class="grain"></div>
+      <div class="pouch" style="width:70px;height:70px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#ff8a6b,#d8392a);left:30px;top:60px;transform:none"></div>
+      <div class="box" style="width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#ffd24a,#e0a41f);right:40px;top:52px;transform:none"></div>
+      <span class="cap" style="color:#fff">여름 제철</span></div>
+    <p class="src">출처 — Instagram <b>#디자인</b> 피드<br>"다가오는 여름 · 제철 디자인 공식"</p>
+    <p class="why"><b>왜 이 사진?</b> 피치→코랄→레드 그라데이션 + 신선한 과일 + 볼드 편집형 타이포. RUN 01(차분·크림·그린)과 정반대인 따뜻·생기·볼드 무드.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② MUDS를 이렇게 바꿨다</p>
+    <div style="font-size:12.5px;color:var(--mut);margin:-2px 0 12px">base: <b style="color:var(--body)">깨끗한 MUDS 복제</b> · <b style="color:var(--body)">토큰 이름 유지, 값만 교체</b></div>
+    <div class="change">
+      <div class="row"><div class="c h">항목</div><div class="c h">Before (base)</div><div class="c h">After (사진 무드)</div></div>
+      <div class="row"><div class="c">브랜드</div><div class="c"><span class="sw"><i style="background:#3a9e4e"></i>#3a9e4e 그린</span></div><div class="c"><span class="sw"><i style="background:#e5462f"></i>#e5462f 코랄레드</span></div></div>
+      <div class="row"><div class="c">중성 배경</div><div class="c"><span class="sw"><i style="background:#f5f8f5"></i>#f5f8f5 그린틴트</span></div><div class="c"><span class="sw"><i style="background:#fdf4f0"></i>#fdf4f0 피치크림</span></div></div>
+      <div class="row"><div class="c">보조 포인트</div><div class="c">—</div><div class="c"><span class="sw"><i style="background:#f2b02e"></i>#f2b02e 선옐로</span></div></div>
+      <div class="row"><div class="c">헤드라인</div><div class="c">세리프 (RUN 01)</div><div class="c">볼드 헤비 산세리프 900</div></div>
+      <div class="row"><div class="c">라운드</div><div class="c">부드러운 16~20px</div><div class="c">둥근 26~32px · 하이라이트 마커</div></div>
     </div>
-  </section>
+    <div class="kw"><span>싱그러운</span><span>juicy</span><span>따뜻한</span><span>생기</span><span>볼드</span><span>여름 제철</span></div>
 
-  <!-- ===== STATS ===== -->
-  <section class="py-24">
-    <div class="mx-auto max-w-7xl px-6">
-      <div data-reveal class="grid gap-8 rounded-3xl bg-ink px-8 py-14 text-center text-white sm:grid-cols-3">
-        <div>
-          <div class="text-5xl font-extrabold bg-gradient-to-r from-brand-400 to-fuchsia-400 bg-clip-text text-transparent">12K+</div>
-          <p class="mt-2 text-gray-400">활성 팀</p>
-        </div>
-        <div>
-          <div class="text-5xl font-extrabold bg-gradient-to-r from-brand-400 to-fuchsia-400 bg-clip-text text-transparent">99.9%</div>
-          <p class="mt-2 text-gray-400">가동률</p>
-        </div>
-        <div>
-          <div class="text-5xl font-extrabold bg-gradient-to-r from-brand-400 to-fuchsia-400 bg-clip-text text-transparent">4.9/5</div>
-          <p class="mt-2 text-gray-400">사용자 평점</p>
-        </div>
-      </div>
+    <div class="human">
+      <p class="lbl" style="margin-top:18px">③ "사람이 만든 티" 체크</p>
+      <ul>
+        <li>실사 주스/과일컷 6컷</li>
+        <li>옐로 하이라이트 마커 · 배지</li>
+        <li>스크롤 리빌·카드 리프트 모션</li>
+        <li>제철 캘린더 등 브랜드 서사</li>
+      </ul>
     </div>
-  </section>
 
-  <!-- ===== TESTIMONIAL ===== -->
-  <section class="py-24">
-    <div class="mx-auto max-w-3xl px-6 text-center">
-      <div data-reveal>
-        <p class="text-2xl md:text-3xl font-semibold leading-relaxed">
-          “Flowly로 바꾼 뒤 디자인 리뷰 시간이 <span class="text-brand-600">절반</span>으로 줄었어요.
-          팀 전체가 같은 화면을 보며 일한다는 게 이렇게 큰 차이일 줄 몰랐습니다.”
-        </p>
-        <div class="mt-8 flex items-center justify-center gap-3">
-          <div class="h-12 w-12 rounded-full bg-gradient-to-br from-brand-400 to-fuchsia-400"></div>
-          <div class="text-left">
-            <div class="font-bold">김서연</div>
-            <div class="text-sm text-gray-500">Nebula · 프로덕트 디자인 리드</div>
-          </div>
-        </div>
-      </div>
+    <p class="lbl" style="margin-top:18px">④ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료</span><a class="btn" href="templates/run-02-ripe.html">랜딩 열기 →</a><span class="path">templates/run-02-ripe.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 01 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 01</span><span class="name">BARE · 느좋 내추럴</span><span class="date">2026-08-02</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 채택한 사진</p>
+    <div class="thumb"><div class="grain"></div><div class="pouch"></div><div class="box"></div><span class="cap">VOLCANIC</span></div>
+    <p class="src">출처 — Instagram <b>#디자인</b> 피드<br>"느좋 브랜드는…" (Innisfree 브랜딩 컷)</p>
+    <p class="why"><b>왜 이 사진?</b> 차콜 배경 위 크림 코튼 + 딥 그린 제품 한 점의 대비가 "조용한 자연주의" 무드로 명확히 읽혀 토큰화가 쉬움.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② MUDS를 이렇게 바꿨다</p>
+    <div style="font-size:12.5px;color:var(--mut);margin:-2px 0 12px">base: <b style="color:var(--body)">MUDS (Farm-In-Main-Website)</b> → 복제본 Project_1 · <b style="color:var(--body)">토큰 이름 유지, 값만 교체</b></div>
+    <div class="change">
+      <div class="row"><div class="c h">항목</div><div class="c h">Before (base)</div><div class="c h">After (사진 무드)</div></div>
+      <div class="row"><div class="c">브랜드</div><div class="c"><span class="sw"><i style="background:#3a9e4e"></i>#3a9e4e 잔디</span></div><div class="c"><span class="sw"><i style="background:#2f7d4c"></i>#2f7d4c 볼케닉</span></div></div>
+      <div class="row"><div class="c">중성 배경</div><div class="c"><span class="sw"><i style="background:#f5f8f5"></i>#f5f8f5 그린틴트</span></div><div class="c"><span class="sw"><i style="background:#f8f5ef"></i>#f8f5ef 크림</span></div></div>
+      <div class="row"><div class="c">다크 표면</div><div class="c"><span class="sw"><i style="background:#182119"></i>#182119 쿨</span></div><div class="c"><span class="sw"><i style="background:#1c1913"></i>#1c1913 웜차콜</span></div></div>
+      <div class="row"><div class="c">헤드라인</div><div class="c">산세리프</div><div class="c">세리프 디스플레이 (Playfair/명조)</div></div>
+      <div class="row"><div class="c">라운드</div><div class="c">각진 8px</div><div class="c">부드러운 16~20px · 버튼 pill</div></div>
     </div>
-  </section>
+    <div class="kw"><span>차분한</span><span>촉각적</span><span>내추럴</span><span>미니멀</span><span>웜 뉴트럴</span><span>프리미엄 여백</span></div>
 
-  <!-- ===== PRICING ===== -->
-  <section id="pricing" class="py-28 bg-gray-50/60">
-    <div class="mx-auto max-w-7xl px-6">
-      <div data-reveal class="mx-auto max-w-2xl text-center">
-        <span class="text-sm font-semibold uppercase tracking-widest text-brand-600">가격</span>
-        <h2 class="mt-3 text-4xl md:text-5xl font-extrabold tracking-tight">팀에 맞는 요금제</h2>
-        <p class="mt-4 text-lg text-gray-500">언제든 업그레이드하거나 취소할 수 있어요.</p>
-      </div>
-
-      <div class="mt-16 grid gap-6 md:grid-cols-3 md:items-center">
-        <!-- Starter -->
-        <div data-reveal class="rounded-3xl border border-black/5 bg-white p-8 shadow-sm">
-          <h3 class="text-lg font-bold">Starter</h3>
-          <p class="mt-1 text-sm text-gray-500">개인과 소규모 팀</p>
-          <div class="mt-6 text-4xl font-extrabold">₩0<span class="text-base font-medium text-gray-400">/월</span></div>
-          <a href="#" class="mt-6 block rounded-xl border border-black/10 py-3 text-center font-semibold hover:bg-gray-50 transition">시작하기</a>
-          <ul class="mt-6 space-y-3 text-sm text-gray-600">
-            <li class="flex gap-2"><span class="text-brand-600">✓</span> 프로젝트 3개</li>
-            <li class="flex gap-2"><span class="text-brand-600">✓</span> 팀원 2명</li>
-            <li class="flex gap-2"><span class="text-brand-600">✓</span> 커뮤니티 지원</li>
-          </ul>
-        </div>
-        <!-- Pro (강조) -->
-        <div data-reveal class="relative rounded-3xl bg-ink p-8 text-white shadow-2xl md:scale-105">
-          <span class="absolute -top-3 left-8 rounded-full bg-gradient-to-r from-brand-500 to-fuchsia-500 px-3 py-1 text-xs font-bold">인기</span>
-          <h3 class="text-lg font-bold">Pro</h3>
-          <p class="mt-1 text-sm text-gray-400">성장하는 팀</p>
-          <div class="mt-6 text-4xl font-extrabold">₩18,000<span class="text-base font-medium text-gray-400">/월</span></div>
-          <a href="#" class="mt-6 block rounded-xl bg-white py-3 text-center font-semibold text-ink hover:bg-brand-50 transition">Pro 시작하기</a>
-          <ul class="mt-6 space-y-3 text-sm text-gray-300">
-            <li class="flex gap-2"><span class="text-brand-400">✓</span> 무제한 프로젝트</li>
-            <li class="flex gap-2"><span class="text-brand-400">✓</span> 무제한 팀원</li>
-            <li class="flex gap-2"><span class="text-brand-400">✓</span> 버전 히스토리</li>
-            <li class="flex gap-2"><span class="text-brand-400">✓</span> 우선 지원</li>
-          </ul>
-        </div>
-        <!-- Enterprise -->
-        <div data-reveal class="rounded-3xl border border-black/5 bg-white p-8 shadow-sm">
-          <h3 class="text-lg font-bold">Enterprise</h3>
-          <p class="mt-1 text-sm text-gray-500">대규모 조직</p>
-          <div class="mt-6 text-4xl font-extrabold">문의</div>
-          <a href="#" class="mt-6 block rounded-xl border border-black/10 py-3 text-center font-semibold hover:bg-gray-50 transition">문의하기</a>
-          <ul class="mt-6 space-y-3 text-sm text-gray-600">
-            <li class="flex gap-2"><span class="text-brand-600">✓</span> SSO / SAML</li>
-            <li class="flex gap-2"><span class="text-brand-600">✓</span> 전담 매니저</li>
-            <li class="flex gap-2"><span class="text-brand-600">✓</span> SLA 보장</li>
-          </ul>
-        </div>
-      </div>
+    <div class="human">
+      <p class="lbl" style="margin-top:18px">③ "사람이 만든 티" 체크</p>
+      <ul>
+        <li>세리프+국문 혼합 타이포 위계</li>
+        <li>단색 포인트 절제(그린 1곳)</li>
+        <li>비대칭 히어로 · 넉넉한 여백</li>
+        <li>그레인 질감으로 디지털 티 제거</li>
+        <li>실사 제품컷 적용 (Unsplash 7컷)</li>
+        <li>스크롤 리빌·호버·마퀴 모션</li>
+        <li class="todo">브랜드 전용 촬영컷으로 교체</li>
+        <li class="todo">세리프 웹폰트 로딩 최적화</li>
+      </ul>
     </div>
-  </section>
 
-  <!-- ===== FAQ ===== -->
-  <section id="faq" class="py-28">
-    <div class="mx-auto max-w-3xl px-6">
-      <div data-reveal class="text-center">
-        <span class="text-sm font-semibold uppercase tracking-widest text-brand-600">FAQ</span>
-        <h2 class="mt-3 text-4xl md:text-5xl font-extrabold tracking-tight">자주 묻는 질문</h2>
-      </div>
-      <div class="mt-12 space-y-3" id="faq-list">
-        <div class="faq-item rounded-2xl border border-black/5 bg-white overflow-hidden">
-          <button class="faq-q flex w-full items-center justify-between px-6 py-5 text-left font-semibold">
-            무료 플랜으로 얼마나 쓸 수 있나요?
-            <span class="faq-icon text-2xl text-gray-400 transition-transform">+</span>
-          </button>
-          <div class="faq-a max-h-0 overflow-hidden px-6 text-gray-500 transition-all duration-300">
-            <p class="pb-5">Starter 플랜은 기간 제한 없이 무료입니다. 프로젝트 3개와 팀원 2명까지 사용할 수 있어요.</p>
-          </div>
-        </div>
-        <div class="faq-item rounded-2xl border border-black/5 bg-white overflow-hidden">
-          <button class="faq-q flex w-full items-center justify-between px-6 py-5 text-left font-semibold">
-            언제든 취소할 수 있나요?
-            <span class="faq-icon text-2xl text-gray-400 transition-transform">+</span>
-          </button>
-          <div class="faq-a max-h-0 overflow-hidden px-6 text-gray-500 transition-all duration-300">
-            <p class="pb-5">네, 언제든 취소 가능하며 남은 기간 동안은 계속 이용하실 수 있습니다.</p>
-          </div>
-        </div>
-        <div class="faq-item rounded-2xl border border-black/5 bg-white overflow-hidden">
-          <button class="faq-q flex w-full items-center justify-between px-6 py-5 text-left font-semibold">
-            개발자 핸드오프는 어떤 언어를 지원하나요?
-            <span class="faq-icon text-2xl text-gray-400 transition-transform">+</span>
-          </button>
-          <div class="faq-a max-h-0 overflow-hidden px-6 text-gray-500 transition-all duration-300">
-            <p class="pb-5">CSS, iOS(Swift), Android(Compose), React 등 주요 플랫폼의 코드 스니펫을 자동 생성합니다.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    <p class="lbl" style="margin-top:18px">④ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료</span><a class="btn" href="templates/run-01-bare.html">랜딩 열기 →</a><span class="path">templates/run-01-bare.html</span></div>
+  </div>
+</div>
+</article>
 
-  <!-- ===== CTA ===== -->
-  <section class="px-6 py-24">
-    <div data-reveal class="relative mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-brand-600 via-brand-500 to-fuchsia-500 px-8 py-20 text-center text-white">
-      <div class="pointer-events-none absolute inset-0 opacity-20" style="background-image:radial-gradient(circle at 20% 20%, white 1px, transparent 1px); background-size:24px 24px;"></div>
-      <h2 class="relative text-4xl md:text-5xl font-extrabold tracking-tight">오늘 팀의 워크플로우를<br />바꿔보세요</h2>
-      <p class="relative mx-auto mt-4 max-w-xl text-white/80">신용카드 없이 바로 시작할 수 있습니다.</p>
-      <div class="relative mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-        <a href="#" class="w-full sm:w-auto rounded-xl bg-white px-7 py-3.5 font-semibold text-ink hover:bg-brand-50 transition">무료로 시작하기</a>
-        <a href="#" class="w-full sm:w-auto rounded-xl border border-white/30 px-7 py-3.5 font-semibold text-white hover:bg-white/10 transition">영업팀 문의</a>
-      </div>
-    </div>
-  </section>
+<!-- 다음 실행은 여기에 RUN 02, 03 … 으로 누적 -->
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="border-t border-black/5 py-16">
-    <div class="mx-auto max-w-7xl px-6">
-      <div class="grid gap-10 md:grid-cols-5">
-        <div class="md:col-span-2">
-          <a href="#" class="flex items-center gap-2 font-bold text-lg">
-            <span class="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-white">F</span>
-            Flowly
-          </a>
-          <p class="mt-4 max-w-xs text-sm text-gray-500">팀을 위한 디자인 협업 플랫폼. 아이디어부터 배포까지 하나의 공간에서.</p>
-        </div>
-        <div>
-          <h4 class="text-sm font-bold">제품</h4>
-          <ul class="mt-4 space-y-2 text-sm text-gray-500">
-            <li><a href="#features" class="hover:text-ink transition">기능</a></li>
-            <li><a href="#pricing" class="hover:text-ink transition">가격</a></li>
-            <li><a href="#" class="hover:text-ink transition">플러그인</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="text-sm font-bold">회사</h4>
-          <ul class="mt-4 space-y-2 text-sm text-gray-500">
-            <li><a href="#" class="hover:text-ink transition">소개</a></li>
-            <li><a href="#" class="hover:text-ink transition">채용</a></li>
-            <li><a href="#" class="hover:text-ink transition">블로그</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="text-sm font-bold">지원</h4>
-          <ul class="mt-4 space-y-2 text-sm text-gray-500">
-            <li><a href="#faq" class="hover:text-ink transition">FAQ</a></li>
-            <li><a href="#" class="hover:text-ink transition">문의</a></li>
-            <li><a href="#" class="hover:text-ink transition">상태</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-black/5 pt-8 text-sm text-gray-400">
-        <p>© 2026 Flowly. All rights reserved.</p>
-        <div class="flex gap-6">
-          <a href="#" class="hover:text-ink transition">개인정보처리방침</a>
-          <a href="#" class="hover:text-ink transition">이용약관</a>
-        </div>
-      </div>
-    </div>
-  </footer>
+<div class="sec-h"><h2>파이프라인</h2><span class="c">3 steps</span><span class="line"></span></div>
+<div class="goal" style="margin-top:0">
+<div><div class="n">Step 1</div><div class="t">인스타 #디자인에서 무드 뚜렷한 사진 1장 채택</div></div>
+<div><div class="n">Step 2</div><div class="t">MUDS 토큰(컬러·타이포·라운드) 전부 그 사진으로 재설정</div></div>
+<div><div class="n">Step 3</div><div class="t">고정 홈페이지 규격에 무드 입혀 랜딩 생성</div></div>
+</div>
+<p style="font-size:13px;color:var(--mut);margin-top:14px">상세 명세 → <a href="design-automation-workflow.md">design-automation-workflow.md</a></p>
 
-  <script src="./js/main.js"></script>
-</body>
-</html>
+<footer>image-driven landing · build log · 계속 누적됩니다</footer>
+</div>
+
+</body></html>

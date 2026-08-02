@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOON STUDIO — Still Life No.03 (룩북 템플릿)</title>
+<style>
+/* ── 무드: 본 화이트 + 잉크, 극미니멀 산세리프 · 아카이타입: 룩북/갤러리 · 구조 P5 Showcase ── */
+:root{
+--font:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+--bg:#efece5;--ink:#181613;--mut:#9a9488;--line:#dcd7cc;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.6}
+a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
+.rise{opacity:0;transform:translateY(22px);transition:.9s cubic-bezier(.2,.7,.2,1)}.rise.vis{opacity:1;transform:none}
+.wrap{max-width:1280px;margin:0 auto;padding:0 40px}
+.thin{font-weight:300;letter-spacing:.02em}
+/* nav */
+.nav{display:flex;align-items:center;gap:32px;height:88px;position:relative;z-index:3}
+.logo{font-size:19px;font-weight:600;letter-spacing:4px}
+.nav .sp{flex:1}
+.nav a.m{font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--mut)}.nav a.m:hover{color:var(--ink)}
+/* hero collage */
+.hero{position:relative;padding:20px 0 80px;min-height:86vh}
+.hero .title{position:relative;z-index:2;pointer-events:none}
+.hero .ey{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--mut);margin-bottom:18px}
+.hero h1{font-size:clamp(52px,10vw,140px);font-weight:300;letter-spacing:-3px;line-height:.92;margin:0}
+.hero h1 b{font-weight:600}
+.hero .sub{margin-top:22px;max-width:360px;font-size:15px;color:#5b564d;line-height:1.7}
+.hero .im{position:absolute;overflow:hidden;box-shadow:0 30px 60px rgba(30,25,15,.14)}
+.hero .im img{width:100%;height:100%;object-fit:cover}
+.hero .im1{width:290px;height:380px;right:5%;top:0;z-index:1}
+.hero .im2{width:210px;height:270px;right:24%;bottom:40px;z-index:2}
+.hero .im3{width:150px;height:190px;left:2%;bottom:70px;z-index:2}
+.hero .num{position:absolute;right:40px;bottom:20px;font-size:13px;letter-spacing:.2em;color:var(--mut);z-index:2}
+/* gallery masonry */
+.gal{padding:40px 0 60px}
+.gal .cols{columns:3;column-gap:20px}
+.gal figure{margin:0 0 20px;break-inside:avoid;position:relative}
+.gal .fr{overflow:hidden}
+.gal img{width:100%;display:block;transition:.7s cubic-bezier(.2,.7,.2,1)}
+.gal figure:hover img{transform:scale(1.04)}
+.gal figcaption{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);letter-spacing:.05em;padding:12px 2px 0}
+.gal figcaption b{color:var(--ink);font-weight:500}
+/* featured split */
+.feat{padding:90px 0}
+.feat .in{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center}
+.feat .in>*{min-width:0}
+.feat .fr{overflow:hidden;height:600px}
+.feat .fr img{width:100%;height:100%;object-fit:cover}
+.feat .n{font-size:12px;letter-spacing:.25em;text-transform:uppercase;color:var(--mut)}
+.feat h2{font-size:44px;font-weight:300;letter-spacing:-1.5px;line-height:1.15;margin:16px 0 22px}
+.feat h2 b{font-weight:600}
+.feat p{font-size:15.5px;color:#5b564d;line-height:1.8;max-width:400px;margin:0 0 28px}
+.feat .link{font-size:13px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--ink);padding-bottom:3px}
+/* index */
+.index{border-top:1px solid var(--line);padding:70px 0}
+.index h3{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut);margin:0 0 26px}
+.irow{display:grid;grid-template-columns:60px 1fr 200px 120px;align-items:center;padding:20px 0;border-top:1px solid var(--line);font-size:15px;transition:.2s;cursor:pointer}
+.irow:hover{padding-left:12px;color:#000}
+.irow .no{color:var(--mut);font-size:13px}
+.irow .nm{font-weight:500}
+.irow .ma{color:var(--mut);font-size:13px}
+.irow .pr{text-align:right;font-weight:500}
+/* contact */
+.contact{padding:100px 0;text-align:center}
+.contact .ey{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--mut)}
+.contact h2{font-size:clamp(40px,7vw,88px);font-weight:300;letter-spacing:-2px;margin:18px 0 30px;line-height:1}
+.contact a.big{font-size:18px;border-bottom:1px solid var(--ink);padding-bottom:4px}
+footer{border-top:1px solid var(--line);padding:36px 0;font-size:12px;color:var(--mut);letter-spacing:.05em}
+footer .in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media(max-width:820px){.gal .cols{columns:2}.feat .in{grid-template-columns:1fr;gap:32px}.feat .fr{height:420px}.hero .im{display:none}.irow{grid-template-columns:40px 1fr 90px}.irow .ma{display:none}}
+</style></head><body>
+
+<div class="wrap"><div class="nav">
+<span class="logo">NOON</span><span class="sp"></span>
+<a class="m" href="#gal">Collection</a><a class="m" href="#index">Index</a><a class="m" href="#contact">Contact</a>
+</div></div>
+
+<section class="hero"><div class="wrap">
+<div class="title rise">
+<div class="ey">Still Life · No.03</div>
+<h1 class="thin">Quiet<br><b>Objects</b></h1>
+<p class="sub">쓰임을 덜어낸 오브제들. 빛과 그림자만 남긴 2026 봄 컬렉션.</p>
+</div>
+<div class="im im1 rise"><img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=700&q=80&auto=format&fit=crop" onerror="this.parentElement.style.background='#d6cfc0'"></div>
+<div class="im im2 rise"><img src="https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=600&q=80&auto=format&fit=crop" onerror="this.parentElement.style.background='#cec7b6'"></div>
+<div class="im im3 rise"><img src="https://images.unsplash.com/photo-1503236823255-94609f598e71?w=500&q=80&auto=format&fit=crop" onerror="this.parentElement.style.background='#e0d9ca'"></div>
+<div class="num">01 / 08</div>
+</div></section>
+
+<section class="gal" id="gal"><div class="wrap"><div class="cols">
+<figure class="rise"><div class="fr"><img src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=700&q=80&auto=format&fit=crop" onerror="this.parentElement.style.background='#d6cfc0';this.parentElement.style.height='300px'"></div><figcaption><b>Look 01 — Bone</b><span>Ceramic</span></figcaption></figure>
+<figure class="rise"><div class="fr"><img src="https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=700&q=80&auto=format&fit=crop" onerror="this.parentElement.style.background='#cec7b6';this.parentElement.style.height='380px'"></div><figcaption><b>Look 02 — Hand</b><span>Study</span></figcaption></figure>
+<figure class="rise"><div class="fr"><img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=700&q=80&auto=format&fit=crop" onerror="this.parentElement.style.background='#e0d9ca';this.parentElement.style.height='260px'"></div><figcaption><b>Look 03 — Amber</b><span>Glass</span></figcaption></figure>
+<figure class="rise"><div class="fr"><img src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=700&q=80&auto=format&fit=crop" onerror="this.parentElement.style.background='#d6cfc0';this.parentElement.style.height='340px'"></div><figcaption><b>Look 04 — Earth</b><span>Outdoor</span></figcaption></figure>
+<figure class="rise"><div class="fr"><img src="https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=700&q=80&auto=format&fit=crop" onerror="this.parentElement.style.background='#cec7b6';this.parentElement.style.height='300px'"></div><figcaption><b>Look 05 — Seed</b><span>Ritual</span></figcaption></figure>
+<figure class="rise"><div class="fr"><img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=700&q=80&auto=format&fit=crop" onerror="this.parentElement.style.background='#e0d9ca';this.parentElement.style.height='380px'"></div><figcaption><b>Look 06 — Tube</b><span>Minimal</span></figcaption></figure>
+</div></div></section>
+
+<section class="feat"><div class="wrap"><div class="in">
+<div class="fr rise"><img src="https://images.unsplash.com/photo-1503236823255-94609f598e71?w=1000&q=80&auto=format&fit=crop" onerror="this.parentElement.style.background='#d6cfc0'"></div>
+<div class="rise">
+<div class="n">Featured — Look 03</div>
+<h2 class="thin">빛이 오래<br>머무는 <b>표면</b></h2>
+<p>유리와 세라믹만으로 구성한 오브제. 아침 8시의 그림자를 기준으로 촬영했습니다.</p>
+<a class="link" href="#">Look 상세 보기</a>
+</div>
+</div></div></section>
+
+<section class="index" id="index"><div class="wrap">
+<h3>Collection Index</h3>
+<div class="irow rise"><span class="no">01</span><span class="nm">Bone Vessel</span><span class="ma">Ceramic · Matte</span><span class="pr">₩ 68,000</span></div>
+<div class="irow rise"><span class="no">02</span><span class="nm">Hand Study</span><span class="ma">Print · A2</span><span class="pr">₩ 42,000</span></div>
+<div class="irow rise"><span class="no">03</span><span class="nm">Amber Glass</span><span class="ma">Glass · Hand-blown</span><span class="pr">₩ 96,000</span></div>
+<div class="irow rise"><span class="no">04</span><span class="nm">Earth Bottle</span><span class="ma">Stoneware</span><span class="pr">₩ 74,000</span></div>
+</div></section>
+
+<section class="contact" id="contact"><div class="wrap">
+<div class="ey rise">Inquiry</div>
+<h2 class="thin rise">Let's make<br>something <b>quiet.</b></h2>
+<a class="big rise" href="#">studio@noon.kr</a>
+</div></section>
+
+<footer><div class="wrap in"><span>© 2026 NOON STUDIO · 발명된 룩북</span><span>MUDS · 본 화이트/미니멀 무드 · 구조 P5 Showcase · RUN 07</span></div></footer>
+
+<script>
+if('scrollRestoration' in history)history.scrollRestoration='manual';window.scrollTo(0,0);
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}}),{threshold:.08});
+document.querySelectorAll('.rise').forEach((el,i)=>{el.style.transitionDelay=(i%3*70)+'ms';io.observe(el)});
+addEventListener('load',()=>requestAnimationFrame(()=>document.querySelectorAll('.rise').forEach(el=>{if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis')})));
+</script>
+</body></html>

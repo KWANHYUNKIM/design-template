@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flowly — 팀을 위한 디자인 협업 플랫폼</title>
+  <meta name="description" content="아이디어부터 배포까지, 한 공간에서. Flowly로 팀의 디자인 워크플로우를 하나로 연결하세요." />
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', 'Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0d0d12',
+            brand: {
+              50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe',
+              400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca',
+            },
+          },
+          keyframes: {
+            float: {
+              '0%,100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-14px)' },
+            },
+            'fade-up': {
+              '0%': { opacity: '0', transform: 'translateY(24px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+          },
+          animation: {
+            float: 'float 6s ease-in-out infinite',
+            'fade-up': 'fade-up 0.7s ease forwards',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Pretendard 폰트 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+
+<body class="bg-white text-ink antialiased selection:bg-brand-200/60">
+
+  <!-- ===== NAVBAR ===== -->
+  <header id="navbar" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+    <nav class="mx-auto max-w-7xl px-6">
+      <div class="mt-4 flex items-center justify-between rounded-2xl border border-black/5 bg-white/70 px-5 py-3 backdrop-blur-xl shadow-sm">
+        <a href="#" class="flex items-center gap-2 font-bold text-lg">
+          <span class="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-white">F</span>
+          Flowly
+        </a>
+        <ul class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+          <li><a href="#features" class="hover:text-ink transition">기능</a></li>
+          <li><a href="#showcase" class="hover:text-ink transition">쇼케이스</a></li>
+          <li><a href="#pricing" class="hover:text-ink transition">가격</a></li>
+          <li><a href="#faq" class="hover:text-ink transition">FAQ</a></li>
+        </ul>
+        <div class="flex items-center gap-3">
+          <a href="#" class="hidden sm:inline text-sm font-medium text-gray-600 hover:text-ink transition">로그인</a>
+          <a href="#" class="rounded-xl bg-ink px-4 py-2 text-sm font-semibold text-white hover:bg-brand-600 transition">시작하기</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="relative overflow-hidden pt-40 pb-24">
+    <!-- 배경 그라데이션 blob -->
+    <div class="pointer-events-none absolute inset-0 -z-10">
+      <div class="absolute -top-32 left-1/2 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-brand-400/40 via-fuchsia-300/30 to-sky-300/30 blur-3xl"></div>
+    </div>
+
+    <div class="mx-auto max-w-7xl px-6 text-center">
+      <div data-reveal class="inline-flex items-center gap-2 rounded-full border border-black/5 bg-white px-4 py-1.5 text-sm font-medium text-gray-600 shadow-sm">
+        <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+        새로운 실시간 협업 캔버스 출시
+      </div>
+
+      <h1 data-reveal class="mx-auto mt-6 max-w-4xl text-5xl md:text-7xl font-extrabold leading-[1.05] tracking-tight">
+        아이디어부터 배포까지,<br />
+        <span class="bg-gradient-to-r from-brand-600 via-fuchsia-500 to-sky-500 bg-clip-text text-transparent">하나의 공간에서.</span>
+      </h1>
+
+      <p data-reveal class="mx-auto mt-6 max-w-2xl text-lg text-gray-500">
+        Flowly는 팀의 디자인, 프로토타이핑, 핸드오프를 하나로 연결합니다.
+        더 이상 흩어진 도구 사이를 오갈 필요가 없어요.
+      </p>
+
+      <div data-reveal class="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="#" class="w-full sm:w-auto rounded-xl bg-ink px-7 py-3.5 font-semibold text-white shadow-lg shadow-ink/20 hover:bg-brand-600 transition">무료로 시작하기</a>
+        <a href="#showcase" class="w-full sm:w-auto rounded-xl border border-black/10 bg-white px-7 py-3.5 font-semibold text-ink hover:bg-gray-50 transition">데모 보기 →</a>
+      </div>
+
+      <!-- 히어로 목업 -->
+      <div data-reveal class="relative mx-auto mt-16 max-w-5xl">
+        <div class="animate-float rounded-2xl border border-black/5 bg-white p-3 shadow-2xl shadow-brand-500/10">
+          <div class="overflow-hidden rounded-xl bg-gradient-to-br from-gray-50 to-gray-100">
+            <!-- 목업 상단바 -->
+            <div class="flex items-center gap-1.5 border-b border-black/5 bg-white/60 px-4 py-3">
+              <span class="h-3 w-3 rounded-full bg-red-400"></span>
+              <span class="h-3 w-3 rounded-full bg-yellow-400"></span>
+              <span class="h-3 w-3 rounded-full bg-green-400"></span>
+            </div>
+            <!-- 목업 본문 -->
+            <div class="grid grid-cols-12 gap-4 p-6">
+              <div class="col-span-3 space-y-3">
+                <div class="h-8 rounded-lg bg-brand-100"></div>
+                <div class="h-24 rounded-lg bg-white shadow-sm"></div>
+                <div class="h-24 rounded-lg bg-white shadow-sm"></div>
+              </div>
+              <div class="col-span-6 rounded-xl bg-white shadow-sm p-4">
+                <div class="h-40 rounded-lg bg-gradient-to-tr from-brand-400/30 to-fuchsia-300/30"></div>
+                <div class="mt-4 flex gap-3">
+                  <div class="h-16 flex-1 rounded-lg bg-gray-100"></div>
+                  <div class="h-16 flex-1 rounded-lg bg-gray-100"></div>
+                </div>
+              </div>
+              <div class="col-span-3 space-y-3">
+                <div class="h-20 rounded-lg bg-white shadow-sm"></div>
+                <div class="h-32 rounded-lg bg-white shadow-sm"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 떠다니는 커서 -->
+        <div class="absolute -left-4 top-1/3 hidden md:flex items-center gap-1.5 rounded-full bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white shadow-lg">지수</div>
+        <div class="absolute -right-2 top-2/3 hidden md:flex items-center gap-1.5 rounded-full bg-fuchsia-500 px-3 py-1.5 text-xs font-semibold text-white shadow-lg">민준</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 로고 스트립 ===== -->
+  <section class="border-y border-black/5 bg-gray-50/50 py-10">
+    <div class="mx-auto max-w-7xl px-6">
+      <p class="text-center text-sm font-medium text-gray-400">전 세계 12,000+ 팀이 Flowly를 사용합니다</p>
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-x-12 gap-y-6 opacity-60">
+        <span class="text-xl font-bold text-gray-500">Nebula</span>
+        <span class="text-xl font-bold text-gray-500">Orbit</span>
+        <span class="text-xl font-bold text-gray-500">Kite</span>
+        <span class="text-xl font-bold text-gray-500">Vertex</span>
+        <span class="text-xl font-bold text-gray-500">Lumen</span>
+        <span class="text-xl font-bold text-gray-500">Pulse</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section id="features" class="py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div data-reveal class="mx-auto max-w-2xl text-center">
+        <span class="text-sm font-semibold uppercase tracking-widest text-brand-600">기능</span>
+        <h2 class="mt-3 text-4xl md:text-5xl font-extrabold tracking-tight">팀워크를 위한 모든 것</h2>
+        <p class="mt-4 text-lg text-gray-500">디자인부터 개발 핸드오프까지, 필요한 도구를 한 곳에 담았습니다.</p>
+      </div>
+
+      <div class="mt-16 grid gap-6 md:grid-cols-3">
+        <!-- card -->
+        <div data-reveal class="group rounded-3xl border border-black/5 bg-white p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300">
+          <div class="grid h-12 w-12 place-items-center rounded-2xl bg-brand-100 text-brand-600 text-2xl">⚡</div>
+          <h3 class="mt-5 text-xl font-bold">실시간 협업</h3>
+          <p class="mt-2 text-gray-500">여러 명이 동시에 편집하고, 커서와 코멘트로 즉시 소통하세요.</p>
+        </div>
+        <div data-reveal class="group rounded-3xl border border-black/5 bg-white p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300">
+          <div class="grid h-12 w-12 place-items-center rounded-2xl bg-fuchsia-100 text-fuchsia-600 text-2xl">🎨</div>
+          <h3 class="mt-5 text-xl font-bold">디자인 시스템</h3>
+          <p class="mt-2 text-gray-500">컴포넌트와 토큰을 팀 전체가 공유하고 일관되게 유지합니다.</p>
+        </div>
+        <div data-reveal class="group rounded-3xl border border-black/5 bg-white p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300">
+          <div class="grid h-12 w-12 place-items-center rounded-2xl bg-sky-100 text-sky-600 text-2xl">🚀</div>
+          <h3 class="mt-5 text-xl font-bold">개발자 핸드오프</h3>
+          <p class="mt-2 text-gray-500">CSS·토큰·에셋을 자동 생성해 개발까지 매끄럽게 이어집니다.</p>
+        </div>
+        <div data-reveal class="group rounded-3xl border border-black/5 bg-white p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300">
+          <div class="grid h-12 w-12 place-items-center rounded-2xl bg-amber-100 text-amber-600 text-2xl">🔗</div>
+          <h3 class="mt-5 text-xl font-bold">프로토타이핑</h3>
+          <p class="mt-2 text-gray-500">인터랙션을 연결해 실제 앱처럼 동작하는 시안을 만드세요.</p>
+        </div>
+        <div data-reveal class="group rounded-3xl border border-black/5 bg-white p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300">
+          <div class="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-100 text-emerald-600 text-2xl">🔒</div>
+          <h3 class="mt-5 text-xl font-bold">버전 관리</h3>
+          <p class="mt-2 text-gray-500">모든 변경 이력을 저장하고 언제든 이전 버전으로 되돌립니다.</p>
+        </div>
+        <div data-reveal class="group rounded-3xl border border-black/5 bg-white p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300">
+          <div class="grid h-12 w-12 place-items-center rounded-2xl bg-rose-100 text-rose-600 text-2xl">🧩</div>
+          <h3 class="mt-5 text-xl font-bold">플러그인</h3>
+          <p class="mt-2 text-gray-500">수백 개의 플러그인으로 워크플로우를 자유롭게 확장하세요.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SHOWCASE (좌우 배치) ===== -->
+  <section id="showcase" class="py-28 bg-gray-50/60">
+    <div class="mx-auto max-w-7xl px-6 space-y-28">
+      <!-- row 1 -->
+      <div class="grid items-center gap-12 md:grid-cols-2">
+        <div data-reveal>
+          <span class="text-sm font-semibold uppercase tracking-widest text-brand-600">캔버스</span>
+          <h2 class="mt-3 text-4xl font-extrabold tracking-tight">무한한 캔버스 위에서<br />자유롭게 생각하세요</h2>
+          <p class="mt-4 text-lg text-gray-500">제약 없는 작업 공간에서 아이디어를 펼치고, 팀과 함께 구조를 잡아가세요. 모든 변경은 실시간으로 동기화됩니다.</p>
+          <ul class="mt-6 space-y-3 text-gray-600">
+            <li class="flex gap-3"><span class="text-brand-600">✓</span> 60fps 부드러운 렌더링</li>
+            <li class="flex gap-3"><span class="text-brand-600">✓</span> 오프라인 편집 지원</li>
+            <li class="flex gap-3"><span class="text-brand-600">✓</span> 무제한 프로젝트</li>
+          </ul>
+        </div>
+        <div data-reveal class="rounded-3xl border border-black/5 bg-white p-4 shadow-xl">
+          <div class="aspect-[4/3] rounded-2xl bg-gradient-to-br from-brand-400/20 via-fuchsia-300/20 to-sky-300/20 grid place-items-center">
+            <div class="grid grid-cols-2 gap-3 p-6 w-full">
+              <div class="h-24 rounded-xl bg-white shadow-sm"></div>
+              <div class="h-24 rounded-xl bg-white shadow-sm"></div>
+              <div class="h-24 rounded-xl bg-white shadow-sm"></div>
+              <div class="h-24 rounded-xl bg-white shadow-sm"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- row 2 (역방향) -->
+      <div class="grid items-center gap-12 md:grid-cols-2">
+        <div data-reveal class="order-2 md:order-1 rounded-3xl border border-black/5 bg-white p-4 shadow-xl">
+          <div class="aspect-[4/3] rounded-2xl bg-gradient-to-tr from-sky-300/20 to-brand-400/20 p-6 space-y-3">
+            <div class="h-6 w-1/2 rounded bg-white shadow-sm"></div>
+            <div class="h-32 rounded-xl bg-white shadow-sm"></div>
+            <div class="flex gap-3">
+              <div class="h-10 flex-1 rounded-lg bg-brand-100"></div>
+              <div class="h-10 flex-1 rounded-lg bg-white shadow-sm"></div>
+            </div>
+          </div>
+        </div>
+        <div data-reveal class="order-1 md:order-2">
+          <span class="text-sm font-semibold uppercase tracking-widest text-fuchsia-600">핸드오프</span>
+          <h2 class="mt-3 text-4xl font-extrabold tracking-tight">디자인이 곧<br />개발 명세가 됩니다</h2>
+          <p class="mt-4 text-lg text-gray-500">개발자는 클릭 한 번으로 정확한 수치와 코드를 확인합니다. 커뮤니케이션 비용을 줄이고 구현 속도를 높이세요.</p>
+          <a href="#" class="mt-6 inline-flex items-center gap-2 font-semibold text-fuchsia-600 hover:gap-3 transition-all">자세히 보기 →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STATS ===== -->
+  <section class="py-24">
+    <div class="mx-auto max-w-7xl px-6">
+      <div data-reveal class="grid gap-8 rounded-3xl bg-ink px-8 py-14 text-center text-white sm:grid-cols-3">
+        <div>
+          <div class="text-5xl font-extrabold bg-gradient-to-r from-brand-400 to-fuchsia-400 bg-clip-text text-transparent">12K+</div>
+          <p class="mt-2 text-gray-400">활성 팀</p>
+        </div>
+        <div>
+          <div class="text-5xl font-extrabold bg-gradient-to-r from-brand-400 to-fuchsia-400 bg-clip-text text-transparent">99.9%</div>
+          <p class="mt-2 text-gray-400">가동률</p>
+        </div>
+        <div>
+          <div class="text-5xl font-extrabold bg-gradient-to-r from-brand-400 to-fuchsia-400 bg-clip-text text-transparent">4.9/5</div>
+          <p class="mt-2 text-gray-400">사용자 평점</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIAL ===== -->
+  <section class="py-24">
+    <div class="mx-auto max-w-3xl px-6 text-center">
+      <div data-reveal>
+        <p class="text-2xl md:text-3xl font-semibold leading-relaxed">
+          “Flowly로 바꾼 뒤 디자인 리뷰 시간이 <span class="text-brand-600">절반</span>으로 줄었어요.
+          팀 전체가 같은 화면을 보며 일한다는 게 이렇게 큰 차이일 줄 몰랐습니다.”
+        </p>
+        <div class="mt-8 flex items-center justify-center gap-3">
+          <div class="h-12 w-12 rounded-full bg-gradient-to-br from-brand-400 to-fuchsia-400"></div>
+          <div class="text-left">
+            <div class="font-bold">김서연</div>
+            <div class="text-sm text-gray-500">Nebula · 프로덕트 디자인 리드</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRICING ===== -->
+  <section id="pricing" class="py-28 bg-gray-50/60">
+    <div class="mx-auto max-w-7xl px-6">
+      <div data-reveal class="mx-auto max-w-2xl text-center">
+        <span class="text-sm font-semibold uppercase tracking-widest text-brand-600">가격</span>
+        <h2 class="mt-3 text-4xl md:text-5xl font-extrabold tracking-tight">팀에 맞는 요금제</h2>
+        <p class="mt-4 text-lg text-gray-500">언제든 업그레이드하거나 취소할 수 있어요.</p>
+      </div>
+
+      <div class="mt-16 grid gap-6 md:grid-cols-3 md:items-center">
+        <!-- Starter -->
+        <div data-reveal class="rounded-3xl border border-black/5 bg-white p-8 shadow-sm">
+          <h3 class="text-lg font-bold">Starter</h3>
+          <p class="mt-1 text-sm text-gray-500">개인과 소규모 팀</p>
+          <div class="mt-6 text-4xl font-extrabold">₩0<span class="text-base font-medium text-gray-400">/월</span></div>
+          <a href="#" class="mt-6 block rounded-xl border border-black/10 py-3 text-center font-semibold hover:bg-gray-50 transition">시작하기</a>
+          <ul class="mt-6 space-y-3 text-sm text-gray-600">
+            <li class="flex gap-2"><span class="text-brand-600">✓</span> 프로젝트 3개</li>
+            <li class="flex gap-2"><span class="text-brand-600">✓</span> 팀원 2명</li>
+            <li class="flex gap-2"><span class="text-brand-600">✓</span> 커뮤니티 지원</li>
+          </ul>
+        </div>
+        <!-- Pro (강조) -->
+        <div data-reveal class="relative rounded-3xl bg-ink p-8 text-white shadow-2xl md:scale-105">
+          <span class="absolute -top-3 left-8 rounded-full bg-gradient-to-r from-brand-500 to-fuchsia-500 px-3 py-1 text-xs font-bold">인기</span>
+          <h3 class="text-lg font-bold">Pro</h3>
+          <p class="mt-1 text-sm text-gray-400">성장하는 팀</p>
+          <div class="mt-6 text-4xl font-extrabold">₩18,000<span class="text-base font-medium text-gray-400">/월</span></div>
+          <a href="#" class="mt-6 block rounded-xl bg-white py-3 text-center font-semibold text-ink hover:bg-brand-50 transition">Pro 시작하기</a>
+          <ul class="mt-6 space-y-3 text-sm text-gray-300">
+            <li class="flex gap-2"><span class="text-brand-400">✓</span> 무제한 프로젝트</li>
+            <li class="flex gap-2"><span class="text-brand-400">✓</span> 무제한 팀원</li>
+            <li class="flex gap-2"><span class="text-brand-400">✓</span> 버전 히스토리</li>
+            <li class="flex gap-2"><span class="text-brand-400">✓</span> 우선 지원</li>
+          </ul>
+        </div>
+        <!-- Enterprise -->
+        <div data-reveal class="rounded-3xl border border-black/5 bg-white p-8 shadow-sm">
+          <h3 class="text-lg font-bold">Enterprise</h3>
+          <p class="mt-1 text-sm text-gray-500">대규모 조직</p>
+          <div class="mt-6 text-4xl font-extrabold">문의</div>
+          <a href="#" class="mt-6 block rounded-xl border border-black/10 py-3 text-center font-semibold hover:bg-gray-50 transition">문의하기</a>
+          <ul class="mt-6 space-y-3 text-sm text-gray-600">
+            <li class="flex gap-2"><span class="text-brand-600">✓</span> SSO / SAML</li>
+            <li class="flex gap-2"><span class="text-brand-600">✓</span> 전담 매니저</li>
+            <li class="flex gap-2"><span class="text-brand-600">✓</span> SLA 보장</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq" class="py-28">
+    <div class="mx-auto max-w-3xl px-6">
+      <div data-reveal class="text-center">
+        <span class="text-sm font-semibold uppercase tracking-widest text-brand-600">FAQ</span>
+        <h2 class="mt-3 text-4xl md:text-5xl font-extrabold tracking-tight">자주 묻는 질문</h2>
+      </div>
+      <div class="mt-12 space-y-3" id="faq-list">
+        <div class="faq-item rounded-2xl border border-black/5 bg-white overflow-hidden">
+          <button class="faq-q flex w-full items-center justify-between px-6 py-5 text-left font-semibold">
+            무료 플랜으로 얼마나 쓸 수 있나요?
+            <span class="faq-icon text-2xl text-gray-400 transition-transform">+</span>
+          </button>
+          <div class="faq-a max-h-0 overflow-hidden px-6 text-gray-500 transition-all duration-300">
+            <p class="pb-5">Starter 플랜은 기간 제한 없이 무료입니다. 프로젝트 3개와 팀원 2명까지 사용할 수 있어요.</p>
+          </div>
+        </div>
+        <div class="faq-item rounded-2xl border border-black/5 bg-white overflow-hidden">
+          <button class="faq-q flex w-full items-center justify-between px-6 py-5 text-left font-semibold">
+            언제든 취소할 수 있나요?
+            <span class="faq-icon text-2xl text-gray-400 transition-transform">+</span>
+          </button>
+          <div class="faq-a max-h-0 overflow-hidden px-6 text-gray-500 transition-all duration-300">
+            <p class="pb-5">네, 언제든 취소 가능하며 남은 기간 동안은 계속 이용하실 수 있습니다.</p>
+          </div>
+        </div>
+        <div class="faq-item rounded-2xl border border-black/5 bg-white overflow-hidden">
+          <button class="faq-q flex w-full items-center justify-between px-6 py-5 text-left font-semibold">
+            개발자 핸드오프는 어떤 언어를 지원하나요?
+            <span class="faq-icon text-2xl text-gray-400 transition-transform">+</span>
+          </button>
+          <div class="faq-a max-h-0 overflow-hidden px-6 text-gray-500 transition-all duration-300">
+            <p class="pb-5">CSS, iOS(Swift), Android(Compose), React 등 주요 플랫폼의 코드 스니펫을 자동 생성합니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="px-6 py-24">
+    <div data-reveal class="relative mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-brand-600 via-brand-500 to-fuchsia-500 px-8 py-20 text-center text-white">
+      <div class="pointer-events-none absolute inset-0 opacity-20" style="background-image:radial-gradient(circle at 20% 20%, white 1px, transparent 1px); background-size:24px 24px;"></div>
+      <h2 class="relative text-4xl md:text-5xl font-extrabold tracking-tight">오늘 팀의 워크플로우를<br />바꿔보세요</h2>
+      <p class="relative mx-auto mt-4 max-w-xl text-white/80">신용카드 없이 바로 시작할 수 있습니다.</p>
+      <div class="relative mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="#" class="w-full sm:w-auto rounded-xl bg-white px-7 py-3.5 font-semibold text-ink hover:bg-brand-50 transition">무료로 시작하기</a>
+        <a href="#" class="w-full sm:w-auto rounded-xl border border-white/30 px-7 py-3.5 font-semibold text-white hover:bg-white/10 transition">영업팀 문의</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="border-t border-black/5 py-16">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="grid gap-10 md:grid-cols-5">
+        <div class="md:col-span-2">
+          <a href="#" class="flex items-center gap-2 font-bold text-lg">
+            <span class="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-white">F</span>
+            Flowly
+          </a>
+          <p class="mt-4 max-w-xs text-sm text-gray-500">팀을 위한 디자인 협업 플랫폼. 아이디어부터 배포까지 하나의 공간에서.</p>
+        </div>
+        <div>
+          <h4 class="text-sm font-bold">제품</h4>
+          <ul class="mt-4 space-y-2 text-sm text-gray-500">
+            <li><a href="#features" class="hover:text-ink transition">기능</a></li>
+            <li><a href="#pricing" class="hover:text-ink transition">가격</a></li>
+            <li><a href="#" class="hover:text-ink transition">플러그인</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-sm font-bold">회사</h4>
+          <ul class="mt-4 space-y-2 text-sm text-gray-500">
+            <li><a href="#" class="hover:text-ink transition">소개</a></li>
+            <li><a href="#" class="hover:text-ink transition">채용</a></li>
+            <li><a href="#" class="hover:text-ink transition">블로그</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-sm font-bold">지원</h4>
+          <ul class="mt-4 space-y-2 text-sm text-gray-500">
+            <li><a href="#faq" class="hover:text-ink transition">FAQ</a></li>
+            <li><a href="#" class="hover:text-ink transition">문의</a></li>
+            <li><a href="#" class="hover:text-ink transition">상태</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-black/5 pt-8 text-sm text-gray-400">
+        <p>© 2026 Flowly. All rights reserved.</p>
+        <div class="flex gap-6">
+          <a href="#" class="hover:text-ink transition">개인정보처리방침</a>
+          <a href="#" class="hover:text-ink transition">이용약관</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./js/main.js"></script>
+</body>
+</html>

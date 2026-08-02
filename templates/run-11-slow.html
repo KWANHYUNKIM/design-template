@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SLOW — 한 잔의 여정 (스크롤리텔링 템플릿)</title>
+<style>
+/* ── 무드: 에스프레소 다크 + 크림 + 테라코타 · 아카이타입: 스토리/저널 · 구조 P4 Scrollytelling ── */
+:root{
+--font:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+--serif:'Georgia','Nanum Myeongjo',serif;
+--esp:#231710;--paper:#efe6d8;--cream:#f7f1e6;--clay:#c56a3f;--mut:#9a8b78;--ink:#2a1c12;--line:#d8cbb6;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.6}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+.rise{opacity:0;transform:translateY(22px);transition:.9s cubic-bezier(.2,.7,.2,1)}.rise.vis{opacity:1;transform:none}
+.grain{position:absolute;inset:0;pointer-events:none;opacity:.4;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;height:70px;padding:0 40px;color:var(--cream);mix-blend-mode:difference}
+.nav .lg{font-size:20px;font-weight:900;letter-spacing:3px}.nav .sp{flex:1}
+.nav a.m{font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-left:24px}
+/* hero */
+.hero{min-height:100vh;background:var(--esp);color:var(--cream);display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.hero .bg{position:absolute;inset:0;background:radial-gradient(70% 60% at 75% 30%,#3a2416,transparent 60%),radial-gradient(50% 50% at 10% 90%,#4a2d18,transparent 60%)}
+.hero .in{position:relative;z-index:2}
+.hero .ey{font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--clay);margin-bottom:20px}
+.hero h1{font-family:var(--serif);font-size:clamp(48px,9vw,120px);line-height:.96;letter-spacing:-2px;margin:0;font-weight:700}
+.hero h1 em{font-style:italic;color:var(--clay)}
+.hero .sc{position:absolute;bottom:30px;left:40px;font-size:12px;letter-spacing:.2em;color:var(--mut);z-index:2}
+/* scrollytelling: sticky visual + steps */
+.story{position:relative;background:var(--esp);color:var(--cream)}
+.story .track{display:grid;grid-template-columns:1fr 1fr}
+.story .sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.story .disc{width:64vh;height:64vh;max-width:520px;max-height:520px;border-radius:50%;position:relative;transition:transform .6s,background .6s;background:radial-gradient(circle at 40% 35%,#6b4327,#2a1a10 70%)}
+.story .disc .grain{border-radius:50%}
+.story .disc b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);font-size:120px;color:rgba(255,240,220,.14);font-weight:700}
+.story .steps{padding:0}
+.step{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 8% 0 10%;border-left:1px solid rgba(255,255,255,.08)}
+.step .n{font-size:13px;font-weight:800;color:var(--clay);letter-spacing:.15em}
+.step h2{font-family:var(--serif);font-size:clamp(30px,4vw,52px);letter-spacing:-1px;margin:16px 0 18px;line-height:1.1}
+.step p{font-size:16.5px;line-height:1.85;color:#cbb9a3;max-width:420px}
+/* stat band */
+.stat{background:var(--clay);color:#2a1408;padding:90px 0}
+.stat .g{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;text-align:center}
+.stat .v{font-family:var(--serif);font-size:60px;font-weight:700;line-height:1}
+.stat .l{font-size:13px;margin-top:10px;font-weight:700;letter-spacing:.04em;opacity:.8}
+/* quote */
+.q{padding:120px 0;text-align:center}
+.q p{font-family:var(--serif);font-size:clamp(26px,3.6vw,42px);font-style:italic;line-height:1.4;max-width:840px;margin:0 auto;color:var(--ink)}
+.q .w{margin-top:26px;font-size:13px;color:var(--mut);letter-spacing:.05em}
+/* cta */
+.cta{background:var(--esp);color:var(--cream);text-align:center;padding:120px 0}
+.cta h2{font-family:var(--serif);font-size:clamp(40px,7vw,90px);letter-spacing:-2px;margin:0 0 30px;line-height:1}
+.cta h2 em{font-style:italic;color:var(--clay)}
+.cta a{display:inline-block;background:var(--clay);color:#2a1408;font-weight:800;padding:17px 34px;border-radius:100px;font-size:15px}
+footer{background:var(--esp);color:var(--mut);padding:36px 0;font-size:12.5px;border-top:1px solid rgba(255,255,255,.08)}
+footer .in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media(max-width:860px){.story .track{grid-template-columns:1fr}.story .sticky{height:60vh}.step{min-height:70vh;padding:0 8%}.stat .g{grid-template-columns:1fr;gap:28px}}
+</style></head><body>
+
+<div class="nav"><span class="lg">SLOW</span><span class="sp"></span><a class="m" href="#story">여정</a><a class="m" href="#buy">구독</a></div>
+
+<section class="hero"><div class="bg"></div><div class="grain"></div><div class="wrap in">
+<div class="ey rise">Single Origin · Ethiopia Guji</div>
+<h1 class="rise">한 잔이<br>되기까지의<br><em>느린 여정.</em></h1>
+</div><div class="sc">SCROLL ↓</div></section>
+
+<section class="story" id="story"><div class="track">
+<div class="sticky"><div class="disc" id="disc"><div class="grain"></div><b id="discn">1</b></div></div>
+<div class="steps">
+<div class="step" data-n="1" data-bg="radial-gradient(circle at 40% 35%,#6b4327,#2a1a10 70%)"><div class="n">STEP 01 — 農場</div><h2>해발 2,100m의<br>손</h2><p>구지의 작은 농장에서, 잘 익은 체리만 하나하나 손으로 골라 땁니다. 기계는 익음을 구별하지 못하니까요.</p></div>
+<div class="step" data-n="2" data-bg="radial-gradient(circle at 45% 40%,#8a5a2e,#3a2412 70%)"><div class="n">STEP 02 — 가공</div><h2>햇빛과<br>기다림</h2><p>내추럴 프로세스. 체리를 통째로 21일간 천천히 말립니다. 서두르면 향이 갇힙니다.</p></div>
+<div class="step" data-n="3" data-bg="radial-gradient(circle at 50% 45%,#3a2416,#1a0f08 70%)"><div class="n">STEP 03 — 로스팅</div><h2>불의<br>대화</h2><p>미디엄 라이트. 산미와 단맛이 만나는 지점을 매 배치 커퍼가 귀로 찾습니다.</p></div>
+<div class="step" data-n="4" data-bg="radial-gradient(circle at 42% 38%,#a86a3a,#2a1a10 72%)"><div class="n">STEP 04 — 한 잔</div><h2>당신의<br>아침</h2><p>볶은 지 5일 안에 문 앞으로. 가장 좋은 순간에 마시는 것까지가 여정입니다.</p></div>
+</div>
+</div></section>
+
+<section class="stat"><div class="wrap"><div class="g">
+<div class="rise"><div class="v">2,100m</div><div class="l">재배 고도</div></div>
+<div class="rise"><div class="v">21일</div><div class="l">내추럴 건조</div></div>
+<div class="rise"><div class="v">D+5</div><div class="l">로스팅 후 배송</div></div>
+</div></div></section>
+
+<section class="q"><div class="wrap">
+<p class="rise">“빨리 만든 커피는 빨리 잊힌다. 우리는 <span style="color:var(--clay)">기억되는 한 잔</span>을 만든다.”</p>
+<div class="w rise">— SLOW 로스터, 문해든</div>
+</div></section>
+
+<section class="cta" id="buy"><div class="grain"></div><div class="wrap">
+<h2 class="rise">느리게<br><em>구독하기</em></h2>
+<a class="rise" href="#">2주에 한 봉지 →</a>
+</div></section>
+
+<footer><div class="wrap in"><span>© 2026 SLOW Coffee · 발명된 커피 브랜드</span><span>MUDS · 에스프레소/테라코타 무드 · 구조 P4 Scrollytelling · RUN 11</span></div></footer>
+
+<script>
+if('scrollRestoration' in history)history.scrollRestoration='manual';window.scrollTo(0,0);
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.rise').forEach(el=>io.observe(el));
+addEventListener('load',()=>requestAnimationFrame(()=>document.querySelectorAll('.rise').forEach(el=>{if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis')})));
+// scrollytelling: swap sticky disc per active step
+const disc=document.getElementById('disc'),discn=document.getElementById('discn');
+const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){disc.style.background=e.target.dataset.bg;discn.textContent=e.target.dataset.n;disc.style.transform='scale(1.04)';setTimeout(()=>disc.style.transform='scale(1)',300)}}),{threshold:.55});
+document.querySelectorAll('.step').forEach(s=>so.observe(s));
+</script>
+</body></html>
