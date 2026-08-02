@@ -1,0 +1,20 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Logs / temp
+*.log
+tmp/
+.cache/
+
+# Node (추후 React/Next 전환 시)
+node_modules/
+dist/
+build/
+.env
+.env.local
