@@ -143,8 +143,10 @@ Instagram `#디자인` 피드에서 영감을 한 장 뽑아 그 "느낌"을 MUD
 | P6 | **SaaS Landing** | Header → Hero:split-L(CSS 앱목업) → logo-cloud → feature 교차 → metrics band → pricing → FAQ 아코디언 → CTA → Footer | CSS 대시보드 목업 | 소프트웨어·앱 | **used** (RUN 12) |
 
 | P11 | **Split Diptych (스플릿 대비형)** | 풀하이트 세로 스플릿 히어로(대비 2색) → 교차 스플릿 패널(숫자/비주얼 ∥ 텍스트) ×N → 데이터 밴드(CSS 차트+카운트업) → 풀쿼트 → 마그네틱 CTA | 커스텀 커서·카운트업·글자 리빌·마그네틱 버튼(T2) | 리포트·데이터·에이전시 | **used** (RUN 13) |
+| P12 | **Kinetic Type Specimen (활자 카탈로그)** | 워드마크 히어로(글자 리빌) → 웨이트 마퀴 → **sticky pin + 가로 스크롤-스크럽 웨이트 패널 ×N** → 라이브 테스터(입력+슬라이더) → 스펙 밴드(카운트업) → 사용예 2×2 에디토리얼 → 라이선스 list-rows → 다크 CTA | 스크롤-스크럽 가로 핀(T3, 라이브러리 0) · 인터랙티브 테스터 | 활자·에디토리얼·아카이브·"제품=화면"인 업종 | **used** (RUN 15) |
 
-> **P1~P10 소진, P11부터 신규.** 다음도 새 구조를 조사해 P12+로 append(예: 비대칭 브루탈리즘, 3D/WebGL 씬, 가로 풀스크린 슬라이드, 타임라인/연혁, 인터랙티브 컨피규레이터 등).
+> **P1~P10 소진, P11부터 신규.** 다음도 새 구조를 조사해 P13+로 append(예: 비대칭 브루탈리즘, 3D/WebGL 씬, 가로 풀스크린 슬라이드, 타임라인/연혁, 인터랙티브 컨피규레이터 등).
+> **P12 교훈:** 모바일에선 pin/scrub을 끄고 `scroll-snap-type:x mandatory` 캐러셀로 폴백해야 함(안 그러면 빈 500vh 구간이 생김). `prefers-reduced-motion`도 같은 폴백.
 | P7 | **Immersive Dark** | Header → Hero:fullbleed(크롬 오브 센터피스) → 텍스트 밴드 → 스펙 4열 → 컬렉션 인덱스 → 풀스크린 CTA | **CSS 리퀴드 크롬 오브**(회전+모프, 외부레포 0) | 다크·럭셔리·퍼포먼스 | **used** (RUN 09) |
 | P8 | **Glass Premium** | Header(glass) → Hero:centered(그라데이션) → glass 카드 bento → glass pricing → testimonial → glass CTA → Footer | Liquid Glass 전면 | 프리미엄·핀테크·뷰티테크 | **used** (RUN 04) |
 | P9 | **Event / Ticker** | 풀블리드 히어로+카운트다운 → 컬러 티커 → 스피커 라인업 → 일정표(agenda) → 티켓 3티어 → 베뉴 → 빅 CTA | 무한 티커·카운트다운 | 컨퍼런스·런칭·페스티벌 | **used** (RUN 05) |

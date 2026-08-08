@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KERN Display — 타입 스페시멘 (활자 파운드리)</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+/* ── 무드: 웜 페이퍼 + 잉크 + 단일 버밀리언 · 아카이타입: 타입 스페시멘/카탈로그 · 신규구조 P12 Kinetic Type Specimen · 티어 T3(스크롤-스크럽) ── */
+:root{
+--sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+--mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+--paper:#f3efe6;--ink:#17150f;--body:#4a463c;--mut:#8b857a;--line:#d9d2c4;--red:#f0300d;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden;word-break:keep-all;overflow-wrap:break-word}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1280px;margin:0 auto;padding:0 40px}
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.28;mix-blend-mode:multiply;z-index:1;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.rise{opacity:0;transform:translateY(26px);transition:.9s cubic-bezier(.2,.7,.2,1)}.rise.vis{opacity:1;transform:none}
+.red{color:var(--red)}
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;height:70px;padding:0 40px;transition:.3s;mix-blend-mode:normal}
+.nav.solid{background:rgba(243,239,230,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .lg{font-size:19px;font-weight:900;letter-spacing:-.5px}.nav .lg i{color:var(--red);font-style:normal}
+.nav .sp{flex:1}
+.nav a.m{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--body);margin-left:26px}.nav a.m:hover{color:var(--red)}
+.nav .buy{border:1.5px solid var(--ink);padding:8px 16px;font-size:12px;font-weight:700;letter-spacing:.04em;border-radius:100px;margin-left:26px;transition:.2s}.nav .buy:hover{background:var(--ink);color:var(--paper)}
+/* hero */
+.hero{padding:150px 0 40px;position:relative;z-index:2}
+.hero .ey{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin-bottom:30px}
+.hero .ey b{color:var(--ink);font-weight:700}
+.giant{font-size:clamp(70px,20vw,290px);font-weight:900;letter-spacing:-.055em;line-height:.82;margin:0}
+.giant .ch{display:inline-block;transform:translateY(115%) rotate(6deg);opacity:0;transition:.85s cubic-bezier(.2,.8,.2,1)}
+.giant.go .ch{transform:none;opacity:1}
+.hero .sub{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin-top:24px;flex-wrap:wrap}
+.hero .sub p{font-size:clamp(17px,2vw,22px);line-height:1.5;max-width:540px;color:var(--body);margin:0;font-weight:500}
+.hero .sub .meta{font-family:var(--mono);font-size:12.5px;color:var(--mut);text-align:right;line-height:1.9;white-space:nowrap}
+/* marquee weights */
+.mq{border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);overflow:hidden;white-space:nowrap;padding:14px 0;margin-top:52px;position:relative;z-index:2;background:var(--ink);color:var(--paper)}
+.mq .t{display:inline-block;animation:mq 26s linear infinite}
+.mq .t span{font-size:20px;font-weight:800;letter-spacing:-.02em;margin:0 26px;opacity:.55}
+.mq .t span.on{opacity:1;color:#ffd9cf}
+@keyframes mq{to{transform:translateX(-50%)}}
+/* pinned horizontal specimen */
+.pin{position:relative;z-index:2;height:440vh}
+.pin .stick{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;border-top:1.5px solid var(--ink)}
+.track{display:flex;will-change:transform}
+.panel{flex:0 0 100vw;height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 40px;position:relative}
+.panel .no{position:absolute;top:96px;left:40px;font-family:var(--mono);font-size:13px;color:var(--mut);letter-spacing:.14em}
+.panel .wn{position:absolute;top:96px;right:40px;font-family:var(--mono);font-size:13px;letter-spacing:.14em;color:var(--red);text-transform:uppercase}
+.panel .word{font-size:clamp(80px,26vw,420px);line-height:.8;letter-spacing:-.05em;margin:0}
+.panel .cap{display:flex;gap:30px;flex-wrap:wrap;font-family:var(--mono);font-size:13px;color:var(--body);margin-top:38px;letter-spacing:.02em}
+.panel .cap b{color:var(--ink)}
+.p1 .word{font-weight:100}.p2 .word{font-weight:400}.p3 .word{font-weight:700}.p4 .word{font-weight:900}
+.p4{background:var(--ink);color:var(--paper);margin-left:0}.p4 .word{color:var(--paper)}.p4 .cap{color:#b8b1a2}.p4 .cap b{color:var(--paper)}.p4 .no{color:#8b857a}
+.scrollhint{position:absolute;bottom:40px;left:40px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--mut);display:flex;align-items:center;gap:10px}
+.scrollhint .bar{width:70px;height:2px;background:var(--line);position:relative;overflow:hidden}
+.scrollhint .bar i{position:absolute;left:0;top:0;height:100%;background:var(--red);width:0}
+/* tester */
+.test{padding:110px 0;position:relative;z-index:2;border-top:1.5px solid var(--ink)}
+.test .h{font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:28px}
+.test .disp{font-size:clamp(44px,10vw,140px);font-weight:800;letter-spacing:-.04em;line-height:1;margin:0 0 40px;min-height:1.1em;word-break:break-word;transition:font-weight .1s}
+.test .ctrls{display:grid;grid-template-columns:1.6fr 1fr;gap:22px;align-items:end}
+.test .ctrls>*{min-width:0}
+.field label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:10px}
+.field input[type=text]{width:100%;background:transparent;border:none;border-bottom:1.5px solid var(--ink);font-family:var(--sans);font-size:20px;font-weight:600;color:var(--ink);padding:10px 2px;outline:none}
+.field input[type=text]:focus{border-color:var(--red)}
+.field .row{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--body);margin-bottom:8px}
+.field input[type=range]{width:100%;accent-color:var(--red);height:2px}
+/* spec band */
+.spec{padding:0;position:relative;z-index:2;border-top:1.5px solid var(--ink)}
+.spec .g{display:grid;grid-template-columns:repeat(4,1fr)}
+.spec .g>*{min-width:0}
+.spec .c{padding:56px 34px;border-right:1px solid var(--line)}
+.spec .c:last-child{border-right:none}
+.spec .v{font-size:clamp(48px,7vw,84px);font-weight:900;letter-spacing:-.03em;line-height:1;white-space:nowrap}
+.spec .v .u{font-size:.42em;font-weight:800;letter-spacing:0;margin-left:.12em;color:var(--body)}
+.spec .l{font-family:var(--mono);font-size:12px;color:var(--body);margin-top:14px;letter-spacing:.04em}
+/* in-use editorial */
+.use{padding:110px 0;position:relative;z-index:2;border-top:1.5px solid var(--ink)}
+.use .h{font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:44px}
+.use .g{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--line);border:1.5px solid var(--ink)}
+.use .g>*{min-width:0}
+.use .card{background:var(--paper);padding:40px}
+.use .card.dk{background:var(--ink);color:var(--paper)}
+.use .k{font-family:var(--mono);font-size:12px;color:var(--mut);letter-spacing:.1em;text-transform:uppercase}
+.use .card.dk .k{color:#8b857a}
+.use .big{font-size:clamp(30px,4.4vw,56px);font-weight:800;letter-spacing:-.03em;line-height:1.02;margin:18px 0 16px}
+.use .card p{font-size:15px;line-height:1.7;color:var(--body);max-width:420px;margin:0}
+.use .card.dk p{color:#c3bdb0}
+.use .drop{font-size:15px;line-height:1.75;color:var(--body);margin:0}
+.use .drop::first-letter{font-size:74px;font-weight:900;float:left;line-height:.72;margin:6px 12px 0 0;color:var(--red)}
+/* license rows */
+.lic{padding:110px 0;position:relative;z-index:2;border-top:1.5px solid var(--ink)}
+.lic .h{font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:16px}
+.lrow{display:grid;grid-template-columns:44px 1.4fr 1.3fr 150px 120px;align-items:center;padding:30px 0;border-top:1px solid var(--line);transition:.22s}
+.lrow:first-of-type{border-top:1.5px solid var(--ink)}
+.lrow:hover{padding-left:14px;background:linear-gradient(90deg,rgba(240,48,13,.05),transparent)}
+.lrow .no{font-family:var(--mono);font-size:13px;color:var(--mut)}
+.lrow .nm{font-size:23px;font-weight:800;letter-spacing:-.02em}
+.lrow .ds{font-size:14px;color:var(--body);max-width:340px}
+.lrow .lm{font-family:var(--mono);font-size:13px;color:var(--mut)}
+.lrow .pr{text-align:right;font-size:19px;font-weight:800;letter-spacing:-.02em}
+.lrow .pr small{display:block;font-family:var(--mono);font-size:11px;font-weight:400;color:var(--mut);letter-spacing:.02em}
+/* cta */
+.cta{min-height:82vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;z-index:2;border-top:1.5px solid var(--ink);background:var(--ink);color:var(--paper)}
+.cta h2{font-size:clamp(52px,13vw,190px);font-weight:900;letter-spacing:-.05em;line-height:.84;margin:0 0 36px}
+.cta h2 em{font-style:normal;color:var(--red)}
+.btn{display:inline-flex;gap:10px;align-items:center;font-weight:800;font-size:15px;padding:17px 36px;border-radius:100px;cursor:pointer;transition:transform .2s cubic-bezier(.2,.8,.2,1)}
+.btn-r{background:var(--red);color:#fff}
+.mag-zone{display:inline-block;padding:40px}
+footer{background:var(--ink);color:#8b857a;border-top:1px solid rgba(255,255,255,.09);padding:34px 40px;font-family:var(--mono);font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;position:relative;z-index:2}
+footer a:hover{color:#ffd9cf}
+@media(max-width:860px){
+.hero .sub .meta{text-align:left}
+.pin{height:auto}.pin .stick{position:static;height:auto;display:block;overflow-x:auto}.track{transform:none!important}
+.panel{flex:0 0 88vw;height:78vh;scroll-snap-align:center}.pin .stick{scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}.scrollhint{display:none}
+.test .ctrls{grid-template-columns:1fr}.spec .g{grid-template-columns:1fr 1fr}.spec .c{border-bottom:1px solid var(--line)}
+.use .g{grid-template-columns:1fr}.lrow{grid-template-columns:34px 1fr 100px;row-gap:6px}.lrow .ds,.lrow .lm{display:none}.nav a.m{display:none}
+}
+@media(prefers-reduced-motion:reduce){.pin{height:auto}.pin .stick{position:static;height:auto;overflow-x:auto}.track{transform:none!important}.panel{flex:0 0 90vw;height:80vh}.giant .ch{transform:none;opacity:1}.mq .t{animation:none}}
+</style></head><body>
+<div class="grain"></div>
+
+<div class="nav" id="nav">
+<span class="lg">KERN<i>®</i></span><span class="sp"></span>
+<a class="m" href="#specimen">스페시멘</a><a class="m" href="#test">테스터</a><a class="m" href="#license">라이선스</a>
+<a class="buy" href="#license">서체 구매</a>
+</div>
+
+<section class="hero"><div class="wrap">
+<div class="ey"><span><b>KERN</b> Type Foundry</span><span>Seoul · Est. 2021</span><span>Release 07 — Display</span></div>
+<h1 class="giant" id="giant" aria-label="KERN Display">KERN</h1>
+<div class="sub">
+<p>차가운 그로테스크 골격에 손으로 깎은 잉크 트랩. <span class="red">가변축 1개</span>로 100에서 900까지, 헤드라인 한 벌로 끝내는 디스플레이 산세리프.</p>
+<div class="meta">9 WEIGHTS · 2 AXES<br>KR + LATIN + CYRILLIC<br>v1.2 — 2026.07</div>
+</div>
+</div></section>
+
+<div class="mq"><div class="t" id="mq"></div></div>
+
+<!-- 가로 스크롤-스크럽 스페시멘 (T3) -->
+<section class="pin" id="specimen"><div class="stick"><div class="track" id="track">
+<div class="panel p1"><span class="no">/ 01 — THIN 100</span><span class="wn">Aa · 가</span>
+<h2 class="word">얇게</h2>
+<div class="cap"><span><b>Thin 100</b> · Display Optical</span><span>−5% 트래킹</span><span>여백이 소리보다 크다</span></div>
+</div>
+<div class="panel p2"><span class="no">/ 02 — REGULAR 400</span><span class="wn">Aa · 가</span>
+<h2 class="word">읽다</h2>
+<div class="cap"><span><b>Regular 400</b> · Text Optical</span><span>본문 16–22px</span><span>잉크트랩 개방</span></div>
+</div>
+<div class="panel p3"><span class="no">/ 03 — BOLD 700</span><span class="wn">Aa · 가</span>
+<h2 class="word">굵게</h2>
+<div class="cap"><span><b>Bold 700</b> · Display Optical</span><span>포스터·간판</span><span>테리미널 직절단</span></div>
+</div>
+<div class="panel p4"><span class="no">/ 04 — BLACK 900</span><span class="wn">Aa · 가</span>
+<h2 class="word">외치다</h2>
+<div class="cap"><span><b>Black 900</b> · Display Optical</span><span>−5.5% 트래킹</span><span>최대 임팩트</span></div>
+</div>
+</div>
+<div class="scrollhint">SCROLL — 무게가 흐른다 <span class="bar"><i id="pbar"></i></span></div>
+</div></section>
+
+<!-- 라이브 타입 테스터 (사람티 인터랙션) -->
+<section class="test" id="test"><div class="wrap">
+<div class="h rise">// 직접 조판해 보세요</div>
+<p class="disp" id="disp">타이포그래피는 침묵의 목소리다</p>
+<div class="ctrls rise">
+<div class="field"><label>텍스트 입력</label><input type="text" id="ti" value="타이포그래피는 침묵의 목소리다" maxlength="40" spellcheck="false"></div>
+<div class="field"><div class="row"><span>WEIGHT / 굵기</span><span id="wv" class="red">800</span></div><input type="range" id="wr" min="100" max="900" step="1" value="800"></div>
+</div>
+</div></section>
+
+<section class="spec"><div class="g">
+<div class="c rise"><div class="v countup" data-to="9" data-suf="">0</div><div class="l">웨이트 (100–900)</div></div>
+<div class="c rise"><div class="v countup" data-to="2" data-suf="">0</div><div class="l">가변축 wght · opsz</div></div>
+<div class="c rise"><div class="v countup" data-to="1128" data-suf="">0</div><div class="l">글리프 / 웨이트</div></div>
+<div class="c rise"><div class="v countup" data-to="71" data-suf="개">0</div><div class="l">지원 언어</div></div>
+</div></section>
+
+<section class="use"><div class="wrap">
+<div class="h rise">// 실제 사용 예</div>
+<div class="g rise">
+<div class="card dk"><span class="k">Editorial — 표지</span><div class="big">계간 <span class="red">활자</span><br>2026 겨울호</div><p>본문은 Text 옵티컬로, 표지 타이틀은 Black 900으로. 한 서체가 잡지 한 권의 목소리를 만든다.</p></div>
+<div class="card"><span class="k">Wayfinding — 사인</span><div class="big">3층 · 활판실<br>ROOM 302</div><p>−5% 트래킹의 Bold가 먼 거리에서도 뭉치지 않습니다. 공항·미술관 사인 시스템에 검증된 판독성.</p></div>
+<div class="card"><span class="k">Text — 본문 조판</span><p class="drop">좋은 활자는 스스로를 드러내지 않는다. Text 옵티컬 마스터는 16px 본문에서 잉크트랩을 열어 작은 크기에서도 획이 붙지 않게 설계했다. 오래 읽어도 눈이 피로하지 않은 것, 그것이 디스플레이 이전에 갖춰야 할 예의다.</p></div>
+<div class="card"><span class="k">Branding — 로고타입</span><div class="big" style="letter-spacing:-.05em">KERN®<br>STUDIO</div><p>가변축을 로고에 직접. 브랜드의 톤에 맞춰 100에서 900까지, 같은 골격 안에서 무게만 바꿉니다.</p></div>
+</div>
+</div></section>
+
+<section class="lic" id="license"><div class="wrap">
+<div class="h rise">// 라이선스</div>
+<div class="rise">
+<div class="lrow"><span class="no">01</span><span class="nm">Desktop</span><span class="ds">인쇄물·로고·이미지. 1–3 사용자.</span><span class="lm">영구 · OTF/TTF</span><span class="pr">₩120,000<small>가변 포함</small></span></div>
+<div class="lrow"><span class="no">02</span><span class="nm">Web</span><span class="ds">웹폰트 셀프호스팅. 월 100만 PV까지.</span><span class="lm">연간 · WOFF2</span><span class="pr">₩90,000<small>/ 년</small></span></div>
+<div class="lrow"><span class="no">03</span><span class="nm">App / Embed</span><span class="ds">iOS·Android 앱, e퍼블리싱 임베드.</span><span class="lm">타이틀당</span><span class="pr">₩240,000<small>1 앱</small></span></div>
+<div class="lrow"><span class="no">04</span><span class="nm red">Complete</span><span class="ds">전 라이선스 + 향후 웨이트 무상 업데이트.</span><span class="lm">영구 · 전 포맷</span><span class="pr">₩390,000<small>추천</small></span></div>
+</div>
+</div></section>
+
+<section class="cta"><div class="wrap">
+<h2 class="rise">무게를<br><em>고르세요.</em></h2>
+<span class="mag-zone rise"><a class="btn btn-r" id="mag" href="#license">시험용 서체 받기 →</a></span>
+</div></section>
+
+<!-- pipeline(비공개): MUDS · 웜페이퍼+잉크+버밀리언 · 신규구조 P12 Kinetic Type Specimen · 티어 T3(스크롤-스크럽) · RUN 15 (새 방향 탐색, 챔피언 RUN09 34 도전) -->
+<footer>
+<span>© 2026 KERN Type Foundry · Seoul</span>
+<span>KERN Display v1.2 · 9 weights · <a href="#license">Buy →</a></span>
+</footer>
+
+<script>
+document.documentElement.classList.add('js');
+/* 스크롤 복원 차단 — html{scroll-behavior:smooth}가 scrollTo를 애니메이션으로 만들어
+   복원 스크롤과 경합하므로, 초기 리셋 동안만 auto로 내렸다가 되돌린다 (§D 함정) */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){var h=document.documentElement,prev=h.style.scrollBehavior;h.style.scrollBehavior='auto';window.scrollTo(0,0);
+ addEventListener('load',function(){window.scrollTo(0,0);setTimeout(function(){h.style.scrollBehavior=prev},60)});})();
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* nav solid */
+var nav=document.getElementById('nav');
+addEventListener('scroll',function(){nav.classList.toggle('solid',scrollY>30)},{passive:true});
+
+/* hero letter reveal */
+var giant=document.getElementById('giant');
+var letters='KERN'.split('');
+giant.textContent='';
+letters.forEach(function(c,i){var s=document.createElement('span');s.className='ch';s.textContent=c;s.style.transitionDelay=(0.12+i*0.09)+'s';giant.appendChild(s)});
+addEventListener('load',function(){requestAnimationFrame(function(){giant.classList.add('go')})});
+setTimeout(function(){giant.classList.add('go')},400);
+
+/* marquee weights */
+var names=['Thin','ExtraLight','Light','Regular','Medium','SemiBold','Bold','ExtraBold','Black'];
+var mq=document.getElementById('mq');
+// 2회 반복해 -50% 이동 시 이음매 없이 순환
+(function(){var h='';for(var k=0;k<2;k++){names.forEach(function(n,i){h+='<span class="'+(n==='Black'?'on':'')+'">'+n+' '+((i+1)*100)+' — 활자의 무게</span>'})}mq.innerHTML=h;})();
+
+/* horizontal scroll-scrub (T3) */
+var pin=document.getElementById('specimen'),track=document.getElementById('track'),pbar=document.getElementById('pbar');
+function scrub(){
+  if(reduce||innerWidth<=860)return;
+  var r=pin.getBoundingClientRect();
+  var total=pin.offsetHeight-innerHeight;
+  var p=Math.min(Math.max(-r.top/total,0),1);
+  var dist=track.scrollWidth-innerWidth;
+  track.style.transform='translateX('+(-p*dist)+'px)';
+  pbar.style.width=(p*100)+'%';
+}
+addEventListener('scroll',scrub,{passive:true});addEventListener('resize',scrub);scrub();
+
+/* live tester */
+var ti=document.getElementById('ti'),disp=document.getElementById('disp'),wr=document.getElementById('wr'),wv=document.getElementById('wv');
+function syncText(){disp.textContent=ti.value||' '}
+function syncWeight(){disp.style.fontWeight=wr.value;wv.textContent=wr.value}
+ti.addEventListener('input',syncText);wr.addEventListener('input',syncWeight);
+syncText();syncWeight();
+
+/* magnetic (소반경 래퍼 한정 — 학습 반영) */
+document.querySelectorAll('.mag-zone').forEach(function(z){var b=z.querySelector('.btn');if(b&&matchMedia('(pointer:fine)').matches){z.addEventListener('mousemove',function(e){var r=b.getBoundingClientRect();b.style.transform='translate('+((e.clientX-(r.left+r.width/2))*.3)+'px,'+((e.clientY-(r.top+r.height/2))*.3)+'px)'});z.addEventListener('mouseleave',function(){b.style.transform=''})}});
+
+/* count-up + reveal */
+function countTo(el){var to=parseFloat(el.dataset.to),suf=el.dataset.suf||'',dur=1300,t0=performance.now();
+ var unit=suf?'<span class="u">'+suf+'</span>':'';
+ function s(t){var p=Math.min((t-t0)/dur,1),e=1-Math.pow(1-p,3);el.innerHTML=Math.round(to*e).toLocaleString('ko-KR')+unit;if(p<1)requestAnimationFrame(s)}requestAnimationFrame(s)}
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');if(e.target.classList.contains('countup'))countTo(e.target);io.unobserve(e.target)}})},{threshold:.2});
+document.querySelectorAll('.rise,.countup').forEach(function(el){io.observe(el)});
+addEventListener('load',function(){requestAnimationFrame(function(){document.querySelectorAll('.rise').forEach(function(el){if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis')})})});
+</script>
+</body></html>
