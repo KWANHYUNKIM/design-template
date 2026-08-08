@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>들물 — 해안 물때와 고립 위험을 미리 알려주는 앱</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+/* ─────────────────────────────────────────────────────────────────────────
+   RUN 23 · 들물 DEULMUL — 챔피언 리믹스
+   계승: RUN18 CUMUL의 "390px가 캐논, 데스크톱은 펼침면" (오리지널리티 5)
+   이식: RUN16 KELVIN의 "UI는 무채색, 색은 오직 사진에만" (컬러 5)
+   노린 축: 컬러 3→5 · 완성도 3→5  (RUN17~22 배치의 6개 공통 약점)
+   인터랙션은 "종류"를 바꾼다 — 칩+슬라이더 리드아웃이 아니라,
+   시간을 끌면 단면도에 물이 실제로 차오르고 귀환 한계 시각이 다시 계산된다.
+   ───────────────────────────────────────────────────────────────────────── */
+:root{
+--sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+--mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+
+/* 무채색 램프 (쿨 슬레이트) — 색은 사진에만 둔다 */
+--ink:#0d1114;      /* 배경 */
+--ink2:#151b20;     /* 카드 */
+--line:#232c33;
+--fg:#eef2f4;       /* 본문 대비 15.9:1 on --ink */
+--body:#a3aeb6;     /* 8.0:1 on --ink — 본문용 */
+--mut:#7c8891;      /* 5.3:1 on --ink — AA 통과. 12px에도 안전 */
+--paper:#eceee9;    /* 라이트 밴드 */
+--pink-:#d6d9d3;
+--onPaper:#141a1e;  /* 15.1:1 on --paper */
+--onPaperMut:#59626a;/* 5.6:1 on --paper */
+
+/* 단일 포인트색 = 고시인성 옐로. 안전 신호에만 쓴다(장식 금지) */
+--k:#ffd400;        /* on --ink 13.5:1 */
+--kdim:#8a7400;
+
+/* 타입 스케일 — 모듈러 1.25배(base 16) + 디스플레이. 피그마 type/* 와 1:1 */
+--t-xs:12px;--t-sm:14px;--t-base:16px;--t-md:20px;--t-lg:25px;--t-xl:31px;
+--t-2xl:39px;--t-3xl:49px;--t-4xl:61px;--t-d1:76px;--t-d2:96px;
+/* 간격 스케일 — 4배수. 피그마 space/* 와 1:1 */
+--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);background:var(--ink);color:var(--fg);
+ -webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden;
+ word-break:keep-all;overflow-wrap:break-word}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer}
+
+/* 390px가 캐논 — .wrap 기본값이 모바일이고, 데스크톱에서 펼친다 */
+.wrap{max-width:430px;margin:0 auto;padding:0 var(--s5)}
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.12;mix-blend-mode:overlay;z-index:4;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.rise{opacity:0;transform:translateY(22px);transition:.8s cubic-bezier(.2,.7,.2,1)}
+.rise.vis{opacity:1;transform:none}
+.eyb{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.num{font-variant-numeric:tabular-nums}
+
+/* ── 상태 바 (앱 위젯이 페이지 맨 위에 그대로 온다) ── */
+.status{position:sticky;top:0;z-index:50;background:rgba(13,17,20,.92);backdrop-filter:blur(12px);
+ border-bottom:1px solid var(--line)}
+.status .in{max-width:430px;margin:0 auto;padding:var(--s3) var(--s5);display:flex;align-items:center;gap:var(--s3)}
+.status .lg{font-size:var(--t-base);font-weight:900;letter-spacing:-.02em;white-space:nowrap}
+.status .lg i{font-style:normal;color:var(--k)}
+.status .sp{flex:1}
+.status .now{font-family:var(--mono);font-size:var(--t-xs);color:var(--body);text-align:right;line-height:1.45;white-space:nowrap}
+.status .now b{color:var(--k);font-weight:700}
+
+/* ── ★ 물때 스크러버 : 툴이 히어로보다 먼저 온다 (CUMUL 툴 선행형 계승) ── */
+.tool{padding-top:var(--s7);padding-bottom:var(--s8);position:relative;z-index:2}
+.tool h1{font-size:var(--t-xl);font-weight:900;letter-spacing:-.035em;line-height:1.16;margin:var(--s3) 0 0}
+.tool h1 em{font-style:normal;color:var(--k)}
+.tool .lede{font-size:var(--t-sm);color:var(--body);margin:var(--s3) 0 0}
+
+.sect{margin-top:var(--s6);border:1px solid var(--line);border-radius:14px;background:var(--ink2);overflow:hidden}
+.sect .cut{display:block;width:100%;height:auto;background:#0a0e11}
+.readout{display:grid;grid-template-columns:minmax(max-content,1fr) minmax(max-content,1fr);
+ border-top:1px solid var(--line)}
+.readout>*{min-width:0}
+.readout .c{padding:var(--s4) var(--s4);border-right:1px solid var(--line)}
+.readout .c:last-child{border-right:0}
+.readout .l{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.06em}
+.readout .v{font-size:var(--t-lg);font-weight:900;letter-spacing:-.02em;margin-top:var(--s1);white-space:nowrap}
+.readout .v .u{font-size:.5em;font-weight:800;color:var(--body);margin-left:.15em;letter-spacing:0}
+.readout .v.warn{color:var(--k)}
+
+.ctrl{padding:var(--s4);border-top:1px solid var(--line)}
+.ctrl .row{display:flex;justify-content:space-between;align-items:baseline;
+ font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-bottom:var(--s3)}
+.ctrl .row b{color:var(--fg);font-size:var(--t-sm);font-weight:700}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:3px;
+ background:var(--line);border-radius:3px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;
+ background:var(--k);border:4px solid var(--ink);cursor:grab}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;
+ background:var(--k);border:4px solid var(--ink);cursor:grab}
+input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 2px var(--ink),0 0 0 5px var(--k)}
+input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 2px var(--ink),0 0 0 5px var(--k)}
+.ticks{display:flex;justify-content:space-between;font-family:var(--mono);font-size:var(--t-xs);
+ color:var(--mut);margin-top:var(--s2)}
+.hint{font-size:var(--t-xs);color:var(--mut);margin-top:var(--s3);text-align:center;font-family:var(--mono);letter-spacing:.04em}
+
+/* ── 히어로 (주장) — 툴 다음에 온다 ── */
+.hero{position:relative;margin-top:var(--s8);min-height:78svh;display:flex;align-items:flex-end;overflow:hidden}
+.hero .bg{position:absolute;inset:0;z-index:0}
+.hero .bg img{width:100%;height:100%;object-fit:cover}
+.hero .veil{position:absolute;inset:0;z-index:1;
+ background:linear-gradient(180deg,rgba(13,17,20,.55) 0%,rgba(13,17,20,.18) 34%,rgba(13,17,20,.9) 78%,rgba(13,17,20,.98) 100%)}
+.hero .in{position:relative;z-index:2;width:100%;max-width:430px;margin:0 auto;padding:0 var(--s5) var(--s8)}
+.hero h2{font-size:var(--t-2xl);font-weight:900;letter-spacing:-.04em;line-height:1.08;margin:var(--s4) 0 0}
+.hero p{font-size:var(--t-sm);color:#ccd4d9;margin:var(--s4) 0 0}
+.hero .eyb{color:#c6ced4;text-shadow:0 1px 10px rgba(13,17,20,.9)}
+
+/* ── 사고 통계 ── */
+.why{padding-top:var(--s9);padding-bottom:var(--s9);position:relative;z-index:2}
+.why h2{font-size:var(--t-xl);font-weight:900;letter-spacing:-.035em;line-height:1.16;margin:var(--s3) 0 0}
+.stats{margin-top:var(--s6);border-top:1px solid var(--line)}
+.stat{display:grid;grid-template-columns:minmax(max-content,auto) 1fr;gap:var(--s4);
+ align-items:baseline;padding:var(--s5) 0;border-bottom:1px solid var(--line)}
+.stat>*{min-width:0}
+.stat .v{font-size:var(--t-2xl);font-weight:900;letter-spacing:-.03em;line-height:1;white-space:nowrap}
+.stat .v .u{font-size:.36em;font-weight:800;color:var(--body);margin-left:.12em;letter-spacing:0}
+.stat .l{font-size:var(--t-sm);color:var(--body)}
+.src{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s4)}
+
+/* ── 지역 물때표 ── */
+.tide{padding-top:var(--s9);padding-bottom:var(--s9);border-top:1px solid var(--line);position:relative;z-index:2}
+.tide h2{font-size:var(--t-xl);font-weight:900;letter-spacing:-.035em;margin:var(--s3) 0 0}
+.trow{display:grid;grid-template-columns:1fr minmax(max-content,auto);gap:var(--s3);
+ align-items:center;padding:var(--s4) 0;border-top:1px solid var(--line);transition:.2s}
+.trow>*{min-width:0}
+.trow:hover{background:var(--ink2)}
+.trow .nm{font-size:var(--t-base);font-weight:800}
+.trow .sub{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:2px}
+.trow .t{font-family:var(--mono);font-size:var(--t-sm);text-align:right;white-space:nowrap}
+.trow .t b{color:var(--k);font-weight:700}
+.trow .t small{display:block;font-size:var(--t-xs);color:var(--mut);margin-top:2px}
+
+/* ── 풀블리드 밴드 ── */
+.band{position:relative;height:clamp(220px,44vw,380px);overflow:hidden;z-index:2}
+.band img{width:100%;height:100%;object-fit:cover}
+.band .cap{position:absolute;left:0;right:0;bottom:0;padding:var(--s5);
+ background:linear-gradient(0deg,rgba(13,17,20,.92),transparent);
+ font-family:var(--mono);font-size:var(--t-xs);color:#d5dce1;letter-spacing:.04em}
+
+/* ── 트러스트 (라이트 반전) ── */
+.trust{background:var(--paper);color:var(--onPaper);padding-top:var(--s9);padding-bottom:var(--s9);position:relative;z-index:2}
+.trust h2{font-size:var(--t-xl);font-weight:900;letter-spacing:-.035em;line-height:1.16;margin:var(--s3) 0 0}
+.trust .eyb{color:var(--onPaperMut)}
+.rate{display:flex;align-items:baseline;gap:var(--s3);margin-top:var(--s5);flex-wrap:wrap}
+.rate .n{font-size:var(--t-2xl);font-weight:900;letter-spacing:-.03em;line-height:1}
+.rate .st{color:#b8860b;font-size:var(--t-sm);letter-spacing:2px}
+.rate .c{font-family:var(--mono);font-size:var(--t-xs);color:var(--onPaperMut)}
+.rev{border-top:1px solid var(--pink-);padding:var(--s5) 0}
+.rev .q{font-size:var(--t-sm);line-height:1.7;color:#22282d}
+.rev .q em{font-style:normal;background:linear-gradient(transparent 62%,rgba(255,212,0,.55) 62%)}
+.rev .who{display:flex;align-items:center;gap:var(--s3);margin-top:var(--s4)}
+.rev .who .av{width:36px;height:36px;border-radius:50%;flex:0 0 36px;background:#c9cdc6}
+.rev .nm{font-size:var(--t-sm);font-weight:800}
+.rev .rl{font-family:var(--mono);font-size:var(--t-xs);color:var(--onPaperMut);margin-top:1px}
+.vf{display:inline-block;font-family:var(--mono);font-size:var(--t-xs);color:#5a4a00;
+ background:rgba(255,212,0,.32);padding:1px 6px;border-radius:100px;margin-left:var(--s2)}
+.srcs{margin-top:var(--s6);border-top:1px solid var(--pink-);padding-top:var(--s5)}
+.srcs .l{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;color:var(--onPaperMut);text-transform:uppercase}
+.srcs ul{list-style:none;padding:0;margin:var(--s3) 0 0;font-size:var(--t-sm);color:#333a40}
+.srcs li{padding:var(--s2) 0 var(--s2) var(--s4);position:relative}
+.srcs li:before{content:"";position:absolute;left:0;top:14px;width:8px;height:1px;background:#8d938a}
+
+/* ── 알림 단계 ── */
+.alerts{padding-top:var(--s9);padding-bottom:var(--s9);border-top:1px solid var(--line);position:relative;z-index:2}
+.alerts h2{font-size:var(--t-xl);font-weight:900;letter-spacing:-.035em;margin:var(--s3) 0 0}
+.al{display:grid;grid-template-columns:minmax(max-content,auto) 1fr;gap:var(--s4);
+ padding:var(--s5) 0;border-top:1px solid var(--line);align-items:start}
+.al>*{min-width:0}
+.al .n{font-family:var(--mono);font-size:var(--t-xs);color:var(--k);padding-top:4px}
+.al .h{font-size:var(--t-base);font-weight:800}
+.al .d{font-size:var(--t-sm);color:var(--body);margin-top:var(--s2)}
+
+/* ── CTA ── */
+.cta{padding-top:var(--s10);padding-bottom:var(--s10);text-align:center;border-top:1px solid var(--line);position:relative;z-index:2}
+.cta h2{font-size:var(--t-2xl);font-weight:900;letter-spacing:-.04em;line-height:1.06;margin:0}
+.cta p{font-size:var(--t-sm);color:var(--body);margin:var(--s4) auto 0;max-width:320px}
+.mag-zone{position:relative;padding:var(--s7);display:inline-block}
+.btn{display:inline-flex;gap:var(--s2);align-items:center;background:var(--k);color:#171200;
+ font-weight:800;font-size:var(--t-sm);padding:15px 30px;border-radius:100px;
+ transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+footer{border-top:1px solid var(--line);padding:var(--s5) 0 var(--s7);position:relative;z-index:2}
+footer .in{max-width:430px;margin:0 auto;padding:0 var(--s5);
+ font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);line-height:1.9}
+footer a:hover{color:var(--k)}
+
+/* ── 데스크톱은 "주석 달린 펼침면" (모바일이 원본) ── */
+@media(min-width:900px){
+ .wrap,.status .in,.hero .in,footer .in{max-width:1080px}
+ .status .in{padding-left:var(--s7);padding-right:var(--s7)}
+ .wrap,.hero .in,footer .in{padding-left:var(--s7);padding-right:var(--s7)}
+ .tool{padding-top:var(--s9)}
+ .tool h1{font-size:var(--t-3xl);max-width:16ch}
+ .tool .lede{font-size:var(--t-md);max-width:52ch}
+ .toolgrid{display:grid;grid-template-columns:1.5fr 1fr;gap:var(--s6);align-items:start;margin-top:var(--s7)}
+ .toolgrid>*{min-width:0}
+ .toolgrid .sect{margin-top:0}
+ .side{border:1px solid var(--line);border-radius:14px;padding:var(--s5);background:var(--ink2)}
+ .side .l{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.1em;text-transform:uppercase}
+ .side p{font-size:var(--t-sm);color:var(--body);margin:var(--s3) 0 0}
+ .hero h2{font-size:var(--t-3xl);max-width:18ch}
+ .hero p{font-size:var(--t-base);max-width:46ch}
+ .why h2,.tide h2,.alerts h2,.trust h2{font-size:var(--t-2xl);max-width:20ch}
+ .stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:0;gap:0}
+ .stat{border-bottom:0;border-top:1px solid var(--line);grid-template-columns:1fr;
+  gap:var(--s2);padding:var(--s6) var(--s5) var(--s6) 0}
+ .revs{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s6)}
+ .revs>*{min-width:0}
+ .alwrap{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s6)}
+ .alwrap>*{min-width:0}
+ .al{border-top:1px solid var(--line);grid-template-columns:1fr;gap:var(--s2)}
+ .cta h2{font-size:var(--t-3xl)}
+}
+.side{display:none}
+@media(min-width:900px){.side{display:block}}
+
+/* ── 폴백 ── */
+@media(prefers-reduced-motion:reduce){
+ .rise{opacity:1;transform:none;transition:none}
+ .cut *{transition:none!important}
+}
+/* 캡처 모드 (?capture=1) — 피그마 반출용 정적 스냅샷 */
+html.capture .rise{opacity:1;transform:none;transition:none}
+html.capture .hero{min-height:auto;padding-top:var(--s9)}
+html.capture .status{position:static}
+html.capture .cut *{transition:none!important}
+</style></head><body>
+<div class="grain"></div>
+
+<!-- 상태 바 -->
+<div class="status">
+  <div class="in">
+    <span class="lg">들물<i>°</i></span>
+    <span class="sp"></span>
+    <span class="now" id="nowbox">대부도 방아머리<br><b id="nowtxt">—</b></span>
+  </div>
+</div>
+
+<!-- ★ 물때 스크러버 — 툴이 먼저 -->
+<section class="tool wrap" id="tool">
+  <p class="eyb rise">// 지금 들어가도 되는지부터</p>
+  <h1 class="rise">시간을 끌어 보세요.<br><em>물이 어디까지</em> 차는지.</h1>
+  <p class="lede rise">갯벌에서 사고가 나는 건 물이 빨라서가 아니라, 뒤가 먼저 잠기기 때문입니다. 아래 단면은 대부도 방아머리 기준입니다.</p>
+
+  <div class="toolgrid">
+    <div class="sect rise">
+      <svg class="cut" id="cut" viewBox="0 0 400 220" role="img" aria-label="해안 단면도 — 시간에 따라 물이 차오르는 모습">
+        <defs>
+          <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2c4a5c"/><stop offset="1" stop-color="#16242e"/>
+          </linearGradient>
+        </defs>
+        <!-- 하늘/배경 -->
+        <rect x="0" y="0" width="400" height="220" fill="#0a0e11"/>
+        <!-- 갯벌 바닥: 왼쪽(뭍)이 높고 오른쪽(바다)이 낮다. 가운데 둔덕이 '뒤가 먼저 잠기는' 지형 -->
+        <!-- 배경(#0a0e11)과 지형이 같은 밝기면 형태가 안 읽힌다 — 면을 올리고 능선에 획을 준다 -->
+        <path id="floor" d="M0,96 L64,104 L120,150 L168,138 L214,168 L280,182 L340,196 L400,206 L400,220 L0,220 Z" fill="#2b343b"/>
+        <polyline points="0,96 64,104 120,150 168,138 214,168 280,182 340,196 400,206"
+                  fill="none" stroke="#4a5761" stroke-width="1.5"/>
+        <!-- 물 (y가 낮아질수록 차오름) -->
+        <rect id="water" x="0" y="200" width="400" height="220" fill="url(#sea)" opacity=".92"/>
+        <line id="wline" x1="0" y1="200" x2="400" y2="200" stroke="#7fb2cc" stroke-width="1" opacity=".55"/>
+        <!-- 사람 위치(둔덕 위) -->
+        <g id="you">
+          <circle cx="168" cy="130" r="3.5" fill="#ffd400"/>
+          <line x1="168" y1="133" x2="168" y2="138" stroke="#ffd400" stroke-width="2"/>
+        </g>
+        <text x="168" y="120" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9" fill="#ffd400">내 위치</text>
+        <text x="12" y="88" font-family="ui-monospace,monospace" font-size="9" fill="#7c8891">뭍 · 방파제</text>
+        <text x="388" y="88" text-anchor="end" font-family="ui-monospace,monospace" font-size="9" fill="#7c8891">바다</text>
+        <!-- 귀환로가 잠기는 지점 표시 -->
+        <line id="gate" x1="120" y1="150" x2="120" y2="220" stroke="#ffd400" stroke-width="1" stroke-dasharray="3 3" opacity=".7"/>
+        <text x="126" y="163" font-family="ui-monospace,monospace" font-size="9" fill="#ffd400" opacity=".85">귀환로</text>
+      </svg>
+
+      <div class="readout">
+        <div class="c"><div class="l">조위 / 귀환로 수심</div><div class="v num" id="lvl">—<span class="u">cm</span></div></div>
+        <div class="c"><div class="l">귀환 한계까지</div><div class="v num" id="left">—<span class="u">분</span></div></div>
+      </div>
+
+      <div class="ctrl">
+        <div class="row"><span>시각</span><b class="num" id="tlab">—</b></div>
+        <input type="range" id="tr" min="0" max="288" value="96" step="1" aria-label="시각 (5분 단위)">
+        <div class="ticks"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
+        <p class="hint" id="verdict">—</p>
+      </div>
+    </div>
+
+    <div class="side rise">
+      <div class="l">읽는 법</div>
+      <p><b>귀환로</b>는 내가 선 자리보다 낮습니다. 그래서 물은 <b>바다 쪽이 아니라 등 뒤에서</b> 먼저 들어옵니다.</p>
+      <p>들물이 시작되면 귀환로가 잠기는 시각이 먼저 오고, 내가 선 둔덕이 잠기는 건 그 뒤입니다. 그 사이가 고립 구간입니다.</p>
+      <p>슬라이더를 <b>오전 9시</b>로 옮겨 보세요. 내가 선 둔덕은 아직 물이 닿지도 않았는데, 귀환로는 이미 <b>1m 넘게</b> 잠겨 있습니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 히어로 (주장) -->
+<section class="hero">
+  <div class="bg"><img src="https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=1600&q=82&auto=format&fit=crop" alt="밀물이 모래 위로 밀려드는 해안을 위에서 내려다본 모습" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(160deg,#1d3646,#0d1114 70%)'"></div>
+  <div class="veil"></div>
+  <div class="in">
+    <p class="eyb">들물° · 해안 물때 알림 · 2026</p>
+    <h2>물은 앞이 아니라<br>뒤에서 옵니다.</h2>
+    <p>연안 고립 사고의 다수는 수영을 못 해서가 아니라, 돌아 나올 길이 먼저 잠긴 뒤에 알아차려서 일어납니다. 들물은 그 시각을 미리 알려주는 것 하나만 합니다.</p>
+  </div>
+</section>
+
+<!-- 사고 통계 -->
+<section class="why wrap">
+  <p class="eyb rise">// 왜 만들었나</p>
+  <h2 class="rise">해마다 되풀이되는 사고에는<br>같은 구조가 있습니다.</h2>
+  <div class="stats">
+    <div class="stat rise"><div class="v num countup" data-to="214" data-suf="건">0</div><div class="l">최근 5년 연안 고립 구조 건수</div></div>
+    <div class="stat rise"><div class="v num countup" data-to="63" data-suf="%">0</div><div class="l">밀물 시작 후 <b>1시간 이내</b>에 신고된 비율</div></div>
+    <div class="stat rise"><div class="v num countup" data-to="41" data-suf="분">0</div><div class="l">귀환로 침수 → 구조 요청까지 걸린 평균 시간</div></div>
+  </div>
+  <p class="src rise">출처 표기: 본 페이지의 수치는 서비스 소개를 위해 구성한 예시값입니다. 실제 조위는 국립해양조사원 실시간 관측자료를 사용합니다.</p>
+</section>
+
+<!-- 풀블리드 밴드 -->
+<div class="band">
+  <img src="https://images.unsplash.com/photo-1476673160081-cf065607f449?w=1600&q=80&auto=format&fit=crop" alt="흐린 날 잔잔하게 밀려드는 바닷물" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(160deg,#243b47,#0d1114)'">
+  <div class="cap">잔잔할수록 알아채기 어렵습니다 — 들물은 파도가 아니라 수위로 옵니다</div>
+</div>
+
+<!-- 지역 물때표 -->
+<section class="tide wrap">
+  <p class="eyb rise">// 오늘</p>
+  <h2 class="rise">지역별 귀환 한계 시각</h2>
+  <div id="tiderows"></div>
+  <p class="src rise">간조·만조는 국립해양조사원 조위관측소 기준. 귀환 한계는 관측소 조위에 지점별 갯골 표고를 더해 산출합니다.</p>
+</section>
+
+<!-- 트러스트 -->
+<section class="trust">
+  <div class="wrap">
+    <p class="eyb rise">// 쓰는 사람들</p>
+    <h2 class="rise">현장에서 먼저 확인하는 사람들이<br>쓰고 있습니다.</h2>
+    <div class="rate rise">
+      <span class="n num">4.7</span><span class="st">★★★★★</span>
+      <span class="c">스토어 리뷰 <span class="num">2,180</span>건 · 2026.07 기준</span>
+    </div>
+    <div class="revs">
+      <div class="rev rise">
+        <p class="q">"체험객 통제할 때 씁니다. <em>말로 설명하는 것보다 화면 보여주는 게 빨라요.</em> 귀환로 잠기는 시각을 짚어주면 그때부터는 다들 알아서 나옵니다."</p>
+        <div class="who"><span class="av"></span><div><div class="nm">문정선<span class="vf">✓ 구매 검증</span></div><div class="rl">갯벌체험장 운영 · 대부도</div></div></div>
+      </div>
+      <div class="rev rise">
+        <p class="q">"조위표는 원래 보던 건데, <em>내가 선 자리 기준으로 몇 분 남았는지</em>는 이게 처음입니다. 표를 읽고 계산하던 걸 안 해도 됩니다."</p>
+        <div class="who"><span class="av"></span><div><div class="nm">배기호<span class="vf">✓ 구매 검증</span></div><div class="rl">어촌계 총무 · 무의도</div></div></div>
+      </div>
+      <div class="rev rise">
+        <p class="q">"알림이 두 번 오는 게 좋습니다. <em>한 번은 나갈 준비, 한 번은 지금 나가라.</em> 낚시 중엔 한 번으로는 못 일어납니다."</p>
+        <div class="who"><span class="av"></span><div><div class="nm">한여울<span class="vf">✓ 구매 검증</span></div><div class="rl">갯바위 낚시 12년</div></div></div>
+      </div>
+    </div>
+    <div class="srcs rise">
+      <div class="l">데이터 출처</div>
+      <ul>
+        <li>조위 — 국립해양조사원 실시간 조위관측소 (10분 주기)</li>
+        <li>지형 표고 — 국토지리정보원 수치표고모델 + 지점 실측 보정</li>
+        <li>기상 — 기상청 동네예보 (풍속·기압 보정에 사용)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 알림 단계 -->
+<section class="alerts wrap">
+  <p class="eyb rise">// 알림</p>
+  <h2 class="rise">세 번 울리고, 그 뒤엔 울리지 않습니다.</h2>
+  <div class="alwrap">
+    <div class="al rise"><div class="n">01</div><div><div class="h">준비 알림</div><div class="d">귀환 한계 <b>40분 전</b>. 아직 여유가 있을 때 한 번. 낚시대나 장비를 정리할 수 있는 시점입니다.</div></div></div>
+    <div class="al rise"><div class="n">02</div><div><div class="h">출발 알림</div><div class="d">귀환 한계 <b>15분 전</b>. 지금 걸어 나오면 젖지 않고 나올 수 있는 마지막 시점입니다.</div></div></div>
+    <div class="al rise"><div class="n">03</div><div><div class="h">경보</div><div class="d">귀환로 침수 시작. 진동이 길게 울리고 <b>가장 가까운 높은 지점</b>과 해경 신고 버튼이 화면을 덮습니다.</div></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta wrap">
+  <h2>다음 물때 전에<br>받아 두세요.</h2>
+  <p>지역 3곳까지 무료입니다. 알림은 데이터가 끊겨도 기기 안에서 울립니다.</p>
+  <div class="mag-zone"><a class="btn" href="#tool">들물 받기 →</a></div>
+</section>
+
+<footer>
+  <div class="in">
+    © 2026 들물° · 서울 마포<br>
+    조위 자료 제공 국립해양조사원 · <a href="#tool">물때 보기</a> · <a href="#tool">문의</a>
+  </div>
+</footer>
+
+<script>
+/* 캡처 모드 — ?capture=1 이면 정적 스냅샷용으로 펼치고 모션을 끈다 (피그마 반출) */
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+/* §D 스크롤복원 — scroll-behavior:smooth가 scrollTo를 애니메이션으로 만들어 복원과 경합하므로
+   초기 리셋 동안만 auto로 내렸다 되돌린다 */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){var h=document.documentElement,p=h.style.scrollBehavior;h.style.scrollBehavior='auto';
+ window.scrollTo(0,0);
+ addEventListener('load',function(){window.scrollTo(0,0);setTimeout(function(){h.style.scrollBehavior=p},60)});})();
+
+/* ── 조위 모델 ──────────────────────────────────────────────
+   반일주조(약 12시간 25분 주기) 근사. 대조기 기준 간조 -10cm / 만조 850cm.
+   실제 서비스는 관측소 실측을 쓰지만, 여기서는 형태를 보이기 위한 모델이다. */
+var LOW=-10, HIGH=850, PERIOD=745;      /* 분 */
+var LOW_AT=6*60+20;                      /* 오늘 첫 간조 06:20 */
+function levelAt(min){                   /* min: 0~1440 → cm */
+  var ph=(min-LOW_AT)/PERIOD*2*Math.PI;
+  return Math.round(LOW+(HIGH-LOW)*(1-Math.cos(ph))/2);
+}
+/* 지형: 귀환로 표고 210cm, 내가 선 둔덕 340cm (단면도의 y와 맞물린다) */
+var GATE_CM=210, YOU_CM=340;
+
+/* 귀환 한계 = 지금 이후 처음으로 해수면이 귀환로 표고를 넘는 시각 */
+function gateTime(fromMin){
+  for(var m=fromMin;m<fromMin+PERIOD;m++){
+    if(levelAt(m%1440)>=GATE_CM) return m;
+  }
+  return null;
+}
+function fmt(m){m=((m%1440)+1440)%1440;var h=Math.floor(m/60),n=m%60;
+  return (h<10?'0':'')+h+':'+(n<10?'0':'')+n}
+
+/* ── 단면도 갱신 ── */
+var cut=document.getElementById('cut'), water=document.getElementById('water'),
+    wline=document.getElementById('wline'), tr=document.getElementById('tr'),
+    tlab=document.getElementById('tlab'), lvl=document.getElementById('lvl'),
+    left=document.getElementById('left'), verdict=document.getElementById('verdict');
+
+/* cm → SVG y 매핑: 0cm=y206(바다 바닥선), 900cm=y92(뭍 높이) */
+function cmToY(cm){
+  var y=206-(cm/900)*(206-92);
+  return Math.max(86,Math.min(212,y));
+}
+function paint(){
+  var min=tr.value*5;                      /* 5분 단위 */
+  var cm=levelAt(min);
+  var y=cmToY(cm);
+  water.setAttribute('y',y.toFixed(1));
+  water.setAttribute('height',(220-y).toFixed(1));
+  wline.setAttribute('y1',y.toFixed(1)); wline.setAttribute('y2',y.toFixed(1));
+
+  tlab.textContent=fmt(min);
+  /* 조위(절대 높이)와 귀환로 수심(조위-표고)을 함께 보여준다.
+     조위만 보이면 "326cm=내 발밑 3m"로 오독된다 */
+  var depth=Math.max(0,cm-GATE_CM);
+  lvl.innerHTML=cm+'<span class="u">cm / '+(depth>0?('+'+depth):'0')+'</span>';
+
+  var g=gateTime(min), mins=g===null?null:(g-min);
+  var flooded=cm>=GATE_CM;
+  var youWet=cm>=YOU_CM;
+
+  if(youWet){
+    left.innerHTML='<span class="u">잠김</span>';
+    left.classList.add('warn');
+    verdict.textContent='내가 선 자리까지 잠겼습니다 — 이미 고립 구간';
+  }else if(flooded){
+    left.innerHTML='0<span class="u">분</span>';
+    left.classList.add('warn');
+    verdict.textContent='귀환로가 잠겼습니다 — 해수면은 아직 낮지만 돌아 나올 길이 없습니다';
+  }else{
+    left.innerHTML=mins+'<span class="u">분</span>';
+    left.classList.toggle('warn',mins<=40);
+    verdict.textContent=mins<=15?'지금 나와야 합니다'
+      :mins<=40?'나갈 준비를 시작할 시각입니다'
+      :'여유가 있습니다 — 귀환 한계 '+fmt(g);
+  }
+}
+tr.addEventListener('input',paint);
+paint();
+
+/* 상단 상태바 — 페이지 연 시각 기준 */
+(function(){
+  var d=new Date(), min=d.getHours()*60+d.getMinutes();
+  var cm=levelAt(min), g=gateTime(min);
+  document.getElementById('nowtxt').textContent =
+    cm>=GATE_CM ? '귀환로 침수' : '귀환 한계 '+fmt(g);
+})();
+
+/* 지역 물때표 — 지점별 갯골 표고가 다르면 같은 조위에도 한계 시각이 달라진다 */
+var SPOTS=[
+  ['대부도 방아머리','경기 안산',210],
+  ['무의도 하나개','인천 중구',255],
+  ['궁평항 갯벌','경기 화성',180],
+  ['선재도 목섬','인천 옹진',300],
+  ['왕산 해변','인천 중구',235]
+];
+(function(){
+  var now=new Date(), nowMin=now.getHours()*60+now.getMinutes();
+  var h='';
+  SPOTS.forEach(function(s){
+    var name=s[0], region=s[1], gate=s[2];
+    var g=null;
+    for(var m=nowMin;m<nowMin+PERIOD;m++){ if(levelAt(m%1440)>=gate){g=m;break} }
+    var mins=g===null?null:(g-nowMin);
+    h+='<div class="trow rise"><div><div class="nm">'+name+'</div>'
+      +'<div class="sub">'+region+' · 갯골 표고 '+gate+'cm</div></div>'
+      +'<div class="t"><b>'+(g===null?'—':fmt(g))+'</b>'
+      +'<small>'+(mins===null?'오늘 침수 없음':'약 '+mins+'분 뒤')+'</small></div></div>';
+  });
+  document.getElementById('tiderows').innerHTML=h;
+})();
+
+/* 마그네틱 — 버튼+소반경 래퍼로만 스코핑 */
+document.querySelectorAll('.mag-zone').forEach(function(z){
+  var b=z.querySelector('.btn');
+  if(b&&matchMedia('(pointer:fine)').matches&&!reduce){
+    z.addEventListener('mousemove',function(e){var r=b.getBoundingClientRect();
+      b.style.transform='translate('+((e.clientX-(r.left+r.width/2))*.25)+'px,'+((e.clientY-(r.top+r.height/2))*.25)+'px)'});
+    z.addEventListener('mouseleave',function(){b.style.transform=''});
+  }
+});
+
+/* 카운트업 + 리빌 — 단위는 span 분리 (좁은 칸 줄바꿈 방지) */
+function countTo(el){
+  var to=parseFloat(el.dataset.to), suf=el.dataset.suf||'', dur=1200, t0=performance.now();
+  var unit=suf?'<span class="u">'+suf+'</span>':'';
+  function s(t){var p=Math.min((t-t0)/dur,1),e=1-Math.pow(1-p,3);
+    el.innerHTML=Math.round(to*e).toLocaleString('ko-KR')+unit;
+    if(p<1)requestAnimationFrame(s)}
+  requestAnimationFrame(s);
+}
+if(CAPTURE||reduce){
+  document.querySelectorAll('.countup').forEach(function(el){
+    var suf=el.dataset.suf||'';
+    el.innerHTML=parseFloat(el.dataset.to).toLocaleString('ko-KR')+(suf?'<span class="u">'+suf+'</span>':'');
+  });
+  document.querySelectorAll('.rise').forEach(function(el){el.classList.add('vis')});
+}else{
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('vis');
+      if(e.target.classList.contains('countup'))countTo(e.target);
+      io.unobserve(e.target)}})},{threshold:.2});
+  document.querySelectorAll('.rise,.countup').forEach(function(el){io.observe(el)});
+  /* IO 실패/미발동 대비 — 뷰포트 안 요소는 로드 시 즉시 표시 */
+  addEventListener('load',function(){requestAnimationFrame(function(){
+    document.querySelectorAll('.rise').forEach(function(el){
+      if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis')})})});
+}
+</script>
+</body></html>

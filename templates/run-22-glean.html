@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GLEAN 아카이브 no.04 — 정해수 《매일 장마》 전시 기록</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* ── 추적 메타 (화면 노출 금지 · 주석 전용) ─────────────────────────────
+   RUN 22 · 짝수 = 챔피언(RUN16 KELVIN) 리믹스 · 티어 T3
+   아카이타입: 룩북/갤러리 — 전시 아카이브 (도록을 웹으로 옮긴 형식)
+   영감: 폐 스테인리스 숟가락 수백 개를 격자로 박은 벽 패널(art.centum) —
+        숟가락 볼이 같은 각도로 기울어 은빛 스페큘러가 물결처럼 흐름, 배경은 기름 먹은 웜 브라운 목재
+   무드: 다크 에스프레소 브라운 램프(차가운 회색 금지·RUN21 차콜과 구별) + 웜 그레이 페이퍼 반전 밴드
+        포인트 = 색이 아니라 스틸 스페큘러(무채색 은빛 하이라이트) 그 자체 · 그레인 필수
+   모듈 시퀀스(§A-2 변주):
+     1 얇은 픽스드 갤러리 내비
+     2 Hero: split-R — 세리프 전시 제목(라인 마스크 리빌) ∥ 목재 프레임에 걸린 CSS 숟가락 패널
+       (빛이 자동으로 천천히 지나감) + 뮤지엄 월 라벨 카드·전시중 배지 플로팅
+       ← 워드마크 글자 리빌 + 풀블리드 사진 히어로(RUN15·16·21) 폐기
+     3 Social-proof: marquee(전시 정보 티커)
+     4 Editorial: 큐레이터 서문(세리프 2단·드롭캡) + 스탯 스트립(카운트업 4)
+     5 ★T3: sticky pin + 스크롤 스크럽 「전시실 걷기」 — 가로 트랙이 아니라
+       전시실 4개가 깊이 크로스페이드로 전환되고, 각 방에서 조명이 패널 위를 쓸고 지나감
+       (KELVIN의 가로 사진 스크럽 → 관람 동선 워크스루로 표현 교체)
+     6 아카이브 색인: 작품 4점 list-rows(품번·년도·숟가락 수·크기·소장처)
+     7 ★인터랙션: 조명 스튜디오 — 조명을 드래그하면 숟가락 패널의 스페큘러가 실제로 따라 움직임
+       (칩+슬라이더 폐기 → 드래그 광원 + 방위각/고도 리드아웃)
+     8 채집 기록: 실사 3컷 + 출처 이력 원장(숟가락이 어디서 왔는가)
+     9 트러스트(신형식): 페이퍼 밴드 — 방명록 원장 + 언론 스크랩 + 큐레이터 노트 + 소장처
+       ← 평점 대문짝+★+3열 리뷰 카드(RUN16·21) 폐기
+    10 다음 전시 고지: list-rows + 인라인 소형 예약 CTA ← 다크 풀스크린 센터 CTA 폐기
+    11 판권면(콜로폰) — "끝"이 아니라 "no.05로 계속된다"로 닫음
+    12 Footer
+   T3: 스크럽 워크스루 · CSS 커스텀 프로퍼티 상속으로 500여 개 숟가락 볼의 하이라이트가 한 번에 이동
+   폴백: 모바일(≤980)/reduced-motion/no-JS → 전시실 가로 스냅 캐러셀 · ?capture=1 정적 모드
+──────────────────────────────────────────────────────────────────── */
+:root{
+--sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+--serif:'Noto Serif KR',ui-serif,Georgia,serif;
+--mono:'IBM Plex Mono','SF Mono',ui-monospace,Menlo,monospace;
+/* 에스프레소 브라운 램프 — 기름 먹은 목재. 쿨 그레이 금지 */
+--ink:#1a1410;--ink2:#221a14;--ink3:#2b211a;--line:#382c22;
+/* 웜 그레이 페이퍼(반전 밴드) — 순백 금지 */
+--paper:#e7e3db;--pline:#c9c4b9;--pink:#241e17;--pmut:#5d564b; /* --pmut vs --paper 실측 5.7:1 (AA) */
+--fg:#f2ede4;
+--body:#b3a99a; /* 본문 최다 사용 — vs --ink 실측 7.9:1 (AAA) */
+--mut:#8f8577;  /* 메타·캡션 — vs --ink 실측 5.0:1 · vs --ink2 4.7:1 (AA) */
+/* 포인트 = 색이 아니라 빛. 은빛 하이라이트 전용(채도 0에 가까운 웜 화이트) */
+--st:#e9e5da;
+/* 타입 — 모듈러 1.25배(base 16) 9단 + 디스플레이 1단(--t-d2: 전시 제목 전용). 하드코딩 px 참조 금지 */
+--t-xs:12px;--t-sm:14px;--t-base:16px;--t-md:20px;--t-lg:25px;--t-xl:31px;
+--t-2xl:39px;--t-3xl:49px;--t-4xl:61px;--t-d2:96px;
+/* 간격 — 4배수 토큰 */
+--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+/* 조명 기본값 — JS 없이도 패널이 빛을 갖도록 */
+--lx:34%;--ly:30%;--hx:34%;--hy:30%;--la:.26;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);background:var(--ink);color:var(--fg);-webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden;word-break:keep-all;overflow-wrap:break-word}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{max-width:1280px;margin:0 auto;padding-left:var(--s7);padding-right:var(--s7)}
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.17;mix-blend-mode:overlay;z-index:7;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.rise{opacity:0;transform:translateY(26px);transition:.85s cubic-bezier(.2,.7,.2,1)}.rise.vis{opacity:1;transform:none}
+.eyb{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.eyb b{color:var(--st);font-weight:500}
+h2.sec{font-family:var(--serif);font-size:clamp(var(--t-xl),4.2vw,var(--t-4xl));font-weight:900;letter-spacing:-.02em;line-height:1.14;margin:var(--s4) 0 0}
+h2.sec em{font-style:normal;background:linear-gradient(transparent 64%,rgba(233,229,218,.26) 64%)}
+
+/* ── 숟가락 패널 (이 페이지의 매체 그 자체 · CSS 도판) ──
+   볼 하이라이트는 --hx/--hy를, 패널 광 풀은 --lx/--ly/--la를 상속받는다.
+   패널 하나의 변수만 바꾸면 그 안 숟가락 수십 개의 반사가 한 번에 움직인다 */
+.spanel{position:relative;background:linear-gradient(104deg,#2b1d11,#3c2a19 46%,#241809);padding:var(--s5);overflow:hidden}
+.spanel:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(93deg,rgba(0,0,0,.28) 0 2px,transparent 2px 11px);opacity:.45}
+.cells{position:relative;display:grid;grid-template-columns:repeat(var(--cols,14),1fr);gap:var(--s1)}
+.cells>*{min-width:0}
+.u{position:relative;display:block;aspect-ratio:.58;transform:rotate(var(--rt,32deg))}
+.u .hd{position:absolute;top:0;left:50%;transform:translateX(-50%);width:24%;height:60%;border-radius:40% 40% 34% 34%/14%;background:linear-gradient(102deg,#57534a,#b6b1a6 48%,#4e4a42)}
+.u .bl{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:94%;height:52%;border-radius:50%;
+ background:radial-gradient(58% 46% at var(--hx) var(--hy),#fbfaf5 0%,#d9d5ca 15%,#a19b8e 36%,#5c574d 62%,#332e27 88%)}
+.u.dn .hd{filter:brightness(.55)}
+.u.dn .bl{background:radial-gradient(60% 50% at 50% 82%,#7d776b 0%,#48433a 45%,#231f19 82%)}
+.sheen{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;
+ background:radial-gradient(42% 55% at var(--lx) var(--ly),rgba(255,252,240,var(--la)),rgba(255,252,240,.07) 46%,transparent 72%)}
+.frame{border:var(--s3) solid #211509;outline:1px solid rgba(255,255,255,.06);background:#211509;box-shadow:0 var(--s6) var(--s9) rgba(0,0,0,.62)}
+
+/* 뮤지엄 월 라벨 */
+.wl{background:#ece8df;color:#2a251d;padding:var(--s5);max-width:280px;box-shadow:0 var(--s4) var(--s7) rgba(0,0,0,.5)}
+.wl .a{font-family:var(--serif);font-size:var(--t-sm);font-weight:700}
+.wl .t{font-family:var(--serif);font-size:var(--t-base);font-weight:900;margin-top:var(--s1)}
+.wl .t i{font-style:italic;font-weight:400;font-size:var(--t-sm);color:#5d564b;margin-left:var(--s1)}
+.wl .m{font-family:var(--mono);font-size:var(--t-xs);color:#5d564b;line-height:1.9;margin-top:var(--s3)}
+
+/* 1 ── nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;gap:var(--s5);height:64px;padding:0 var(--s7);transition:.35s}
+.nav.solid{background:rgba(26,20,16,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .lg{font-size:var(--t-md);font-weight:900;letter-spacing:.02em}
+.nav .lg small{font-family:var(--mono);font-size:var(--t-xs);font-weight:400;color:var(--mut);margin-left:var(--s3);letter-spacing:.1em}
+.nav .sp{flex:1}
+.nav a.m{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;color:var(--body);transition:.2s}.nav a.m:hover{color:var(--st)}
+.nav .bk{border:1px solid var(--st);color:var(--st);padding:var(--s2) var(--s4);font-size:var(--t-xs);font-family:var(--mono);letter-spacing:.08em;border-radius:var(--s10);transition:.2s}
+.nav .bk:hover{background:var(--st);color:var(--ink)}
+
+/* 2 ── hero : split-R (제목 ∥ 벽에 걸린 패널) */
+.hero{position:relative;min-height:100svh;display:grid;grid-template-columns:1.05fr 1fr;align-items:center;gap:var(--s8);padding:calc(var(--s9) + var(--s5)) var(--s7) var(--s8);max-width:1280px;margin:0 auto}
+.hero>*{min-width:0}
+.hero .eyb{margin:0}
+.tl{overflow:hidden}
+.tl span{display:block;transform:translateY(112%);transition:1s cubic-bezier(.19,.9,.22,1)}
+.go .tl span{transform:none}
+.hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(var(--t-3xl),8.6vw,var(--t-d2));line-height:1.04;letter-spacing:-.02em;margin:var(--s5) 0 0}
+.hero .sub{font-size:clamp(var(--t-base),1.5vw,var(--t-md));color:var(--body);max-width:460px;margin:var(--s6) 0 0;line-height:1.75}
+.hero .meta{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.06em;line-height:2;margin-top:var(--s6)}
+.hero .meta b{color:var(--st);font-weight:500}
+.hwall{position:relative;padding:var(--s6) 0}
+.hwall .frame{position:relative}
+.hwall .badge{position:absolute;top:0;left:calc(-1 * var(--s4));z-index:3;font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;background:var(--st);color:var(--ink);padding:var(--s2) var(--s4);font-weight:500}
+.hwall .wl{position:absolute;right:calc(-1 * var(--s4));bottom:calc(-1 * var(--s5));z-index:3}
+.hero .cue{position:absolute;left:var(--s7);bottom:var(--s5);font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.16em;color:var(--mut)}
+
+/* 3 ── 전시 정보 티커 */
+.mq{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--ink2);overflow:hidden;white-space:nowrap;padding-top:var(--s4);padding-bottom:var(--s4);position:relative;z-index:2}
+.mq .t{display:inline-block;animation:mqa 36s linear infinite}
+.mq .t span{font-family:var(--mono);font-size:var(--t-sm);letter-spacing:.08em;margin:0 var(--s5);color:var(--body)}
+.mq .t span i{font-style:normal;color:var(--st)}
+@keyframes mqa{to{transform:translateX(-50%)}}
+
+/* 4 ── 큐레이터 서문 */
+.pref{padding-top:var(--s10);padding-bottom:var(--s10)}
+.pcols{margin-top:var(--s7);display:grid;grid-template-columns:1.2fr 1fr;gap:var(--s8)}
+.pcols>*{min-width:0}
+.pcols p{font-family:var(--serif);font-size:clamp(var(--t-base),1.4vw,var(--t-md));line-height:1.95;color:var(--body);margin:0 0 var(--s5)}
+.pcols p:first-child:first-letter{float:left;font-size:calc(var(--t-4xl) + var(--s3));font-weight:900;color:var(--fg);line-height:.82;padding:var(--s2) var(--s3) 0 0}
+.pcols p b{color:var(--fg);font-weight:700}
+.pcols .by{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.1em;margin-top:var(--s6)}
+.stats{margin-top:var(--s8);border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(4,minmax(max-content,1fr))}
+.stats>*{min-width:0}
+.stats .c{padding:var(--s6) var(--s5);border-right:1px solid var(--line)}
+.stats .c:first-child{padding-left:0}.stats .c:last-child{border-right:none;padding-right:0}
+.stats .v{font-size:clamp(var(--t-xl),3.4vw,var(--t-3xl));font-weight:900;letter-spacing:-.03em;line-height:1;white-space:nowrap}
+.stats .v .un{font-size:.42em;font-weight:700;color:var(--body);margin-left:.08em}
+.stats .l{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s3);letter-spacing:.06em}
+
+/* 5 ── ★ 전시실 걷기 : sticky pin + 스크럽 크로스페이드 워크스루 (T3) */
+/* 기본(모바일·reduced·no-JS) = 가로 스냅 캐러셀 — 빈 스크롤 구간 금지 */
+.pin{position:relative;border-top:1px solid var(--line)}
+.stick{position:static}
+.rooms{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.room{flex:0 0 88vw;min-height:72svh;position:relative;scroll-snap-align:center;border-right:1px solid var(--line);background:radial-gradient(120% 90% at 50% 0%,var(--ink3),var(--ink) 74%);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.room .rin{display:flex;align-items:center;justify-content:center;gap:var(--s8);padding:var(--s7);width:100%}
+.room .frame{width:min(58vw,820px)}
+.room.warm .sheen{background:radial-gradient(46% 58% at var(--lx) var(--ly),rgba(255,206,142,calc(var(--la) + .06)),rgba(255,206,142,.08) 48%,transparent 74%)}
+.room.warm .u .bl{filter:sepia(.32) brightness(1.04)}
+.room .spot{position:absolute;top:0;left:var(--lx);transform:translateX(-50%);width:38%;height:52%;background:linear-gradient(180deg,rgba(255,251,238,.1),transparent 78%);clip-path:polygon(42% 0,58% 0,100% 100%,0 100%);pointer-events:none}
+.rcount{display:none}
+.rooms::-webkit-scrollbar{height:0}
+
+/* 데스크톱 + JS + 모션 허용 → 핀 워크스루 (변수 --op/--tf/--lx/--hx는 JS가 굴린다) */
+@media (min-width:981px) and (prefers-reduced-motion:no-preference){
+ html.js:not(.capture) .pin{height:460vh}
+ html.js:not(.capture) .stick{position:sticky;top:0;height:100svh;overflow:hidden}
+ html.js:not(.capture) .rooms{display:block;position:relative;height:100svh;overflow:visible}
+ html.js:not(.capture) .room{position:absolute;inset:0;border-right:none;opacity:var(--op,0);transform:var(--tf,none)}
+ html.js:not(.capture) .room:first-child{--op:1}
+ html.js:not(.capture) .rcount{display:flex;align-items:center;gap:var(--s4);position:absolute;left:var(--s7);bottom:var(--s6);z-index:9;font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;color:var(--st)}
+ html.js:not(.capture) .rcount .dots{display:flex;gap:var(--s2)}
+ html.js:not(:where(.capture)) .rcount .dots i{width:var(--s2);height:var(--s2);border-radius:50%;background:var(--line)}
+ html.js:not(.capture) .rcount .dots i.on{background:var(--st)}
+}
+
+/* 6 ── 아카이브 색인 */
+.idx{padding-top:var(--s10);padding-bottom:var(--s10)}
+.itable{margin-top:var(--s7);border-top:1px solid var(--line)}
+.irow{display:grid;grid-template-columns:max-content 2fr max-content minmax(max-content,1fr) minmax(max-content,1fr) minmax(max-content,1.2fr);gap:var(--s6);align-items:baseline;padding-top:var(--s5);padding-bottom:var(--s5);border-bottom:1px solid var(--line);transition:background .25s;padding-left:var(--s3);padding-right:var(--s3)}
+.irow>*{min-width:0}
+.irow:hover{background:var(--ink2)}
+.irow .no{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.08em}
+.irow .ti{font-family:var(--serif);font-size:clamp(var(--t-md),2vw,var(--t-lg));font-weight:900;letter-spacing:-.01em}
+.irow .ti i{font-style:italic;font-weight:400;font-size:var(--t-sm);color:var(--mut);margin-left:var(--s2)}
+.irow .yr{font-family:var(--mono);font-size:var(--t-sm);color:var(--body)}
+.irow .ct{font-family:var(--mono);font-size:var(--t-sm);color:var(--body);white-space:nowrap}
+.irow .sz{font-family:var(--mono);font-size:var(--t-sm);color:var(--mut);white-space:nowrap}
+.irow .own{font-size:var(--t-sm);color:var(--body);text-align:right}
+.ihead{display:grid;grid-template-columns:max-content 2fr max-content minmax(max-content,1fr) minmax(max-content,1fr) minmax(max-content,1.2fr);gap:var(--s6);padding:var(--s3);font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;color:var(--mut);text-transform:uppercase}
+.inote{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s4);letter-spacing:.04em}
+
+/* 7 ── ★ 조명 스튜디오 */
+.light{padding-top:var(--s10);padding-bottom:var(--s10);border-top:1px solid var(--line)}
+.lwrap{margin-top:var(--s7);display:grid;grid-template-columns:1.65fr 1fr;gap:var(--s7);align-items:stretch}
+.lwrap>*{min-width:0}
+.lstage{position:relative;cursor:crosshair;touch-action:none}
+.lstage .frame{width:100%}
+.lstage .hint{position:absolute;top:var(--s4);left:var(--s4);z-index:3;font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;color:var(--ink);background:var(--st);padding:var(--s1) var(--s3);font-weight:500}
+.lpanel{display:flex;flex-direction:column;justify-content:center;gap:var(--s6);border:1px solid var(--line);padding:var(--s6)}
+.lread{display:grid;grid-template-columns:repeat(2,minmax(max-content,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.lread>*{min-width:0}
+.lr{background:var(--ink);padding:var(--s4)}
+.lr .l{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.1em}
+.lr .v{font-family:var(--mono);font-size:var(--t-xl);font-weight:500;letter-spacing:-.01em;margin-top:var(--s1);white-space:nowrap}
+.lr .v .un{font-size:.5em;color:var(--body);margin-left:.06em}
+.lnote{font-size:var(--t-sm);color:var(--body);line-height:1.75;margin:0}
+.lnote b{color:var(--fg);font-weight:700}
+
+/* 8 ── 채집 기록 (실사 + 출처 원장) */
+.log{padding-top:var(--s10);padding-bottom:var(--s10);border-top:1px solid var(--line)}
+.shots{margin-top:var(--s7);display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s5)}
+.shots>*{min-width:0}
+.shot img{width:100%;aspect-ratio:4/3;object-fit:cover;filter:saturate(.86) contrast(1.04) brightness(.94);transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.shot:hover img{transform:scale(1.02)}
+.shot figure{margin:0;overflow:hidden;border:1px solid var(--line)}
+.shot figcaption{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.05em;line-height:1.8;margin-top:var(--s3)}
+.ledger{margin-top:var(--s8);border-top:1px solid var(--line)}
+.lrow{display:grid;grid-template-columns:2fr 1fr minmax(max-content,1fr) minmax(max-content,1fr);gap:var(--s6);align-items:baseline;padding-top:var(--s4);padding-bottom:var(--s4);border-bottom:1px solid var(--line)}
+.lrow>*{min-width:0}
+.lrow .nm{font-size:var(--t-base);font-weight:700}
+.lrow .rg{font-family:var(--mono);font-size:var(--t-sm);color:var(--mut)}
+.lrow .pd{font-family:var(--mono);font-size:var(--t-sm);color:var(--body);white-space:nowrap}
+.lrow .qt{font-family:var(--mono);font-size:var(--t-sm);color:var(--st);text-align:right;white-space:nowrap}
+.lrow.sum .nm{font-weight:400;color:var(--mut);font-size:var(--t-sm)}
+.lrow.sum .qt{font-weight:500}
+
+/* 9 ── 방명록 · 스크랩 · 소장처 (페이퍼 밴드 · 신형식 트러스트) */
+.guest{background:var(--paper);color:var(--pink);padding-top:var(--s10);padding-bottom:var(--s10)}
+.guest h2.sec em{background:linear-gradient(transparent 64%,rgba(36,30,23,.16) 64%)}
+.guest .eyb{color:var(--pmut)}
+.gcols{margin-top:var(--s8);display:grid;grid-template-columns:1.5fr 1fr;gap:var(--s9)}
+.gcols>*{min-width:0}
+.gb{border-top:1px solid var(--pink)}
+.gb .g{display:grid;grid-template-columns:max-content 1fr max-content;gap:var(--s5);align-items:baseline;padding-top:var(--s5);padding-bottom:var(--s5);border-bottom:1px solid var(--pline)}
+.gb .g>*{min-width:0}
+.gb .d{font-family:var(--mono);font-size:var(--t-xs);color:var(--pmut);letter-spacing:.06em;white-space:nowrap}
+.gb .q{font-family:var(--serif);font-style:italic;font-size:clamp(var(--t-base),1.5vw,var(--t-md));line-height:1.75;color:#2c261e}
+.gb .n{font-family:var(--mono);font-size:var(--t-xs);color:var(--pmut);white-space:nowrap}
+.glab{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.16em;color:var(--pmut);text-transform:uppercase;margin:0 0 var(--s4)}
+.scrap{border-left:2px solid var(--pink);padding-left:var(--s5);margin-bottom:var(--s7)}
+.scrap p{font-family:var(--serif);font-size:clamp(var(--t-base),1.5vw,var(--t-md));font-weight:700;line-height:1.7;margin:0;color:#241e17}
+.scrap .src{font-family:var(--mono);font-size:var(--t-xs);color:var(--pmut);margin-top:var(--s3);letter-spacing:.06em}
+.cnote{background:#ece8df;padding:var(--s5);margin-top:var(--s2)}
+.cnote p{font-size:var(--t-sm);line-height:1.8;color:#3a332a;margin:0}
+.cnote .src{font-family:var(--mono);font-size:var(--t-xs);color:var(--pmut);margin-top:var(--s3);letter-spacing:.06em}
+.owns{margin-top:var(--s8);border-top:1px solid var(--pink);padding-top:var(--s5);display:flex;flex-wrap:wrap;gap:var(--s3) var(--s7);align-items:baseline}
+.owns span{font-size:var(--t-base);font-weight:800;color:#33';2c24}
+.owns span{color:#332c24}
+.owns span i{font-style:normal;font-family:var(--mono);font-size:var(--t-xs);color:var(--pmut);font-weight:400;margin-left:var(--s2)}
+
+/* 10 ── 다음 전시 (조용한 종결 · 풀스크린 CTA 아님) */
+.next{padding-top:var(--s10);padding-bottom:var(--s9);border-top:1px solid var(--line)}
+.nrows{margin-top:var(--s7);border-top:1px solid var(--line)}
+.nrow{display:grid;grid-template-columns:minmax(max-content,1fr) 2fr 1.2fr minmax(max-content,1fr);gap:var(--s6);align-items:baseline;padding-top:var(--s6);padding-bottom:var(--s6);border-bottom:1px solid var(--line)}
+.nrow>*{min-width:0}
+.nrow .dt{font-family:var(--mono);font-size:var(--t-sm);color:var(--st);white-space:nowrap}
+.nrow .tt{font-family:var(--serif);font-size:clamp(var(--t-md),2.2vw,var(--t-xl));font-weight:900;letter-spacing:-.01em}
+.nrow .tt i{font-style:italic;font-weight:400;font-size:var(--t-sm);color:var(--mut);margin-left:var(--s2)}
+.nrow .pl{font-size:var(--t-sm);color:var(--body)}
+.nrow .stt{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);text-align:right;letter-spacing:.1em;white-space:nowrap}
+.book{margin-top:var(--s7);display:flex;align-items:center;gap:var(--s6);flex-wrap:wrap}
+.book p{font-size:var(--t-sm);color:var(--body);margin:0;max-width:520px;line-height:1.75}
+.book p b{color:var(--fg)}
+.btn{display:inline-flex;gap:var(--s3);align-items:center;border:1px solid var(--st);color:var(--st);font-family:var(--mono);font-size:var(--t-sm);padding:var(--s3) var(--s5);border-radius:var(--s10);transition:.2s;white-space:nowrap}
+.btn:hover{background:var(--st);color:var(--ink)}
+
+/* 11 ── 판권면 (콜로폰) */
+.colo{border-top:1px solid var(--line);background:var(--ink2);padding-top:var(--s9);padding-bottom:var(--s9)}
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s6) var(--s8);margin-top:var(--s6)}
+.cgrid>*{min-width:0}
+.ci .l{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;color:var(--mut);text-transform:uppercase}
+.ci .v{font-size:var(--t-sm);color:var(--body);margin-top:var(--s2);line-height:1.8}
+.ci .v b{color:var(--fg);font-weight:700}
+.cont{font-family:var(--serif);font-style:italic;font-size:clamp(var(--t-base),1.6vw,var(--t-md));color:var(--body);margin:var(--s8) 0 0;border-top:1px solid var(--line);padding-top:var(--s6)}
+.cont b{color:var(--st);font-weight:700;font-style:normal}
+footer{border-top:1px solid var(--line);padding:var(--s6) var(--s7);display:flex;justify-content:space-between;gap:var(--s5);flex-wrap:wrap;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut)}
+footer a:hover{color:var(--st)}
+
+@media(max-width:980px){
+.wrap{padding-left:var(--s5);padding-right:var(--s5)}
+.nav{padding:0 var(--s5)}.nav a.m{display:none}
+.hero{grid-template-columns:1fr;gap:var(--s6);padding:calc(var(--s9) + var(--s4)) var(--s5) var(--s9)}
+.hwall{padding:var(--s4) 0 var(--s8)}
+.hwall .wl{position:static;margin-top:var(--s5);max-width:none}
+.hwall .badge{left:0}
+.hero .cue{left:var(--s5)}
+.pcols{grid-template-columns:1fr;gap:var(--s5)}
+.stats{grid-template-columns:repeat(2,minmax(max-content,1fr))}
+.stats .c{border-bottom:1px solid var(--line);padding-left:0}
+.room{flex:0 0 88vw}
+.room .rin{flex-direction:column;gap:var(--s5)}
+.room .frame{width:min(76vw,560px)}
+.room .wl{max-width:none;width:min(76vw,560px)}
+.ihead{display:none}
+.irow{grid-template-columns:max-content 1fr max-content;gap:var(--s3) var(--s5)}
+.irow .sz{display:none}
+.irow .yr{display:none}
+.irow .own{grid-column:2/4;text-align:left;color:var(--mut);font-size:var(--t-xs);font-family:var(--mono)}
+.lwrap{grid-template-columns:1fr}
+.shots{grid-template-columns:1fr}
+.lrow{grid-template-columns:1fr minmax(max-content,1fr);gap:var(--s2) var(--s5)}
+.lrow .rg{display:none}
+.lrow .pd{text-align:right;color:var(--mut)}
+.gcols{grid-template-columns:1fr;gap:var(--s8)}
+.gb .g{grid-template-columns:max-content 1fr;grid-auto-rows:auto}
+.gb .n{grid-column:2;text-align:right}
+.nrow{grid-template-columns:minmax(max-content,1fr) 1fr;gap:var(--s2) var(--s5)}
+.nrow .pl{grid-column:2}.nrow .stt{grid-column:2;text-align:left}
+.cgrid{grid-template-columns:1fr 1fr}
+}
+@media(prefers-reduced-motion:reduce){
+html{scroll-behavior:auto}
+.rise{opacity:1;transform:none;transition:none}
+.tl span{transform:none;transition:none}
+.mq .t{animation:none}
+.shot img{transition:none}.shot:hover img{transform:none}
+.irow{transition:none}
+}
+
+/* ── 캡처 모드 (?capture=1) — 리빌 강제·핀 해제 후 세로 전개·애니 정지·카운트업 고정 ── */
+html.capture .rise{opacity:1;transform:none;transition:none}
+html.capture .tl span{transform:none;transition:none}
+html.capture .hero{min-height:auto}
+html.capture .mq .t{animation:none}
+html.capture .pin{height:auto}
+html.capture .stick{position:static;height:auto}
+html.capture .rooms{display:block;height:auto;overflow:visible}
+html.capture .room{position:relative;inset:auto;opacity:1;transform:none;flex:none;width:auto;min-height:auto;padding:var(--s8) 0;border-right:none;border-bottom:1px solid var(--line)}
+html.capture .rcount{display:none}
+</style></head><body>
+<div class="grain"></div>
+
+<!-- 1 · nav -->
+<div class="nav" id="nav">
+  <span class="lg">GLEAN<small>채집 금속 아카이브 · NO.04</small></span><span class="sp"></span>
+  <a class="m" href="#pref">서문</a>
+  <a class="m" href="#rooms">전시실</a>
+  <a class="m" href="#index">색인</a>
+  <a class="m" href="#light">조명 스튜디오</a>
+  <a class="m" href="#guest">방명록</a>
+  <a class="bk" href="#next">관람 예약</a>
+</div>
+
+<!-- 2 · hero : 도록 표지 — 세리프 제목 ∥ 벽에 걸린 패널 -->
+<section class="hero" id="top">
+  <div>
+    <p class="eyb"><b>GLEAN</b> ARCHIVE NO.04 · EXHIBITION RECORD</p>
+    <h1 id="ht"><span class="tl"><span>매일,</span></span><span class="tl"><span>장마</span></span></h1>
+    <p class="sub">정해수는 6년 동안 버려진 숟가락 3,812개를 주웠고, 그것을 전부 같은 각도로 눕혀 벽에 박았다. 조명이 지나갈 때마다 은빛이 물결처럼 흐른다 — 젖은 계절의 빛이다.</p>
+    <p class="meta"><b>정해수 개인전</b> — 폐 스테인리스 숟가락 연작<br>2026.07.18 — 09.06 · 을지로 별관 2F<br>화—일 11:00—19:00 · 수요일 휴관 · 관람 무료</p>
+  </div>
+  <div class="hwall">
+    <div class="frame">
+      <div class="spanel" id="heroPanel">
+        <div class="cells" data-cols="11" data-rows="7" data-pat="field"></div>
+        <div class="sheen"></div>
+      </div>
+    </div>
+    <span class="badge">전시 중 · 9.6까지</span>
+    <div class="wl">
+      <p class="a">정해수 鄭海水 (b. 1972)</p>
+      <p class="t">장마 들판<i>Monsoon Field</i>, 2026</p>
+      <p class="m">폐 스테인리스 숟가락 1,204개, 오일드 월넛<br>244 × 122 cm<br>작가 소장</p>
+    </div>
+  </div>
+  <span class="cue">SCROLL — 전시실이 이어집니다 ↓</span>
+</section>
+
+<!-- 3 · 전시 정보 티커 -->
+<div class="mq" aria-hidden="true"><div class="t" id="mq"></div></div>
+
+<!-- 4 · 큐레이터 서문 -->
+<section class="pref wrap" id="pref">
+  <p class="eyb rise">// 서문 — PREFACE</p>
+  <h2 class="sec rise">버려진 것들이 <em>빛</em>을 갖는 방식</h2>
+  <div class="pcols rise">
+    <div>
+      <p>숟가락은 하루 세 번 입에 닿는 가장 사적인 금속이지만, 식당이 문을 닫는 순간 가장 먼저 버려지는 물건이기도 하다. 정해수는 2020년 겨울, 폐업한 기사식당 앞 고물 자루에서 첫 640개를 주웠다. <b>닦고, 같은 각도로 눕히고, 격자로 박는다.</b> 작업은 그것이 전부다.</p>
+      <p>그런데 볼(bowl)이 전부 같은 방향으로 기울어 있기 때문에, 조명이 움직이면 수백 개의 오목한 면이 한꺼번에 빛을 넘긴다. 벽이 젖은 들판처럼 일렁인다. 작가는 이것을 "매일 장마"라고 부른다.</p>
+    </div>
+    <div>
+      <p>이번 전시는 연작 네 점을 제작 순서대로 건다. 관람 동선의 끝이 아니라 중간에 조명 콘솔을 두었다 — 빛의 각도가 곧 이 작업의 붓질이라는 것을, 관람자가 직접 밀어 보며 확인하게 하기 위해서다.</p>
+      <p class="by">글 — 한소진 · GLEAN 아카이브 책임 큐레이터</p>
+    </div>
+  </div>
+  <div class="stats rise">
+    <div class="c"><div class="v countup" data-to="3812" data-suf="개">0</div><div class="l">채집된 숟가락 · 연작 전체</div></div>
+    <div class="c"><div class="v countup" data-to="47" data-suf="곳">0</div><div class="l">기증·수거처 (식당·급식소·부대)</div></div>
+    <div class="c"><div class="v countup" data-to="6" data-suf="년">0</div><div class="l">채집 기간 2020—2026</div></div>
+    <div class="c"><div class="v countup" data-to="4" data-suf="점">0</div><div class="l">출품작 · 전시실 순서대로</div></div>
+  </div>
+</section>
+
+<!-- 5 · ★ 전시실 걷기 : 스크럽 워크스루 -->
+<section class="pin" id="rooms">
+  <div class="stick">
+    <div class="rooms" id="roomTrack">
+      <div class="room" data-i="0">
+        <div class="spot"></div>
+        <div class="rin">
+          <div class="frame"><div class="spanel"><div class="cells" data-cols="16" data-rows="5" data-pat="heat"></div><div class="sheen"></div></div></div>
+          <div class="wl"><p class="a">ROOM 01</p><p class="t">백열 白熱<i>White Heat</i>, 2023</p><p class="m">폐 스테인리스 숟가락 500개, 오일드 월넛<br>180 × 90 cm · 텅스텐 단일 조명<br>서울공예박물관 소장 (대여 출품)</p></div>
+        </div>
+      </div>
+      <div class="room warm" data-i="1">
+        <div class="spot"></div>
+        <div class="rin">
+          <div class="frame"><div class="spanel"><div class="cells" data-cols="16" data-rows="5" data-pat="flood"></div><div class="sheen"></div></div></div>
+          <div class="wl"><p class="a">ROOM 02</p><p class="t">범람 汎濫<i>Overflow</i>, 2024</p><p class="m">폐 스테인리스 숟가락 986개, 오일드 월넛<br>220 × 110 cm · 행마다 기울기가 5°씩 다름<br>국립현대미술관 미술은행 소장 (2025 수집)</p></div>
+        </div>
+      </div>
+      <div class="room" data-i="2">
+        <div class="spot"></div>
+        <div class="rin">
+          <div class="frame"><div class="spanel"><div class="cells" data-cols="16" data-rows="6" data-pat="portrait"></div><div class="sheen"></div></div></div>
+          <div class="wl"><p class="a">ROOM 03</p><p class="t">수저의 초상<i>Portrait</i>, 2025</p><p class="m">폐 스테인리스 숟가락 1,122개, 오일드 월넛<br>244 × 122 cm · 중앙 원형은 볼을 뒤집어 박음<br>개인 소장 (대여 출품)</p></div>
+        </div>
+      </div>
+      <div class="room" data-i="3">
+        <div class="spot"></div>
+        <div class="rin">
+          <div class="frame"><div class="spanel"><div class="cells" data-cols="16" data-rows="5" data-pat="field"></div><div class="sheen"></div></div></div>
+          <div class="wl"><p class="a">ROOM 04 — 신작</p><p class="t">장마 들판<i>Monsoon Field</i>, 2026</p><p class="m">폐 스테인리스 숟가락 1,204개, 오일드 월넛<br>244 × 122 cm · 이번 전시로 첫 공개<br>작가 소장</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="rcount" id="rcount"><span id="rlabel">전시실 01 / 04 — 백열</span><span class="dots" id="rdots"><i class="on"></i><i></i><i></i><i></i></span></div>
+  </div>
+</section>
+
+<!-- 6 · 아카이브 색인 -->
+<section class="idx wrap" id="index">
+  <p class="eyb rise">// 색인 — CATALOGUE RAISONNÉ</p>
+  <h2 class="sec rise">연작 네 점, 숟가락 삼천팔백열두 개.</h2>
+  <div class="itable rise">
+    <div class="ihead"><span>NO.</span><span>제목</span><span>년도</span><span>숟가락</span><span>크기 (cm)</span><span style="text-align:right">소장</span></div>
+    <div class="irow"><span class="no">GL-01</span><span class="ti">백열 白熱<i>White Heat</i></span><span class="yr">2023</span><span class="ct">500개</span><span class="sz">180 × 90</span><span class="own">서울공예박물관</span></div>
+    <div class="irow"><span class="no">GL-02</span><span class="ti">범람 汎濫<i>Overflow</i></span><span class="yr">2024</span><span class="ct">986개</span><span class="sz">220 × 110</span><span class="own">국립현대미술관 미술은행</span></div>
+    <div class="irow"><span class="no">GL-03</span><span class="ti">수저의 초상<i>Portrait</i></span><span class="yr">2025</span><span class="ct">1,122개</span><span class="sz">244 × 122</span><span class="own">개인 소장</span></div>
+    <div class="irow"><span class="no">GL-04</span><span class="ti">장마 들판<i>Monsoon Field</i></span><span class="yr">2026</span><span class="ct">1,204개</span><span class="sz">244 × 122</span><span class="own">작가 소장</span></div>
+  </div>
+  <p class="inote">화면의 패널 도판은 격자 구성을 따른 축소 재현입니다 · 실물 숟가락 수와 다릅니다</p>
+</section>
+
+<!-- 7 · ★ 조명 스튜디오 -->
+<section class="light wrap" id="light">
+  <p class="eyb rise">// 조명 스튜디오 — LIGHT CONSOLE</p>
+  <h2 class="sec rise">조명을 옮기면, 그림이 바뀝니다.</h2>
+  <div class="lwrap">
+    <div class="lstage rise" id="lstage">
+      <span class="hint" id="lhint">조명을 끌어 옮겨 보세요</span>
+      <div class="frame"><div class="spanel" id="lpanel"><div class="cells" data-cols="15" data-rows="6" data-pat="field"></div><div class="sheen"></div></div></div>
+    </div>
+    <div class="lpanel rise">
+      <div class="lread">
+        <div class="lr"><div class="l">방위각 / AZIMUTH</div><div class="v" id="azv">+0<span class="un">°</span></div></div>
+        <div class="lr"><div class="l">고도 / ELEVATION</div><div class="v" id="elv">42<span class="un">°</span></div></div>
+      </div>
+      <p class="lnote"><b>이 작업의 붓질은 조명입니다.</b> 볼 3,812개가 전부 같은 각도로 누워 있어, 광원이 한 뼘 움직이면 하이라이트 전체가 물결처럼 따라 움직입니다. 전시장에서는 천장 레일의 스포트 두 개가 12분 주기로 왕복합니다 — 같은 벽이 하루에 일흔 번 다른 그림이 됩니다.</p>
+      <p class="lnote">위 패널은 «장마 들판»의 격자를 따른 축소 재현입니다. 실제 전시실에서는 관람자가 콘솔 다이얼로 같은 조작을 할 수 있습니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · 채집 기록 -->
+<section class="log wrap" id="log">
+  <p class="eyb rise">// 채집 기록 — PROVENANCE</p>
+  <h2 class="sec rise">숟가락은 전부 어딘가의 상에서 왔다.</h2>
+  <div class="shots rise">
+    <div class="shot"><figure>
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=82&auto=format&fit=crop" alt="어둑한 조명의 식당 내부" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(150deg,#3c2a19,#1a1410 70%)';this.parentNode.style.aspectRatio='4/3'">
+      <figcaption>숟가락이 일하던 자리 — 연작의 재료 대부분은 문을 닫은 식당의 홀에서 왔다.</figcaption>
+    </figure></div>
+    <div class="shot"><figure>
+      <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1200&q=82&auto=format&fit=crop" alt="서가에 꽂힌 책들" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(150deg,#33261a,#1a1410 70%)';this.parentNode.style.aspectRatio='4/3'">
+      <figcaption>자료실 — 수저의 형태사를 좇는 문헌들. 작가는 채집한 모든 로트의 연대를 기록한다.</figcaption>
+    </figure></div>
+    <div class="shot"><figure>
+      <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200&q=82&auto=format&fit=crop" alt="나무 탁자 위의 커피" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(150deg,#3a2b1c,#1a1410 70%)';this.parentNode.style.aspectRatio='4/3'">
+      <figcaption>작업 일지 — 새벽 세척을 끝낸 뒤의 커피. 숟가락은 하루 마흔 개까지만 닦는다.</figcaption>
+    </figure></div>
+  </div>
+  <div class="ledger rise">
+    <div class="lrow"><span class="nm">대성기사식당</span><span class="rg">서울 을지로 · 폐업 수거</span><span class="pd">2020—2022</span><span class="qt">640개</span></div>
+    <div class="lrow"><span class="nm">제3보급대대 취사장</span><span class="rg">경기 파주 · 불용품 불하</span><span class="pd">2021</span><span class="qt">512개</span></div>
+    <div class="lrow"><span class="nm">매동초등학교 급식소</span><span class="rg">서울 종로 · 교체분 기증</span><span class="pd">2022—2023</span><span class="qt">486개</span></div>
+    <div class="lrow"><span class="nm">백년예식장 연회부</span><span class="rg">인천 · 폐업 수거</span><span class="pd">2023</span><span class="qt">380개</span></div>
+    <div class="lrow"><span class="nm">금강휴게소</span><span class="rg">충북 옥천 · 교체분 기증</span><span class="pd">2024</span><span class="qt">341개</span></div>
+    <div class="lrow sum"><span class="nm">…외 42곳 — 로트별 수거 대장은 전시장 열람대에 있습니다</span><span class="rg"></span><span class="pd">2020—2026</span><span class="qt">계 3,812개</span></div>
+  </div>
+</section>
+
+<!-- 9 · 방명록 · 스크랩 · 소장처 (페이퍼 밴드) -->
+<section class="guest" id="guest">
+  <div class="wrap">
+    <p class="eyb rise">// 기록 — GUESTBOOK & PRESS</p>
+    <h2 class="sec rise">관람자들이 <em>연필로</em> 남기고 간 것</h2>
+    <div class="gcols">
+      <div class="gb rise">
+        <div class="g"><span class="d">07.19</span><p class="q">"숟가락이 이렇게 쓸쓸한 물건인 줄 몰랐습니다. 백열 앞에서 한참 서 있었어요."</p><span class="n">— 김입분</span></div>
+        <div class="g"><span class="d">07.26</span><p class="q">"조명이 지나갈 때 벽이 숨을 쉬는 것 같다. 두 바퀴째 보고 갑니다."</p><span class="n">— 이재훈 · 재방문</span></div>
+        <div class="g"><span class="d">08.02</span><p class="q">"우리 학교 숟가락도 여기 있대요!! 매동초 6학년 3반 다 같이 왔다 감."</p><span class="n">— 서율 외 22명</span></div>
+        <div class="g"><span class="d">08.05</span><p class="q">"아버지가 기사식당을 하셨습니다. 저 640개 중에 아버지 것이 있을 것만 같아서, 오래 찾았습니다."</p><span class="n">— 익명</span></div>
+      </div>
+      <div class="rise">
+        <p class="glab">언론 스크랩</p>
+        <div class="scrap">
+          <p>"정해수는 수저를 닦아 빛을 만든다. 그 빛은 재료의 이력서다."</p>
+          <p class="src">월간 공예 2026년 8월호 — 리뷰 「젖은 금속」</p>
+        </div>
+        <div class="scrap">
+          <p>"버려진 3,812개의 오후가 한 벽에 걸렸다."</p>
+          <p class="src">한겨레 문화면 2026.07.21</p>
+        </div>
+        <p class="glab" style="margin-top:var(--s7)">큐레이터 노트</p>
+        <div class="cnote">
+          <p>방명록은 매주 월요일 스캔해 아카이브에 합칩니다. 이 페이지의 인용은 관람자 동의를 받은 것만 옮겼습니다. 손글씨 원본은 전시 종료 후 도록 2쇄 부록으로 들어갑니다.</p>
+          <p class="src">— 한소진, 책임 큐레이터</p>
+        </div>
+      </div>
+    </div>
+    <div class="owns rise">
+      <span>서울공예박물관<i>«백열» 2024 소장</i></span>
+      <span>국립현대미술관 미술은행<i>«범람» 2025 수집</i></span>
+      <span>개인 소장<i>«수저의 초상»</i></span>
+      <span>작가 소장<i>«장마 들판»</i></span>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · 다음 전시 — "계속된다"로 닫는 종결부 -->
+<section class="next wrap" id="next">
+  <p class="eyb rise">// 다음 — UPCOMING</p>
+  <h2 class="sec rise">이 아카이브는 여기서 끝나지 않습니다.</h2>
+  <div class="nrows rise">
+    <div class="nrow"><span class="dt">2026.09.18 — 10.26</span><span class="tt">쓸모의 저편<i>단체전</i></span><span class="pl">청주공예비엔날레 특별전 · «범람» 출품</span><span class="stt">순회 확정</span></div>
+    <div class="nrow"><span class="dt">2026.11</span><span class="tt">도록 «매일 장마» 2쇄<i>방명록 부록 수록</i></span><span class="pl">GLEAN 아카이브 발행 · ₩38,000</span><span class="stt">예약 접수 중</span></div>
+    <div class="nrow"><span class="dt">2027.03</span><span class="tt">장마 2<i>개인전 · 신작 연작</i></span><span class="pl">서울 · 장소 미정</span><span class="stt">준비 중</span></div>
+  </div>
+  <div class="book rise">
+    <a class="btn" href="mailto:visit@glean.kr">관람 예약 — visit@glean.kr</a>
+    <p><b>예약 없이도 입장할 수 있습니다.</b> 다만 조명 콘솔 체험은 예약 관람(매시 정각, 8명)에서만 열립니다. 수요일 휴관.</p>
+  </div>
+</section>
+
+<!-- 11 · 판권면 -->
+<section class="colo">
+  <div class="wrap">
+    <p class="eyb rise">// 판권 — COLOPHON</p>
+    <div class="cgrid rise">
+      <div class="ci"><p class="l">전시</p><p class="v"><b>정해수 — 매일, 장마</b><br>2026.07.18 — 09.06 · 을지로 별관 2F</p></div>
+      <div class="ci"><p class="l">주최 · 기획</p><p class="v">GLEAN 채집 금속 아카이브<br>책임 큐레이터 한소진</p></div>
+      <div class="ci"><p class="l">조명 설계</p><p class="v">스튜디오 무영<br>왕복 레일 스포트 2기 · 12분 주기</p></div>
+      <div class="ci"><p class="l">도록</p><p class="v">초판 800부 · 2026.07<br>글 한소진 · 사진 스튜디오 무영</p></div>
+      <div class="ci"><p class="l">서체</p><p class="v">Noto Serif KR · Pretendard<br>IBM Plex Mono</p></div>
+      <div class="ci"><p class="l">아카이브</p><p class="v">이 페이지는 전시 종료 후에도<br>기록으로 남습니다</p></div>
+    </div>
+    <p class="cont rise">아카이브 no.05는 <b>«쓸모의 저편»</b>과 함께 돌아옵니다 — 숟가락은 계속 주워지고 있습니다.</p>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 GLEAN 채집 금속 아카이브 · 서울 중구 을지로 별관 2F</span>
+  <span>화—일 11:00—19:00 · 수요일 휴관</span>
+  <span><a href="#index">색인</a> · <a href="#guest">방명록</a> · <a href="#next">다음 전시</a></span>
+</footer>
+
+<script>
+document.documentElement.classList.add('js');
+/* §D 스크롤복원 — smooth가 scrollTo를 애니메이션으로 만들어 복원과 경합 → 초기 리셋 동안만 auto */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){var h=document.documentElement,prev=h.style.scrollBehavior;h.style.scrollBehavior='auto';window.scrollTo(0,0);
+ addEventListener('load',function(){window.scrollTo(0,0);setTimeout(function(){h.style.scrollBehavior=prev},60)});})();
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+/* nav */
+var nav=document.getElementById('nav');
+addEventListener('scroll',function(){nav.classList.toggle('solid',scrollY>40)},{passive:true});
+
+/* 히어로 제목 — 라인 마스크 리빌 (글자 리빌 아님) */
+addEventListener('load',function(){requestAnimationFrame(function(){document.getElementById('ht').classList.add('go')})});
+setTimeout(function(){document.getElementById('ht').classList.add('go')},420);
+
+/* 티커 — 전시 정보 2회 반복(-50% 순환) */
+(function(){var items=['«매일, 장마» <i>정해수</i>','2026.07.18 — 09.06','을지로 별관 2F','작품 <i>4점</i>','폐 스테인리스 숟가락 <i>3,812개</i>','관람 무료','수요일 휴관','도록 <i>초판 800부</i>'];
+ var h='';for(var r=0;r<2;r++){items.forEach(function(t){h+='<span>'+t+'</span><span style="color:var(--mut)">·</span>'})}
+ document.getElementById('mq').innerHTML=h;})();
+
+/* ── 숟가락 패널 빌더 — 작품마다 격자 패턴이 다르다 ──
+   field: 균일 32° · flood: 행마다 기울기 증가+열 방향 파동 · portrait: 중앙 타원은 볼을 뒤집음 · heat: 균일 30°(웜 룸) */
+function buildPanel(cells){
+  var cols=+cells.dataset.cols,rows=+cells.dataset.rows,pat=cells.dataset.pat||'field',h='';
+  cells.style.setProperty('--cols',cols);
+  for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){
+    var rt=32,dn=false;
+    if(pat==='flood')rt=Math.round((8+r*5+6*Math.sin(c/2.2))*10)/10;
+    else if(pat==='heat')rt=30;
+    else if(pat==='portrait'){var cx=(cols-1)/2,cy=(rows-1)/2,dx=(c-cx)/(cols*.30),dy=(r-cy)/(rows*.36);dn=(dx*dx+dy*dy)<1}
+    h+='<i class="u'+(dn?' dn':'')+'" style="--rt:'+rt+'deg"><i class="hd"></i><i class="bl"></i></i>';
+  }
+  cells.innerHTML=h;
+}
+document.querySelectorAll('.cells').forEach(buildPanel);
+
+/* 패널 광원 세팅 — 변수 5개만 바꾸면 그 패널의 볼 수십 개가 한 번에 반응 */
+function setLight(panel,x,y,a){ /* x,y: 0~100 */
+  panel.style.setProperty('--lx',x.toFixed(1)+'%');
+  panel.style.setProperty('--ly',y.toFixed(1)+'%');
+  panel.style.setProperty('--hx',(18+x*.64).toFixed(1)+'%');
+  panel.style.setProperty('--hy',(16+y*.5).toFixed(1)+'%');
+  if(a!=null)panel.style.setProperty('--la',a.toFixed(3));
+}
+
+/* 히어로 패널 — 빛이 천천히 왕복(전시장 레일 스포트의 재현) */
+var heroPanel=document.getElementById('heroPanel');
+if(!reduce){
+  (function(){var t0=performance.now();
+   function sweep(t){var e=(t-t0)/1000;
+     setLight(heroPanel,50+38*Math.sin(e/5.2),34+9*Math.sin(e/3.4),.24+.05*Math.sin(e/5.2));
+     requestAnimationFrame(sweep)}
+   requestAnimationFrame(sweep)})();
+}else{setLight(heroPanel,38,30,.26)}
+
+/* ── ★ 전시실 워크스루 스크럽 (T3) — 방이 깊이로 열리고, 방마다 조명이 벽을 쓸고 지나간다 ── */
+var pinEl=document.getElementById('rooms'),roomEls=[].slice.call(document.querySelectorAll('.room')),
+    rlabel=document.getElementById('rlabel'),rdots=document.getElementById('rdots');
+var RNAMES=['백열','범람','수저의 초상','장마 들판'];
+var deskMQ=matchMedia('(min-width:981px)');
+function clamp(v,a,b){return Math.min(Math.max(v,a),b)}
+function scrub(){
+  if(reduce||!deskMQ.matches)return;
+  var r=pinEl.getBoundingClientRect(),total=pinEl.offsetHeight-innerHeight;
+  if(total<=0)return;
+  var p=clamp(-r.top/total,0,1),seg=p*roomEls.length,idx=Math.min(Math.floor(seg),roomEls.length-1);
+  roomEls.forEach(function(el,i){
+    var t=seg-i,op=0;
+    if(t>-0.22&&t<1.22)op=t<0?1+t/0.22:(t>1?1-(t-1)/0.22:1);
+    el.style.setProperty('--op',op.toFixed(3));
+    el.style.setProperty('--tf','scale('+(1.045-.045*clamp((t+.22)/.44,0,1)).toFixed(4)+')');
+    el.style.zIndex=1+i;
+    var panel=el.querySelector('.spanel');
+    setLight(panel,18+64*clamp(t,0,1),34,.26);
+  });
+  rlabel.textContent='전시실 0'+(idx+1)+' / 04 — '+RNAMES[idx];
+  [].forEach.call(rdots.children,function(d,i){d.classList.toggle('on',i===idx)});
+}
+addEventListener('scroll',scrub,{passive:true});addEventListener('resize',scrub);scrub();
+/* 모바일·reduced에선 캐러셀 폴백 — 각 방 패널에 정적 광 */
+if(reduce||!deskMQ.matches){roomEls.forEach(function(el,i){setLight(el.querySelector('.spanel'),26+i*16,32,.26)})}
+
+/* ── ★ 조명 스튜디오 — 광원을 끌면 스페큘러가 실제로 따라온다 ── */
+var lstage=document.getElementById('lstage'),lpanel=document.getElementById('lpanel'),
+    azv=document.getElementById('azv'),elv=document.getElementById('elv'),lhint=document.getElementById('lhint');
+function lightAt(clientX,clientY){
+  var r=lpanel.getBoundingClientRect();
+  var x=clamp((clientX-r.left)/r.width,0,1)*100,y=clamp((clientY-r.top)/r.height,0,1)*100;
+  var el=Math.round(15+(1-y/100)*55);
+  setLight(lpanel,x,y,.16+(el-15)/55*.2);
+  var az=Math.round((x/100-.5)*120);
+  azv.innerHTML=(az>=0?'+':'−')+Math.abs(az)+'<span class="un">°</span>';
+  elv.innerHTML=el+'<span class="un">°</span>';
+}
+if(!CAPTURE){
+  var ldrag=false,fine=matchMedia('(pointer:fine)').matches;
+  lstage.addEventListener('pointerdown',function(e){ldrag=true;lstage.setPointerCapture(e.pointerId);lightAt(e.clientX,e.clientY);lhint.textContent='조명 이동 중 —'});
+  lstage.addEventListener('pointermove',function(e){if(ldrag||fine)lightAt(e.clientX,e.clientY)});
+  ['pointerup','pointercancel'].forEach(function(ev){lstage.addEventListener(ev,function(){ldrag=false;lhint.textContent='조명을 끌어 옮겨 보세요'})});
+}else{setLight(lpanel,36,30,.26)}
+
+/* 카운트업 — 단위는 span 분리 + nowrap(부모 .v) */
+function countTo(el){var to=parseFloat(el.dataset.to),suf=el.dataset.suf||'',dur=1300,t0=performance.now();
+ var unit=suf?'<span class="un">'+suf+'</span>':'';
+ function s(t){var p=Math.min((t-t0)/dur,1),e=1-Math.pow(1-p,3);
+  el.innerHTML=Math.round(to*e).toLocaleString('ko-KR')+unit;if(p<1)requestAnimationFrame(s)}requestAnimationFrame(s)}
+if(CAPTURE){
+  document.querySelectorAll('.countup').forEach(function(el){
+    var suf=el.dataset.suf||'';
+    el.innerHTML=parseFloat(el.dataset.to).toLocaleString('ko-KR')+(suf?'<span class="un">'+suf+'</span>':'');
+  });
+  document.querySelectorAll('.rise').forEach(function(el){el.classList.add('vis')});
+  roomEls.forEach(function(el,i){setLight(el.querySelector('.spanel'),26+i*16,32,.26)});
+}else{
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){
+    e.target.classList.add('vis');
+    if(e.target.classList.contains('countup'))countTo(e.target);
+    io.unobserve(e.target)}})},{threshold:.18});
+  document.querySelectorAll('.rise,.countup').forEach(function(el){io.observe(el)});
+}
+/* §D 로드 폴백 — 뷰포트 안 요소는 IO와 무관하게 즉시 표시 */
+addEventListener('load',function(){requestAnimationFrame(function(){
+  document.querySelectorAll('.rise').forEach(function(el){
+    if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis')})})});
+</script>
+</body></html>
