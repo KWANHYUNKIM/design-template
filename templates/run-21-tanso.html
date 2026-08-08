@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TANSO 탄소 — 소량 생산 금속 하드웨어 · 사양 카탈로그 CAT.09</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap">
+<style>
+/* ── 추적 메타 (화면 노출 금지 · 주석 전용) ─────────────────────────────
+   RUN 21 · 구조 P14 「Spec Sheet / Industrial Index」(신규 · AKLR+Airmee 조사) · 티어 T3
+   아카이타입: 카탈로그/사양서 — 문래동 소량 생산 금속 하드웨어 공방 "TANSO 탄소"
+   무드: 기름 낀 웜 차콜 + 연한 스틸 페이퍼 + 파우더코트 오렌지 1색(RAL 2004) · 그레인+브러시드 메탈
+   모듈 시퀀스(§A-2 변주):
+     1 모노 인덱스 바(Header: 촘촘한 mono index — AKLR식)
+     2 Social-proof: stat-band  ← 히어로보다 먼저(관습 파괴 지점, 카운트업)
+     3 Hero: fullbleed + 크롭 초대형 워드마크(좌우 overflow) — 강조어 1개
+     4 Collection: bento(비대칭 12col 인덱스 그리드, CSS 부품 도판 + 실사 혼합 + 치수선)
+     5 Social-proof(보조): marquee(소재/설비 티커)
+     6 인터랙티브 사양 컨피규레이터 ★ (마감 칩 + 두께 슬라이더 → 부품 렌더/중량/단가/납기 실시간)
+     7 Editorial: numbered-steps(공정 5단계, 스크롤 리빌)
+     8 Proof: rating-summary+cards(라이트 반전 스틸 페이퍼 밴드 + 납품 크레딧)
+     9 CTA: centered-cta 다크 풀스크린(마그네틱 버튼)
+    10 Footer
+   T3: 컨피규레이터 스테이지 3D 틸트 + 포인터 추적 스펙큘러 글레어(부품 1곳에만 한정)
+   T2: 카운트업(스탯밴드) · 워드마크 글자 리빌 · 마그네틱 버튼 · 마퀴 · hover 리빌 캡션
+   폴백: prefers-reduced-motion/터치 → 틸트·마그네틱·마퀴 정지, 리빌 즉시 표시 · ?capture=1 정적 모드
+──────────────────────────────────────────────────────────────────── */
+:root{
+--sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+--mono:'IBM Plex Mono','SF Mono',ui-monospace,Menlo,monospace;
+/* 기름 먹은 웜 차콜 램프 — 쿨 그레이 금지 */
+--ink:#151412;--ink2:#1c1a17;--ink3:#232019;--line:#2e2b25;
+/* 연한 스틸 페이퍼(크림 아님·순백 금지) */
+--steel:#e3e1db;--sline:#c8c5bc;--sink:#22201c;--smut:#5f5c54;
+--fg:#edeae3;--body:#a29d92;--mut:#8a857a;
+/* 파우더코트 오렌지 1색 — RAL 2004 계열, 안전색처럼 절제 */
+--org:#ee5a1e;--org2:#c74712;
+/* 실측 명도 대비(WCAG): --mut #8a857a vs --ink 5.0:1 · vs --ink2 4.7:1 (AA 통과)
+   --smut #5f5c54 vs --steel 5.1:1 · 별점 #8a4a0c vs --steel 5.3:1 — 다음 RUN도 이 하한 유지 */
+/* 타입 스케일 — 모듈러 1.25배(base 16) 9단 + 디스플레이 1단(--t-d2: 워드마크·CTA 전용).
+   하드코딩 px 참조 금지 · 미사용 디스플레이 토큰(d1/d3/d4)은 크리틱 지적으로 삭제 */
+--t-xs:12px;--t-sm:14px;--t-base:16px;--t-md:20px;--t-lg:25px;--t-xl:31px;
+--t-2xl:39px;--t-3xl:49px;--t-4xl:61px;--t-d2:96px;
+/* 간격 — 4배수 토큰 */
+--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);background:var(--ink);color:var(--fg);-webkit-font-smoothing:antialiased;line-height:1.55;overflow-x:hidden;word-break:keep-all;overflow-wrap:break-word}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{max-width:1320px;margin:0 auto;padding-left:var(--s7);padding-right:var(--s7)}
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.16;mix-blend-mode:overlay;z-index:5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.rise{opacity:0;transform:translateY(26px);transition:.85s cubic-bezier(.2,.7,.2,1)}.rise.vis{opacity:1;transform:none}
+.o{color:var(--org)}
+.eyb{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.eyb b{color:var(--org);font-weight:700}
+h2.sec{font-size:clamp(var(--t-xl),4.4vw,var(--t-4xl));font-weight:900;letter-spacing:-.035em;line-height:1.06;margin:var(--s4) 0 0}
+
+/* 1 ── 모노 인덱스 바 (히어로보다 위 · AKLR식 촘촘한 메타) */
+.idx{position:relative;z-index:6;border-bottom:1px solid var(--line);background:var(--ink)}
+.idx .in{display:flex;align-items:center;gap:var(--s6);padding-top:var(--s4);padding-bottom:var(--s4);flex-wrap:wrap}
+.idx .lg{font-size:var(--t-md);font-weight:900;letter-spacing:-.02em;white-space:nowrap}
+.idx .lg i{color:var(--org);font-style:normal;font-weight:700}
+.idx .lg small{font-family:var(--mono);font-size:var(--t-xs);font-weight:400;color:var(--mut);margin-left:var(--s3);letter-spacing:.1em}
+.idx nav{display:flex;gap:var(--s5);flex:1;flex-wrap:wrap;font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em;color:var(--body)}
+.idx nav a{transition:.2s;white-space:nowrap}.idx nav a:hover{color:var(--org)}
+.idx nav a i{font-style:normal;color:var(--mut)}
+.idx .est{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;color:var(--mut);white-space:nowrap}
+
+/* 2 ── 스탯·트러스트 밴드 (히어로보다 먼저 — 순서 파괴 지점) */
+.band{border-bottom:1px solid var(--line);background:var(--ink2)}
+/* 값 칸은 minmax(max-content,1fr) — nowrap 수치(412,000EA)가 981~1300px에서 셀을 넘지 않게 */
+.band .g{display:grid;grid-template-columns:1.35fr repeat(4,minmax(max-content,1fr))}
+.band .g>*{min-width:0}
+.band .c{padding:var(--s6) var(--s5);border-right:1px solid var(--line)}
+.band .c:first-child{padding-left:0}
+.band .c:last-child{border-right:none;padding-right:0}
+.band .lead{display:flex;flex-direction:column;justify-content:center;gap:var(--s2)}
+.band .lead .t{font-size:var(--t-base);font-weight:800;letter-spacing:-.01em;line-height:1.4}
+.band .lead .st{color:#e8a33d;font-size:var(--t-sm);letter-spacing:2px}
+.band .lead .st b{color:var(--fg);font-family:var(--mono);font-weight:700;letter-spacing:0;margin-right:var(--s2)}
+.band .lead .m{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut)}
+.band .v{font-size:clamp(var(--t-lg),2.8vw,var(--t-2xl));font-weight:900;letter-spacing:-.03em;line-height:1;white-space:nowrap}
+.band .v .u{font-size:.42em;font-weight:800;color:var(--body);margin-left:.08em}
+.band .l{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s3);letter-spacing:.05em}
+
+/* 3 ── 크롭 워드마크 히어로 (fullbleed) */
+.hero{position:relative;min-height:92svh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.hero .bg{position:absolute;inset:0;z-index:0}
+.hero .bg img{width:100%;height:100%;object-fit:cover;filter:saturate(.92) contrast(1.05) brightness(.9)}
+.hero .veil{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(21,20,18,.86) 0%,rgba(21,20,18,.28) 36%,rgba(21,20,18,.55) 68%,rgba(21,20,18,.97) 100%)}
+.hero .top{position:relative;z-index:2;padding:var(--s6) var(--s7) 0;display:flex;justify-content:space-between;gap:var(--s6);flex-wrap:wrap}
+/* 사진 위 모노 캡션 — 중성 --mut 금지, 밝은 값 + 섀도 분리 */
+.hero .eyb{color:#d8d3c8;text-shadow:0 1px 12px rgba(21,20,18,.9)}
+.hero .meta{font-family:var(--mono);font-size:var(--t-xs);color:#c6c1b5;text-align:right;line-height:1.9;letter-spacing:.06em;text-shadow:0 1px 12px rgba(21,20,18,.9);white-space:nowrap}
+/* 워드마크 — 뷰포트 좌우로 잘려 나가는 크롭 타입 (vw 기반, px 하드코딩 없음) */
+.wordmark{position:relative;z-index:2;font-size:max(var(--t-d2),36vw);font-weight:900;letter-spacing:-.07em;line-height:.78;white-space:nowrap;margin:0 calc(-1 * var(--s9));text-align:center;color:var(--fg)}
+.wordmark .ch{display:inline-block;transform:translateY(112%);opacity:0;transition:.9s cubic-bezier(.19,.9,.22,1)}
+.wordmark.go .ch{transform:none;opacity:1}
+.hero .foot{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s6);flex-wrap:wrap;padding:var(--s5) var(--s7) var(--s7)}
+.hero .foot h1{font-size:clamp(var(--t-md),2.4vw,var(--t-xl));font-weight:800;letter-spacing:-.02em;line-height:1.3;max-width:560px;margin:0}
+.hero .foot h1 em{font-style:normal;color:var(--org)}
+.hero .foot .cue{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.16em;color:#c6c1b5;text-shadow:0 1px 10px rgba(21,20,18,.9)}
+
+/* 4 ── 비대칭 인덱스 그리드 */
+.cat{padding-top:var(--s9);padding-bottom:var(--s9)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:minmax(var(--s10),auto);gap:2px;background:var(--line);border:1px solid var(--line);margin-top:var(--s7)}
+.grid>*{min-width:0}
+.cell{position:relative;background:var(--ink2);overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:calc(var(--s10) + var(--s10))}
+.cell.ph{padding:0}
+.cell.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.85) contrast(1.04) brightness(.92);transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.cell.ph:hover img{transform:scale(1.035)}
+.cell .cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:var(--s7) var(--s4) var(--s3);font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.06em;display:flex;justify-content:space-between;gap:var(--s3);flex-wrap:wrap}
+.cell .cap b{font-weight:700}
+.cell.ph .cap{color:#ddd8cc;text-shadow:0 1px 10px rgba(21,20,18,.95);background:linear-gradient(180deg,transparent,rgba(21,20,18,.88))}
+.cell.fig .cap{color:var(--body)}
+.cell.fig .cap b{color:var(--fg)}
+.cell.a{grid-column:span 7;grid-row:span 2}
+.cell.b{grid-column:span 5}
+.cell.c{grid-column:span 5}
+.cell.d{grid-column:span 4}
+.cell.e{grid-column:span 4}
+.cell.f{grid-column:span 4}
+/* CSS 부품 도판 — 스펙시트 피규어 톤 */
+.fig .art{position:relative;width:52%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;margin-bottom:var(--s5);transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.fig:hover .art{transform:translateY(calc(-1 * var(--s1)))}
+.brush-s{background:conic-gradient(from 210deg,#a7a399,#7b776e 14%,#c2beb3 30%,#726e65 46%,#b5b1a6 62%,#807c73 78%,#a7a399)}
+.oxide-s{background:radial-gradient(120% 95% at 32% 24%,#3b3831,#242119 58%,#181613)}
+.powder-s{background:radial-gradient(120% 95% at 32% 24%,#ff7c38,#ee5a1e 56%,#c74712)}
+.disc-fig{width:82%;aspect-ratio:1;border-radius:50%;position:relative;box-shadow:0 var(--s4) var(--s7) rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.09)}
+.disc-fig:before{content:"";position:absolute;inset:32%;border-radius:50%;background:var(--ink2);box-shadow:inset 0 var(--s1) var(--s3) rgba(0,0,0,.75)}
+.disc-fig:after{content:"";position:absolute;inset:10%;border-radius:50%;border:1px solid rgba(255,255,255,.1)}
+.brk-fig{width:74%;aspect-ratio:1;position:relative}
+.brk-fig i{position:absolute;display:block;box-shadow:0 var(--s3) var(--s6) rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.14)}
+.brk-fig .v{left:6%;top:0;width:26%;height:100%}
+.brk-fig .h{left:6%;bottom:0;width:88%;height:26%}
+.brk-fig s{position:absolute;width:9%;aspect-ratio:1;border-radius:50%;background:var(--ink2);box-shadow:inset 0 var(--s1) var(--s2) rgba(0,0,0,.8);text-decoration:none}
+.hook-fig{width:46%;height:82%;position:relative}
+.hook-fig i{display:block}
+.hook-fig .p{position:absolute;top:0;left:50%;transform:translateX(-50%);width:100%;height:22%;border-radius:var(--s1);box-shadow:0 var(--s2) var(--s5) rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.22)}
+.hook-fig .r{position:absolute;top:20%;left:50%;transform:translateX(-50%);width:18%;height:52%;border-radius:var(--s2)}
+/* J 곡선 — 스템(좌 41%~우 59%, 하단 72%) 끝에 물려 위로 감기는 U자. 우측 보더 팔이 스템과 겹쳐 이어진다 */
+.hook-fig .j{position:absolute;top:66%;left:19%;width:40%;height:30%;border:var(--s3) solid var(--org);border-top:none;border-radius:0 0 var(--s10) var(--s10)}
+.knob-fig{width:56%;aspect-ratio:1;border-radius:50%;position:relative;box-shadow:0 var(--s3) var(--s6) rgba(0,0,0,.5)}
+.knob-fig:before{content:"";position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(rgba(255,255,255,.1) 0 3deg,transparent 3deg 9deg)}
+.knob-fig:after{content:"";position:absolute;inset:18%;border-radius:50%;background:radial-gradient(110% 95% at 34% 26%,#37342d,#201d17 60%);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+/* 치수선 — 스펙시트 사람티 */
+.dim{position:absolute;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.05em}
+.dim.h{left:12%;right:12%;top:11%;border-top:1px solid var(--mut);text-align:center;padding-top:var(--s1)}
+.dim.h:before,.dim.h:after{content:"";position:absolute;top:calc(-1 * var(--s1));width:1px;height:var(--s2);background:var(--mut)}
+.dim.h:before{left:0}.dim.h:after{right:0}
+
+/* 5 ── 소재 마퀴 */
+.mq{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--ink2);overflow:hidden;white-space:nowrap;padding-top:var(--s4);padding-bottom:var(--s4)}
+.mq .t{display:inline-block;animation:mqa 34s linear infinite}
+.mq .t span{font-family:var(--mono);font-size:var(--t-sm);letter-spacing:.08em;margin:0 var(--s5);color:var(--body)}
+.mq .t span i{font-style:normal;color:var(--org)}
+@keyframes mqa{to{transform:translateX(-50%)}}
+
+/* 6 ── 사양 컨피규레이터 ★ */
+.conf{padding-top:var(--s10);padding-bottom:var(--s10)}
+.cwrap{margin-top:var(--s7);display:grid;grid-template-columns:1.5fr 1fr;gap:var(--s7);align-items:stretch}
+.cwrap>*{min-width:0}
+.stage{position:relative;border:1px solid var(--line);background:
+ radial-gradient(120% 90% at 50% 10%,#242119,var(--ink2) 70%);
+ display:flex;align-items:center;justify-content:center;min-height:calc(var(--s10) * 3.6);overflow:hidden;perspective:900px}
+.stage .floor{position:absolute;left:10%;right:10%;bottom:14%;height:1px;background:var(--line)}
+.stage .tag{position:absolute;top:var(--s4);left:var(--s4);font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;color:var(--body);z-index:3}
+.stage .tag b{color:var(--fg);font-weight:700}
+.stage .rot{position:absolute;top:var(--s4);right:var(--s4);font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;color:var(--mut);z-index:3}
+.part{position:relative;width:min(46%,var(--s10) * 3);aspect-ratio:1/.74;transform-style:preserve-3d;transition:transform .18s ease-out;will-change:transform}
+.part .side,.part .face{position:absolute;inset:0;border-radius:50%}
+.part .side{transform:translateY(var(--e,10px));filter:brightness(.55)}
+.part .face{box-shadow:0 var(--s5) var(--s8) rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.12);transition:background .35s}
+.part .face:before{content:"";position:absolute;inset:34% 34%;border-radius:50%;background:var(--ink2);box-shadow:inset 0 var(--s1) var(--s3) rgba(0,0,0,.8)}
+.part .face:after{content:"";position:absolute;inset:8%;border-radius:50%;border:1px solid rgba(255,255,255,.09)}
+.part .face s{position:absolute;width:8%;aspect-ratio:1;border-radius:50%;background:var(--ink2);box-shadow:inset 0 1px var(--s1) rgba(0,0,0,.85);text-decoration:none}
+.part .face s:nth-child(1){top:8%;left:46%}
+.part .face s:nth-child(2){bottom:8%;left:46%}
+.part .face s:nth-child(3){left:5%;top:46%}
+.part .face s:nth-child(4){right:5%;top:46%}
+.glare{position:absolute;inset:0;z-index:2;pointer-events:none}
+.stage .dimline{position:absolute;left:50%;transform:translateX(-50%);bottom:8%;width:46%;border-top:1px solid var(--mut);text-align:center;font-family:var(--mono);font-size:var(--t-xs);color:var(--body);padding-top:var(--s1);letter-spacing:.08em;z-index:3}
+.stage .dimline:before,.stage .dimline:after{content:"";position:absolute;top:calc(-1 * var(--s1));width:1px;height:var(--s2);background:var(--mut)}
+.stage .dimline:before{left:0}.stage .dimline:after{right:0}
+.cpanel{display:flex;flex-direction:column;justify-content:center;gap:var(--s5);border:1px solid var(--line);padding:var(--s6)}
+.slab{display:flex;justify-content:space-between;font-family:var(--mono);font-size:var(--t-xs);color:var(--body);margin:0 0 var(--s3);letter-spacing:.06em}
+.slab b{color:var(--org)}
+.chips{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.chip{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.05em;padding:var(--s2) var(--s4);border:1px solid var(--line);border-radius:var(--s10);color:var(--body);cursor:pointer;transition:.18s;background:none}
+.chip:hover{color:var(--fg);border-color:var(--mut)}
+.chip.on{background:var(--org);border-color:var(--org);color:var(--ink);font-weight:700}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:var(--line);outline:none;border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:var(--s4);height:var(--s4);border-radius:50%;background:var(--org);cursor:grab;border:3px solid var(--ink)}
+input[type=range]::-moz-range-thumb{width:var(--s4);height:var(--s4);border-radius:50%;background:var(--org);cursor:grab;border:3px solid var(--ink)}
+.reads{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+.reads>*{min-width:0}
+.rd{background:var(--ink);padding:var(--s4) var(--s4)}
+.rd .l{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.08em}
+.rd .v{font-size:var(--t-lg);font-weight:900;letter-spacing:-.02em;margin-top:var(--s1);white-space:nowrap}
+.rd .v .u{font-size:.55em;font-weight:700;color:var(--body);margin-left:.06em}
+.rd.pr .v{font-size:var(--t-xl);color:var(--org)}
+.cnote{font-size:var(--t-sm);color:var(--body);line-height:1.7;margin:0}
+.cnote b{color:var(--fg);font-weight:700}
+
+/* 7 ── 공정 스텝 */
+.proc{padding-top:var(--s10);padding-bottom:var(--s10);border-top:1px solid var(--line)}
+.steps{margin-top:var(--s7);border-top:1px solid var(--line)}
+.step{display:grid;grid-template-columns:var(--s10) 1.1fr 1.6fr 1fr;gap:var(--s6);align-items:baseline;padding-top:var(--s6);padding-bottom:var(--s6);border-bottom:1px solid var(--line)}
+.step>*{min-width:0}
+.step .no{font-family:var(--mono);font-size:var(--t-md);font-weight:700;color:var(--org)}
+.step .tt{font-size:var(--t-lg);font-weight:900;letter-spacing:-.02em}
+.step .ds{font-size:var(--t-sm);color:var(--body);line-height:1.7;margin:0}
+.step .eq{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.05em;text-align:right;line-height:1.9}
+
+/* 8 ── 라이트 반전 트러스트 (스틸 페이퍼) */
+.trust{background:var(--steel);color:var(--sink);padding-top:var(--s10);padding-bottom:var(--s10)}
+.trust .hd{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s6);flex-wrap:wrap;border-bottom:1px solid var(--sline);padding-bottom:var(--s5)}
+.trust h2{font-size:clamp(var(--t-lg),3.4vw,var(--t-2xl));font-weight:900;letter-spacing:-.035em;margin:0;max-width:640px;line-height:1.15}
+.rate{text-align:right;white-space:nowrap}
+.rate .n{font-size:var(--t-3xl);font-weight:900;letter-spacing:-.03em;line-height:1}
+.rate .st{color:#8a4a0c;font-size:var(--t-sm);letter-spacing:2px} /* vs --steel 5.3:1 */
+.rate .c{font-family:var(--mono);font-size:var(--t-xs);color:var(--smut);margin-top:var(--s1)}
+.revs{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--sline);border:1px solid var(--sline);margin-top:2px}
+.revs>*{min-width:0}
+.rev{background:var(--steel);padding:var(--s6);display:flex;flex-direction:column}
+.rev .q{font-size:var(--t-base);line-height:1.65;color:#2c2a25;font-weight:500;margin:0}
+.rev .q em{font-style:normal;background:linear-gradient(transparent 62%,rgba(238,90,30,.32) 62%)}
+.rev .who{display:flex;align-items:center;gap:var(--s3);margin-top:auto;padding-top:var(--s5)}
+.rev .who img{width:var(--s7);height:var(--s7);border-radius:50%;object-fit:cover;flex:0 0 var(--s7);background:#bab6ac}
+.rev .who .nm{font-size:var(--t-sm);font-weight:800}
+.rev .who .rl{font-family:var(--mono);font-size:var(--t-xs);color:var(--smut);margin-top:2px}
+.vf{display:inline-flex;align-items:center;gap:var(--s1);font-family:var(--mono);font-size:var(--t-xs);color:#a03a10;background:rgba(238,90,30,.15);padding:2px var(--s2);border-radius:var(--s10);margin-left:var(--s2);letter-spacing:.04em}
+.credits{margin-top:var(--s8)}
+.credits .l{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.15em;color:var(--smut);text-transform:uppercase}
+.credits .row{display:flex;flex-wrap:wrap;gap:var(--s4) var(--s7);margin-top:var(--s4);align-items:baseline}
+.credits .row span{font-size:var(--t-base);font-weight:800;letter-spacing:-.01em;color:#3f3c35}
+.credits .row span i{font-style:normal;font-family:var(--mono);font-size:var(--t-xs);color:var(--smut);font-weight:400;margin-left:var(--s2);letter-spacing:.04em}
+
+/* 9 ── 다크 풀스크린 CTA */
+.cta{min-height:88svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-top:1px solid var(--line);position:relative;overflow:hidden;padding:var(--s9) var(--s7)}
+.cta .heat{position:absolute;width:min(1100px,120vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(238,90,30,.14),transparent 60%);filter:blur(30px);animation:drift 24s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate(-7%,-5%) scale(1)}to{transform:translate(7%,5%) scale(1.14)}}
+.cta h2{position:relative;font-size:clamp(var(--t-2xl),7.2vw,var(--t-d2));font-weight:900;letter-spacing:-.05em;line-height:1;margin:0}
+.cta p{position:relative;color:var(--body);margin:var(--s5) 0 0;font-size:var(--t-base);max-width:520px}
+.cta p b{color:var(--fg);font-weight:700}
+.mag-zone{position:relative;padding:var(--s7);margin-top:var(--s5)}
+.btn{display:inline-flex;gap:var(--s3);align-items:center;background:var(--org);color:var(--ink);font-weight:800;font-size:var(--t-sm);padding:var(--s4) var(--s6);border-radius:var(--s10);transition:transform .22s cubic-bezier(.2,.8,.2,1), background .2s}
+.btn:hover{background:#ff6a2b}
+footer{border-top:1px solid var(--line);padding:var(--s6) var(--s7);display:flex;justify-content:space-between;gap:var(--s5);flex-wrap:wrap;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut)}
+footer a:hover{color:var(--org)}
+
+@media(max-width:980px){
+.wrap{padding-left:var(--s5);padding-right:var(--s5)}
+/* 인덱스 내비는 숨기지 않고 가로 스크롤 행으로 폴백 */
+.idx nav{flex-basis:100%;order:3;flex-wrap:nowrap;overflow-x:auto;gap:var(--s4);padding-bottom:var(--s2);-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.idx nav::-webkit-scrollbar{display:none}
+.band .g{grid-template-columns:1fr 1fr}
+.band .c{border-bottom:1px solid var(--line);padding-left:0}
+.band .c.lead{grid-column:1/-1}
+.hero .top{padding:var(--s5) var(--s5) 0}.hero .meta{text-align:left;white-space:normal}
+.hero .foot{padding:var(--s5)}
+.grid{grid-template-columns:1fr 1fr;grid-auto-rows:auto}
+.cell.a{grid-row:auto}
+.cell.a,.cell.b,.cell.c,.cell.f{grid-column:span 2}
+.cell.d,.cell.e{grid-column:span 1}
+.cell{min-height:calc(var(--s10) + var(--s9))}
+.cwrap{grid-template-columns:1fr}
+.stage{min-height:calc(var(--s10) * 2.8)}
+.cpanel{padding:var(--s5)}
+.step{grid-template-columns:var(--s8) 1fr;gap:var(--s3) var(--s5)}
+.step .ds{grid-column:2}.step .eq{grid-column:2;text-align:left}
+.revs{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+html{scroll-behavior:auto}
+.rise{opacity:1;transform:none;transition:none}
+.wordmark .ch{transform:none;opacity:1}
+.mq .t{animation:none}.cta .heat{animation:none}
+.cell.ph img,.fig .art,.part{transition:none}
+.cell.ph:hover img{transform:none}.fig:hover .art{transform:none}
+}
+
+/* ── 캡처 모드 (?capture=1) — 정적 스냅샷: 리빌 강제·애니 정지·카운트업 고정 ── */
+html.capture .rise{opacity:1;transform:none;transition:none}
+html.capture .wordmark .ch{transform:none;opacity:1}
+html.capture .hero{min-height:auto}
+html.capture .mq .t{animation:none}
+html.capture .cta{min-height:auto;padding-top:var(--s10);padding-bottom:var(--s10)}
+html.capture .cta .heat{animation:none}
+html.capture .part{transform:none!important}
+</style></head><body>
+<div class="grain"></div>
+
+<!-- 1 · 모노 인덱스 바 -->
+<header class="idx">
+  <div class="wrap in">
+    <span class="lg">TANSO<i>®</i><small>METAL WORKS — MULLAE</small></span>
+    <nav>
+      <a href="#index">B 브래킷 <i>/12</i></a>
+      <a href="#index">D 플레이트 <i>/08</i></a>
+      <a href="#index">H 후크 <i>/06</i></a>
+      <a href="#index">K 노브 <i>/05</i></a>
+      <a href="#conf">C 커스텀 <i>/—</i></a>
+      <a href="#proc">공정</a>
+      <a href="#order">견적</a>
+    </nav>
+    <span class="est">CAT.09 · EST 2017 · SEOUL</span>
+  </div>
+</header>
+
+<!-- 2 · 스탯·트러스트 밴드 (히어로보다 먼저) -->
+<section class="band">
+  <div class="wrap g">
+    <div class="c lead">
+      <p class="t">가구 공방과 인테리어 스튜디오가<br>도면째 맡기는 하드웨어.</p>
+      <p class="st"><b>4.8</b>★★★★★</p>
+      <p class="m">구매처 검증 리뷰 172건</p>
+    </div>
+    <div class="c"><div class="v countup" data-to="214" data-suf="곳">0</div><div class="l">누적 납품처</div></div>
+    <div class="c"><div class="v countup" data-to="412000" data-suf="EA">0</div><div class="l">누적 출고 수량</div></div>
+    <div class="c"><div class="v countup" data-to="78" data-suf="%">0</div><div class="l">12개월 재주문율</div></div>
+    <div class="c"><div class="v">±0.1<span class="u">mm</span></div><div class="l">프레스 출하 공차 보증</div></div>
+  </div>
+</section>
+
+<!-- 3 · 크롭 워드마크 히어로 -->
+<section class="hero">
+  <div class="bg"><img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=2000&q=82&auto=format&fit=crop" alt="문래 공장 프레스 라인" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(165deg,#2c2820,#151412 62%)'"></div>
+  <div class="veil"></div>
+  <div class="top">
+    <p class="eyb">SMALL-BATCH METAL HARDWARE · 문래동 3가 · SINCE 2017</p>
+    <p class="meta">SPCC · S45C · SUS304 · AL6061<br>PRESS — CNC — POWDER COAT<br>MOQ 50EA · 카탈로그 NO.09</p>
+  </div>
+  <div class="wordmark" id="wm" aria-label="TANSO">TANSO</div>
+  <div class="foot">
+    <h1>쌓아 두고 파는 철물이 아니라, <em>도면</em>대로 눌러 만드는 철물. 50개부터, 공차 안에서.</h1>
+    <span class="cue">SCROLL — 인덱스가 이어집니다 ↓</span>
+  </div>
+</section>
+
+<!-- 4 · 비대칭 인덱스 그리드 -->
+<section class="cat wrap" id="index">
+  <p class="eyb rise">// INDEX — 표준품 31종 중 발췌</p>
+  <h2 class="sec rise">전 품목, 품번과 공차가 붙어 나갑니다.</h2>
+  <div class="grid">
+    <div class="cell ph a rise">
+      <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=1400&q=82&auto=format&fit=crop" alt="공구 벽 — 플라이어와 렌치가 걸린 보관대" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(150deg,#33302a,#1c1a17 70%)'">
+      <div class="cap"><span><b>TOOL WALL</b> — 수공구·지그 보관</span><span>MULLAE PLANT 1F</span></div>
+    </div>
+    <div class="cell fig b rise">
+      <div class="dim h">Ø120</div>
+      <div class="art"><div class="disc-fig oxide-s"></div></div>
+      <div class="cap"><span><b>TS-D03</b> 원형 플레이트</span><span>SPCC 3.0T · 흑착색 · ±0.1</span></div>
+    </div>
+    <div class="cell fig c rise">
+      <div class="art"><div class="hook-fig"><i class="p powder-s"></i><i class="r powder-s"></i><i class="j"></i></div></div>
+      <div class="cap"><span><b>TS-H07</b> 월 후크</span><span>S45C Ø8 · RAL 2004 · 허용하중 12kg</span></div>
+    </div>
+    <div class="cell fig d rise">
+      <div class="art"><div class="brk-fig"><i class="v brush-s"></i><i class="h brush-s"></i><s style="left:12%;top:8%"></s><s style="left:12%;top:30%"></s><s style="right:8%;bottom:8%"></s></div></div>
+      <div class="cap"><span><b>TS-B01</b> 선반 브래킷</span><span>SPCC 3.2T · 150×100</span></div>
+    </div>
+    <div class="cell ph e rise">
+      <img src="https://images.unsplash.com/photo-1644522248824-ed975fd9ee81?w=1200&q=82&auto=format&fit=crop" alt="선반 앞에서 가공 중인 기술자" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(150deg,#3a352c,#1c1a17 70%)'">
+      <div class="cap"><span><b>LATHE ROOM</b> — 선반 가공</span><span>외경 공차 ±0.05</span></div>
+    </div>
+    <div class="cell fig f rise">
+      <div class="art"><div class="knob-fig oxide-s"></div></div>
+      <div class="cap"><span><b>TS-K02</b> 원형 노브</span><span>S45C Ø32 · 널링 · M6 탭</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · 소재/설비 마퀴 -->
+<div class="mq" aria-hidden="true"><div class="t" id="mq"></div></div>
+
+<!-- 6 · ★ 사양 컨피규레이터 -->
+<section class="conf wrap" id="conf">
+  <p class="eyb rise">// CONFIGURATOR — TS-D03 원형 플레이트</p>
+  <h2 class="sec rise">두께와 마감을 고르면, 그대로 견적입니다.</h2>
+  <div class="cwrap">
+    <div class="stage rise" id="stage">
+      <span class="tag"><b>TS-D03</b> · Ø120 · SPCC</span>
+      <span class="rot" id="rotcue">DRAG-FREE — 마우스를 올려 돌려보세요</span>
+      <div class="part" id="part">
+        <div class="side oxide-s" id="pside"></div>
+        <div class="face oxide-s" id="pface"><s></s><s></s><s></s><s></s></div>
+      </div>
+      <div class="glare" id="glare"></div>
+      <div class="dimline" id="dimlab">Ø120 × 3.0T</div>
+      <div class="floor"></div>
+    </div>
+    <div class="cpanel rise">
+      <div>
+        <p class="slab"><span>표면 마감 / FINISH</span><b id="fcode">흑착색 · KS D 9502</b></p>
+        <div class="chips" id="chips"></div>
+      </div>
+      <div>
+        <p class="slab"><span>판 두께 / THICKNESS</span><b id="tv">3.0T</b></p>
+        <input type="range" id="tr" min="2" max="6" value="3" step="1" aria-label="판 두께 (mm)">
+      </div>
+      <div class="reads">
+        <div class="rd"><div class="l">중량 (1EA)</div><div class="v" id="wv">233<span class="u">g</span></div></div>
+        <div class="rd pr"><div class="l">단가 · 50EA 기준</div><div class="v" id="pv">₩5,600</div></div>
+        <div class="rd"><div class="l">리드타임</div><div class="v" id="lv">7<span class="u">일</span></div></div>
+        <div class="rd"><div class="l">블랭킹 공차</div><div class="v">±0.1<span class="u">mm</span></div></div>
+      </div>
+      <p class="cnote"><b>이 화면이 곧 사양서입니다.</b> 고른 그대로 PDF 사양서가 나가고, 홀 위치·수량 변경은 도면 검토 후 24시간 안에 회신합니다. 단가는 SPCC 기준 참고가입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · 공정 스텝 -->
+<section class="proc wrap" id="proc">
+  <p class="eyb rise">// PROCESS — 접수부터 출하까지</p>
+  <h2 class="sec rise">다섯 번 만지고, 한 번에 통과시킵니다.</h2>
+  <div class="steps">
+    <div class="step rise">
+      <span class="no">01</span><span class="tt">블랭킹</span>
+      <p class="ds">도면 그대로 강판에서 떠냅니다. 수량 500EA 미만은 레이저, 이상은 프레스 금형으로 전환해 단가를 낮춥니다.</p>
+      <span class="eq">3kW 화이버 레이저<br>80T C형 프레스</span>
+    </div>
+    <div class="step rise">
+      <span class="no">02</span><span class="tt">성형 · 절곡</span>
+      <p class="ds">브래킷·후크류는 프레스 브레이크로 각을 세웁니다. 각도 허용차 ±0.5°, 굽힘 R은 판 두께의 1.5배가 기본입니다.</p>
+      <span class="eq">유압 프레스 브레이크<br>V다이 6—32mm</span>
+    </div>
+    <div class="step rise">
+      <span class="no">03</span><span class="tt">연마 · 디버링</span>
+      <p class="ds">진동 배럴에서 6시간. 버를 걷어내고 모서리를 둥글립니다. 손에 걸리는 물건은 출하하지 않습니다.</p>
+      <span class="eq">진동 배럴 연마기<br>세라믹 미디어</span>
+    </div>
+    <div class="step rise">
+      <span class="no">04</span><span class="tt">표면처리</span>
+      <p class="ds">파우더코트는 70µm를 걸고 200°C 경화로에서 20분. 흑착색·아연도금은 협력 라인에서 로트 단위로 관리합니다.</p>
+      <span class="eq">분체도장 부스<br>200°C 경화로</span>
+    </div>
+    <div class="step rise">
+      <span class="no">05</span><span class="tt">검수 · 출하</span>
+      <p class="ds">전수는 아니어도 로트마다 뽑아 잽니다. 외형 ±0.1, 홀 피치 ±0.05 게이트를 넘은 로트만 상자에 들어갑니다.</p>
+      <span class="eq">디지털 하이트게이지<br>핀 게이지 세트</span>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · 라이트 반전 트러스트 밴드 -->
+<section class="trust">
+  <div class="wrap">
+    <div class="hd rise">
+      <h2>직접 쓰는 사람들이<br>다시 주문합니다.</h2>
+      <div class="rate">
+        <div class="n">4.8</div>
+        <div class="st">★★★★★</div>
+        <div class="c">구매처 검증 리뷰 172건</div>
+      </div>
+    </div>
+    <div class="revs">
+      <div class="rev rise">
+        <p class="q">"브래킷 200개를 받았는데 <em>공차가 전부 게이지 안</em>이었습니다. 현장에서 갈아 끼우거나 다시 뚫은 게 하나도 없어요."</p>
+        <div class="who"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=160&q=70&auto=format&fit=crop" alt="" onerror="this.style.display='none'"><div><div class="nm">박도윤<span class="vf">✓ 거래처 검증</span></div><div class="rl">목요일가구 대표 · FURNITURE</div></div></div>
+      </div>
+      <div class="rev rise">
+        <p class="q">"파우더 오렌지가 로트마다 색이 같습니다. 작년 납품분 옆에 <em>나란히 걸어도 티가 안</em> 나요. 이게 제일 어려운 건데."</p>
+        <div class="who"><img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=160&q=70&auto=format&fit=crop" alt="" onerror="this.style.display='none'"><div><div class="nm">서지안<span class="vf">✓ 거래처 검증</span></div><div class="rl">스튜디오 웜그레이 실장 · INTERIOR</div></div></div>
+      </div>
+      <div class="rev rise">
+        <p class="q">"도면 없이 손스케치만 보냈는데 다음 날 검토 도면이 왔습니다. <em>50개 소량인데도</em> 똑같이 진지하게 봐줘요."</p>
+        <div class="who"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=160&q=70&auto=format&fit=crop" alt="" onerror="this.style.display='none'"><div><div class="nm">한결<span class="vf">✓ 거래처 검증</span></div><div class="rl">카페 파운드 운영 · F&B</div></div></div>
+      </div>
+    </div>
+    <div class="credits rise">
+      <p class="l">최근 12개월 납품</p>
+      <div class="row">
+        <span>목요일가구<i>선반 시스템 하드웨어</i></span>
+        <span>스튜디오 웜그레이<i>전시 집기 브래킷</i></span>
+        <span>카페 파운드<i>3개 지점 집기</i></span>
+        <span>호텔 소락<i>객실 후크 620EA</i></span>
+        <span>서점 미행<i>진열 브래킷</i></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 · 다크 풀스크린 CTA -->
+<section class="cta" id="order">
+  <div class="heat"></div>
+  <h2>도면 한 장이면<br>됩니다.</h2>
+  <p>DXF · DWG · PDF, 손스케치도 좋습니다. <b>24시간 안에</b> 검토 도면과 견적으로 답합니다. 최소 수량 50EA.</p>
+  <div class="mag-zone"><a class="btn" href="mailto:order@tanso.kr">도면 보내고 견적 받기 →</a></div>
+</section>
+
+<footer>
+  <span>© 2026 TANSO® METAL WORKS · 서울 영등포구 문래동 3가</span>
+  <span>MON—FRI 09:00—18:00 · 공장 견학 예약제</span>
+  <span><a href="#index">카탈로그 CAT.09</a> · <a href="#conf">컨피규레이터</a> · <a href="#order">견적</a></span>
+</footer>
+
+<script>
+document.documentElement.classList.add('js');
+/* §D 스크롤복원 — smooth가 scrollTo를 애니메이션으로 만들어 복원과 경합하므로
+   초기 리셋 동안만 auto로 내렸다 되돌린다 */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){var h=document.documentElement,prev=h.style.scrollBehavior;h.style.scrollBehavior='auto';window.scrollTo(0,0);
+ addEventListener('load',function(){window.scrollTo(0,0);setTimeout(function(){h.style.scrollBehavior=prev},60)});})();
+/* 캡처 모드 (?capture=1) — 정적 스냅샷 */
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+var coarse=matchMedia('(pointer:coarse)').matches;
+
+/* 워드마크 글자 리빌 (T2) */
+var wm=document.getElementById('wm');
+(function(){var s=wm.textContent;wm.textContent='';
+ s.split('').forEach(function(c,i){var e=document.createElement('span');e.className='ch';e.textContent=c;e.style.transitionDelay=(0.12+i*0.07)+'s';wm.appendChild(e)});})();
+addEventListener('load',function(){requestAnimationFrame(function(){wm.classList.add('go')})});
+setTimeout(function(){wm.classList.add('go')},420);
+
+/* 마퀴 — 소재/설비, 2회 반복(-50% 순환) */
+(function(){var items=['SPCC 냉연강판 <i>1.6—6.0T</i>','S45C 탄소강','SUS304 스테인리스','AL6061-T6','파우더코트 <i>RAL 2004 · 70µm</i>','흑착색 <i>KS D 9502</i>','화이버 레이저 <i>3kW</i>','C형 프레스 <i>80T</i>','블랭킹 공차 <i>±0.1</i>'];
+ var h='';for(var r=0;r<2;r++){items.forEach(function(t){h+='<span>'+t+'</span><span style="color:var(--mut)">·</span>'})}
+ document.getElementById('mq').innerHTML=h;})();
+
+/* ★ 컨피규레이터 — 마감 칩 + 두께 슬라이더 → 부품 표면/두께/중량/단가/납기 실시간 */
+var FINS=[
+ {cls:'brush-s', name:'브러시드 스틸', code:'#4 헤어라인',        add:0,    lead:5},
+ {cls:'oxide-s', name:'블랙 옥사이드', code:'흑착색 · KS D 9502', add:600,  lead:7},
+ {cls:'powder-s',name:'파우더코트 오렌지', code:'RAL 2004 · 70µm', add:1200, lead:10}
+];
+var curF=1; /* 기본: 흑착색 (영감 사진의 검은 디스크) */
+var tr=document.getElementById('tr'),tv=document.getElementById('tv'),
+    wv=document.getElementById('wv'),pv=document.getElementById('pv'),lv=document.getElementById('lv'),
+    fcode=document.getElementById('fcode'),dimlab=document.getElementById('dimlab'),
+    pface=document.getElementById('pface'),pside=document.getElementById('pside'),
+    part=document.getElementById('part'),chips=document.getElementById('chips');
+(function(){FINS.forEach(function(f,i){
+  var b=document.createElement('button');b.className='chip'+(i===curF?' on':'');b.type='button';
+  b.textContent=f.name;
+  b.addEventListener('click',function(){curF=i;render();
+    [].forEach.call(chips.children,function(c,j){c.classList.toggle('on',j===i)})});
+  chips.appendChild(b)});})();
+function render(){
+  var t=+tr.value,f=FINS[curF];
+  /* Ø120 SPCC 원판(총 113cm²)에서 중앙 보어 Ø38(≈11cm²)·볼트홀 4개(≈3cm²) 제외 → 유효면적 ≈99cm² · 밀도 7.85g/cm³ */
+  var w=Math.round(99*(t/10)*7.85);
+  var price=Math.round((2400+w*11+f.add)/100)*100;
+  pface.className='face '+f.cls;pside.className='side '+f.cls;
+  part.style.setProperty('--e',(t*3)+'px');
+  tv.textContent=t.toFixed(1)+'T';
+  dimlab.textContent='Ø120 × '+t.toFixed(1)+'T';
+  wv.innerHTML=w.toLocaleString('ko-KR')+'<span class="u">g</span>';
+  pv.textContent='₩'+price.toLocaleString('ko-KR');
+  lv.innerHTML=f.lead+'<span class="u">일</span>';
+  fcode.textContent=f.code;
+}
+tr.addEventListener('input',render);render();
+
+/* ★ T3 — 스테이지 3D 틸트 + 포인터 추적 글레어 (부품 1곳에만 한정) */
+var stage=document.getElementById('stage'),glare=document.getElementById('glare'),rotcue=document.getElementById('rotcue');
+if(reduce||coarse){rotcue.textContent='TS-D03 — 사양은 오른쪽에서'}
+else{
+  stage.addEventListener('pointermove',function(e){
+    var r=stage.getBoundingClientRect();
+    var x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    part.style.transform='rotateX('+(-y*10).toFixed(2)+'deg) rotateY('+(x*14).toFixed(2)+'deg)';
+    glare.style.background='radial-gradient(circle at '+((x+.5)*100).toFixed(1)+'% '+((y+.5)*100).toFixed(1)+'%, rgba(255,255,255,.13), transparent 55%)';
+  });
+  stage.addEventListener('pointerleave',function(){part.style.transform='';glare.style.background=''});
+}
+
+/* 마그네틱 버튼 — 버튼+소반경 래퍼로만 스코핑 */
+document.querySelectorAll('.mag-zone').forEach(function(z){var b=z.querySelector('.btn');
+ if(b&&matchMedia('(pointer:fine)').matches&&!reduce){
+  z.addEventListener('mousemove',function(e){var r=b.getBoundingClientRect();
+    b.style.transform='translate('+((e.clientX-(r.left+r.width/2))*.28)+'px,'+((e.clientY-(r.top+r.height/2))*.28)+'px)'});
+  z.addEventListener('mouseleave',function(){b.style.transform=''})}});
+
+/* 카운트업 — 단위는 span 분리(줄바꿈 방지) */
+function countTo(el){var to=parseFloat(el.dataset.to),suf=el.dataset.suf||'',dur=1300,t0=performance.now();
+ var unit=suf?'<span class="u">'+suf+'</span>':'';
+ function s(t){var p=Math.min((t-t0)/dur,1),e=1-Math.pow(1-p,3);
+  el.innerHTML=Math.round(to*e).toLocaleString('ko-KR')+unit;if(p<1)requestAnimationFrame(s)}requestAnimationFrame(s)}
+if(CAPTURE){
+  document.querySelectorAll('.countup').forEach(function(el){
+    var suf=el.dataset.suf||'';
+    el.innerHTML=parseFloat(el.dataset.to).toLocaleString('ko-KR')+(suf?'<span class="u">'+suf+'</span>':'');
+  });
+  document.querySelectorAll('.rise').forEach(function(el){el.classList.add('vis')});
+}else{
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){
+    e.target.classList.add('vis');
+    if(e.target.classList.contains('countup'))countTo(e.target);
+    io.unobserve(e.target)}})},{threshold:.18});
+  document.querySelectorAll('.rise,.countup').forEach(function(el){io.observe(el)});
+}
+/* §D 로드 폴백 — 뷰포트 안 요소는 IO와 무관하게 즉시 표시 */
+addEventListener('load',function(){requestAnimationFrame(function(){
+  document.querySelectorAll('.rise').forEach(function(el){
+    if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis')})})});
+</script>
+</body></html>

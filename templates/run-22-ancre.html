@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ANCRE 앵크르 — 오차를 숨기지 않는 기계식 시계 공방</title>
+<meta name="description" content="서울의 독립 기계식 시계 공방 앵크르. 모든 개체는 5자세 실측 오차 성적표와 함께 출고됩니다.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<!--
+  RUN 20 메타 (화면 비노출 · 채점/추적용)
+  아카이타입: 인터랙티브 컨피규레이터 + 계측 리포트 (이전 19개 RUN에 없던 종류)
+  구조 프리셋: P15 "Live Instrument" — 도구 먼저 → 증거 → 주장 → 서사 → 상품.
+    얇은 헤더 → ①컨피규레이터 히어로(실시간 구동 SVG 시계 + 즉시 반영 컨트롤)
+    → ②실측 성적표 밴드(5자세 일차편차 차트, 구성 바꾸면 개체·차트가 통째로 바뀜)
+    → ③주장 밴드(디스플레이 타입 + 각주 시스템) → ④제3자 트러스트(상단권 배치·순서 깨기)
+    → ⑤무브먼트 해부(sticky pin + '세로' 스크럽 — P12/P13의 가로 스크럽 변주)
+    → ⑥공방 서사(지그재그 에디토리얼) → ⑦컬렉션 list-rows → ⑧각주/개체 조회 + 다크 CTA + 푸터
+  직전 약점 공략:
+    · 오리지널리티 4 → 골격 자체를 신조(P15). 빅 히어로 카피로 시작하지 않고
+      "조작 가능한 도구"로 시작. 트러스트를 상단권으로, 주장은 증거 뒤에. 각주(¹²³) 시스템.
+    · 타이포 위계 4 → 모듈러 1.25 스케일 9단+디스플레이 3단 토큰만 사용(하드코딩 px 0).
+      히어로는 의도적으로 '얇게'(t-xl), 주장 밴드에서 t-d2급 디스플레이로 낙차를 만든다.
+      원래 큰 쌍 유지 확인: 모델명(t-lg) < 가격(t-xl) < 섹션헤드(t-3xl) < 주장(d2).
+    · 여백 리듬 4 → --sp-* 4배수 스케일만 사용. 밴드 배경 명암 교차(밝음→밝음2→다크→밝음→다크…)
+      + 주장 밴드만 sp-10 상하로 호흡을 크게 벌려 리듬을 만든다.
+  색 규칙: 포인트 1색 = 블루드 스틸 #1d5083 (열처리 청염 바늘의 색 — 브랜드 서사와 직결).
+    2차색 --ruby 는 무브먼트 도해의 '주얼 도트' 전용(콘텐츠 유래 예외, UI 사용 금지).
+    지면은 실버 페이퍼(#edeff1, 순백 금지). 본문 --mut #454c54 ≈ 7.4:1, --pt ≈ 7.1:1 → AA 통과.
+    제품 렌더(다이얼·스트랩·케이스) 안의 색은 '제품 그 자체'로 허용 — UI는 끝까지 무채색+포인트 1.
+  ※ SVG 내부 좌표/문자 크기는 viewBox 단위(화면 px 아님) — 타입 토큰 규칙의 대상 밖.
+-->
+<style>
+:root{
+--sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+--mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+
+/* 색 — 포인트 1(블루드 스틸) + 중성 램프. --ruby는 주얼 도트 전용 */
+--pt:#1d5083;          /* 블루드 스틸 — 유일한 포인트색 */
+--pt-d:#143a61;        /* 누름/hover */
+--pt-w:#dde6ee;        /* 워시 — 선택 배경 */
+--pt-l:#8fb6dd;        /* 다크 지면 위 포인트 (라이트 스틸) */
+--ruby:#7d3140;        /* 주얼 도트 전용 2차색 — UI 사용 금지 */
+--bg:#edeff1;          /* 실버 페이퍼 (순백 금지) */
+--bg2:#e3e6e9;         /* 한 단 짙은 지면 — 밴드 */
+--card:#f4f5f7;        /* 카드면 */
+--ink:#14181d;         /* 잉크 / 다크 밴드 지면 */
+--ink2:#242a31;
+--mut:#454c54;         /* 본문 — 7.4:1 */
+--mut2:#6a727b;        /* 캡션/메타 */
+--line:#d2d6db;
+--line2:#bcc2c9;
+--dk-tx:#c3c9d0;       /* 다크 밴드 본문 */
+--dk-mut:#8a929b;      /* 다크 밴드 메타 */
+--dk-line:#2b323a;
+
+/* 타입 스케일 — 모듈러 1.25배(base 16) 9단 + 디스플레이 3단. font-size는 여기만 참조 */
+--t-xs:12px;--t-sm:14px;--t-base:16px;--t-md:20px;--t-lg:25px;--t-xl:31px;
+--t-2xl:39px;--t-3xl:49px;--t-4xl:61px;--t-d1:76px;--t-d2:96px;--t-d3:132px;
+
+/* 간격 스케일 — 4배수 */
+--sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;
+--sp-7:40px;--sp-8:56px;--sp-9:80px;--sp-10:120px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);
+ -webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden;
+ word-break:keep-all;overflow-wrap:break-word;font-size:var(--t-base)}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font-family:inherit}
+h1,h2,h3,h4,p,figure{margin:0}
+::selection{background:var(--pt);color:var(--bg)}
+
+.wrap{max-width:1240px;margin:0 auto;padding-left:var(--sp-7);padding-right:var(--sp-7)}
+@media(max-width:640px){.wrap{padding-left:var(--sp-5);padding-right:var(--sp-5)}}
+
+/* 그레인 한 겹 */
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.38;mix-blend-mode:multiply;z-index:5;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.32'/%3E%3C/svg%3E")}
+
+/* 스크롤 리빌 — 고유 클래스명 (.in 금지) */
+.rise{opacity:0;transform:translateY(18px);transition:opacity .55s cubic-bezier(.2,.7,.2,1),transform .55s cubic-bezier(.2,.7,.2,1)}
+.rise.vis{opacity:1;transform:none}
+.d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}
+
+.eyb{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--mut2)}
+.eyb b{color:var(--pt);font-weight:700}
+.sec-h{font-size:clamp(var(--t-xl),4vw,var(--t-3xl));font-weight:800;letter-spacing:-.035em;line-height:1.14;margin-top:var(--sp-4)}
+.lede{font-size:var(--t-md);color:var(--mut);max-width:54ch;margin-top:var(--sp-5);line-height:1.75}
+sup.fn{font-family:var(--mono);font-size:var(--t-xs);color:var(--pt);font-weight:700;margin-left:2px}
+.dark sup.fn{color:var(--pt-l)}
+
+/* ── 얇은 헤더 ─────────────────────────────────────────────────────────── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:60;height:58px;display:flex;align-items:center;
+ gap:var(--sp-5);padding-left:var(--sp-7);padding-right:var(--sp-7);
+ background:rgba(237,239,241,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);transition:border-color .3s}
+.nav .lg{font-size:var(--t-base);font-weight:800;letter-spacing:.22em}
+.nav .lg i{font-style:normal;color:var(--pt)}
+.nav .lg em{font-style:normal;font-weight:500;font-size:var(--t-xs);color:var(--mut2);letter-spacing:.06em;margin-left:var(--sp-2)}
+.nav .sp{flex:1}
+.nav a.m{font-size:var(--t-sm);color:var(--mut);transition:color .2s}
+.nav a.m:hover{color:var(--pt)}
+.nav .bk{border:1px solid var(--pt);color:var(--pt);padding:7px 15px;font-size:var(--t-sm);font-weight:700;
+ border-radius:2px;transition:background .2s,color .2s;font-family:var(--mono);letter-spacing:.04em}
+.nav .bk:hover{background:var(--pt);color:var(--bg)}
+@media(max-width:860px){.nav a.m{display:none}.nav .lg em{display:none}}
+
+/* ── ① 컨피규레이터 히어로 — 첫 화면이 도구다 ──────────────────────────── */
+.hero{padding-top:calc(58px + var(--sp-8));padding-bottom:var(--sp-9)}
+.hero .hd{max-width:62ch}
+.hero h1{font-size:clamp(var(--t-lg),3vw,var(--t-xl));font-weight:700;letter-spacing:-.02em;line-height:1.3;margin-top:var(--sp-4)}
+.hero h1 mark{background:none;color:var(--pt)}
+.hero .sub{font-size:var(--t-base);color:var(--mut);margin-top:var(--sp-3);max-width:52ch;line-height:1.8}
+.cfg{display:grid;grid-template-columns:7fr 5fr;gap:var(--sp-8);margin-top:var(--sp-7);align-items:stretch}
+.cfg>*{min-width:0}
+
+/* 시계 스테이지 */
+.stage{position:relative;background:radial-gradient(120% 90% at 50% 30%,var(--card) 0%,var(--bg2) 68%,#d7dbdf 100%);
+ border:1px solid var(--line2);overflow:hidden;display:flex;align-items:center;justify-content:center;
+ padding-top:var(--sp-6);padding-bottom:var(--sp-6)}
+.stage svg{width:min(76%,420px);height:auto;display:block;filter:drop-shadow(0 22px 34px rgba(20,24,29,.22))}
+.stage .live{position:absolute;left:var(--sp-4);top:var(--sp-4);display:inline-flex;align-items:center;gap:8px;
+ font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em;color:var(--mut);
+ background:rgba(244,245,247,.85);border:1px solid var(--line2);padding:7px 12px;border-radius:2px}
+.stage .live i{width:7px;height:7px;border-radius:50%;background:var(--pt);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.stage .sn{position:absolute;right:var(--sp-4);bottom:var(--sp-4);font-family:var(--mono);font-size:var(--t-xs);
+ letter-spacing:.1em;color:var(--mut2)}
+.stage .sn b{color:var(--ink);font-weight:700}
+/* 유리 위 하이라이트 스윕 */
+.sheen{position:absolute;top:-30%;left:-46%;width:36%;height:160%;transform:rotate(18deg);
+ background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.30),rgba(255,255,255,0));
+ animation:swp 9s cubic-bezier(.4,0,.2,1) infinite;pointer-events:none}
+@keyframes swp{0%,62%{left:-46%}88%,100%{left:118%}}
+
+/* 컨트롤 패널 */
+.panel{border:1px solid var(--line2);background:var(--card);display:flex;flex-direction:column}
+.panel .ph{display:flex;justify-content:space-between;align-items:baseline;gap:var(--sp-4);
+ border-bottom:1px solid var(--line);padding:var(--sp-4) var(--sp-5)}
+.panel .ph .t{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--mut2)}
+.panel .ph .n{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2)}
+.panel .grp{padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--line)}
+.panel .gl{display:flex;justify-content:space-between;align-items:baseline;gap:var(--sp-3)}
+.panel .gl .k{font-size:var(--t-sm);font-weight:700;letter-spacing:-.01em}
+.panel .gl .v{font-family:var(--mono);font-size:var(--t-xs);color:var(--pt)}
+.chips{display:flex;flex-wrap:wrap;gap:var(--sp-2);margin-top:var(--sp-3)}
+.chip{font-size:var(--t-xs);font-weight:600;padding:7px 13px;border:1px solid var(--line2);background:none;color:var(--mut);
+ border-radius:100px;cursor:pointer;transition:background .18s,color .18s,border-color .18s;white-space:nowrap}
+.chip:hover{border-color:var(--pt);color:var(--pt)}
+.chip[aria-pressed="true"]{background:var(--pt);border-color:var(--pt);color:var(--bg)}
+.chip:focus-visible{outline:2px solid var(--pt);outline-offset:2px}
+.panel .out{padding:var(--sp-5);margin-top:auto}
+.panel .out .row{display:flex;justify-content:space-between;align-items:baseline;gap:var(--sp-4);
+ padding-top:var(--sp-2);padding-bottom:var(--sp-2)}
+.panel .out .row .k{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em;color:var(--mut2);white-space:nowrap}
+.panel .out .row .v{font-size:var(--t-sm);font-weight:700;text-align:right}
+.panel .out .row .v.mono{font-family:var(--mono);font-weight:600;letter-spacing:.04em}
+/* 가격 > 나머지 행 — 위계 쌍 유지 */
+.panel .out .pr{font-size:var(--t-xl);font-weight:800;letter-spacing:-.035em;line-height:1.1;white-space:nowrap;margin-top:var(--sp-3)}
+.panel .out .pr span{font-size:var(--t-base);font-weight:600;color:var(--mut2);margin-left:var(--sp-1);white-space:nowrap}
+.panel .out .note{font-size:var(--t-xs);color:var(--mut2);margin-top:var(--sp-3);line-height:1.7}
+.flash{animation:fl .28s ease}
+@keyframes fl{0%{opacity:.35;transform:translateY(-3px)}100%{opacity:1;transform:none}}
+@media(max-width:980px){.cfg{grid-template-columns:1fr;gap:var(--sp-5)}.stage svg{width:min(88%,360px)}}
+
+/* 시계 SVG 내부 */
+.w-tick{stroke:var(--tickC,#3a4149)}
+.w-hand{fill:var(--handC,#1d5083)}
+.w-hand-o{fill:none;stroke:var(--handC,#1d5083)}
+.w-sec{stroke:var(--secC,#1d5083)}
+.w-secf{fill:var(--secC,#1d5083)}
+.w-dtxt{fill:var(--dtxtC,#3a4149);font-family:var(--mono);letter-spacing:.28em}
+.w-dtxt2{fill:var(--dtxtC,#3a4149);font-family:var(--mono);letter-spacing:.14em;opacity:.72}
+.w-strap{fill:var(--strapC,#5c4634)}
+.w-stitch{fill:none;stroke:var(--stitchC,rgba(240,236,228,.5));stroke-width:1.6;stroke-dasharray:5 6}
+
+/* ── ② 실측 성적표 밴드 ────────────────────────────────────────────────── */
+.report{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+ padding-top:var(--sp-9);padding-bottom:var(--sp-9)}
+.rgrid{display:grid;grid-template-columns:5fr 7fr;gap:var(--sp-8);margin-top:var(--sp-7);align-items:start}
+.rgrid>*{min-width:0}
+.cert{background:var(--card);border:1px solid var(--line2);position:relative;padding:var(--sp-5) var(--sp-5) var(--sp-6)}
+.cert .chd{display:flex;justify-content:space-between;align-items:baseline;gap:var(--sp-3);
+ border-bottom:1px solid var(--line);padding-bottom:var(--sp-3)}
+.cert .chd .t{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--mut2)}
+.cert .chd .id{font-family:var(--mono);font-size:var(--t-xs);color:var(--pt);font-weight:700}
+.float-chip{position:absolute;right:calc(-1 * var(--sp-3));top:calc(-1 * var(--sp-4));background:var(--ink);color:var(--bg);
+ font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em;padding:9px 14px;border-radius:2px;z-index:3;white-space:nowrap}
+.float-chip i{font-style:normal;color:var(--pt-l)}
+.prow{display:grid;grid-template-columns:132px 1fr;gap:var(--sp-4);align-items:center;
+ padding-top:var(--sp-3);padding-bottom:var(--sp-3);border-bottom:1px solid var(--line)}
+.prow>*{min-width:0}
+.prow .pl{font-size:var(--t-sm);font-weight:600;line-height:1.35}
+.prow .pl em{display:block;font-style:normal;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2);letter-spacing:.1em}
+.ptrack{position:relative;height:30px;background:var(--bg);border:1px solid var(--line)}
+.ptrack .zero{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--line2)}
+.ptrack .pbar{position:absolute;top:6px;bottom:6px;background:var(--pt);opacity:.88;
+ transition:width .5s cubic-bezier(.2,.7,.2,1),left .5s cubic-bezier(.2,.7,.2,1)}
+.ptrack .pv{position:absolute;right:8px;top:50%;transform:translateY(-50%);
+ font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);white-space:nowrap}
+.paxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:var(--t-xs);
+ color:var(--mut2);margin-top:var(--sp-2);padding-left:calc(132px + var(--sp-4))}
+.cavg{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--sp-4);flex-wrap:wrap;
+ border-top:1px solid var(--line2);margin-top:var(--sp-4);padding-top:var(--sp-4)}
+.cavg .bigval{font-size:var(--t-2xl);font-weight:800;letter-spacing:-.035em;line-height:1;white-space:nowrap}
+.cavg .bigval span{font-size:var(--t-base);font-weight:600;color:var(--mut2);margin-left:var(--sp-2);white-space:nowrap}
+.cavg .lb{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2);margin-top:var(--sp-2)}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:var(--t-xs);font-weight:800;letter-spacing:.06em;
+ padding:7px 13px;border-radius:100px;border:1px solid var(--pt);color:var(--pt);white-space:nowrap}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.specs{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-6);margin-top:var(--sp-7)}
+.specs>*{min-width:0}
+.spc{border-left:1px solid var(--line2);padding-left:var(--sp-4)}
+.spc .v{font-size:clamp(var(--t-xl),3.4vw,var(--t-2xl));font-weight:800;letter-spacing:-.035em;line-height:1;white-space:nowrap}
+.spc .v span{font-size:var(--t-sm);font-weight:700;color:var(--pt);margin-left:var(--sp-1);white-space:nowrap}
+.spc .l{font-size:var(--t-sm);color:var(--mut);margin-top:var(--sp-2);line-height:1.55}
+.spc .n{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2);margin-top:var(--sp-1)}
+@media(max-width:980px){.rgrid{grid-template-columns:1fr;gap:var(--sp-6)}
+ .float-chip{right:var(--sp-4)}}
+@media(max-width:700px){.specs{grid-template-columns:1fr;gap:var(--sp-5)}
+ .prow{grid-template-columns:1fr;gap:var(--sp-2)}
+ .paxis{padding-left:0}}
+
+/* ── ③ 주장 밴드 — 여기서 처음 디스플레이 타입이 나온다 ─────────────────── */
+.claim{background:var(--ink);color:var(--dk-tx);padding-top:var(--sp-10);padding-bottom:var(--sp-10)}
+.claim .eyb{color:var(--dk-mut)}
+.claim h2{font-size:clamp(var(--t-2xl),8.4vw,var(--t-d2));font-weight:800;letter-spacing:-.045em;
+ line-height:1.06;color:var(--bg);margin-top:var(--sp-5)}
+.claim h2 mark{background:none;color:var(--pt-l)}
+.claim .sub{font-size:var(--t-md);color:var(--dk-tx);max-width:46ch;margin-top:var(--sp-6);line-height:1.8}
+.claim .row{display:flex;gap:var(--sp-6);flex-wrap:wrap;margin-top:var(--sp-8);
+ border-top:1px solid var(--dk-line);padding-top:var(--sp-5);
+ font-family:var(--mono);font-size:var(--t-xs);color:var(--dk-mut);letter-spacing:.06em}
+.claim .row b{color:var(--pt-l);font-weight:700}
+
+/* ── ④ 제3자 트러스트 ──────────────────────────────────────────────────── */
+.trust{padding-top:var(--sp-9);padding-bottom:var(--sp-9)}
+.thead-band{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--sp-6);flex-wrap:wrap}
+.tsum{display:flex;gap:var(--sp-6);flex-wrap:wrap}
+.tsum .ts{border-left:1px solid var(--line2);padding-left:var(--sp-4)}
+.tsum .ts .v{font-size:var(--t-xl);font-weight:800;letter-spacing:-.03em;white-space:nowrap;line-height:1.1}
+.tsum .ts .v span{font-size:var(--t-sm);font-weight:600;color:var(--mut2);margin-left:var(--sp-1);white-space:nowrap}
+.tsum .ts .v .stars{color:var(--pt);letter-spacing:2px;font-size:var(--t-sm);margin-left:var(--sp-2)}
+.tsum .ts .l{font-size:var(--t-xs);color:var(--mut2);margin-top:var(--sp-1)}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:var(--sp-7)}
+.tgrid>*{min-width:0}
+.rev{background:var(--bg);padding:var(--sp-6);transition:background .2s;display:flex;flex-direction:column}
+.rev:hover{background:var(--card)}
+.rev .q{font-size:var(--t-md);font-weight:600;letter-spacing:-.015em;line-height:1.62;flex:1}
+.rev .q b{color:var(--pt);font-weight:700}
+.rev .who{margin-top:var(--sp-5);border-top:1px solid var(--line);padding-top:var(--sp-3);font-size:var(--t-sm);color:var(--mut)}
+.rev .who b{color:var(--ink);font-weight:700}
+.rev .meta{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2);margin-top:var(--sp-1)}
+.rev .meta i{font-style:normal;color:var(--pt);font-weight:700}
+.credits{margin-top:var(--sp-7);border-top:1px solid var(--line2);padding-top:var(--sp-5);
+ display:flex;gap:var(--sp-6);flex-wrap:wrap;align-items:baseline}
+.credits .ck{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--mut2)}
+.credits .cv{font-size:var(--t-sm);color:var(--mut);font-weight:600}
+@media(max-width:980px){.tgrid{grid-template-columns:1fr}}
+
+/* ── ⑤ 무브먼트 해부 — sticky pin + 세로 스크럽 ─────────────────────────── */
+.anat{background:var(--ink);color:var(--dk-tx);position:relative}
+.anat .track{height:340vh;position:relative}
+.anat .pin{position:sticky;top:0;height:100vh;display:flex;align-items:center;overflow:hidden}
+.anat .agrid{display:grid;grid-template-columns:6fr 5fr;gap:var(--sp-8);align-items:center;width:100%}
+.anat .agrid>*{min-width:0}
+.anat .eyb{color:var(--dk-mut)}
+.anat h2{font-size:clamp(var(--t-xl),3.4vw,var(--t-2xl));font-weight:800;letter-spacing:-.035em;line-height:1.16;
+ color:var(--bg);margin-top:var(--sp-4)}
+.anat svg{width:100%;max-width:520px;height:auto;display:block;margin:0 auto}
+.anat.scrub svg{max-height:52vh}
+.anat.scrub h2{font-size:clamp(var(--t-md),2.2vw,var(--t-xl))}
+.apart{transition:opacity .5s}
+.anat.scrub .apart{opacity:.2}
+.anat.scrub .apart.on{opacity:1}
+#anaRing{fill:none;stroke:var(--pt-l);stroke-width:2;stroke-dasharray:5 7;opacity:.9;
+ transition:cx .6s cubic-bezier(.2,.7,.2,1),cy .6s cubic-bezier(.2,.7,.2,1),r .6s cubic-bezier(.2,.7,.2,1)}
+.steps{position:relative}
+.step{transition:opacity .45s,transform .45s}
+.anat.scrub .step{position:absolute;inset:0;opacity:0;transform:translateY(14px);pointer-events:none;display:flex;flex-direction:column;justify-content:center;padding-bottom:var(--sp-7)}
+.anat.scrub .step.on{opacity:1;transform:none;pointer-events:auto}
+.anat.scrub .steps{min-height:400px}
+.anat.scrub .arail{position:absolute;left:0;bottom:0;margin-top:0}
+.step .no{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;color:var(--pt-l)}
+.step h3{font-size:clamp(var(--t-lg),2.6vw,var(--t-xl));font-weight:800;letter-spacing:-.03em;color:var(--bg);margin-top:var(--sp-3)}
+.step p{font-size:var(--t-base);color:var(--dk-tx);line-height:1.85;margin-top:var(--sp-4);max-width:46ch}
+.step .sm{font-family:var(--mono);font-size:var(--t-xs);color:var(--dk-mut);margin-top:var(--sp-4);line-height:1.9}
+.arail{display:flex;gap:var(--sp-2);margin-top:var(--sp-6)}
+.arail i{width:26px;height:3px;background:var(--dk-line);transition:background .3s}
+.arail i.on{background:var(--pt-l)}
+/* 스크럽 꺼짐(모바일/reduced/capture): 세로 스택 폴백 — 빈 vh 구간 없음 */
+.anat:not(.scrub) .track{height:auto}
+.anat:not(.scrub) .pin{position:static;height:auto;padding-top:var(--sp-9);padding-bottom:var(--sp-9)}
+.anat:not(.scrub) .step+.step{margin-top:var(--sp-7);border-top:1px solid var(--dk-line);padding-top:var(--sp-6)}
+.anat:not(.scrub) .arail{display:none}
+@media(max-width:980px){.anat .agrid{grid-template-columns:1fr;gap:var(--sp-6)}}
+
+/* ── ⑥ 공방 서사 — 지그재그 에디토리얼 ─────────────────────────────────── */
+.atel{padding-top:var(--sp-9);padding-bottom:var(--sp-9)}
+.zig{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-8);align-items:center;margin-top:var(--sp-8)}
+.zig>*{min-width:0}
+.zig+.zig{margin-top:var(--sp-9)}
+.zig.rv .txt{order:-1}
+.zig h3{font-size:clamp(var(--t-lg),2.6vw,var(--t-xl));font-weight:800;letter-spacing:-.03em;line-height:1.25}
+.zig p{font-size:var(--t-base);color:var(--mut);line-height:1.85;margin-top:var(--sp-4);max-width:48ch}
+.zig .fact{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2);margin-top:var(--sp-5);line-height:2;
+ border-top:1px solid var(--line);padding-top:var(--sp-4)}
+.ph{position:relative;overflow:hidden;background:var(--bg2);border:1px solid var(--line)}
+.ph img{width:100%;height:100%;object-fit:cover;filter:saturate(.82) contrast(1.03);
+ transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.ph:hover img{transform:scale(1.035)}
+.ph.a{aspect-ratio:4/3}
+.ph.b{aspect-ratio:3/4;max-width:86%}
+.zig.rv .ph.b{margin-left:auto}
+/* 사진 위 캡션 — 밝은 값 + 그림자 + 스크림 (중성 --mut 금지) */
+.ph figcaption{position:absolute;left:var(--sp-4);bottom:var(--sp-4);right:var(--sp-4);z-index:2;
+ font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.06em;color:#eef1f4;
+ text-shadow:0 1px 10px rgba(0,0,0,.9),0 0 3px rgba(0,0,0,.7)}
+.ph .scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(0,0,0,0) 46%,rgba(0,0,0,.58))}
+@media(max-width:900px){.zig{grid-template-columns:1fr;gap:var(--sp-5)}
+ .zig.rv .txt{order:0}.ph.b{max-width:100%;aspect-ratio:4/3}}
+
+/* ── ⑦ 컬렉션 list-rows ────────────────────────────────────────────────── */
+.coll{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+ padding-top:var(--sp-9);padding-bottom:var(--sp-9)}
+.mhead,.mrow{display:grid;grid-template-columns:2.2fr 3fr 1.6fr 1.4fr;gap:var(--sp-5);align-items:baseline}
+.mhead{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--mut2);
+ border-bottom:1px solid var(--line2);padding-bottom:var(--sp-2);margin-top:var(--sp-7)}
+.mrow{border-bottom:1px solid var(--line2);padding-top:var(--sp-5);padding-bottom:var(--sp-5);
+ transition:background .18s,padding-left .18s;position:relative}
+.mrow>*{min-width:0}
+.mrow:hover{background:var(--card);padding-left:var(--sp-3)}
+/* 모델명 t-lg < 가격 t-xl — 가격이 판단 기준이라는 위계 */
+.mrow .nm{font-size:var(--t-lg);font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.mrow .nm em{font-style:normal;font-family:var(--mono);font-size:var(--t-xs);font-weight:500;color:var(--mut2);
+ display:block;letter-spacing:.14em;margin-top:var(--sp-1)}
+.mrow .sp{font-size:var(--t-sm);color:var(--mut);line-height:1.8}
+.mrow .gr{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);line-height:1.9}
+.mrow .gr b{color:var(--pt);font-weight:700}
+.mrow .pr{font-size:var(--t-xl);font-weight:800;letter-spacing:-.035em;white-space:nowrap;text-align:right}
+.mrow .pr span{font-size:var(--t-sm);font-weight:600;color:var(--mut2);white-space:nowrap}
+.mrow .pr em{display:block;font-style:normal;font-family:var(--mono);font-size:var(--t-xs);font-weight:500;
+ color:var(--mut2);margin-top:var(--sp-1);letter-spacing:.06em}
+.coll .fno{font-size:var(--t-xs);color:var(--mut2);margin-top:var(--sp-5);line-height:1.9;max-width:72ch}
+@media(max-width:900px){.mhead{display:none}.mrow{grid-template-columns:1fr;gap:var(--sp-2)}
+ .mrow .pr{text-align:left}}
+
+/* ── ⑧ 각주 + 개체 조회 + 다크 CTA ─────────────────────────────────────── */
+.notes{padding-top:var(--sp-9);padding-bottom:var(--sp-9)}
+.ngrid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-8);align-items:start;margin-top:var(--sp-7)}
+.ngrid>*{min-width:0}
+.notes ol{margin:0;padding:0;list-style:none;counter-reset:fn}
+.notes li{counter-increment:fn;position:relative;padding-left:var(--sp-6);font-size:var(--t-sm);color:var(--mut);
+ line-height:1.85;padding-top:var(--sp-3);padding-bottom:var(--sp-3);border-bottom:1px solid var(--line)}
+.notes li::before{content:counter(fn);position:absolute;left:0;top:var(--sp-3);
+ font-family:var(--mono);font-size:var(--t-xs);font-weight:700;color:var(--pt)}
+.lookup{background:var(--ink);color:var(--dk-tx);padding:var(--sp-7)}
+.lookup .t{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--dk-mut)}
+.lookup h3{font-size:var(--t-lg);font-weight:800;letter-spacing:-.025em;color:var(--bg);margin-top:var(--sp-3);line-height:1.3}
+.lookup form{display:flex;gap:var(--sp-2);margin-top:var(--sp-5)}
+.lookup input{flex:1;min-width:0;background:none;border:1px solid var(--dk-line);color:var(--bg);
+ font-family:var(--mono);font-size:var(--t-sm);padding:12px 14px;letter-spacing:.06em;border-radius:2px}
+.lookup input::placeholder{color:var(--dk-mut)}
+.lookup input:focus{outline:2px solid var(--pt-l);outline-offset:1px}
+.lookup button{background:var(--bg);color:var(--ink);border:1px solid var(--bg);font-weight:700;
+ font-size:var(--t-sm);padding:12px 20px;border-radius:2px;cursor:pointer;transition:background .2s,color .2s;white-space:nowrap}
+.lookup button:hover{background:var(--pt-l);border-color:var(--pt-l);color:var(--ink)}
+.lookup .res{margin-top:var(--sp-5);border-top:1px solid var(--dk-line);padding-top:var(--sp-4);
+ font-family:var(--mono);font-size:var(--t-xs);color:var(--dk-mut);line-height:2;min-height:3.2em}
+.lookup .res b{color:var(--pt-l);font-weight:700}
+.lookup .res .ok{color:var(--dk-tx)}
+
+.cta{background:var(--ink);color:var(--dk-tx);border-top:1px solid var(--dk-line);
+ padding-top:var(--sp-9);padding-bottom:var(--sp-9)}
+.cta .cgrid{display:grid;grid-template-columns:1.4fr 1fr;gap:var(--sp-8);align-items:center}
+.cta .cgrid>*{min-width:0}
+.cta h2{font-size:clamp(var(--t-xl),4.4vw,var(--t-3xl));font-weight:800;letter-spacing:-.04em;line-height:1.12;color:var(--bg)}
+.cta p{font-size:var(--t-base);color:var(--dk-tx);line-height:1.85;margin-top:var(--sp-5);max-width:46ch}
+.cta .side{border-left:1px solid var(--dk-line);padding-left:var(--sp-6)}
+.cta .side .r{display:flex;justify-content:space-between;gap:var(--sp-4);align-items:baseline;
+ padding-top:var(--sp-3);padding-bottom:var(--sp-3);border-bottom:1px solid var(--dk-line)}
+.cta .side dt{font-family:var(--mono);font-size:var(--t-xs);color:var(--dk-mut);letter-spacing:.06em;white-space:nowrap}
+.cta .side dd{margin:0;font-size:var(--t-sm);font-weight:700;text-align:right;color:var(--bg)}
+.cta .side dd i{font-style:normal;color:var(--pt-l)}
+.btn{display:inline-block;background:var(--bg);color:var(--ink);padding:14px 28px;font-size:var(--t-sm);font-weight:700;
+ border-radius:2px;border:1px solid var(--bg);cursor:pointer;transition:background .2s,color .2s,transform .2s;margin-top:var(--sp-6)}
+.btn:hover{background:var(--pt-l);border-color:var(--pt-l);transform:translateY(-2px)}
+@media(max-width:900px){.cta .cgrid,.ngrid{grid-template-columns:1fr;gap:var(--sp-6)}
+ .cta .side{border-left:0;padding-left:0;border-top:1px solid var(--dk-line);padding-top:var(--sp-5)}}
+
+/* ── footer ────────────────────────────────────────────────────────────── */
+footer{background:var(--bg2);border-top:1px solid var(--line2);padding-top:var(--sp-8);padding-bottom:var(--sp-8)}
+.fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:var(--sp-7)}
+.fgrid>*{min-width:0}
+.fgrid .lg{font-size:var(--t-md);font-weight:800;letter-spacing:.22em}
+.fgrid .lg i{font-style:normal;color:var(--pt)}
+.fgrid p{font-size:var(--t-sm);color:var(--mut);line-height:1.85;margin-top:var(--sp-3)}
+.fgrid .h{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--mut2)}
+.fgrid dl{margin:0;margin-top:var(--sp-3)}
+.fgrid .fr{display:flex;justify-content:space-between;gap:var(--sp-3);font-size:var(--t-sm);color:var(--mut);
+ padding-top:var(--sp-2);padding-bottom:var(--sp-2);border-bottom:1px solid var(--line)}
+.fgrid .fr b{color:var(--ink);font-weight:600;white-space:nowrap}
+.legal{margin-top:var(--sp-8);border-top:1px solid var(--line);padding-top:var(--sp-5);
+ font-size:var(--t-xs);color:var(--mut2);line-height:1.9;max-width:84ch}
+@media(max-width:820px){.fgrid{grid-template-columns:1fr;gap:var(--sp-6)}}
+
+/* ── reduced motion ────────────────────────────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+  transition-duration:.001ms!important}
+ .rise{opacity:1;transform:none}
+ .sheen{display:none}
+}
+
+/* ── 캡처 모드 (?capture=1) — 리빌 강제·핀 해제·무한 애니 정지·값 고정 ────── */
+html.capture .rise{opacity:1!important;transform:none!important;transition:none!important}
+html.capture .sheen{animation:none;display:none}
+html.capture .stage .live i{animation:none}
+html.capture #balGrp{animation:none!important}
+html.capture .anat .track{height:auto}
+html.capture .anat .pin{position:static;height:auto;padding-top:var(--sp-9);padding-bottom:var(--sp-9)}
+html.capture .nav{position:absolute}
+html.capture .ptrack .pbar,html.capture #anaRing{transition:none}
+html.capture .flash{animation:none}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ═══ 얇은 헤더 ═══ -->
+<nav class="nav" id="nav">
+  <a href="#top" class="lg">AN<i>C</i>RE<em>앵크르 · 서울</em></a>
+  <span class="sp"></span>
+  <a href="#report" class="m">성적표</a>
+  <a href="#movement" class="m">무브먼트</a>
+  <a href="#atelier" class="m">공방</a>
+  <a href="#collection" class="m">컬렉션</a>
+  <a href="#lookup" class="bk">개체번호 조회</a>
+</nav>
+
+<!-- ═══ ① 컨피규레이터 히어로 — 첫 화면이 조작 가능한 시계다 ═══ -->
+<section class="hero wrap" id="top">
+  <div class="hd">
+    <p class="eyb rise"><b>독립 기계식 시계 공방</b> · 서울 세운상가 · 2019년 설립</p>
+    <h1 class="rise">먼저 <mark>만져</mark> 보세요. 광고는 그다음입니다.</h1>
+    <p class="sub rise d1">아래 시계는 그림이 아니라 지금 이 순간의 시각으로 걷고 있는 도구입니다. 다이얼·핸즈·케이스·스트랩을 조합하면, 그 구성으로 조립될 개체의 예상 성적까지 함께 바뀝니다.</p>
+  </div>
+
+  <div class="cfg">
+    <!-- 시계 스테이지 — 초침은 실제 현재 시각, 28,800vph 스윕 -->
+    <div class="stage rise" aria-label="구성 미리보기 — 실시간으로 작동하는 시계 렌더">
+      <span class="live"><i></i>실시간 · 현재 시각 구동</span>
+      <div class="sheen" aria-hidden="true"></div>
+      <svg id="watch" viewBox="0 0 440 560" role="img" aria-label="선택한 구성의 시계 미리보기">
+        <defs>
+          <linearGradient id="gradSteel" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#eceef0"/><stop offset=".38" stop-color="#a7aeb6"/>
+            <stop offset=".62" stop-color="#dde1e5"/><stop offset="1" stop-color="#7c848e"/>
+          </linearGradient>
+          <linearGradient id="gradTi" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#c2c5c9"/><stop offset=".45" stop-color="#71777e"/>
+            <stop offset=".72" stop-color="#a8adb3"/><stop offset="1" stop-color="#5b6169"/>
+          </linearGradient>
+          <linearGradient id="gradRG" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ecccb6"/><stop offset=".42" stop-color="#b1855f"/>
+            <stop offset=".68" stop-color="#e0b28c"/><stop offset="1" stop-color="#96693f"/>
+          </linearGradient>
+          <radialGradient id="dialSilver" cx=".5" cy=".42" r=".72">
+            <stop offset="0" stop-color="#f5f6f5"/><stop offset=".72" stop-color="#dfe2e4"/>
+            <stop offset="1" stop-color="#c4c9cd"/>
+          </radialGradient>
+          <radialGradient id="dialBlue" cx=".5" cy=".38" r=".78">
+            <stop offset="0" stop-color="#39679c"/><stop offset=".62" stop-color="#1e4470"/>
+            <stop offset="1" stop-color="#0f2440"/>
+          </radialGradient>
+          <radialGradient id="dialChar" cx=".5" cy=".4" r=".76">
+            <stop offset="0" stop-color="#464c53"/><stop offset=".66" stop-color="#26292e"/>
+            <stop offset="1" stop-color="#131518"/>
+          </radialGradient>
+          <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity=".22"/>
+            <stop offset=".45" stop-color="#ffffff" stop-opacity="0"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity=".07"/>
+          </linearGradient>
+        </defs>
+
+        <!-- 스트랩 -->
+        <path id="strapT" class="w-strap" d="M160 0 h120 l7 148 h-134 z"/>
+        <path class="w-stitch" d="M172 6 l5 132 M268 6 l-5 132"/>
+        <path id="strapB" class="w-strap" d="M152 432 h136 l-8 128 h-120 z"/>
+        <path class="w-stitch" d="M164 444 l6 108 M276 444 l-6 108"/>
+
+        <!-- 케이스 · 크라운 -->
+        <rect id="crown" x="366" y="278" width="16" height="24" rx="4" fill="url(#gradSteel)"/>
+        <circle id="caseC" cx="220" cy="290" r="148" fill="url(#gradSteel)"/>
+        <circle id="bezelC" cx="220" cy="290" r="135" fill="none" stroke="rgba(20,24,29,.34)" stroke-width="1.4"/>
+
+        <!-- 다이얼 -->
+        <circle id="dialFace" cx="220" cy="290" r="128" fill="url(#dialSilver)"/>
+        <g id="ticks" aria-hidden="true"></g>
+        <text class="w-dtxt" x="220" y="242" text-anchor="middle" font-size="13" font-weight="700">ANCRE</text>
+        <text class="w-dtxt2" x="220" y="352" text-anchor="middle" font-size="8">5 POSITIONS · SEOUL</text>
+
+        <!-- 핸즈 (도핀 / 브레게 / 바통) — JS가 변형 선택 -->
+        <g id="hHour">
+          <g class="hv hv-0"><path class="w-hand" d="M220 214 L228 284 L220 292 L212 284 Z"/></g>
+          <g class="hv hv-1" style="display:none">
+            <path class="w-hand" d="M217.6 236 h4.8 v50 h-4.8 z"/>
+            <circle class="w-hand-o" cx="220" cy="227" r="8" stroke-width="4"/>
+            <path class="w-hand" d="M217.6 210 h4.8 v10 h-4.8 z"/>
+          </g>
+          <g class="hv hv-2" style="display:none"><rect class="w-hand" x="216.4" y="216" width="7.2" height="72" rx="2.4"/></g>
+        </g>
+        <g id="hMin">
+          <g class="hv hv-0"><path class="w-hand" d="M220 184 L226.4 284 L220 292 L213.6 284 Z"/></g>
+          <g class="hv hv-1" style="display:none">
+            <path class="w-hand" d="M218 214 h4 v72 h-4 z"/>
+            <circle class="w-hand-o" cx="220" cy="205" r="7" stroke-width="3.4"/>
+            <path class="w-hand" d="M218 182 h4 v17 h-4 z"/>
+          </g>
+          <g class="hv hv-2" style="display:none"><rect class="w-hand" x="217.4" y="186" width="5.2" height="102" rx="2"/></g>
+        </g>
+        <g id="hSec">
+          <line class="w-sec" x1="220" y1="318" x2="220" y2="174" stroke-width="2"/>
+          <circle class="w-secf" cx="220" cy="322" r="5.4"/>
+        </g>
+        <circle cx="220" cy="290" r="4.6" fill="#2b3138" stroke="#e8eaec" stroke-width="1.4"/>
+
+        <!-- 유리 반사 -->
+        <circle cx="220" cy="290" r="128" fill="url(#glass)" pointer-events="none"/>
+      </svg>
+      <span class="sn">개체 예정 번호 <b id="snStage">—</b></span>
+    </div>
+
+    <!-- 컨트롤 — 누르면 시계와 성적표가 즉시 바뀐다 -->
+    <div class="panel rise d1">
+      <div class="ph"><span class="t">구성 — 앵크르 01 「등시」 기반</span><span class="n" id="cfgCode">—</span></div>
+      <div class="grp">
+        <div class="gl"><span class="k">다이얼 마감</span><span class="v" id="vDial">실버 프로스트</span></div>
+        <div class="chips" role="group" aria-label="다이얼 마감 선택" id="gDial">
+          <button class="chip" type="button" data-i="0" aria-pressed="true">실버 프로스트</button>
+          <button class="chip" type="button" data-i="1" aria-pressed="false">솔레이유 블루</button>
+          <button class="chip" type="button" data-i="2" aria-pressed="false">차콜 그레인</button>
+        </div>
+      </div>
+      <div class="grp">
+        <div class="gl"><span class="k">핸즈</span><span class="v" id="vHands">도핀</span></div>
+        <div class="chips" role="group" aria-label="핸즈 형태 선택" id="gHands">
+          <button class="chip" type="button" data-i="0" aria-pressed="true">도핀</button>
+          <button class="chip" type="button" data-i="1" aria-pressed="false">브레게</button>
+          <button class="chip" type="button" data-i="2" aria-pressed="false">바통</button>
+        </div>
+      </div>
+      <div class="grp">
+        <div class="gl"><span class="k">케이스</span><span class="v" id="vCase">스틸 316L</span></div>
+        <div class="chips" role="group" aria-label="케이스 소재 선택" id="gCase">
+          <button class="chip" type="button" data-i="0" aria-pressed="true">스틸 316L</button>
+          <button class="chip" type="button" data-i="1" aria-pressed="false">티타늄 5급</button>
+          <button class="chip" type="button" data-i="2" aria-pressed="false">로즈골드</button>
+        </div>
+      </div>
+      <div class="grp" style="border-bottom:0">
+        <div class="gl"><span class="k">스트랩</span><span class="v" id="vStrap">브라운 카프</span></div>
+        <div class="chips" role="group" aria-label="스트랩 선택" id="gStrap">
+          <button class="chip" type="button" data-i="0" aria-pressed="true">브라운 카프</button>
+          <button class="chip" type="button" data-i="1" aria-pressed="false">블랙 카프</button>
+          <button class="chip" type="button" data-i="2" aria-pressed="false">네이비 캔버스</button>
+        </div>
+      </div>
+      <div class="out" id="cfgOut">
+        <div class="row"><span class="k">개체 예정 번호</span><span class="v mono" id="snOut">—</span></div>
+        <div class="row"><span class="k">예상 평균 일차</span><span class="v mono" id="rateOut">—</span></div>
+        <div class="row"><span class="k">조립·조정 대기</span><span class="v">약 11주</span></div>
+        <div class="pr" id="priceOut">4,600,000<span>원</span></div>
+        <p class="note">가격은 구성 확정 시점 기준이며, 출고 전 실측 성적표가 예상치를 대체합니다.<sup class="fn">1</sup></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ② 실측 성적표 밴드 — 증거 ═══ -->
+<section class="report" id="report">
+  <div class="wrap">
+    <p class="eyb rise">// 실측 성적표</p>
+    <h2 class="sec-h rise">이 구성의 개체는, 이렇게 걷습니다.</h2>
+    <p class="lede rise d1">모든 앵크르는 출고 전 5자세에서 각 24시간씩 측정됩니다.<sup class="fn">1</sup> 아래는 위에서 고른 구성과 같은 사양으로 최근 출고된 개체의 실측 기록 — 광고 문구가 아니라 측정기의 숫자입니다.</p>
+
+    <div class="rgrid">
+      <div class="rise d1">
+        <p style="font-size:var(--t-base);color:var(--mut);line-height:1.85;max-width:44ch">기계식 시계는 자세에 따라 중력을 다르게 받습니다. 그래서 한 자세의 평균만 말하는 건 절반의 진실입니다. 우리는 다섯 자세의 편차를 전부 적고, 가장 나쁜 자세의 숫자까지 성적표에 남깁니다.</p>
+        <div class="specs">
+          <div class="spc"><div class="v"><b class="countup" data-to="28800" data-fmt="1">0</b><span>vph</span></div><div class="l">진동수 — 시간당 진동</div><div class="n">4Hz 하이비트 · 스윕 초침</div></div>
+          <div class="spc"><div class="v"><b class="countup" data-to="72">0</b><span>시간</span></div><div class="l">파워리저브</div><div class="n">풀와인딩 기준 실측 74h 12m</div></div>
+          <div class="spc"><div class="v"><b class="countup" data-to="25">0</b><span>석</span></div><div class="l">주얼 수</div><div class="n">전 피벗 인조 루비 베어링</div></div>
+        </div>
+      </div>
+
+      <div class="cert rise d2" aria-live="polite">
+        <span class="float-chip">측정기 <i>TM-8</i> · 23±1°C</span>
+        <div class="chd"><span class="t">개체 성적표 — 일차 편차</span><span class="id" id="certSn">—</span></div>
+        <div class="prow"><span class="pl">문자판 위<em>DIAL UP</em></span><div class="ptrack"><i class="zero"></i><b class="pbar" id="pb0"></b><span class="pv" id="pv0">—</span></div></div>
+        <div class="prow"><span class="pl">문자판 아래<em>DIAL DOWN</em></span><div class="ptrack"><i class="zero"></i><b class="pbar" id="pb1"></b><span class="pv" id="pv1">—</span></div></div>
+        <div class="prow"><span class="pl">3시 아래<em>CROWN DOWN</em></span><div class="ptrack"><i class="zero"></i><b class="pbar" id="pb2"></b><span class="pv" id="pv2">—</span></div></div>
+        <div class="prow"><span class="pl">6시 아래<em>CROWN LEFT</em></span><div class="ptrack"><i class="zero"></i><b class="pbar" id="pb3"></b><span class="pv" id="pv3">—</span></div></div>
+        <div class="prow" style="border-bottom:0"><span class="pl">9시 아래<em>CROWN UP</em></span><div class="ptrack"><i class="zero"></i><b class="pbar" id="pb4"></b><span class="pv" id="pv4">—</span></div></div>
+        <div class="paxis" aria-hidden="true"><span>-5 s/일</span><span>0</span><span>+6.5 s/일</span></div>
+        <div class="cavg">
+          <div>
+            <div class="bigval" id="avgVal">+0.0<span>s/일</span></div>
+            <div class="lb">5자세 평균 일차 · 자세차 <span id="posDelta">—</span></div>
+          </div>
+          <span class="badge">공방 보증 ±4 s/일 이내</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ③ 주장 밴드 — 증거 뒤에 오는 주장 ═══ -->
+<section class="claim dark" id="claim">
+  <div class="wrap">
+    <p class="eyb rise">// 앵크르의 원칙</p>
+    <h2 class="rise">우리는 <mark>오차</mark>를<br>숨기지 않습니다.</h2>
+    <p class="sub rise d1">완벽한 시계는 없습니다. 정직하게 측정된 시계가 있을 뿐입니다. 그래서 모든 개체는 자신의 이름 — 개체번호 — 과 자신의 실측 성적표를 들고 공방을 떠납니다.<sup class="fn">2</sup></p>
+    <div class="row rise d2">
+      <span>출고 개체 <b>전수</b> 성적표 동봉</span>
+      <span>측정 원본 <b>10년</b> 보관 · 열람 가능</span>
+      <span>보증 편차 초과 시 <b>무상 재조정</b></span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ④ 제3자 트러스트 — 내가 쓴 카피가 아니라 남이 한 말 ═══ -->
+<section class="trust wrap" id="trust">
+  <div class="thead-band">
+    <div>
+      <p class="eyb rise">// 제3자 기록</p>
+      <h2 class="sec-h rise">우리가 아니라, 그들이 잰 숫자.</h2>
+    </div>
+    <div class="tsum rise d1">
+      <div class="ts"><div class="v">4.9<span>/ 5.0</span><span class="stars">★★★★★</span></div><div class="l">소유자 평가 · 누적 리뷰 173건</div></div>
+      <div class="ts"><div class="v"><b class="countup" data-to="412">0</b><span>개체</span></div><div class="l">누적 출고 (2019–2026)</div></div>
+    </div>
+  </div>
+
+  <div class="tgrid">
+    <article class="rev rise">
+      <p class="q">&ldquo;성적표를 동봉하는 국내 공방은 앵크르가 처음이다. 3주 착용 실측 <b>+2.9초/일</b> — 동봉된 성적표와 0.4초 차이였다.&rdquo;</p>
+      <div class="who"><b>백도윤</b> · 시계 계측 채널 「초침연구소」</div>
+      <div class="meta">구독 8.2만 · 실측 리뷰 <i>Verified</i></div>
+    </article>
+    <article class="rev rise d1">
+      <p class="q">&ldquo;조정 다섯 자세의 편차를 전부 공개하는 건 제네바의 이름난 공방들도 꺼리는 일이다. 서울의 작은 공방이 그걸 <b>기본값</b>으로 만들었다.&rdquo;</p>
+      <div class="who"><b>한정우</b> · 격월간 「호로스」 편집장</div>
+      <div class="meta">2025년 11월호 · 공방 탐방 특집 <i>Verified</i></div>
+    </article>
+    <article class="rev rise d2">
+      <p class="q">&ldquo;구매 14개월 뒤 무상 재조정을 받았다. 돌아온 시계엔 <b>두 번째 성적표</b>가 들어 있었다. 이 문서가 이 시계의 이력서다.&rdquo;</p>
+      <div class="who"><b>임가을</b> · 서울워치클럽 운영자 · 개체 0187 소유</div>
+      <div class="meta">소유자 인터뷰 · 2026년 3월 <i>Verified</i></div>
+    </article>
+  </div>
+
+  <div class="credits rise d1">
+    <span class="ck">다뤄진 곳</span>
+    <span class="cv">격월간 호로스</span><span class="cv">초침연구소</span><span class="cv">서울워치클럽 연례 리포트</span><span class="cv">공예진흥원 「손의 기록」 展</span>
+  </div>
+</section>
+
+<!-- ═══ ⑤ 무브먼트 해부 — sticky pin + 세로 스크럽 ═══ -->
+<section class="anat" id="movement">
+  <div class="track" id="anatTrack">
+    <div class="pin">
+      <div class="wrap agrid">
+        <div>
+          <p class="eyb rise">// 무브먼트 해부 — 수동 Cal. AN-01</p>
+          <h2 class="rise">오차가 태어나는 자리를<br>정확히 알고 있습니다.</h2>
+          <svg id="mov" viewBox="0 0 480 480" role="img" aria-label="Cal. AN-01 무브먼트 도해" style="margin-top:var(--sp-6)">
+            <defs>
+              <clipPath id="plateClip"><circle cx="240" cy="240" r="208"/></clipPath>
+            </defs>
+            <circle cx="240" cy="240" r="208" fill="#1b2128" stroke="#2c343d" stroke-width="2"/>
+            <!-- 코트 드 제네브 -->
+            <g clip-path="url(#plateClip)" opacity=".26">
+              <g id="stripes"></g>
+            </g>
+            <!-- 메인스프링 배럴 -->
+            <g id="g-spring" class="apart">
+              <circle cx="150" cy="150" r="70" fill="#232b34" stroke="#3a444f" stroke-width="2"/>
+              <path id="spiralB" fill="none" stroke="#8ea3b8" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="150" cy="150" r="7" fill="#3a444f"/>
+            </g>
+            <!-- 기어 트레인 -->
+            <g class="apart" id="g-train">
+              <circle cx="262" cy="118" r="34" fill="none" stroke="#55606c" stroke-width="3" stroke-dasharray="4 5"/>
+              <circle cx="262" cy="118" r="10" fill="#232b34" stroke="#55606c" stroke-width="2"/>
+              <circle cx="326" cy="172" r="25" fill="none" stroke="#55606c" stroke-width="3" stroke-dasharray="3.5 4.5"/>
+              <circle cx="326" cy="172" r="8" fill="#232b34" stroke="#55606c" stroke-width="2"/>
+            </g>
+            <!-- 탈진기 (앵크르) -->
+            <g id="g-escape" class="apart">
+              <circle cx="286" cy="252" r="31" fill="none" stroke="#7f8c99" stroke-width="3" stroke-dasharray="3 4"/>
+              <circle cx="286" cy="252" r="6" fill="#232b34" stroke="#7f8c99" stroke-width="2"/>
+              <path d="M258 236 L233 268 L241 275 L263 249 Z" fill="#414c58"/>
+              <path d="M233 268 L214 296 L221 301 L241 275 Z" fill="#414c58"/>
+              <rect x="252" y="238" width="9" height="6" rx="1" fill="#7d3140" transform="rotate(-38 256 241)"/>
+              <rect x="230" y="266" width="9" height="6" rx="1" fill="#7d3140" transform="rotate(-38 234 269)"/>
+            </g>
+            <!-- 밸런스 휠 + 헤어스프링 -->
+            <g id="g-balance" class="apart">
+              <g id="balGrp" style="transform-origin:330px 330px;animation:bal 1.4s ease-in-out infinite alternate">
+                <circle cx="330" cy="330" r="56" fill="none" stroke="#93a2b1" stroke-width="6"/>
+                <line x1="278" y1="316" x2="382" y2="344" stroke="#93a2b1" stroke-width="4"/>
+                <line x1="316" y1="382" x2="344" y2="278" stroke="#93a2b1" stroke-width="4"/>
+                <path id="spiralH" fill="none" stroke="#8ea3b8" stroke-width="1.6"/>
+              </g>
+              <circle cx="330" cy="330" r="5" fill="#3a444f"/>
+            </g>
+            <!-- 주얼 -->
+            <g id="g-jewel" class="apart">
+              <circle cx="150" cy="150" r="5" fill="#7d3140"/>
+              <circle cx="262" cy="118" r="4.4" fill="#7d3140"/>
+              <circle cx="326" cy="172" r="4.4" fill="#7d3140"/>
+              <circle cx="286" cy="252" r="4.4" fill="#7d3140"/>
+              <circle cx="330" cy="330" r="5" fill="#7d3140"/>
+            </g>
+            <circle id="anaRing" cx="150" cy="150" r="86"/>
+          </svg>
+        </div>
+
+        <div class="steps" id="steps">
+          <article class="step on" data-ring="150,150,86">
+            <span class="no">01 / 04 — 동력</span>
+            <h3>메인스프링 배럴</h3>
+            <p>감긴 스프링이 풀리며 사흘치 동력을 냅니다. 문제는 토크가 일정하지 않다는 것 — 풀와인딩 직후와 60시간 뒤의 힘이 다르고, 그 차이가 오차의 첫 번째 원천입니다. 우리는 배럴 내벽 브레이킹 그리스를 개체마다 손으로 다시 바릅니다.</p>
+            <p class="sm">실측 토크 편차 · 0–60h 구간 ±9% 이내 관리</p>
+          </article>
+          <article class="step" data-ring="270,260,64">
+            <span class="no">02 / 04 — 배분</span>
+            <h3>탈진기 — 우리 이름의 자리</h3>
+            <p>닻 모양의 레버가 기어 트레인을 붙잡았다 놓으며 동력을 초당 여덟 번으로 쪼갭니다. 이 닻의 프랑스어 이름이 앙크르(ancre) — 우리 공방의 이름은 여기서 왔습니다. 팔레트 스톤의 물림 깊이는 현미경 아래에서 개체별로 맞춥니다.</p>
+            <p class="sm">임펄스 각 개체별 기록 · 팔레트 스톤 인조 루비</p>
+          </article>
+          <article class="step" data-ring="330,330,78">
+            <span class="no">03 / 04 — 심장</span>
+            <h3>밸런스 휠</h3>
+            <p>1초에 여덟 번, 하루 691,200번 같은 폭으로 흔들리는 것이 이 바퀴의 일입니다. 자세가 바뀌면 중력이 진폭을 흔들고, 그게 5자세 편차의 정체입니다. 우리는 다섯 자세에서 진폭을 재고, 미크론 단위의 나사 무게추로 균형을 다시 잡습니다.</p>
+            <p class="sm">진폭 기준 수평 295° ±15° · 수직 낙폭 45° 이내</p>
+          </article>
+          <article class="step" data-ring="240,240,176">
+            <span class="no">04 / 04 — 관절</span>
+            <h3>주얼 — 25개의 붉은 점</h3>
+            <p>회전축이 닿는 모든 자리에는 강철 대신 인조 루비가 박혀 있습니다. 마찰을 백분의 일로 줄이는 25개의 베어링 — 이 페이지에서 붉은색이 허락된 유일한 자리이기도 합니다. 주얼의 구멍 공차가 자세차의 마지막 변수라서, 압입 후 전수 검경합니다.</p>
+            <p class="sm">전 피벗 주얼링 · 구멍 공차 3μm 이내</p>
+          </article>
+          <div class="arail" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ⑥ 공방 서사 — 지그재그 에디토리얼 ═══ -->
+<section class="atel wrap" id="atelier">
+  <p class="eyb rise">// 공방</p>
+  <h2 class="sec-h rise">세운상가 4층, 하루 두 개체.</h2>
+
+  <div class="zig">
+    <figure class="ph a rise">
+      <img src="https://images.unsplash.com/photo-1731446451263-fc3881d4973d?w=1400&q=80&auto=format&fit=crop"
+           alt="작업대 위에 분해된 무브먼트 부품과 트위저" loading="lazy" decoding="async"
+           onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(140deg,#242a31,#1d5083)'">
+      <span class="scrim"></span>
+      <figcaption>조정실 — 다섯 자세 측정은 한 개체당 다섯 밤이 걸립니다</figcaption>
+    </figure>
+    <div class="txt rise d1">
+      <h3>시계 골목의 끝에서 시작했습니다.</h3>
+      <p>앵크르는 2019년, 수리공들의 골목이던 세운상가 한 칸에서 시작했습니다. 처음 2년은 남의 시계를 고쳤습니다. 고장 난 시계 삼백 개를 열어 본 뒤에야 우리 무브먼트의 도면을 그렸습니다 — 어디서 마모가 시작되는지 눈으로 확인한 자리들만 두껍게.</p>
+      <p class="fact">설립 2019 · 워치메이커 3인 · 연 출고 약 90개체</p>
+    </div>
+  </div>
+
+  <div class="zig rv">
+    <figure class="ph b rise">
+      <img src="https://images.unsplash.com/photo-1664437235473-65aaf8912d20?w=1200&q=80&auto=format&fit=crop"
+           alt="루페를 쓰고 작업대에서 조립 중인 워치메이커" loading="lazy" decoding="async"
+           onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(140deg,#1d5083,#14181d)'">
+      <span class="scrim"></span>
+      <figcaption>조립대 — 한 개체는 처음부터 끝까지 한 사람의 손을 통과합니다</figcaption>
+    </figure>
+    <div class="txt rise d1">
+      <h3>빨리 만드는 법은 배우지 않았습니다.</h3>
+      <p>조립은 두 사람이 나눠 하지 않습니다. 한 개체는 처음부터 끝까지 한 사람의 손을 통과하고, 성적표에는 그 워치메이커의 서명이 들어갑니다. 하루에 완성되는 시계는 많아야 두 개 — 측정에 필요한 다섯 밤은 어떤 공정으로도 줄일 수 없기 때문입니다.</p>
+      <p class="fact">1개체 1워치메이커 · 성적표 자필 서명 · 대기 약 11주</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ⑦ 컬렉션 list-rows ═══ -->
+<section class="coll" id="collection">
+  <div class="wrap">
+    <p class="eyb rise">// 컬렉션</p>
+    <h2 class="sec-h rise">네 개의 이름, 네 개의 보증.</h2>
+    <p class="lede rise d1">모든 모델은 같은 원칙 — 전수 실측·성적표 동봉 — 을 공유하고, 조정 등급만 다릅니다. 보증 편차는 마케팅 수치가 아니라 환불 조건입니다.<sup class="fn">3</sup></p>
+
+    <div class="mhead rise"><span>모델</span><span>사양</span><span>보증 편차</span><span style="text-align:right">가격</span></div>
+
+    <div class="mrow rise">
+      <div class="nm">등시 <em>AN-01 · TŬNGSI</em></div>
+      <div class="sp">38mm 스틸 · 수동 Cal. AN-01 · 3핸즈 · 두께 9.2mm · 시스루 백</div>
+      <div class="gr">일차 <b>±4.0 s</b><br>5자세 조정</div>
+      <div class="pr">460<span>만원</span><em>대기 11주</em></div>
+    </div>
+    <div class="mrow rise d1">
+      <div class="nm">진폭 <em>AN-02 · CHINPOK</em></div>
+      <div class="sp">39mm 스틸/티타늄 · 자동 Cal. AN-02 · 마이크로 로터 · 두께 10.4mm</div>
+      <div class="gr">일차 <b>±3.5 s</b><br>5자세 + 등시성 조정</div>
+      <div class="pr">620<span>만원</span><em>대기 14주</em></div>
+    </div>
+    <div class="mrow rise d2">
+      <div class="nm">항로 <em>AN-03 · HANGNO</em></div>
+      <div class="sp">40mm 스틸 · 수동 · GMT 24시간침 · 파워리저브 인디케이터</div>
+      <div class="gr">일차 <b>±4.0 s</b><br>5자세 + 2온도 조정</div>
+      <div class="pr">740<span>만원</span><em>대기 16주</em></div>
+    </div>
+    <div class="mrow rise d3">
+      <div class="nm">영점 <em>AN-00 · YŎNGJOM</em></div>
+      <div class="sp">36mm 로즈골드 · 수동 · 레귤레이터 다이얼 · 연 30개체 한정</div>
+      <div class="gr">일차 <b>±2.5 s</b><br>5자세 + 등시성 + 2온도</div>
+      <div class="pr">1,180<span>만원</span><em>추첨 배정</em></div>
+    </div>
+
+    <p class="fno rise d1">모든 가격은 부가세 포함 공방 직판가. 스트랩 2종(카프·캔버스)과 성적표 원본, 10년 무브먼트 보증서가 함께 제공됩니다.</p>
+  </div>
+</section>
+
+<!-- ═══ ⑧ 각주 + 개체 조회 ═══ -->
+<section class="notes wrap" id="notes">
+  <p class="eyb rise">// 각주 — 본문의 숫자들이 딛고 선 조건</p>
+  <h2 class="sec-h rise">작은 글씨까지가 제품입니다.</h2>
+
+  <div class="ngrid">
+    <ol class="rise d1">
+      <li>측정 조건 — 풀와인딩 후 1시간 안정화, 23±1°C, 5자세 각 24시간, 비브로그래프 TM-8. 예상 평균 일차는 동일 구성 최근 20개체의 실측 중앙값입니다.</li>
+      <li>측정 원본(자세별 로그 전체)은 개체번호로 10년간 보관하며, 소유자는 언제든 열람을 요청할 수 있습니다. 중고 거래 시 소유자 이전 등록도 무상입니다.</li>
+      <li>수령 후 90일 이내 상온 착용 조건에서 보증 편차를 초과하면 무상 재조정, 재조정 후에도 초과하면 전액 환불합니다. 재조정 개체에는 새 성적표가 발급됩니다.</li>
+    </ol>
+
+    <div class="lookup rise d2" id="lookup">
+      <span class="t">개체번호 조회</span>
+      <h3>당신의 시계가 공방을 떠나던 날의 기록.</h3>
+      <form id="lkForm" autocomplete="off">
+        <input type="text" id="lkIn" placeholder="예: AN-25-0187" aria-label="개체번호 입력" maxlength="16">
+        <button type="submit">조회</button>
+      </form>
+      <p class="res" id="lkRes">케이스백에 각인된 개체번호를 입력하면 출고 시 성적표 요약을 보여 드립니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 다크 CTA ═══ -->
+<section class="cta dark">
+  <div class="wrap cgrid">
+    <div>
+      <p class="eyb rise" style="color:var(--dk-mut)">// 주문</p>
+      <h2 class="rise">숫자를 확인하고<br>주문하셔도 늦지 않습니다.</h2>
+      <p class="rise d1">공방 방문 예약을 하시면 출고 대기 중인 개체들의 성적표 원본을 먼저 보여 드립니다. 마음에 드는 숫자가 없다면, 사지 않으셔도 됩니다.</p>
+      <a href="#top" class="btn rise d2">구성 이어서 만들기</a>
+    </div>
+    <dl class="side rise d1">
+      <div class="r"><dt>방문 상담</dt><dd>화–토 · 예약제</dd></div>
+      <div class="r"><dt>현재 대기</dt><dd><i>약 11주</i> (등시 기준)</dd></div>
+      <div class="r"><dt>상담 소요</dt><dd>60분 · 측정 시연 포함</dd></div>
+      <div class="r"><dt>보증</dt><dd>무브먼트 10년</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ═══ footer ═══ -->
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <div class="lg">AN<i>C</i>RE</div>
+        <p>앵크르 시계공방<br>서울특별시 종로구 청계천로 159, 세운상가 가동 4층 402호<br>대표 02-2265-0419 · 공방 직판 전용</p>
+      </div>
+      <div>
+        <div class="h">공방 시간</div>
+        <dl>
+          <div class="fr"><span>화–금</span><b>10:30 – 19:00</b></div>
+          <div class="fr"><span>토요일</span><b>10:30 – 17:00</b></div>
+          <div class="fr"><span>일·월</span><b>휴무 (측정일)</b></div>
+          <div class="fr"><span>방문 상담</span><b>100% 예약제</b></div>
+        </dl>
+      </div>
+      <div>
+        <div class="h">안내</div>
+        <dl>
+          <div class="fr"><span>수리·재조정 접수</span><b>02-2265-0420</b></div>
+          <div class="fr"><span>성적표 재발급</span><b>개체번호 확인 후</b></div>
+          <div class="fr"><span>소유자 이전 등록</span><b>무상</b></div>
+          <div class="fr"><span>해외 배송</span><b>미지원 (직접 수령)</b></div>
+        </dl>
+      </div>
+    </div>
+    <p class="legal">
+      앵크르(ancre)는 탈진기의 닻을 뜻하는 프랑스어입니다. 게재된 편차·진폭·토크 수치는 공방 자체 측정 기준이며 COSC 등 외부 인증 수치가 아닙니다. 본 페이지의 성적표 예시는 실제 출고 개체의 기록 형식을 따른 표본 데이터입니다. 시계는 자세·온도·착용 습관에 따라 표기 편차와 다르게 걸을 수 있습니다.<br>
+      &copy; 2026 앵크르 시계공방. 사업자등록번호 573-42-01187. 통신판매업 신고 제2026-서울종로-0334호.
+    </p>
+  </div>
+</footer>
+
+<style>
+@keyframes bal{from{transform:rotate(-16deg)}to{transform:rotate(16deg)}}
+@media(prefers-reduced-motion:reduce){#balGrp{animation:none!important}}
+</style>
+
+<script>
+/* ══ 스크롤 복원 가드 — smooth를 초기 리셋 동안만 auto로 ══════════════════ */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){var h=document.documentElement,p=h.style.scrollBehavior;h.style.scrollBehavior='auto';
+ scrollTo(0,0);addEventListener('load',function(){scrollTo(0,0);
+ setTimeout(function(){h.style.scrollBehavior=p},60)})})();
+
+/* 캡처 모드 */
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+var REDUCE=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+var $=function(s){return document.querySelector(s)};
+
+/* ══ 시계 눈금 생성 ═══════════════════════════════════════════════════════ */
+(function(){
+ var g=$('#ticks'),h='',i,a,c=Math.cos,s=Math.sin,CX=220,CY=290;
+ for(i=0;i<60;i++){
+  a=i*6*Math.PI/180;
+  var maj=i%5===0,r1=maj?104:112,r2=118;
+  h+='<line class="w-tick" x1="'+(CX+r1*s(a)).toFixed(1)+'" y1="'+(CY-r1*c(a)).toFixed(1)+
+     '" x2="'+(CX+r2*s(a)).toFixed(1)+'" y2="'+(CY-r2*c(a)).toFixed(1)+
+     '" stroke-width="'+(maj?3:1)+'" opacity="'+(maj?1:.55)+'"/>';
+ }
+ g.innerHTML=h;
+})();
+
+/* 스파이럴 생성 (배럴 스프링 · 헤어스프링) */
+function spiral(cx,cy,r0,r1,turns){
+ var d='',n=Math.ceil(turns*40),i,t,r,a;
+ for(i=0;i<=n;i++){t=i/n;r=r0+(r1-r0)*t;a=t*turns*Math.PI*2;
+  d+=(i?'L':'M')+(cx+r*Math.cos(a)).toFixed(1)+' '+(cy+r*Math.sin(a)).toFixed(1)+' ';}
+ return d;
+}
+$('#spiralB').setAttribute('d',spiral(150,150,6,58,3.6));
+$('#spiralH').setAttribute('d',spiral(330,330,5,34,3.2));
+
+/* ══ 실시간 무브먼트 — 초침 스윕(28,800vph 감성) ══════════════════════════ */
+(function(){
+ var hh=$('#hHour'),mm=$('#hMin'),ss=$('#hSec');
+ function setT(h,m,s){
+  hh.setAttribute('transform','rotate('+((h%12+m/60)*30).toFixed(2)+' 220 290)');
+  mm.setAttribute('transform','rotate('+((m+s/60)*6).toFixed(2)+' 220 290)');
+  ss.setAttribute('transform','rotate('+(s*6).toFixed(2)+' 220 290)');
+ }
+ if(CAPTURE){setT(10,9,36);return}
+ if(REDUCE){
+  var t0=new Date();setT(t0.getHours(),t0.getMinutes(),t0.getSeconds());
+  setInterval(function(){var t=new Date();setT(t.getHours(),t.getMinutes(),t.getSeconds())},1000);
+  return;
+ }
+ (function loop(){
+  var t=new Date();
+  setT(t.getHours(),t.getMinutes(),t.getSeconds()+t.getMilliseconds()/1000);
+  requestAnimationFrame(loop);
+ })();
+})();
+
+/* ══ ★ 시그니처 ① 컨피규레이터 — 조작 결과가 시계·성적표로 즉시 보인다 ═══ */
+var DIAL=[
+ {n:'실버 프로스트',fill:'url(#dialSilver)',tick:'#39414a',dtxt:'#39414a',hand:'#1d5083',sec:'#1d5083',code:'S'},
+ {n:'솔레이유 블루',fill:'url(#dialBlue)',tick:'#dbe3ea',dtxt:'#dbe3ea',hand:'#e8ecef',sec:'#dfe5ea',code:'B'},
+ {n:'차콜 그레인',fill:'url(#dialChar)',tick:'#c9ced4',dtxt:'#c9ced4',hand:'#dfe3e7',sec:'#9fc0e0',code:'C'}
+];
+var HANDS=[{n:'도핀',code:'D'},{n:'브레게',code:'G'},{n:'바통',code:'T'}];
+var CASES=[
+ {n:'스틸 316L',grad:'url(#gradSteel)',add:0,code:'ST'},
+ {n:'티타늄 5급',grad:'url(#gradTi)',add:400000,code:'TI'},
+ {n:'로즈골드',grad:'url(#gradRG)',add:1800000,code:'RG'}
+];
+var STRAP=[
+ {n:'브라운 카프',fill:'#5c4634',stitch:'rgba(240,232,220,.55)',code:'BR'},
+ {n:'블랙 카프',fill:'#23262a',stitch:'rgba(210,214,219,.4)',code:'BK'},
+ {n:'네이비 캔버스',fill:'#2b3a52',stitch:'rgba(214,222,232,.42)',code:'NV'}
+];
+var BASE=4600000,POS=['DU','DD','CD','CL','CU'];
+var st={d:0,h:0,c:0,s:0};
+
+function seedOf(){return st.d*29+st.h*13+st.c*7+st.s*3+11}
+function ratesOf(seed){
+ var r=[],i,v;
+ for(i=0;i<5;i++){
+  v=Math.sin(seed*2.13+i*1.91)*2.9+Math.cos(seed*1.37+i*0.83)*1.5+1.3;
+  v=Math.max(-4.6,Math.min(6.2,v));
+  r.push(Math.round(v*10)/10);
+ }
+ return r;
+}
+function serialOf(seed){
+ var n=113+(seed*97)%286;
+ return 'AN-26-'+('000'+n).slice(-4);
+}
+function fmtRate(v){return (v>0?'+':v===0?'±':'')+v.toFixed(1)}
+
+/* 성적표 차트 갱신 — 막대 폭·위치·평균·자세차가 전부 움직인다 */
+var avgCur=0;
+function tween(el,from,to,dec,suffixEl){
+ if(REDUCE){el.firstChild.nodeValue=(to>0?'+':to===0?'±':'')+to.toFixed(dec);return}
+ var t0=performance.now(),dur=460;
+ (function tk(t){var k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3),v=from+(to-from)*e;
+  el.firstChild.nodeValue=(v>0?'+':Math.abs(v)<.05?'±':'')+v.toFixed(dec);
+  if(k<1)requestAnimationFrame(tk)})(t0);
+}
+function updateReport(){
+ var seed=seedOf(),r=ratesOf(seed),sn=serialOf(seed),i,sum=0,mn=99,mx=-99;
+ var MIN=-5,MAX=6.5,SPAN=MAX-MIN,zero=(0-MIN)/SPAN*100;
+ for(i=0;i<5;i++){
+  var v=r[i];sum+=v;if(v<mn)mn=v;if(v>mx)mx=v;
+  var bar=document.getElementById('pb'+i),val=document.getElementById('pv'+i);
+  var w=Math.abs(v)/SPAN*100;
+  if(v>=0){bar.style.left=zero+'%';bar.style.width=w+'%'}
+  else{bar.style.left=(zero-w)+'%';bar.style.width=w+'%'}
+  val.textContent=fmtRate(v)+' s';
+ }
+ var avg=Math.round(sum/5*10)/10;
+ var av=$('#avgVal');tween(av,avgCur,avg,1);avgCur=avg;
+ $('#posDelta').textContent=(mx-mn).toFixed(1)+' s';
+ $('#certSn').textContent=sn;
+ $('#snOut').textContent=sn;$('#snStage').textContent=sn;
+ $('#rateOut').textContent=fmtRate(avg)+' s/일';
+ $('#cfgCode').textContent=DIAL[st.d].code+HANDS[st.h].code+'-'+CASES[st.c].code+'-'+STRAP[st.s].code;
+ var cert=$('.cert');
+ if(!REDUCE){cert.classList.remove('flash');void cert.offsetWidth;cert.classList.add('flash')}
+}
+
+/* 시계 렌더 갱신 */
+function updateWatch(){
+ var d=DIAL[st.d],c=CASES[st.c],sp=STRAP[st.s],w=$('#watch');
+ $('#dialFace').setAttribute('fill',d.fill);
+ $('#caseC').setAttribute('fill',c.grad);
+ $('#crown').setAttribute('fill',c.grad);
+ w.style.setProperty('--tickC',d.tick);
+ w.style.setProperty('--dtxtC',d.dtxt);
+ w.style.setProperty('--handC',d.hand);
+ w.style.setProperty('--secC',d.sec);
+ w.style.setProperty('--strapC',sp.fill);
+ w.style.setProperty('--stitchC',sp.stitch);
+ var vs=w.querySelectorAll('.hv'),i;
+ for(i=0;i<vs.length;i++)vs[i].style.display=vs[i].classList.contains('hv-'+st.h)?'':'none';
+ $('#vDial').textContent=d.n;$('#vHands').textContent=HANDS[st.h].n;
+ $('#vCase').textContent=c.n;$('#vStrap').textContent=sp.n;
+ $('#priceOut').firstChild.nodeValue=(BASE+c.add).toLocaleString('ko-KR');
+}
+function bindGroup(sel,key){
+ var btns=document.querySelectorAll(sel+' .chip');
+ btns.forEach(function(b){
+  b.addEventListener('click',function(){
+   btns.forEach(function(o){o.setAttribute('aria-pressed','false')});
+   b.setAttribute('aria-pressed','true');
+   st[key]=+b.dataset.i;updateWatch();updateReport();
+  });
+ });
+}
+bindGroup('#gDial','d');bindGroup('#gHands','h');bindGroup('#gCase','c');bindGroup('#gStrap','s');
+updateWatch();updateReport();
+
+/* ══ 카운트업 + 스크롤 리빌 ═══════════════════════════════════════════════ */
+function fmt(n,thou){var s=String(Math.round(n));
+ return thou?s.replace(/\B(?=(\d{3})+(?!\d))/g,','):s}
+function runCount(el){
+ if(el.dataset.done)return;el.dataset.done='1';
+ var to=parseFloat(el.dataset.to),thou=el.dataset.fmt==='1';
+ if(REDUCE){el.textContent=fmt(to,thou);return}
+ var t0=performance.now(),dur=1000;
+ (function tick(t){var k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);
+  el.textContent=fmt(to*e,thou);
+  if(k<1)requestAnimationFrame(tick);else el.textContent=fmt(to,thou)})(t0);
+}
+if(REDUCE){
+ document.querySelectorAll('.rise').forEach(function(el){el.classList.add('vis')});
+ document.querySelectorAll('.countup').forEach(runCount);
+}else{
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){
+  if(!e.isIntersecting)return;
+  e.target.classList.add('vis');
+  if(e.target.classList.contains('countup'))runCount(e.target);
+  else if(e.target.querySelectorAll)e.target.querySelectorAll('.countup').forEach(runCount);
+  io.unobserve(e.target);
+ })},{rootMargin:'0px 0px -8% 0px',threshold:.08});
+ document.querySelectorAll('.rise,.countup').forEach(function(el){io.observe(el)});
+ /* load 폴백 — 뷰포트 안 요소 즉시 표시 */
+ addEventListener('load',function(){
+  document.querySelectorAll('.rise').forEach(function(el){
+   if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis')});
+  document.querySelectorAll('.countup').forEach(function(el){
+   if(el.getBoundingClientRect().top<innerHeight)runCount(el)});
+ });
+}
+
+/* ══ ★ 시그니처 ② 무브먼트 해부 — sticky pin + 세로 스크럽 ═══════════════
+   데스크톱 + 모션 허용에서만 스크럽. 모바일/reduced/capture는 정적 스택 폴백
+   (track 높이 auto — 빈 vh 구간이 생기지 않는다). */
+(function(){
+ var sec=document.querySelector('.anat'),track=$('#anatTrack'),
+     steps=[].slice.call(document.querySelectorAll('#steps .step')),
+     dots=[].slice.call(document.querySelectorAll('.arail i')),
+     ring=$('#anaRing'),parts=[$('#g-spring'),$('#g-escape'),$('#g-balance'),$('#g-jewel')],
+     cur=0,mq=matchMedia('(min-width:980px)');
+ function setStep(i){
+  if(i===cur&&sec.classList.contains('scrub'))return;
+  cur=i;
+  steps.forEach(function(s,k){s.classList.toggle('on',k===i)});
+  dots.forEach(function(d,k){d.classList.toggle('on',k===i)});
+  parts.forEach(function(p,k){p.classList.toggle('on',k===i)});
+  var rg=steps[i].dataset.ring.split(',');
+  ring.setAttribute('cx',rg[0]);ring.setAttribute('cy',rg[1]);ring.setAttribute('r',rg[2]);
+ }
+ function onScroll(){
+  var r=track.getBoundingClientRect(),vh=innerHeight;
+  var total=r.height-vh;if(total<=0)return;
+  var p=Math.max(0,Math.min(1,-r.top/total));
+  setStep(Math.min(3,Math.floor(p*4)));
+ }
+ function apply(){
+  var live=mq.matches&&!REDUCE&&!CAPTURE;
+  sec.classList.toggle('scrub',live);
+  if(live){setStep(0);onScroll()}
+  else{steps.forEach(function(s){s.classList.add('on')});parts.forEach(function(p){p.classList.add('on')})}
+ }
+ addEventListener('scroll',function(){if(sec.classList.contains('scrub'))onScroll()},{passive:true});
+ if(mq.addEventListener)mq.addEventListener('change',apply);else if(mq.addListener)mq.addListener(apply);
+ apply();
+})();
+
+/* ══ 개체번호 조회 — 입력에서 결정적으로 기록 생성 ════════════════════════ */
+$('#lkForm').addEventListener('submit',function(e){
+ e.preventDefault();
+ var q=$('#lkIn').value.trim().toUpperCase(),res=$('#lkRes');
+ if(!/^AN-\d{2}-\d{3,4}$/.test(q)){
+  res.innerHTML='형식이 다릅니다. 케이스백의 각인은 <b>AN-연도-번호</b> (예: AN-25-0187) 형식입니다.';
+  return;
+ }
+ var h=0,i;for(i=0;i<q.length;i++)h=(h*31+q.charCodeAt(i))>>>0;
+ var yy=q.slice(3,5),avg=((h%56)/10-1.4).toFixed(1),amp=280+(h%31),
+     mth=1+(h%12),wm=['김한결','서은호','박도경'][h%3];
+ res.innerHTML='<span class="ok">개체 <b>'+q+'</b> · 20'+yy+'년 '+mth+'월 출고</span><br>'+
+  '평균 일차 <b>'+(avg>0?'+':'')+avg+' s/일</b> · 수평 진폭 '+amp+'° · 조립·조정 '+wm+
+  '<br>성적표 원본 열람은 방문 예약 시 신청할 수 있습니다.';
+});
+
+/* nav 괘선 상태 */
+addEventListener('scroll',function(){
+ $('#nav').style.borderBottomColor=scrollY>12?'var(--line2)':'var(--line)';
+},{passive:true});
+</script>
+
+<!--
+  추적 정보 (화면 비노출)
+  run: 20 / slug: ancre / 카테고리: 시계·크래프트 (신규 업종)
+  구조 프리셋: P15 Live Instrument — 얇은 헤더 → 컨피규레이터 히어로(도구 먼저)
+    → 실측 성적표 밴드(증거) → 주장 밴드(디스플레이 타입은 여기서 처음) → 제3자 트러스트(상단권)
+    → 무브먼트 해부(sticky + 세로 스크럽) → 공방 서사(지그재그) → 컬렉션 list-rows
+    → 각주 + 개체 조회 + 다크 CTA + 푸터
+  P12/P13/P14 대비: 빅 히어로 카피 폐기(히어로=도구) / 가로 스크럽 → 세로 스크럽 /
+    주장이 증거 뒤에 오는 역순 서사 / 각주(¹²³) 시스템 / 트러스트를 4번 위치로
+  시그니처: ① 컨피규레이터(실시간 구동 SVG 시계 — 다이얼·핸즈·케이스·스트랩 즉시 반영,
+    개체번호·예상 일차·가격·성적표 차트 연동) ② 세로 스크럽 무브먼트 해부(4부품 지목 링)
+  이미지 2컷: 1731446451263(분해 무브먼트 작업대) / 1664437235473(루페 쓴 워치메이커)
+  — 최초 후보 1522312346375·1547996160은 TISSOT/Rolex 상표 노출로 브라우저 검증에서 교체
+  색: --pt #1d5083 (블루드 스틸) 단일 포인트 · --ruby는 주얼 도트 전용 · 실버 페이퍼 지면
+-->
+</body></html>

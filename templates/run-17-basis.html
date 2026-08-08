@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>베이시스 정기예금 — 상품설명서 BS-2026-04</title>
+<meta name="description" content="금리도 수수료도 1bp까지, 각주까지 전부 인쇄한 예금 상품 공시 명세서.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<!--
+  RUN 17 · BASIS — 아키타입: 공시 명세서 / 상품설명서(Disclosure Prospectus)
+  구조 P14 Disclosure Sheet · 랜딩이 아니라 문서번호·시행일·개정이력을 가진 "문서"로 행세한다.
+  순서 원칙: 숫자(레이트보드) → 증거(감사밴드) → 주장(히어로는 그 사이). 큰 클로징 CTA 없음 —
+  페이지는 각주와 개정 이력으로 끝난다. 브랜드 서사가 모듈 순서를 결정한 케이스.
+  색 규칙(핵심): UI는 전부 무채색, 인주 레드는 "당신이 잃는 숫자"에만 붙는다 —
+  유료 수수료 / 이자소득세 / 경쟁사 차감액 / 금리 인하 시점 / 개정 이력의 정정선.
+  0원과 우리 수치는 검정. 색이 장식이 아니라 회계 기호로 정보를 나른다.
+-->
+<style>
+:root{
+--sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+--mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+/* 쿨 슬레이트 지면 — 순백 금지. 잉크·저대비 본문·반전 밴드까지 전부 차가운 중성 램프 */
+--paper:#e7e9ea;--panel:#dcdfe1;--panel2:#d2d6d9;
+/* --mut은 AA(4.5:1) 통과값. 위계는 명도가 아니라 weight(500)·트래킹(.1em)으로 만든다 */
+--ink:#0e1114;--body:#5d656c;--mut:#5f666c;
+--line:#c6cbcf;--line2:#b0b7bc;
+--dark:#14181b;--dark2:#1d2226;--onDark:#eceef0;--onDarkMut:#98a0a7;
+--k:#b3271e; /* 인주·정정 레드 — 오직 손실 수치에만 */
+/* 타입 스케일 — 모듈러 1.25배(base 16) + 디스플레이 3단. 피그마 Variables type/* 와 1:1 */
+--t-xs:12px;--t-sm:14px;--t-base:16px;--t-md:20px;--t-lg:25px;--t-xl:31px;
+--t-2xl:39px;--t-3xl:49px;--t-4xl:61px;--t-d1:76px;--t-d2:96px;--t-d3:132px;
+/* 간격 스케일 — 4배수. 피그마 Variables space/* 와 1:1 */
+--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+--head:54px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+/* 한글 조판: 단어 중간 끊김 방지 */
+body{margin:0;font-family:var(--sans);background:var(--paper);color:var(--ink);
+ -webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden;word-break:keep-all;overflow-wrap:break-word;
+ font-size:var(--t-base)}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font-family:inherit;color:inherit}
+.wrap{max-width:1280px;margin:0 auto;padding:0 var(--s7)}
+.mono{font-family:var(--mono)}
+.k{color:var(--k)}
+/* 그레인 — 밝은 지면이라 multiply로 아주 얕게 */
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.07;mix-blend-mode:multiply;z-index:80;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* 리빌 클래스는 고유명(.rise/.vis) — .in 은 레이아웃 클래스와 충돌한 전례가 있어 금지 */
+.rise{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+.rise.vis{opacity:1;transform:none}
+
+/* 문서 라벨 · 각주 마커 ------------------------------------------------ */
+.lbl{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.tblno{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;color:var(--mut);border:1px solid var(--line);padding:3px 7px}
+sup.fn{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);vertical-align:super;line-height:0;margin-left:2px;font-weight:500}
+sup.fn a{border-bottom:1px dotted var(--line2)}
+sup.fn a:hover{color:var(--ink)}
+.sechd{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s5);flex-wrap:wrap;
+ border-bottom:1px solid var(--ink);padding-bottom:var(--s4)}
+.sechd h2{margin:var(--s2) 0 0;font-size:clamp(var(--t-lg),3.2vw,var(--t-xl));font-weight:800;letter-spacing:-.03em;line-height:1.2;max-width:22ch}
+.sechd .smeta{text-align:right;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);line-height:1.9;white-space:nowrap}
+
+/* ① 문서 헤드바 — 로고보다 문서 메타가 먼저 온다 ---------------------- */
+.dochead{position:sticky;top:0;z-index:70;height:var(--head);display:flex;align-items:center;
+ background:rgba(231,233,234,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--ink)}
+.dochead .in{max-width:1280px;margin:0 auto;padding:0 var(--s7);width:100%;display:flex;align-items:center;gap:var(--s5)}
+.dochead .meta{display:flex;gap:var(--s5);flex-wrap:nowrap;overflow:hidden;font-family:var(--mono);
+ font-size:var(--t-xs);letter-spacing:.06em;color:var(--body);white-space:nowrap}
+.dochead .meta b{color:var(--ink);font-weight:700}
+.dochead .meta i{font-style:normal;color:var(--mut)}
+.dochead .sp{flex:1 1 auto;min-width:var(--s2)}
+.dochead .brand{font-size:var(--t-md);font-weight:900;letter-spacing:-.03em;white-space:nowrap}
+.dochead .brand em{font-style:normal;font-family:var(--mono);font-size:var(--t-xs);font-weight:500;
+ letter-spacing:.16em;color:var(--mut);margin-left:var(--s2);vertical-align:2px}
+
+/* ② 레이트보드 — 히어로보다 위. 주장보다 숫자가 먼저 ------------------- */
+.board{padding-top:var(--s7);padding-bottom:var(--s8)}
+.board .top{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s5);flex-wrap:wrap;
+ border-bottom:1px solid var(--ink);padding-bottom:var(--s3)}
+.board .top h1{margin:0;font-size:var(--t-md);font-weight:800;letter-spacing:-.02em}
+.board .top .up{font-family:var(--mono);font-size:var(--t-xs);color:var(--body);white-space:nowrap}
+.board .top .up i{font-style:normal;display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ink);
+ margin-right:6px;vertical-align:0;animation:blip 2.6s ease-in-out infinite}
+@keyframes blip{0%,100%{opacity:1}50%{opacity:.18}}
+.rates{display:grid;grid-template-columns:repeat(6,1fr);border-left:1px solid var(--line)}
+.rates>*{min-width:0}
+/* 라벨 길이가 제각각이어도 숫자의 베이스라인은 6칸 전부 맞아야 한다 → 값을 margin-top:auto로 바닥에 붙인다 */
+.rt{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:var(--s5) var(--s4) var(--s4);
+ background:transparent;transition:background .25s;display:flex;flex-direction:column}
+.rt:hover{background:var(--panel)}
+.rt .n{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.1em}
+.rt .l{font-size:var(--t-sm);color:var(--body);margin-top:var(--s3);line-height:1.45}
+.rt .v{font-size:clamp(var(--t-lg),2.6vw,var(--t-xl));font-weight:800;letter-spacing:-.045em;line-height:1;
+ margin-top:auto;padding-top:var(--s5);white-space:nowrap;font-variant-numeric:tabular-nums}
+.rt .v span.u{font-size:var(--t-md);font-weight:700;letter-spacing:-.02em;margin-left:1px}
+.rt .d{font-family:var(--mono);font-size:var(--t-xs);color:var(--body);margin-top:var(--s2);white-space:nowrap}
+.rt .d.dn{color:var(--k)} /* 인하 = 당신이 잃는 쪽 → 인주 레드 */
+
+/* ③ 히어로 — 비대칭. 좌 선언 / 우 본문 크기 각주 3컬럼 + 문서 사진 칩 --- */
+.hero{padding-top:var(--s9);padding-bottom:var(--s9);position:relative}
+.hero .g{display:grid;grid-template-columns:1.24fr .96fr;gap:var(--s9);align-items:start}
+.hero .g>*{min-width:0}
+.hero h2{margin:var(--s5) 0 0;font-size:clamp(var(--t-2xl),6.6vw,var(--t-d1));font-weight:900;
+ letter-spacing:-.055em;line-height:.98}
+/* 헤드라인 강조어는 단 하나 — 인주 레드 밑줄 */
+.hero h2 em{font-style:normal;position:relative;white-space:nowrap}
+.hero h2 em::after{content:"";position:absolute;left:0;right:0;bottom:.07em;height:.075em;background:var(--k);
+ transform:scaleX(0);transform-origin:0 50%;transition:transform 1.1s cubic-bezier(.2,.8,.2,1) .35s}
+.hero h2.go em::after{transform:none}
+.hero .sub{margin:var(--s6) 0 0;font-size:var(--t-md);color:var(--body);max-width:40ch;line-height:1.72}
+.hero .sub b{color:var(--ink);font-weight:700}
+.hero .stamp{display:inline-flex;align-items:center;gap:var(--s2);margin-top:var(--s6);
+ border:1px solid var(--line2);padding:var(--s2) var(--s4);font-family:var(--mono);font-size:var(--t-xs);
+ letter-spacing:.1em;color:var(--body)}
+.hero .stamp i{font-style:normal;width:6px;height:6px;background:var(--k);display:inline-block}
+.fncols{display:grid;grid-template-columns:1fr 1fr;gap:var(--s5) var(--s6);border-top:1px solid var(--ink);padding-top:var(--s5)}
+.fncols>*{min-width:0}
+/* "각주를 본문 크기로" — 실제로 var(--t-base). 작게 쓰지 않는 게 이 페이지의 논지 */
+.fnc p{margin:0;font-size:var(--t-base);color:var(--body);line-height:1.72}
+.fnc p b{color:var(--ink);font-weight:700}
+.fnc .h{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;color:var(--ink);margin:0 0 var(--s2)}
+.docchip{grid-column:1/-1;position:relative;margin-top:var(--s3);border:1px solid var(--line2);background:var(--panel);
+ transform:rotate(-.9deg);transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.docchip:hover{transform:rotate(0deg)}
+.docchip img{width:100%;height:238px;object-fit:cover;filter:grayscale(1) contrast(1.06) brightness(1.02)}
+.docchip .cap{display:flex;justify-content:space-between;gap:var(--s4);padding:var(--s3) var(--s4);
+ font-family:var(--mono);font-size:var(--t-xs);color:var(--body);border-top:1px solid var(--line2);letter-spacing:.04em}
+
+/* ④ 이자 계산 명세기 ---------------------------------------------------- */
+.calc{padding-top:var(--s9);padding-bottom:var(--s9);border-top:1px solid var(--line)}
+.cg{display:grid;grid-template-columns:.86fr 1.14fr;gap:var(--s8);margin-top:var(--s7);align-items:start}
+.cg>*{min-width:0}
+.ctrl{border:1px solid var(--ink);padding:var(--s6)}
+.fld+.fld{margin-top:var(--s6);padding-top:var(--s6);border-top:1px solid var(--line)}
+.fld .hd{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3)}
+.fld .hd .t{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;color:var(--body)}
+.fld .hd .val{font-size:var(--t-md);font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.fld .hd .val span.u{font-size:var(--t-sm);font-weight:600;margin-left:2px;color:var(--body)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:var(--line2);
+ outline:none;margin-top:var(--s5);border-radius:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--ink);
+ border:3px solid var(--paper);cursor:grab;border-radius:0;box-shadow:0 0 0 1px var(--ink)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--ink);border:3px solid var(--paper);
+ cursor:grab;border-radius:0;box-shadow:0 0 0 1px var(--ink)}
+/* outline:none을 쓴 대가는 반드시 대체 표시로 갚는다 (WCAG 2.4.7). 벤더 접두 규칙은 서로 분리해야 한다 */
+input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 1px var(--ink),0 0 0 4px var(--k)}
+input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 1px var(--ink),0 0 0 4px var(--k)}
+.scale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s2)}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line2);margin-top:var(--s5)}
+.seg button{background:none;border:0;border-right:1px solid var(--line2);padding:var(--s3) 0;cursor:pointer;
+ font-family:var(--mono);font-size:var(--t-sm);letter-spacing:.04em;color:var(--body);transition:.18s}
+.seg button:last-child{border-right:0}
+.seg button:hover{background:var(--panel)}
+.seg button:focus-visible,.sorter button:focus-visible{outline:2px solid var(--k);outline-offset:-2px}
+.seg button.on{background:var(--ink);color:var(--paper);font-weight:700}
+.chk{display:flex;align-items:flex-start;gap:var(--s3);padding:var(--s3) 0;cursor:pointer}
+.chk+.chk{border-top:1px dotted var(--line)}
+.chk .box{flex:0 0 auto;width:16px;height:16px;border:1px solid var(--ink);margin-top:3px;position:relative;transition:.16s}
+.chk input{position:absolute;opacity:0;width:0;height:0}
+.chk input:checked+.box{background:var(--ink)}
+.chk input:checked+.box::after{content:"";position:absolute;left:4px;top:0;width:5px;height:10px;
+ border:solid var(--paper);border-width:0 2px 2px 0;transform:rotate(42deg)}
+.chk input:focus-visible+.box{outline:2px solid var(--k);outline-offset:2px}
+.chk .tx{font-size:var(--t-sm);line-height:1.5}
+.chk .tx b{font-weight:700}
+.chk .tx em{font-style:normal;display:block;color:var(--body);font-size:var(--t-xs);font-family:var(--mono);margin-top:2px}
+.chk .pp{margin-left:auto;font-family:var(--mono);font-size:var(--t-sm);font-weight:700;white-space:nowrap;color:var(--body);transition:.16s}
+.chk input:checked~.pp{color:var(--ink)}
+
+.out{border:1px solid var(--ink);border-bottom:0}
+.chartbox{padding:var(--s5) var(--s5) var(--s3);border-bottom:1px solid var(--ink);background:var(--panel)}
+.chartbox .cl{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s4);flex-wrap:wrap;
+ font-family:var(--mono);font-size:var(--t-xs);color:var(--body);letter-spacing:.06em}
+.chartbox .cl .lg{display:flex;gap:var(--s4);align-items:center}
+.chartbox .cl .lg span{display:inline-flex;align-items:center;gap:6px}
+.chartbox .cl .lg i{width:9px;height:9px;display:inline-block}
+.chartbox .cl .lg i.a{background:var(--ink)}.chartbox .cl .lg i.b{background:var(--k)}
+#chart{width:100%;height:auto;display:block;margin-top:var(--s3)}
+/* 막대는 각자 자기 바닥을 기준으로 자란다 — fill-box가 있어야 SVG에서 scaleY 원점이 맞는다 */
+#chart .bar{transform-box:fill-box;transform-origin:50% 100%}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--ink)}
+.sum>*{min-width:0}
+.sc{padding:var(--s5);border-right:1px solid var(--line);display:flex;flex-direction:column}
+.sc:last-child{border-right:0;background:var(--panel)}
+.sc .l{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em;color:var(--body);line-height:1.5}
+.sc .v{font-size:clamp(var(--t-lg),2.5vw,var(--t-xl));font-weight:800;letter-spacing:-.045em;margin-top:auto;padding-top:var(--s3);
+ white-space:nowrap;font-variant-numeric:tabular-nums;line-height:1.05}
+/* 단위는 반드시 span 분리 + nowrap — 좁은 칸에서 줄바꿈되면 베이스라인이 어긋난다 */
+.sc .v span.u{font-size:var(--t-md);font-weight:700;margin-left:1px}
+.sc.minus .v{color:var(--k)} /* 이자소득세 = 당신이 잃는 숫자 */
+.notes{padding:var(--s5);border-bottom:1px solid var(--ink)}
+.notes .nl{display:flex;gap:var(--s3);font-size:var(--t-sm);color:var(--body);line-height:1.6;
+ padding:var(--s2) 0;border-bottom:1px dotted var(--line)}
+.notes .nl:last-child{border-bottom:0}
+.notes .nl b{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);flex:0 0 auto;padding-top:3px;min-width:22px}
+.notes .nl.warn{color:var(--k)}
+.notes .nl.warn b{color:var(--k)}
+.notes .nl.fadein{animation:fadein .42s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+.applied{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s3)}
+.applied .tag{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.06em;border:1px solid var(--line2);
+ padding:3px var(--s2);color:var(--body);animation:fadein .3s ease both}
+
+/* ⑤ 감사·검증 밴드 (다크 반전) — 상반부에 배치 ------------------------- */
+.audit{background:var(--dark);color:var(--onDark);position:relative;z-index:1}
+.audit .pad{padding-top:var(--s9);padding-bottom:var(--s8)}
+.audit .sechd{border-bottom-color:#39424a}
+.audit .sechd h2{color:var(--onDark)}
+.audit .sechd .smeta{color:var(--onDarkMut)}
+.audit .lbl{color:var(--onDarkMut)}
+.ag{display:grid;grid-template-columns:repeat(4,1fr);margin-top:var(--s7);border-top:1px solid #39424a}
+.ag>*{min-width:0}
+.ac{padding:var(--s6) var(--s5) var(--s6) 0;border-right:1px solid #39424a}
+.ac:last-child{border-right:0}
+.ac .v{font-size:clamp(var(--t-xl),3.4vw,var(--t-3xl));font-weight:800;letter-spacing:-.05em;line-height:1;
+ white-space:nowrap;font-variant-numeric:tabular-nums}
+.ac .v span.u{font-size:var(--t-md);font-weight:700;margin-left:2px;letter-spacing:-.01em}
+.ac .l{font-size:var(--t-sm);color:var(--onDarkMut);margin-top:var(--s3);line-height:1.5}
+.ac .s{font-family:var(--mono);font-size:var(--t-xs);color:#6f7880;margin-top:var(--s2)}
+.ac .st{color:#d9b23c;letter-spacing:2px;font-size:var(--t-sm)}
+.auditor{display:flex;gap:var(--s5);align-items:center;margin-top:var(--s7);border-top:1px solid #39424a;padding-top:var(--s6)}
+.auditor img{width:74px;height:74px;object-fit:cover;flex:0 0 auto;filter:grayscale(1) contrast(1.05)}
+.auditor .tx p{margin:0;font-size:var(--t-base);color:#cdd3d8;line-height:1.65;max-width:62ch}
+.auditor .tx .who{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em;color:var(--onDarkMut);margin-top:var(--s3)}
+.auditor .tx .who b{color:var(--onDark)}
+/* 서명 사진 풀블리드 스트립 — 사진 위 모노 캡션은 밝은 값 + text-shadow (어두운 중성색 금지) */
+.strip{position:relative;height:clamp(230px,30vw,400px);overflow:hidden;border-top:1px solid #39424a}
+.strip img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.12) brightness(.82)}
+.strip .veil{position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,24,27,.9),rgba(20,24,27,.28) 52%,rgba(20,24,27,.86))}
+.strip .cap{position:absolute;left:0;right:0;bottom:0;padding:var(--s6) var(--s7);display:flex;
+ justify-content:space-between;gap:var(--s5);flex-wrap:wrap;align-items:flex-end}
+.strip .cap p{margin:0;font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;color:#e2e6e9;
+ text-shadow:0 1px 14px rgba(0,0,0,.9);line-height:1.9}
+.strip .cap .big{font-family:var(--sans);font-size:clamp(var(--t-md),2.4vw,var(--t-lg));font-weight:800;
+ letter-spacing:-.03em;color:#f2f4f5;max-width:24ch;line-height:1.28;text-shadow:0 2px 20px rgba(0,0,0,.85)}
+
+/* ⑥ 수수료 전액 명세 ---------------------------------------------------- */
+.fees{padding-top:var(--s9);padding-bottom:var(--s9)}
+.frows{margin-top:var(--s6);border-top:1px solid var(--ink)}
+.fr{display:grid;grid-template-columns:52px 1.5fr 1.9fr auto;gap:var(--s4);align-items:baseline;
+ padding:var(--s4) var(--s3);border-bottom:1px solid var(--line);transition:background .2s}
+.fr>*{min-width:0}
+.fr:hover{background:var(--panel)}
+.fr .no{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut)}
+.fr .nm{font-size:var(--t-base);font-weight:600;letter-spacing:-.01em}
+.fr .cd{font-size:var(--t-sm);color:var(--body);line-height:1.5}
+.fr .am{font-family:var(--mono);font-size:var(--t-md);font-weight:700;text-align:right;white-space:nowrap;
+ letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.fr .am.pay{color:var(--k)} /* 유료 = 인주 레드, 0원은 잉크 */
+.fr.hd{border-bottom:1px solid var(--ink);padding-top:var(--s3);padding-bottom:var(--s3)}
+.fr.hd>*{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;color:var(--mut);font-weight:500}
+.fr.hd .am{text-align:right;font-size:var(--t-xs);font-weight:500;color:var(--mut)}
+.feefoot{display:flex;justify-content:space-between;gap:var(--s5);flex-wrap:wrap;padding-top:var(--s4);
+ font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.04em}
+.feefoot b{color:var(--ink)}
+
+/* ⑦ 대조표 ------------------------------------------------------------- */
+.cmp{padding-top:var(--s9);padding-bottom:var(--s9);border-top:1px solid var(--line)}
+.sorter{display:inline-grid;grid-template-columns:auto auto;border:1px solid var(--ink);margin-top:var(--s5)}
+.sorter button{background:none;border:0;border-right:1px solid var(--ink);padding:var(--s3) var(--s5);cursor:pointer;
+ font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;color:var(--body);transition:.18s;white-space:nowrap}
+.sorter button:last-child{border-right:0}
+.sorter button:hover{background:var(--panel)}
+.sorter button.on{background:var(--ink);color:var(--paper);font-weight:700}
+.tblscroll{overflow-x:auto;margin-top:var(--s5);-webkit-overflow-scrolling:touch}
+.ctbl{min-width:820px}
+.crow{display:grid;grid-template-columns:1.45fr .8fr .8fr 1.05fr 1fr 1.15fr;gap:var(--s4);align-items:center;
+ padding:var(--s5) var(--s4);border-bottom:1px solid var(--line);background:transparent}
+.crow>*{min-width:0}
+.crow.hd{border-bottom:1px solid var(--ink);border-top:1px solid var(--ink);padding-top:var(--s3);padding-bottom:var(--s3)}
+.crow.hd div{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.09em;color:var(--mut);text-align:right}
+.crow.hd div:first-child{text-align:left}
+.crow.hd div.act{color:var(--ink);font-weight:700}
+.crow .org{font-size:var(--t-base);font-weight:700;letter-spacing:-.01em}
+.crow .org em{font-style:normal;display:block;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);
+ font-weight:400;margin-top:3px;letter-spacing:.04em}
+.crow .c{text-align:right;font-family:var(--mono);font-size:var(--t-md);font-weight:600;white-space:nowrap;
+ color:var(--body);transition:color .3s;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.crow .c.act{color:var(--ink);font-weight:800} /* 정렬 기준 열만 잉크로 활성 */
+.crow .c.neg{color:var(--k)} /* 수수료 차감 = 잃는 숫자 */
+.crow.us{background:var(--panel);box-shadow:inset 3px 0 0 var(--ink)}
+.crow.us .org{font-weight:900}
+.crow.us .org em{color:var(--body)}
+.cnote{margin-top:var(--s5);font-size:var(--t-sm);color:var(--body);line-height:1.65;max-width:76ch}
+
+/* ⑧ 36개월 금리 이력 스몰멀티플 ----------------------------------------- */
+.hist{padding-top:var(--s9);padding-bottom:var(--s9);background:var(--panel);border-top:1px solid var(--line)}
+.hg{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s5);margin-top:var(--s7)}
+.hg>*{min-width:0}
+.hc{background:var(--paper);border:1px solid var(--line);padding:var(--s5)}
+.hc .t{font-size:var(--t-sm);font-weight:700;letter-spacing:-.01em}
+.hc .r{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s1);display:flex;
+ justify-content:space-between;gap:var(--s2)}
+.hc svg{width:100%;height:auto;display:block;margin-top:var(--s4)}
+.hc .now{font-size:var(--t-lg);font-weight:800;letter-spacing:-.04em;margin-top:var(--s3);white-space:nowrap;
+ font-variant-numeric:tabular-nums}
+.hc .now span.u{font-size:var(--t-sm);font-weight:700;margin-left:1px}
+.hc .dl{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:2px}
+.hc .dl.dn{color:var(--k)}
+.spark{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+.hc svg .cutd{fill:var(--k)}
+.hc svg .base{stroke:var(--line);stroke-width:1}
+
+/* ⑨ 실명 리뷰 ---------------------------------------------------------- */
+.revs{padding-top:var(--s9);padding-bottom:var(--s9)}
+.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s6);margin-top:var(--s7)}
+.rg>*{min-width:0}
+.rv{border-top:1px solid var(--ink);padding-top:var(--s5)}
+.rv .ph{width:100%;aspect-ratio:1/1;overflow:hidden;background:var(--panel)}
+.rv .ph img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.04);
+ transform:scale(1.01);transition:filter .55s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.rv:hover .ph img{filter:none;transform:scale(1.045)}
+.rv q{display:block;font-size:var(--t-md);line-height:1.6;letter-spacing:-.02em;margin-top:var(--s5);quotes:none}
+.rv q em{font-style:normal;box-shadow:inset 0 -.42em 0 var(--panel2)}
+.rv .who{margin-top:var(--s5);border-top:1px dotted var(--line);padding-top:var(--s3)}
+.rv .who .nm{font-size:var(--t-sm);font-weight:800;letter-spacing:-.01em}
+.rv .who .rl{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:3px;line-height:1.7}
+
+/* ⑩ 인라인 개설 스트립 — 얇은 다크 밴드 (큰 클로징 CTA 아님) ----------- */
+.open{background:var(--dark);color:var(--onDark)}
+.open .in{display:flex;align-items:center;gap:var(--s6);flex-wrap:wrap;padding-top:var(--s7);padding-bottom:var(--s7)}
+.open .tx{flex:1 1 380px;min-width:0}
+.open .tx p{margin:0;font-size:clamp(var(--t-md),2.1vw,var(--t-lg));font-weight:800;letter-spacing:-.03em;line-height:1.3}
+.open .tx small{display:block;font-family:var(--mono);font-size:var(--t-xs);color:var(--onDarkMut);margin-top:var(--s3);
+ letter-spacing:.06em;line-height:1.9}
+.mag-zone{padding:22px 46px;margin:-22px -46px;display:inline-flex} /* 마그네틱은 버튼+소반경 래퍼로만 스코핑 */
+.btn{display:inline-flex;align-items:center;gap:var(--s3);background:var(--paper);color:var(--ink);
+ padding:var(--s4) var(--s6);font-size:var(--t-sm);font-weight:800;letter-spacing:-.01em;white-space:nowrap;
+ transition:transform .18s cubic-bezier(.2,.8,.2,1),background .2s}
+.btn:hover{background:#fff}
+
+/* ⑪ 각주 & 개정 이력 — 페이지는 여기서 끝난다 -------------------------- */
+.foots{padding-top:var(--s9);padding-bottom:var(--s8)}
+.fng{display:grid;grid-template-columns:1fr 1fr;gap:0 var(--s8);margin-top:var(--s6)}
+.fng>*{min-width:0}
+.fnrow{display:grid;grid-template-columns:30px 1fr;gap:var(--s3);padding:var(--s4) 0;border-bottom:1px solid var(--line)}
+.fnrow>*{min-width:0}
+.fnrow .i{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);padding-top:3px}
+/* 각주를 본문 크기로 인쇄한다 — 이 페이지의 논지가 실제 CSS로 지켜지는 지점 */
+.fnrow p{margin:0;font-size:var(--t-base);color:var(--body);line-height:1.68}
+.fnrow p b{color:var(--ink);font-weight:700}
+.fnrow:target p,.fnrow.hl p{color:var(--ink)}
+.fnrow.hl{background:var(--panel)}
+.rev-hist{margin-top:var(--s9)}
+.rh{display:grid;grid-template-columns:130px 84px 1fr;gap:var(--s4);padding:var(--s4) var(--s3);
+ border-bottom:1px solid var(--line);align-items:baseline}
+.rh>*{min-width:0}
+.rh.hd{border-bottom:1px solid var(--ink);border-top:1px solid var(--ink);padding-top:var(--s3);padding-bottom:var(--s3)}
+.rh.hd div{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.09em;color:var(--mut)}
+.rh .dt{font-family:var(--mono);font-size:var(--t-sm);color:var(--body);white-space:nowrap}
+.rh .vr{font-family:var(--mono);font-size:var(--t-sm);font-weight:700}
+.rh .ch{font-size:var(--t-sm);line-height:1.75;color:var(--body)}
+.rh .ch b{color:var(--ink);font-weight:700}
+/* 정정선 — 개정 전 값은 인주 레드로 그어 남긴다. 지우지 않는 게 이 문서의 규칙 */
+.rh .ch s{color:var(--k);text-decoration-color:var(--k);text-decoration-thickness:1.5px;margin:0 3px}
+footer{border-top:1px solid var(--ink);padding-top:var(--s5);padding-bottom:var(--s7);display:flex;
+ justify-content:space-between;gap:var(--s5);flex-wrap:wrap;font-family:var(--mono);font-size:var(--t-xs);
+ color:var(--mut);letter-spacing:.04em;line-height:1.9}
+footer a:hover{color:var(--ink)}
+
+/* 반응형 --------------------------------------------------------------- */
+@media(max-width:1120px){
+  .rates{grid-template-columns:repeat(3,1fr)}
+  .hg{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:980px){
+  .hero .g{grid-template-columns:1fr;gap:var(--s7)}
+  .cg{grid-template-columns:1fr;gap:var(--s6)}
+  .ag{grid-template-columns:repeat(2,1fr)}
+  .ac{border-bottom:1px solid #39424a}
+  .ac:nth-child(2n){border-right:0}
+  .rg{grid-template-columns:1fr;gap:var(--s7)}
+  .rv .ph{aspect-ratio:16/10}
+}
+@media(max-width:760px){
+  :root{--head:48px}
+  .wrap{padding:0 var(--s5)}
+  .dochead .in{padding:0 var(--s5)}
+  .dochead .meta span:nth-child(n+3){display:none}
+  .rates{grid-template-columns:repeat(2,1fr)}
+  .fncols{grid-template-columns:1fr}
+  .sum{grid-template-columns:1fr}
+  .sc{border-right:0;border-bottom:1px solid var(--line)}
+  .fr{grid-template-columns:34px 1fr auto;gap:var(--s3)}
+  .fr .cd{grid-column:2/-1;font-size:var(--t-xs)}
+  .fr.hd .cd{display:none}
+  .fng{grid-template-columns:1fr}
+  .hg{grid-template-columns:1fr}
+  .rh{grid-template-columns:1fr;gap:var(--s1)}
+  .strip .cap{padding:var(--s5)}
+  .open .in{padding-top:var(--s6);padding-bottom:var(--s6)}
+}
+/* 모션 축소 · 캡처 모드: 리빌 강제 표시 + 무한 애니 정지 + 스티키 해제 */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rise{opacity:1;transform:none;transition:none}
+  .board .top .up i{animation:none}
+  .docchip{transform:none}
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+.capture .rise{opacity:1!important;transform:none!important;transition:none!important}
+.capture .dochead{position:static;background:var(--paper)}
+.capture .board .top .up i{animation:none}
+.capture .docchip{transform:none}
+.capture .rv .ph img{filter:none}
+.capture .notes .nl,.capture .applied .tag{animation:none!important}
+.capture .hero h2 em::after{transform:none;transition:none}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ① 문서 헤드바 — 브랜드보다 문서 메타가 왼쪽에 온다 -->
+<header class="dochead">
+  <div class="in">
+    <div class="meta">
+      <span><i>문서</i> <b>BS-2026-04</b></span>
+      <span><i>시행</i> <b>2026.08.01</b></span>
+      <span><i>개정</i> <b>3회</b></span>
+      <span><i>기준시각</i> <b id="asof">08:00</b></span>
+    </div>
+    <div class="sp"></div>
+    <div class="brand">베이시스<em>BASIS</em></div>
+  </div>
+</header>
+
+<!-- ② 레이트보드 — 히어로보다 위. 주장 이전에 숫자부터 보여준다 -->
+<section class="wrap board" id="board">
+  <div class="top">
+    <h1>오늘의 명세<span class="lbl" style="margin-left:var(--s3)">RATE BOARD</span></h1>
+    <div class="up"><i></i>2026.08.08 08:00 갱신 · 영업일 매일 08:00 재공시 <span class="tblno" style="margin-left:var(--s3)">표 1</span></div>
+  </div>
+  <div class="rates">
+    <div class="rt">
+      <div class="n">01 / 정기예금 12개월</div>
+      <div class="l">기본금리<sup class="fn"><a href="#f3">3</a></sup> · 우대 전</div>
+      <div class="v">3.10<span class="u">%</span></div>
+      <div class="d">최고 3.70% (우대 3종 전부)</div>
+    </div>
+    <div class="rt">
+      <div class="n">02 / 정기예금 24개월</div>
+      <div class="l">기본금리 · 장기 구간</div>
+      <div class="v">3.35<span class="u">%</span></div>
+      <div class="d">최고 3.95%</div>
+    </div>
+    <div class="rt">
+      <div class="n">03 / 수시입출금</div>
+      <div class="l">잔액 구간 없음 · 전액 동일</div>
+      <div class="v">0.85<span class="u">%</span></div>
+      <div class="d dn">▼ 0.05%p (2026.08.01 인하)</div>
+    </div>
+    <div class="rt">
+      <div class="n">04 / 적금 12개월</div>
+      <div class="l">최고금리<sup class="fn"><a href="#f7">7</a></sup> · 월 50만원 한도</div>
+      <div class="v">4.05<span class="u">%</span></div>
+      <div class="d">기본 3.45%</div>
+    </div>
+    <div class="rt">
+      <div class="n">05 / 타행 이체</div>
+      <div class="l">인터넷·모바일 · 횟수 제한 없음</div>
+      <div class="v">0<span class="u">원</span></div>
+      <div class="d">2024.06.01부터 전면 면제</div>
+    </div>
+    <div class="rt">
+      <div class="n">06 / 마이너스통장</div>
+      <div class="l">신용등급 1구간 최저금리</div>
+      <div class="v">5.62<span class="u">%</span></div>
+      <div class="d dn">▲ 0.11%p (2026.08.01 인상)</div>
+    </div>
+  </div>
+</section>
+
+<!-- ③ 히어로 (비대칭) — 좌 선언 / 우 각주 3컬럼 + 문서 사진 칩 -->
+<section class="wrap hero">
+  <div class="g">
+    <div>
+      <p class="lbl rise">제1조 (표시 원칙)</p>
+      <h2 id="h1" class="rise">각주를<br><em>본문 크기</em>로<br>인쇄합니다.</h2>
+      <p class="sub rise">금융상품에서 사람이 손해를 보는 자리는 늘 8pt 회색 글씨 안에 있었습니다. 베이시스는 그 문장들을 <b>본문과 같은 크기, 같은 색</b>으로 옮겨 적었습니다. 이 페이지에 작게 쓴 문장은 없습니다.</p>
+      <p class="stamp rise"><i></i>이 문서에 없는 수수료는 청구하지 않습니다<sup class="fn"><a href="#f12">12</a></sup></p>
+    </div>
+    <div class="fncols rise">
+      <div class="fnc">
+        <p class="h">각주 A</p>
+        <p><b>금리는 1bp 단위로 적습니다.</b> 3.7%가 아니라 3.70%. 반올림해서 좋아 보이게 만든 자리가 곧 당신이 못 받는 자리입니다.</p>
+      </div>
+      <div class="fnc">
+        <p class="h">각주 B</p>
+        <p><b>세금은 먼저 뺍니다.</b> 이자소득세 15.4%를 먼저 차감한 실수령액을 앞에 두고, 세전 금액은 뒤에 둡니다.</p>
+      </div>
+      <div class="fnc">
+        <p class="h">각주 C</p>
+        <p><b>수수료는 14항목 전부.</b> 자주 쓰지 않는 항목까지 한 표에 넣습니다. 숨긴 항목 0개.</p>
+      </div>
+      <div class="fnc">
+        <p class="h">각주 D</p>
+        <p><b>고친 자리는 지우지 않습니다.</b> 개정 전 수치에 정정선을 긋고 사유와 함께 문서 끝에 남깁니다.</p>
+      </div>
+      <figure class="docchip" style="margin-bottom:0">
+        <img src="https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=1200&q=80&auto=format&fit=crop" alt="원천징수 서식과 계산기가 놓인 책상" loading="lazy"
+          onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(150deg,#d2d6d9,#9aa1a7 70%)';this.parentNode.style.minHeight='238px'">
+        <figcaption class="cap"><span>부속서류 · 원천징수 계산 근거</span><span>BS-2026-04 / A-2</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ④ 시그니처 ① 이자 계산 명세기 -->
+<section class="wrap calc" id="calc">
+  <div class="sechd rise">
+    <div>
+      <p class="lbl">제2조 (이자 산출)</p>
+      <h2>얼마가 남는지 직접 계산해 보세요.</h2>
+    </div>
+    <div class="smeta">단리 · 만기일시지급<br>이자소득세 15.4% 원천징수<sup class="fn"><a href="#f1">1</a></sup></div>
+  </div>
+  <div class="cg">
+    <!-- 좌: 조작 -->
+    <div class="ctrl rise">
+      <div class="fld">
+        <div class="hd"><span class="t">예치금액</span><span class="val" id="amtOut">10,000,000<span class="u">원</span></span></div>
+        <input type="range" id="amt" min="1000000" max="100000000" step="1000000" value="10000000" aria-label="예치금액">
+        <div class="scale"><span>100만</span><span>5,000만</span><span>1억</span></div>
+      </div>
+      <div class="fld">
+        <div class="hd"><span class="t">예치기간</span><span class="val" id="termOut">12<span class="u">개월</span></span></div>
+        <div class="seg" id="seg" role="group" aria-label="예치기간 선택">
+          <button type="button" data-m="3">3개월</button>
+          <button type="button" data-m="6">6개월</button>
+          <button type="button" data-m="12" class="on">12개월</button>
+          <button type="button" data-m="24">24개월</button>
+        </div>
+      </div>
+      <div class="fld">
+        <div class="hd"><span class="t">우대조건</span><span class="val" id="bonusOut">+0.00<span class="u">%p</span></span></div>
+        <div style="margin-top:var(--s4)">
+          <label class="chk"><input type="checkbox" id="c1" data-pp="0.30" data-fn="4"><span class="box"></span>
+            <span class="tx"><b>급여이체 등록</b><em>월 50만원 이상 · 3회 이상</em></span><span class="pp">+0.30%p</span></label>
+          <label class="chk"><input type="checkbox" id="c2" data-pp="0.20" data-fn="5"><span class="box"></span>
+            <span class="tx"><b>자동이체 2건 이상</b><em>3개월 연속 유지</em></span><span class="pp">+0.20%p</span></label>
+          <label class="chk"><input type="checkbox" id="c3" data-pp="0.10" data-fn="6"><span class="box"></span>
+            <span class="tx"><b>마케팅 정보 수신 동의</b><em>철회 시 다음 계산일부터 제외</em></span><span class="pp">+0.10%p</span></label>
+        </div>
+      </div>
+      <div class="fld">
+        <div class="hd"><span class="t">적용금리</span><span class="val" id="rateOut">연 3.10<span class="u">%</span></span></div>
+        <div class="applied" id="applied"></div>
+      </div>
+    </div>
+    <!-- 우: 결과 (막대차트 + 명세) -->
+    <div class="out rise">
+      <div class="chartbox">
+        <div class="cl">
+          <span>월별 누적이자 명세 <b class="mono" id="chartTerm">12개월</b></span>
+          <span class="lg"><span><i class="a"></i>실수령</span><span><i class="b"></i>이자소득세 15.4%</span></span>
+        </div>
+        <svg id="chart" viewBox="0 0 620 300" role="img" aria-label="월별 누적이자 막대 명세"></svg>
+      </div>
+      <div class="sum">
+        <div class="sc"><div class="l">세전이자 (약정금리 기준)</div><div class="v" id="oGross">0<span class="u">원</span></div></div>
+        <div class="sc minus"><div class="l">이자소득세 15.4%<sup class="fn"><a href="#f1">1</a></sup></div><div class="v" id="oTax">0<span class="u">원</span></div></div>
+        <div class="sc"><div class="l">만기 실수령 이자</div><div class="v" id="oNet">0<span class="u">원</span></div></div>
+      </div>
+      <div class="notes" id="notes"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑤ 감사·검증 밴드 — 상반부에 배치. '주장 → 증거'가 아니라 '숫자 → 증거 → 주장' -->
+<section class="audit" id="audit">
+  <div class="wrap pad">
+    <div class="sechd rise">
+      <div>
+        <p class="lbl">제3조 (검증)</p>
+        <h2>우리 말이 아니라, 남이 우리에 대해 쓴 것.</h2>
+      </div>
+      <div class="smeta">외부감사 · 예금보험 · 건전성 지표<br>전부 제3자 발행 문서 기준</div>
+    </div>
+    <div class="ag">
+      <div class="ac rise"><div class="v">적정</div><div class="l">외부감사 의견<br>(2025 회계연도 재무제표)</div><div class="s">한림회계법인 · 2026.03.14 보고</div></div>
+      <div class="ac rise"><div class="v countup" data-to="1" data-suf="억원">0</div><div class="l">예금자보호 한도<sup class="fn"><a href="#f8">8</a></sup><br>1인당 원금+이자 합산</div><div class="s">예금보험공사 부보금융회사</div></div>
+      <div class="ac rise"><div class="v countup" data-to="14.8" data-dec="1" data-suf="%">0</div><div class="l">BIS 자기자본비율<br>(2026.06 분기 공시)</div><div class="s">규제 최저 10.5% 대비 +4.3%p</div></div>
+      <div class="ac rise"><div class="v countup" data-to="4.8" data-dec="1">0</div><div class="st">★★★★★</div><div class="l">앱스토어 평균 평점</div><div class="s">누적 12,430건 · 2026.08.01 기준</div></div>
+    </div>
+    <div class="auditor rise">
+      <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&q=75&auto=format&fit=crop" alt="외부감사 담당 파트너" loading="lazy"
+        onerror="this.style.display='none'">
+      <div class="tx">
+        <p>"수수료 항목을 감사 범위 밖까지 전량 공시하겠다는 요청은 받아본 적이 없었습니다. 확인 결과 미공시 항목은 없었고, 표기 누락 2건은 개정 이력에 등재하는 조건으로 정리했습니다."</p>
+        <div class="who"><b>정다인</b> · 한림회계법인 금융감사본부 담당 파트너 · 2025 회계연도 감사</div>
+      </div>
+    </div>
+  </div>
+  <figure class="strip" style="margin:0">
+    <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1800&q=80&auto=format&fit=crop" alt="서류에 서명하는 손" loading="lazy"
+      onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(100deg,#14181b,#39424a 60%,#14181b)'">
+    <div class="veil"></div>
+    <figcaption class="cap">
+      <p class="big">서명하기 전에 다 읽을 수 있는 분량으로 씁니다.</p>
+      <p>상품설명서 본문 2,940자 · 각주 12항<br>평균 통독 시간 6분 40초 · 약관 별지 없음</p>
+    </figcaption>
+  </figure>
+</section>
+
+<!-- ⑥ 수수료 전액 명세 -->
+<section class="wrap fees" id="fees">
+  <div class="sechd rise">
+    <div>
+      <p class="lbl">제4조 (수수료)</p>
+      <h2>수수료 전액 명세 · 14항목, 숨긴 항목 0개.</h2>
+    </div>
+    <div class="smeta">2026.08.01 시행분 <span class="tblno">표 2</span><br>부가세 포함 · 개인 기준</div>
+  </div>
+  <div class="frows rise" id="frows">
+    <div class="fr hd"><div class="no">No.</div><div class="nm">항목</div><div class="cd">적용 조건</div><div class="am">금액</div></div>
+  </div>
+  <div class="feefoot rise"><span>유료 항목 <b>5</b> / 14 · 면제 항목 <b>9</b> / 14</span><span>미기재 수수료 <b>0</b>건<sup class="fn"><a href="#f12">12</a></sup></span></div>
+</section>
+
+<!-- ⑦ 시그니처 ② 대조표 — 정렬 토글로 행이 물리적으로 재배열된다 -->
+<section class="wrap cmp" id="compare">
+  <div class="sechd rise">
+    <div>
+      <p class="lbl">제5조 (대조)</p>
+      <h2>같은 조건으로 비교하면.</h2>
+    </div>
+    <div class="smeta">1,000만원 · 12개월 · 우대조건 전부 충족 <span class="tblno">표 3</span><br>세후 · 연간 수수료 차감 후</div>
+  </div>
+  <div class="rise">
+    <div class="sorter" id="sorter" role="group" aria-label="정렬 기준">
+      <button type="button" data-s="base" class="on">기본금리순</button>
+      <button type="button" data-s="total">12개월 총 수령액순</button>
+    </div>
+  </div>
+  <div class="tblscroll rise">
+    <div class="ctbl">
+      <div class="crow hd" id="chd">
+        <div>기관</div><div data-col="base" class="act">기본금리</div><div data-col="top">최고금리</div>
+        <div data-col="net">세후이자</div><div data-col="fee">연 수수료</div><div data-col="total">총 수령액</div>
+      </div>
+      <div id="crows"></div>
+    </div>
+  </div>
+  <p class="cnote rise">타행 수치는 각 사가 2026.08.01 공시한 상품설명서 기준이며, 동일 조건으로 환산했습니다.<sup class="fn"><a href="#f11">11</a></sup> 기본금리만 보면 베이시스는 <b style="color:var(--ink)">3위</b>입니다. 수수료를 빼고 나면 순서가 바뀝니다 — 정렬 기준을 바꿔서 직접 확인하세요.</p>
+</section>
+
+<!-- ⑧ 36개월 금리 이력 스몰멀티플 -->
+<section class="hist" id="history">
+  <div class="wrap">
+    <div class="sechd rise">
+      <div>
+        <p class="lbl">제6조 (이력)</p>
+        <h2>36개월 금리 이력 · 기준금리 인하 시점 표기.</h2>
+      </div>
+      <div class="smeta">2023.09 — 2026.08 (36개월) <span class="tblno">표 4</span><br>기준금리 인하 시점 <span class="k">●</span> 표기</div>
+    </div>
+    <div class="hg" id="hg"></div>
+    <p class="cnote rise">올린 구간만 그리는 그래프는 그리지 않습니다. 기준금리 인하 시점(<span class="k">●</span>)과 그때의 인하폭을 같은 축 위에 남겼고, 상품 자체의 조정 횟수는 카드마다 따로 셌습니다. 수시입출금 금리는 기준금리 인하 시점 두 곳에서 함께 내렸고, 그중 가장 최근 인하의 사유는 개정 이력 <span class="mono">3차</span> 항목에 적혀 있습니다.</p>
+  </div>
+</section>
+
+<!-- ⑨ 실명 리뷰 -->
+<section class="wrap revs" id="reviews">
+  <div class="sechd rise">
+    <div>
+      <p class="lbl">제7조 (가입자 진술)</p>
+      <h2>가입자가 남긴 말.</h2>
+    </div>
+    <div class="smeta">앱스토어 리뷰 중 본인 확인 동의분 발췌<br>원문 무편집 · 소속·직함 본인 기재</div>
+  </div>
+  <div class="rg">
+    <div class="rv rise">
+      <div class="ph"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80&auto=format&fit=crop" alt="조민형 세무사" loading="lazy" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(150deg,#d2d6d9,#8d939a)'"></div>
+      <q>직업상 상품설명서를 매주 읽는데, <em>수수료표를 다 펴놓은 은행</em>은 처음 봤습니다. 창구 이체 600원까지 적혀 있으면 오히려 신뢰가 갑니다.</q>
+      <div class="who"><div class="nm">조민형</div><div class="rl">세무회계 담율 · 대표 세무사<br>2025.03 가입 · 정기예금 24개월</div></div>
+    </div>
+    <div class="rv rise">
+      <div class="ph"><img src="https://images.unsplash.com/photo-1544168190-79c17527004f?w=800&q=80&auto=format&fit=crop" alt="배성호 엔지니어" loading="lazy" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(150deg,#d2d6d9,#8d939a)'"></div>
+      <q>계산기에서 <em>세금을 먼저 빼고 보여주는 게</em> 결정적이었습니다. 다른 데서 3.8% 보고 갔다가 실수령이 더 적었던 적이 있어서요.</q>
+      <div class="who"><div class="nm">배성호</div><div class="rl">큐브릭스 · 백엔드 엔지니어<br>2024.11 가입 · 정기예금 12개월</div></div>
+    </div>
+    <div class="rv rise">
+      <div class="ph"><img src="https://images.unsplash.com/photo-1592621385612-4d7129426394?w=800&q=80&auto=format&fit=crop" alt="한지원 일러스트레이터" loading="lazy" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(150deg,#d2d6d9,#8d939a)'"></div>
+      <q>프리랜서라 급여이체 우대를 못 받습니다. 그런데 <em>그 조건을 못 채우면 얼마인지</em>가 같이 나와 있어서 계산이 빨랐어요.</q>
+      <div class="who"><div class="nm">한지원</div><div class="rl">프리랜스 일러스트레이터<br>2025.07 가입 · 적금 12개월</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑩ 인라인 개설 스트립 — 이 페이지의 유일한 CTA. 얇게 지나간다 -->
+<section class="open" id="openacct">
+  <div class="wrap in">
+    <div class="tx">
+      <p>계좌 개설은 6분, 해지는 같은 화면에서 2분.</p>
+      <small>비대면 실명확인 · 영업일 09:00—21:00 즉시 개설 · 중도해지 시 중도해지이율 적용<sup class="fn" style="color:#6f7880"><a href="#f9" style="color:#98a0a7">9</a></sup></small>
+    </div>
+    <div class="mag-zone"><a class="btn" href="#calc">먼저 계산해 보기 <span aria-hidden="true">→</span></a></div>
+  </div>
+</section>
+
+<!-- ⑪ 각주 & 개정 이력 — 큰 클로징 CTA 대신 문서가 문서답게 끝난다 -->
+<section class="wrap foots" id="footnotes">
+  <div class="sechd rise">
+    <div>
+      <p class="lbl">부칙</p>
+      <h2>각주 12 · 개정 이력 3.</h2>
+    </div>
+    <div class="smeta">문서 BS-2026-04 · 3차 개정<br>다음 정기 재공시 2026.11.01</div>
+  </div>
+  <div class="fng">
+    <div>
+      <div class="fnrow rise" id="f1"><div class="i">1</div><p>본 문서의 모든 금리는 <b>연이율(세전)</b>이며, 실제 지급액은 이자소득세 15.4%(소득세 14% + 지방소득세 1.4%)를 원천징수한 뒤 결정됩니다.</p></div>
+      <div class="fnrow rise" id="f2"><div class="i">2</div><p>표시 금리는 2026.08.01 시행분이며, 시장금리 변동 시 <b>영업일 08:00</b>에 갱신합니다. 갱신 이력은 표 5에 전량 기재합니다.</p></div>
+      <div class="fnrow rise" id="f3"><div class="i">3</div><p>정기예금 기본금리는 기간별로 다릅니다. <b>3개월 2.45% · 6개월 2.80% · 12개월 3.10% · 24개월 3.35%.</b></p></div>
+      <div class="fnrow rise" id="f4"><div class="i">4</div><p>급여이체 우대 <b>+0.30%p</b>: 가입 후 매월 50만원 이상 급여성 입금이 3회 이상 확인된 경우.</p></div>
+      <div class="fnrow rise" id="f5"><div class="i">5</div><p>자동이체 우대 <b>+0.20%p</b>: 공과금·통신비 등 자동이체 2건 이상을 3개월 연속 유지한 경우.</p></div>
+      <div class="fnrow rise" id="f6"><div class="i">6</div><p>마케팅 정보 수신 동의 <b>+0.10%p</b>: 동의를 철회하면 다음 이자 계산일부터 적용에서 제외되며, <b>이미 지급된 이자는 회수하지 않습니다.</b></p></div>
+    </div>
+    <div>
+      <div class="fnrow rise" id="f7"><div class="i">7</div><p>우대금리는 만기 시점에 조건 충족 여부를 일괄 판정합니다. 중도 미충족 기간은 <b>일할 계산으로 차감</b>합니다.</p></div>
+      <div class="fnrow rise" id="f8"><div class="i">8</div><p>예금자보호법에 따라 1인당 원금과 소정의 이자를 합하여 <b>1억원까지</b> 보호됩니다. 초과분은 보호되지 않습니다.</p></div>
+      <div class="fnrow rise" id="f9"><div class="i">9</div><p>중도해지 시 약정금리가 아닌 <b>중도해지이율</b>(가입기간별 기본금리의 20~60%)이 적용됩니다. 해지 화면에서 예상 수령액을 먼저 표시합니다.</p></div>
+      <div class="fnrow rise" id="f10"><div class="i">10</div><p>수수료 <b>'실비'</b>는 해외 중계은행이 부과하는 금액으로 당행이 결정하지 않으며, 송금 실행 전 예상액을 고지합니다.</p></div>
+      <div class="fnrow rise" id="f11"><div class="i">11</div><p>표 3의 타행 수치는 각 사 공시 상품설명서 기준이며, 연 12회 타행이체·연 4회 창구거래를 가정한 <b>수수료 차감 추정치</b>를 포함합니다.</p></div>
+      <div class="fnrow rise" id="f12"><div class="i">12</div><p>본 문서에 기재되지 않은 수수료는 부과하지 않습니다. <b>누락이 발견되면 해당 수수료를 청구하지 않고</b>, 사유와 함께 개정 이력에 등재합니다.</p></div>
+    </div>
+  </div>
+
+  <div class="rev-hist">
+    <div class="sechd rise" style="border-bottom:0;padding-bottom:0">
+      <div><h2 style="font-size:var(--t-md)">개정 이력</h2></div>
+      <div class="smeta"><span class="tblno">표 5</span> 정정선은 지우지 않습니다</div>
+    </div>
+    <div style="margin-top:var(--s5)">
+      <div class="rh hd rise"><div>시행일</div><div>차수</div><div>변경 내용 및 사유</div></div>
+      <div class="rh rise"><div class="dt">2026.08.01</div><div class="vr">3차</div><div class="ch">정기예금 12개월 기본금리 <s>2.95%</s> <b>3.10%</b> 인상 · 수시입출금 금리 <s>0.90%</s> <b>0.85%</b> 인하. 사유: 시장금리 변동 반영, 수시입출금 재원의 정기예금 이전.</div></div>
+      <div class="rh rise"><div class="dt">2026.05.01</div><div class="vr">2차</div><div class="ch">창구 타행이체 수수료 <s>1,000원</s> <b>600원</b> 인하 · 증명서 창구 발급 수수료 항목 <b>신규 기재</b>. 사유: 외부감사 지적사항 중 <b>표기 누락 2건</b> 시정.</div></div>
+      <div class="rh rise"><div class="dt">2026.02.01</div><div class="vr">1차</div><div class="ch">타행 ATM 출금 수수료 <s>500원</s> <b>0원</b> 면제 · 영업시간 외 할증 <s>500원</s> <b>폐지</b>. 사유: 제휴망 정산단가 인하분 전액 이전.</div></div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <span>베이시스은행 주식회사 · 서울특별시 중구 · 예금보험공사 부보금융회사</span>
+  <span>문서 BS-2026-04 · 시행 2026.08.01 · <a href="#footnotes">각주</a> · <a href="#fees">수수료 명세</a> · <a href="#board">레이트보드</a></span>
+</footer>
+
+<script>
+/* ── 전역 부트: 스크롤 복원 가드 · 캡처 모드 ─────────────────────────── */
+document.documentElement.classList.add('js');
+/* scroll-behavior:smooth가 scrollTo를 애니메이션으로 만들어 복원과 경합한다 → 초기 리셋 동안만 auto */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){var h=document.documentElement,prev=h.style.scrollBehavior;h.style.scrollBehavior='auto';window.scrollTo(0,0);
+ addEventListener('load',function(){window.scrollTo(0,0);setTimeout(function(){h.style.scrollBehavior=prev},60)});})();
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+var fmt=function(n){return Math.round(n).toLocaleString('ko-KR')};
+
+/* ── ⑥ 수수료 14항목 — 0원은 잉크, 유료는 인주 레드 ────────────────── */
+var FEES=[
+ ['타행 이체','인터넷뱅킹 · 모바일 · 횟수 제한 없음',0,''],
+ ['타행 이체','영업점 창구 · 건당',600,''],
+ ['ATM 출금','당행 기기 · 시간 무관',0,''],
+ ['ATM 출금','타행 기기 · 영업시간 내',0,''],
+ ['ATM 출금','타행 기기 · 영업시간 외',0,''],
+ ['자동이체 등록·해지','건수 제한 없음',0,''],
+ ['계좌 유지','잔액 조건 없음',0,''],
+ ['체크카드 재발급','마모·자체 오류 사유',0,''],
+ ['체크카드 재발급','분실·훼손 사유 · 건당',2000,''],
+ ['통장 재발급','건당',2000,''],
+ ['증명서 발급','인터넷·앱 · 부수 제한 없음',0,''],
+ ['증명서 발급','영업점 창구 · 부당',1000,''],
+ ['해외송금 (SWIFT)','인터넷 · 건당',5000,''],
+ ['해외 중계은행 수수료','송금 경로에 따라 부과 · 당행 결정 아님','실비','10']
+];
+(function(){var el=document.getElementById('frows'),h='';
+ FEES.forEach(function(f,i){
+  var amt=f[2],pay=amt!==0,txt=(amt==='실비')?'실비':(fmt(amt)+'원');
+  var fn=f[3]?'<sup class="fn"><a href="#f'+f[3]+'">'+f[3]+'</a></sup>':'';
+  h+='<div class="fr rise"><div class="no">'+String(i+1).padStart(2,'0')+'</div>'
+    +'<div class="nm">'+f[0]+fn+'</div><div class="cd">'+f[1]+'</div>'
+    +'<div class="am'+(pay?' pay':'')+'">'+txt+'</div></div>';
+ });
+ el.insertAdjacentHTML('beforeend',h);})();
+
+/* ── ④ 시그니처 ①: 이자 계산 명세기 ──────────────────────────────────
+   슬라이더가 값만 바꾸지 않는다 — 막대 개수(=기간)와 스택 비율, 각주 태그 목록,
+   경고 줄의 존재 여부까지 바뀐다. 즉 조작이 화면 '구성'을 바꾼다. */
+var BASE={3:2.45,6:2.80,12:3.10,24:3.35}; /* 기간별 기본금리 (각주 3) */
+var TAXR=0.154;
+var S={amt:10000000,m:12,c1:false,c2:false,c3:false};
+var $=function(id){return document.getElementById(id)};
+var amtEl=$('amt'),segEl=$('seg'),chart=$('chart');
+
+function rateOf(){var r=BASE[S.m];
+ if(S.c1)r+=0.30; if(S.c2)r+=0.20; if(S.c3)r+=0.10; return r}
+function bonusOf(){return (S.c1?0.30:0)+(S.c2?0.20:0)+(S.c3?0.10:0)}
+
+/* 카운트업 — 단위 span은 반드시 분리해서 다시 붙인다 (좁은 칸 줄바꿈 방지) */
+var animState={};
+function countTo(el,to,unit,key,dec){
+ /* 백그라운드 탭에서는 rAF가 안 돈다 → 애니메이션을 걸면 0원인 채로 굳는다. 즉시 확정값. */
+ if(reduce||document.hidden){animState[key]=to;
+  el.innerHTML=(dec?to.toFixed(dec):fmt(to))+'<span class="u">'+unit+'</span>';return}
+ var from=animState[key]||0,t0=performance.now(),dur=420;
+ animState[key]=to;
+ function step(t){var p=Math.min((t-t0)/dur,1),e=1-Math.pow(1-p,3),v=from+(to-from)*e;
+  el.innerHTML=(dec?v.toFixed(dec):fmt(v))+'<span class="u">'+unit+'</span>';
+  if(p<1)requestAnimationFrame(step)}
+ requestAnimationFrame(step);
+}
+
+/* SVG 막대 재드로잉 — 스택 하단 잉크(실수령) / 상단 인주 레드(세금).
+   "당신이 잃는 부분"이 막대 꼭대기에 물리적으로 얹혀 보이게 하는 게 핵심 */
+function drawChart(animate){
+ var r=rateOf()/100,P=S.amt,n=S.m;
+ var W=620,H=300,R=12,T=16;
+ var total=P*r*n/12; if(total<=0)total=1;
+ /* viewBox가 렌더 폭에 맞춰 축소되므로 축 글자는 축소율의 역수로 키운다 — 실제 화면에서 최소 11px 확보 */
+ var sc=620/Math.max(chart.clientWidth||620,1);
+ var fs=Math.min(Math.max(11*sc,11),22);
+ var B=Math.max(42,fs*2.6);
+ /* 눈금 라벨은 단위 적응형 — 총이자가 작을 때 Math.round가 '0만'을 중복 출력하는 붕괴를 막는다 */
+ var labOf=function(val){
+  return total>=100000?fmt(val/10000)+'만'
+       :(val>=10000?(val/10000).toFixed(1)+'만':fmt(val)+'원')};
+ var labs=[labOf(total),labOf(total/2),labOf(0)];
+ /* 좌측 여백은 글자 크기·자릿수에 맞춰 넓힌다 (키운 눈금이 viewBox 밖으로 잘리지 않게) */
+ var wOf=function(t){var w=0;for(var j=0;j<t.length;j++)w+=(t.charCodeAt(j)>0x2000?1:0.62);return w*fs};
+ var L=Math.min(Math.max(64,Math.max(wOf(labs[0]),wOf(labs[1]),wOf(labs[2]))+12),260);
+ var pw=W-L-R,ph=H-T-B;
+ var gap=n>12?3:(n>6?7:14);
+ var bw=(pw-gap*(n-1))/n;
+ var s='';
+ /* 가로 그리드 3선 + 좌측 눈금 */
+ for(var g=0;g<=2;g++){
+  var y=T+ph*(g/2);
+  s+='<line x1="'+L.toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+(W-R)+'" y2="'+y.toFixed(1)+'" stroke="#c6cbcf" stroke-width="1" stroke-dasharray="'+(g===2?'0':'2 4')+'"/>';
+  s+='<text x="'+(L-8).toFixed(1)+'" y="'+(y+fs*0.36).toFixed(1)+'" text-anchor="end" font-family="ui-monospace,monospace" font-size="'+fs.toFixed(1)+'" fill="#5f666c">'+labs[g]+'</text>';
+ }
+ for(var i=1;i<=n;i++){
+  var cum=P*r*(i/12),hh=ph*(cum/total);
+  var x=L+(i-1)*(bw+gap),y0=T+ph-hh;
+  var taxH=hh*TAXR,netH=hh-taxH;
+  s+='<g class="bar" style="--d:'+(i*0.022)+'s">';
+  s+='<rect x="'+x.toFixed(1)+'" y="'+(y0+taxH).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+netH.toFixed(1)+'" fill="#0e1114"/>';
+  s+='<rect x="'+x.toFixed(1)+'" y="'+y0.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(taxH,1.2).toFixed(1)+'" fill="#b3271e"/>';
+  s+='</g>';
+  /* 라벨은 붐비면 솎아낸다 */
+  var every=n>12?3:1;
+  if(i%every===0||i===n)
+   s+='<text x="'+(x+bw/2).toFixed(1)+'" y="'+(T+ph+6+fs*0.85).toFixed(1)+'" text-anchor="middle" font-family="ui-monospace,monospace" font-size="'+fs.toFixed(1)+'" fill="#5f666c">'+i+'</text>';
+ }
+ s+='<text x="'+(W-R)+'" y="'+(T+ph+6+fs*2.05).toFixed(1)+'" text-anchor="end" font-family="ui-monospace,monospace" font-size="'+fs.toFixed(1)+'" fill="#5f666c">경과 개월</text>';
+ chart.innerHTML=s;
+ /* 성장 애니메이션은 '이산적 변경'(기간·우대조건)에만. 슬라이더 드래그에는 걸지 않는다 — 안 그러면 매 tick 재시작돼 깜빡인다 */
+ if(!reduce&&animate!==false){
+  /* 막대가 아래에서 자라는 미세 모션 — 재계산이 '일어난 것'으로 보이게 */
+  [].forEach.call(chart.querySelectorAll('.bar'),function(gEl){
+   gEl.animate([{transform:'scaleY(0)',opacity:.2},{transform:'scaleY(1)',opacity:1}],
+    {duration:420,delay:parseFloat(gEl.style.getPropertyValue('--d'))*1000,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'});
+  });
+ }
+}
+
+/* 각주 태그 — 적용된 조건에 따라 붙었다 떨어진다 */
+function paintTags(){
+ var tags=[['기본금리 '+BASE[S.m].toFixed(2)+'%','3']];
+ if(S.c1)tags.push(['급여이체 +0.30%p','4']);
+ if(S.c2)tags.push(['자동이체 +0.20%p','5']);
+ if(S.c3)tags.push(['마케팅 동의 +0.10%p','6']);
+ if(S.c1&&S.c2&&S.c3)tags.push(['우대 전부 충족 · 만기 일괄 판정','7']);
+ var html=tags.map(function(t){
+  return '<span class="tag">'+t[0]+'<sup class="fn"><a href="#f'+t[1]+'">'+t[1]+'</a></sup></span>'}).join('');
+ /* 내용이 같으면 다시 쓰지 않는다 — 슬라이더 드래그마다 태그 fadein이 재시작되는 점멸 방지 */
+ if($('applied').innerHTML!==html)$('applied').innerHTML=html;
+}
+
+/* 명세 하단 주석 — 상태에 따라 줄이 생기고 사라진다 (레이아웃 자체가 바뀜) */
+function paintNotes(gross,animate){
+ var L=[];
+ L.push(['※','약정금리 연 '+rateOf().toFixed(2)+'% · 단리 · 만기일시지급 기준으로 산출했습니다.',false]);
+ if(bonusOf()===0)L.push(['※','우대조건 미적용 상태입니다. 3종을 모두 채우면 연 '+(BASE[S.m]+0.60).toFixed(2)+'%가 됩니다.',false]);
+ if(S.m===24)L.push(['※','24개월 구간은 기본금리가 3.35%로 올라갑니다. 대신 중도해지 시 차감폭도 커집니다.',false]);
+ if(S.m===3)L.push(['※','3개월 구간은 기본금리가 2.45%로 가장 낮습니다. 6개월 이상부터 우대 효과가 커집니다.',false]);
+ var totalPrincipalPlus=S.amt+gross;
+ if(totalPrincipalPlus>100000000)
+  L.push(['!','원리금 합계 '+fmt(totalPrincipalPlus)+'원이 예금자보호 한도 1억원을 초과합니다. 초과분 '+fmt(totalPrincipalPlus-100000000)+'원은 보호 대상이 아닙니다.',true]);
+ if(S.c3)L.push(['※','마케팅 동의 우대는 철회 시 다음 이자 계산일부터 제외됩니다. 이미 지급된 이자는 회수하지 않습니다.',false]);
+ $('notes').innerHTML=L.map(function(l){
+  return '<div class="nl'+(l[2]?' warn':'')+((reduce||animate===false)?'':' fadein')+'"><b>'+l[0]+'</b><span>'+l[1]+'</span></div>'}).join('');
+}
+
+function recalc(animate){
+ var r=rateOf()/100,gross=S.amt*r*S.m/12,tax=gross*TAXR,net=gross-tax;
+ $('amtOut').innerHTML=fmt(S.amt)+'<span class="u">원</span>';
+ $('termOut').innerHTML=S.m+'<span class="u">개월</span>';
+ $('bonusOut').innerHTML='+'+bonusOf().toFixed(2)+'<span class="u">%p</span>';
+ $('rateOut').innerHTML='연 '+rateOf().toFixed(2)+'<span class="u">%</span>';
+ $('chartTerm').textContent=S.m+'개월';
+ countTo($('oGross'),gross,'원','g');
+ countTo($('oTax'),tax,'원','t');
+ countTo($('oNet'),net,'원','n');
+ paintTags();paintNotes(gross,animate);drawChart(animate);
+}
+/* 슬라이더는 연속 입력 — rAF로 스로틀하고 애니메이션 없이 값만 갱신한다 */
+var amtRaf=0;
+amtEl.addEventListener('input',function(){S.amt=+amtEl.value;
+ if(amtRaf)return; amtRaf=requestAnimationFrame(function(){amtRaf=0;recalc(false)})});
+[].forEach.call(segEl.querySelectorAll('button'),function(b){
+ b.addEventListener('click',function(){S.m=+b.dataset.m;
+  [].forEach.call(segEl.querySelectorAll('button'),function(x){x.classList.toggle('on',x===b)});recalc(true)})});
+['c1','c2','c3'].forEach(function(id){$(id).addEventListener('change',function(){S[id]=$(id).checked;recalc(true)})});
+recalc(true);
+/* 폭이 바뀌면 축 글자 크기(=viewBox 축소율 보정)를 다시 계산해야 한다 — 애니메이션은 걸지 않는다 */
+var rzRaf=0;
+addEventListener('resize',function(){if(rzRaf)return;
+ rzRaf=requestAnimationFrame(function(){rzRaf=0;drawChart(false)})});
+/* 숨은 탭에서 확정값으로 굳었더라도 되돌아오면 한 번 더 그린다 (막대 애니메이션도 마찬가지) */
+document.addEventListener('visibilitychange',function(){if(!document.hidden)drawChart()});
+
+/* ── ⑦ 시그니처 ②: 대조표 FLIP 재배열 ────────────────────────────────
+   정렬 토글 시 행이 '순간 이동'하면 어디로 갔는지 못 쫓아간다.
+   First/Last/Invert/Play로 물리적으로 미끄러지게 만들어 우리 행의 이동을 눈으로 확인시킨다. */
+var ORGS=[
+ {n:'베이시스 정기예금',s:'BS-2026-04 · 12개월',base:3.10,top:3.70,net:313020,fee:0,us:true},
+ {n:'C 인터넷은행',s:'2026.08.01 공시 기준',base:3.25,top:3.80,net:321480,fee:-9600},
+ {n:'D 저축은행',s:'2026.08.01 공시 기준',base:3.40,top:3.65,net:308790,fee:-21600},
+ {n:'A 시중은행',s:'2026.08.01 공시 기준',base:2.85,top:3.55,net:300330,fee:-14400},
+ {n:'B 시중은행',s:'2026.08.01 공시 기준',base:2.70,top:3.30,net:279180,fee:-12000}
+];
+ORGS.forEach(function(o){o.total=o.net+o.fee});
+var crows=$('crows'),chd=$('chd'),sortKey='base';
+function rowHTML(o){
+ return '<div class="crow'+(o.us?' us':'')+'" data-n="'+o.n+'">'
+  +'<div class="org">'+o.n+'<em>'+o.s+'</em></div>'
+  +'<div class="c" data-col="base">'+o.base.toFixed(2)+'%</div>'
+  +'<div class="c" data-col="top">'+o.top.toFixed(2)+'%</div>'
+  +'<div class="c" data-col="net">'+fmt(o.net)+'</div>'
+  +'<div class="c'+(o.fee<0?' neg':'')+'" data-col="fee">'+(o.fee===0?'0':fmt(o.fee))+'</div>'
+  +'<div class="c" data-col="total">'+fmt(o.total)+'</div></div>';
+}
+crows.innerHTML=ORGS.slice().sort(function(a,b){return b.base-a.base}).map(rowHTML).join('');
+function paintActive(){
+ [].forEach.call(chd.children,function(d){d.classList.toggle('act',d.dataset.col===sortKey)});
+ [].forEach.call(crows.querySelectorAll('.c'),function(c){c.classList.toggle('act',c.dataset.col===sortKey)});
+}
+paintActive();
+function sortRows(key){
+ if(key===sortKey)return; sortKey=key;
+ var rows=[].slice.call(crows.children);
+ var first={};rows.forEach(function(r){first[r.dataset.n]=r.getBoundingClientRect().top});
+ ORGS.slice().sort(function(a,b){return b[key]-a[key]}).forEach(function(o){
+  crows.appendChild([].filter.call(crows.children,function(r){return r.dataset.n===o.n})[0])});
+ paintActive();
+ if(reduce)return;
+ rows.forEach(function(r){
+  var d=first[r.dataset.n]-r.getBoundingClientRect().top;
+  if(!d)return;
+  r.animate([{transform:'translateY('+d+'px)'},{transform:'none'}],
+   {duration:620,easing:'cubic-bezier(.2,.85,.2,1)'});
+ });
+}
+[].forEach.call($('sorter').querySelectorAll('button'),function(b){
+ b.addEventListener('click',function(){
+  [].forEach.call($('sorter').querySelectorAll('button'),function(x){x.classList.toggle('on',x===b)});
+  sortRows(b.dataset.s)})});
+
+/* ── ⑧ 36개월 스몰멀티플 — 리빌 시 path draw ─────────────────────── */
+var HIST=[
+ {t:'정기예금 12개월 기본금리',u:'%',dec:2,cuts:[6,17,28],
+  v:[3.85,3.85,3.80,3.80,3.75,3.70,3.55,3.55,3.50,3.45,3.45,3.40,3.35,3.30,3.30,3.25,3.20,3.05,3.00,3.00,2.95,2.95,2.95,2.90,2.90,2.90,2.90,2.85,2.75,2.80,2.85,2.90,2.95,2.95,2.95,3.10],
+  d:'기준금리 인하 3회 구간'},
+ /* index 0 = 2023.09. 0.90 → 0.85 전환은 index 35 = 2026.08 (개정 이력 3차와 동일 시점) */
+ {t:'수시입출금 금리',u:'%',dec:2,cuts:[17,35],
+  v:[1.10,1.10,1.10,1.05,1.05,1.05,1.05,1.00,1.00,1.00,1.00,1.00,0.95,0.95,0.95,0.95,0.95,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.85],
+  d:'기준금리 인하 2회 구간'},
+ {t:'적금 12개월 최고금리',u:'%',dec:2,cuts:[9],
+  v:[4.60,4.60,4.55,4.55,4.50,4.50,4.45,4.45,4.40,4.25,4.25,4.20,4.20,4.15,4.15,4.10,4.10,4.05,4.00,4.00,3.95,3.95,3.95,3.90,3.90,3.90,3.95,3.95,4.00,4.00,4.00,4.05,4.05,4.05,4.05,4.05],
+  d:'기준금리 인하 1회 구간'},
+ /* inv: 수수료는 '내려가는 게 이득' — 색 규칙(레드=잃는 숫자)이 뒤집히는 유일한 계열 */
+ /* 0원 시작점 index 9 = 2024.06 — 레이트보드 05의 '2024.06.01부터 전면 면제'와 같은 시점.
+    이 계열은 인터넷·모바일 채널 전용이며, 개정 이력 1차(타행 ATM)·2차(창구 이체)와는 다른 항목이다. */
+ {t:'타행 이체 수수료(인터넷·모바일)',u:'원',dec:0,cuts:[],inv:true,
+  v:[500,500,500,500,500,300,300,300,300,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  d:'2024.06 전면 면제 후 유지'}
+];
+(function(){var h='';
+ HIST.forEach(function(s,idx){
+  var W=300,H=92,P=6,mn=Math.min.apply(null,s.v),mx=Math.max.apply(null,s.v);
+  if(mx===mn){mx=mn+1}
+  var pad=(mx-mn)*0.18;
+  var lo=mn-pad,hi=mx+pad;
+  var X=function(i){return P+(W-P*2)*(i/(s.v.length-1))};
+  var Y=function(v){return P+(H-P*2)*(1-(v-lo)/(hi-lo))};
+  var d=s.v.map(function(v,i){return (i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)}).join(' ');
+  var dots=s.cuts.map(function(ci){
+   return '<circle class="cutd" cx="'+X(ci).toFixed(1)+'" cy="'+Y(s.v[ci]).toFixed(1)+'" r="3.2"/>'}).join('');
+  var now=s.v[s.v.length-1],prev=s.v[0];
+  var delta=now-prev;
+  /* 라벨의 주어를 분리한다: s.d는 '기준금리(정책금리) 인하 시점', 아래 두 값은 '이 상품 자체의 조정 횟수' */
+  var down=s.v.filter(function(v,i){return i&&v<s.v[i-1]}).length,
+      up=s.v.filter(function(v,i){return i&&v>s.v[i-1]}).length;
+  h+='<div class="hc rise" data-hc="'+idx+'">'
+   +'<div class="t">'+s.t+'</div>'
+   +'<div class="r"><span>2023.09</span><span>2026.08</span></div>'
+   +'<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+s.t+' 36개월 추이">'
+   +'<line class="base" x1="'+P+'" y1="'+(H-P)+'" x2="'+(W-P)+'" y2="'+(H-P)+'"/>'
+   +'<path class="spark" d="'+d+'"/>'+dots+'</svg>'
+   +'<div class="now">'+(s.dec?now.toFixed(s.dec):fmt(now))+'<span class="u">'+s.u+'</span></div>'
+   +'<div class="dl'+((s.inv?delta>0:delta<0)?' dn':'')+'">36개월 '+(delta<0?'▼ ':'▲ ')
+     +(s.dec?Math.abs(delta).toFixed(s.dec)+'%p':fmt(Math.abs(delta))+'원')+' · '+s.d
+     +'<br>자체 조정 '+down+'회 인하 · '+up+'회 인상</div>'
+   +'</div>';
+ });
+ $('hg').innerHTML=h;
+ /* draw 준비 — 리빌 시점에 dash offset을 푼다 */
+ [].forEach.call(document.querySelectorAll('.hc .spark'),function(p){
+  var len=p.getTotalLength();
+  p.style.strokeDasharray=len;p.style.strokeDashoffset=reduce?0:len;
+  p.style.transition='stroke-dashoffset 1.5s cubic-bezier(.25,.8,.25,1)';
+ });
+ [].forEach.call(document.querySelectorAll('.hc .cutd'),function(c){
+  c.style.opacity=reduce?1:0;c.style.transition='opacity .5s ease 1.1s';
+ });
+})();
+function drawSpark(card){
+ var p=card.querySelector('.spark');if(!p||p.dataset.done)return;p.dataset.done='1';
+ p.style.strokeDashoffset=0;
+ [].forEach.call(card.querySelectorAll('.cutd'),function(c){c.style.opacity=1});
+}
+
+/* ── 마그네틱 — 버튼 + 소반경 래퍼로만 스코핑 (부모 섹션에 걸면 가장자리에서 튄다) ── */
+document.querySelectorAll('.mag-zone').forEach(function(z){var b=z.querySelector('.btn');
+ if(b&&matchMedia('(pointer:fine)').matches&&!reduce){
+  z.addEventListener('mousemove',function(e){var r=b.getBoundingClientRect();
+   b.style.transform='translate('+((e.clientX-(r.left+r.width/2))*.26)+'px,'+((e.clientY-(r.top+r.height/2))*.26)+'px)'});
+  z.addEventListener('mouseleave',function(){b.style.transform=''})}});
+
+/* ── 각주 앵커 하이라이트 — 문서다운 왕복 읽기 ─────────────────────── */
+document.addEventListener('click',function(e){
+ var a=e.target.closest('sup.fn a');if(!a)return;
+ var t=document.querySelector(a.getAttribute('href'));if(!t)return;
+ document.querySelectorAll(".fnrow.hl").forEach(function(x){x.classList.remove('hl')});
+ t.classList.add('hl');setTimeout(function(){t.classList.remove('hl')},2600);
+});
+
+/* ── 히어로 밑줄 + 리빌 ───────────────────────────────────────────── */
+var h1=$('h1');
+addEventListener('load',function(){requestAnimationFrame(function(){h1.classList.add('go')})});
+setTimeout(function(){h1.classList.add('go')},420);
+
+/* 카운트업(감사 밴드) */
+function bandCount(el){
+ var to=parseFloat(el.dataset.to),dec=+(el.dataset.dec||0),suf=el.dataset.suf||'',t0=performance.now(),dur=1200;
+ var unit=suf?'<span class="u">'+suf+'</span>':'';
+ if(document.hidden){el.innerHTML=(dec?to.toFixed(dec):fmt(to))+unit;return}
+ function s(t){var p=Math.min((t-t0)/dur,1),e=1-Math.pow(1-p,3),v=to*e;
+  el.innerHTML=(dec?v.toFixed(dec):fmt(v))+unit;if(p<1)requestAnimationFrame(s)}
+ requestAnimationFrame(s);
+}
+/* 캡처 모드에선 스크롤이 없어 IO가 안 터진다 → 최종 상태로 고정하고 관측 자체를 생략 */
+if(CAPTURE||reduce){
+ document.querySelectorAll('.countup').forEach(function(el){
+  var suf=el.dataset.suf||'',dec=+(el.dataset.dec||0),to=parseFloat(el.dataset.to);
+  el.innerHTML=(dec?to.toFixed(dec):fmt(to))+(suf?'<span class="u">'+suf+'</span>':'')});
+ document.querySelectorAll('.rise').forEach(function(el){el.classList.add('vis')});
+ document.querySelectorAll('.hc').forEach(drawSpark);
+ h1.classList.add('go');
+}else{
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;
+  e.target.classList.add('vis');
+  if(e.target.classList.contains('countup'))bandCount(e.target);
+  if(e.target.classList.contains('hc'))setTimeout(function(){drawSpark(e.target)},120);
+  io.unobserve(e.target)})},{threshold:.18});
+ document.querySelectorAll('.rise,.countup').forEach(function(el){io.observe(el)});
+}
+/* 로드 폴백 — 뷰포트 안 요소는 IO 실패와 무관하게 즉시 표시 */
+addEventListener('load',function(){requestAnimationFrame(function(){
+ document.querySelectorAll('.rise').forEach(function(el){
+  if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis')});
+ document.querySelectorAll('.hc').forEach(function(c){
+  if(c.getBoundingClientRect().top<innerHeight)drawSpark(c)});
+})});
+
+/* 기준시각 — 영업일 08:00 공시라는 설정과 어긋나지 않게 고정 표기 유지 */
+</script>
+</body></html>

@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BASELINE 기준선검진센터 — 판독 안내서</title>
+<meta name="description" content="정상범위가 아니라, 당신의 기준선. 해마다 이어지는 자기 자신의 기준선으로 읽는 종합검진 판독 안내서.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<!-- mono는 이 문서의 아카이타입 신호다(표제부·차트축·타임라인 시각 30여 선택자).
+     로드하지 않으면 Windows에서 Courier New로 착지해 자폭·질감이 무너진다. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5/700.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   무드: 세이지 페이퍼 + 딥 클리니컬 틸 단일 포인트 · 아카이타입: 임상 판독 안내서
+   구조 P14 — RUN 17(basis)이 선점한 Disclosure Sheet 계열의 리드아웃 변주다.
+   새 프리셋이 아니다. 페이지 = 광고 랜딩이 아니라 "수검자에게 발급되는 문서"
+
+   색 규칙(브랜드 서사와 직결):
+   ① 형광 하늘색 금지 — 병원 웹 클리셰라 즉시 싸구려로 읽힌다
+   ② 경고 적색 금지 — 결과지의 빨강은 정보가 아니라 불안이다. '조치' 등급은
+      적색이 아니라 잉크 반전(검정 배지)으로 처리하고, 그 규칙 자체를 ③번 섹션
+      본문 콘텐츠로 노출해 절제를 서사로 만든다.
+   포인트는 --pt 하나. 2차색 --amber는 '추적' 배지 단 한 군데에만 등장.
+   대비 실측(WCAG 2.1 상대휘도) — 두 지면 모두 검증한다. 밴드/레일/푸터는
+   bg2 지면이므로 bg만 재는 것은 검증이 아니다.
+     paper bg(#eff0ec) 위 : mut 7.09 / pt 7.23 / mut2 5.45
+     band  bg2(#e7e9e3) 위: mut 6.64 / pt 6.76 / mut2 5.10
+   --mut2는 12px 일반 굵기에만 얹히므로 4.5:1 기준을 두 지면 다 넘겨야 한다.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root{
+--sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+/* 폴백 끝단을 generic monospace로 두면 Windows에서 Courier New로 떨어진다 —
+   Consolas를 명시해 자폭·질감이 SF Mono에 가까운 쪽으로 착지시킨다 */
+--mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,'Consolas','Courier New',monospace;
+
+/* 색 — 포인트 1 + 배지용 2차색 1 + 나머지 전부 중성 램프 */
+--pt:#14584f;          /* 딥 클리니컬 틸 (유일한 포인트색) */
+--pt-d:#0e3f38;        /* 틸 딥 — hover/누름 상태 */
+--pt-w:#e2e8e4;        /* 틸 워시 — 참고범위 밴드/선택 배경 */
+--amber:#8a5a12;       /* 2차색 — '추적' 배지 전용. 다른 곳에 절대 쓰지 않음 */
+--bg:#eff0ec;          /* 세이지 페이퍼 (순백 금지 — 눈부심 억제) */
+--bg2:#e7e9e3;         /* 한 단 짙은 페이퍼 — 밴드/레일 */
+--card:#f5f6f2;        /* 카드면 (여전히 순백 아님) */
+--ink:#161a19;         /* 잉크 */
+--ink2:#2c322f;
+--mut:#4b514e;         /* 본문 중성 — 낮은 대비지만 7:1 유지 */
+--mut2:#5c625f;        /* 캡션/메타 — 12px 전용이라 bg2 위에서도 4.5:1을 넘겨야 한다 */
+--line:#d2d6cd;        /* 괘선 */
+--line2:#c0c5ba;       /* 강한 괘선 */
+
+/* 타입 스케일 — 모듈러 1.25배(base 16) 9단 + 디스플레이 3단.
+   피그마 Variables `type/*`와 1:1 대응. 모든 font-size는 여기만 참조한다. */
+--t-xs:12px;--t-sm:14px;--t-base:16px;--t-md:20px;--t-lg:25px;--t-xl:31px;
+--t-2xl:39px;--t-3xl:49px;--t-4xl:61px;--t-d1:76px;--t-d2:96px;--t-d3:132px;
+
+/* 간격 스케일 — 4배수. 피그마 Variables `space/*`와 1:1 */
+--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);
+ -webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden;
+ /* 한글 조판 — 없으면 단어 중간에서 끊긴다 */
+ word-break:keep-all;overflow-wrap:break-word;font-size:var(--t-base)}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font-family:inherit}
+h1,h2,h3,h4,p{margin:0}
+::selection{background:var(--pt);color:var(--bg)}
+
+.wrap{max-width:1240px;margin:0 auto;padding:0 var(--s7)}
+/* 그레인 — 밝은 지면이라 multiply. 문서 종이의 결을 흉내낸다 */
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.4;mix-blend-mode:multiply;z-index:4;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.34'/%3E%3C/svg%3E")}
+
+/* 스크롤 리빌 — 클래스명은 .rise/.vis 고유명 (.in은 레이아웃 클래스와 충돌) */
+.rise{opacity:0;transform:translateY(20px);transition:opacity .5s cubic-bezier(.2,.7,.2,1),transform .5s cubic-bezier(.2,.7,.2,1)}
+.rise.vis{opacity:1;transform:none}
+.d1{transition-delay:.06s}.d2{transition-delay:.12s}.d3{transition-delay:.18s}
+
+.eyb{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--mut2)}
+.eyb b{color:var(--pt);font-weight:700}
+.sec-h{font-size:clamp(var(--t-xl),4vw,var(--t-3xl));font-weight:800;letter-spacing:-.035em;line-height:1.14;margin-top:var(--s4)}
+.lede{font-size:var(--t-md);color:var(--mut);max-width:56ch;margin-top:var(--s5);line-height:1.75}
+.rule{height:1px;background:var(--line);border:0;margin:0}
+
+/* ── nav: 얇은 고정 바. 그림자 없음 — 문서에 그림자를 넣지 않는다 ───────── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:60;height:60px;display:flex;align-items:center;
+ gap:var(--s5);padding-left:var(--s7);padding-right:var(--s7);
+ background:rgba(239,240,236,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);transition:border-color .3s}
+.nav .lg{font-size:var(--t-base);font-weight:800;letter-spacing:.14em}
+.nav .lg i{font-style:normal;color:var(--pt)}
+.nav .sp{flex:1}
+.nav a.m{font-size:var(--t-sm);color:var(--mut);transition:color .2s}
+.nav a.m:hover{color:var(--pt)}
+.nav .bk{border:1px solid var(--pt);color:var(--pt);padding:8px 16px;font-size:var(--t-sm);font-weight:700;
+ border-radius:2px;transition:background .2s,color .2s}
+.nav .bk:hover{background:var(--pt);color:var(--bg)}
+@media(max-width:820px){.nav a.m{display:none}}
+
+/* ── ① Docket band — 문서 표제부. 트러스트 신호를 페이지 1번 위치에 ────────
+   랜딩 관성(히어로 먼저)을 의도적으로 깬다. 이 페이지는 문서이므로 표제부가 먼저다. */
+.docket{background:var(--bg2);border-bottom:1px solid var(--line);padding-top:calc(60px + var(--s6));padding-bottom:var(--s6)}
+/* .row가 .wrap을 겸하므로 padding 단축 금지 — 좌우값을 덮어써 이 밴드만 어긋난다 */
+.docket .row{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s6)}
+.docket .row>*{min-width:0}
+.dk{border-left:1px solid var(--line2);padding-left:var(--s4)}
+.dk .k{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--mut2)}
+.dk .v{font-size:var(--t-sm);font-weight:700;margin-top:var(--s2);line-height:1.5}
+.dk .v em{font-style:normal;color:var(--pt)}
+.dk .s{font-size:var(--t-xs);color:var(--mut2);margin-top:var(--s1)}
+.stars{color:var(--pt);letter-spacing:2px;font-size:var(--t-xs)}
+@media(max-width:900px){.docket .row{grid-template-columns:repeat(2,1fr);gap:var(--s5)}}
+@media(max-width:520px){.docket .row{grid-template-columns:1fr}}
+
+/* ── ② Hero: 비대칭 7:5 split-L. 인터랙티브 툴이 히어로 안에 있다 ────────── */
+.hero{padding-top:var(--s9);padding-bottom:var(--s9);position:relative}
+.hgrid{display:grid;grid-template-columns:7fr 5fr;gap:var(--s8);align-items:center}
+.hgrid>*{min-width:0}  /* 없으면 SVG 카드가 텍스트 열을 찌그러뜨린다 */
+.hero h1{font-size:clamp(var(--t-2xl),6.4vw,var(--t-d1));font-weight:800;letter-spacing:-.045em;line-height:1.04;margin-top:var(--s4)}
+/* 강조어는 '기준선' 단 하나. 틸 언더마커 — 색+밑줄을 남발하지 않는다 */
+.hero h1 mark{background:none;color:inherit;position:relative;white-space:nowrap}
+.hero h1 mark::after{content:"";position:absolute;left:-.02em;right:-.02em;bottom:.07em;height:.14em;
+ background:var(--pt);opacity:.9;transform:scaleX(0);transform-origin:left;transition:transform .7s cubic-bezier(.2,.7,.2,1) .3s}
+.hero h1.go mark::after{transform:scaleX(1)}
+.hero .sub{font-size:var(--t-md);color:var(--mut);max-width:44ch;margin-top:var(--s6);line-height:1.8}
+.hbtns{display:flex;gap:var(--s3);flex-wrap:wrap;margin-top:var(--s7)}
+.btn{display:inline-block;background:var(--pt);color:var(--bg);padding:14px 26px;font-size:var(--t-sm);font-weight:700;
+ border-radius:2px;border:1px solid var(--pt);cursor:pointer;transition:background .2s,transform .2s}
+.btn:hover{background:var(--pt-d);transform:translateY(-2px)}
+.btn.gh{background:none;color:var(--pt)}
+.btn.gh:hover{background:var(--pt-w);transform:translateY(-2px)}
+.hnote{display:flex;gap:var(--s5);flex-wrap:wrap;margin-top:var(--s6);font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2)}
+
+/* 기준선 리더 (주 시그니처) */
+.reader{background:var(--card);border:1px solid var(--line2);border-radius:3px;position:relative;
+ padding:var(--s5) var(--s5) var(--s5)}
+.reader .rhd{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s4);
+ border-bottom:1px solid var(--line);padding-bottom:var(--s3)}
+.reader .rhd .t{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--mut2)}
+.reader .rhd .id{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2)}
+.chips{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s4)}
+.chip{font-size:var(--t-xs);font-weight:600;padding:7px 12px;border:1px solid var(--line2);background:none;color:var(--mut);
+ border-radius:100px;cursor:pointer;transition:background .18s,color .18s,border-color .18s;white-space:nowrap}
+.chip:hover{border-color:var(--pt);color:var(--pt)}
+.chip[aria-pressed="true"]{background:var(--pt);border-color:var(--pt);color:var(--bg)}
+.chip:focus-visible{outline:2px solid var(--pt);outline-offset:2px}
+
+.chartbox{margin-top:var(--s4);position:relative}
+.chartbox svg{width:100%;height:auto;display:block;touch-action:pan-y}
+.cx-lab{font-family:var(--mono);font-size:var(--t-xs);fill:var(--mut2)}
+.cy-lab{font-family:var(--mono);font-size:var(--t-xs);fill:var(--mut2)}
+.band-lab{font-family:var(--mono);font-size:var(--t-xs);fill:var(--pt)}
+.gridline{stroke:var(--line);stroke-width:1}
+.axis{stroke:var(--line2);stroke-width:1}
+#band{fill:var(--pt-w);transition:y .34s cubic-bezier(.2,.7,.2,1),height .34s cubic-bezier(.2,.7,.2,1)}
+/* line의 y1/y2는 CSS 지오메트리 프로퍼티가 아니라 어떤 브라우저에서도 전이되지
+   않는다. 상/하한선은 각각 <g>로 감싸 transform으로만 움직인다 — 그래야 밴드
+   (#band: y/height 전이)와 같은 곡선·같은 시간으로 미끄러진다. */
+#bandtop,#bandbot{stroke:var(--pt);stroke-width:1;stroke-dasharray:3 3;opacity:.55}
+#bandtg,#bandbg,#guideg{transition:transform .34s cubic-bezier(.2,.7,.2,1)}
+#line{fill:none;stroke:var(--pt);stroke-width:2;stroke-linejoin:round;stroke-linecap:round;transition:d .34s cubic-bezier(.2,.7,.2,1)}
+/* 점은 draw()마다 재생성하지 않고 초기 8개를 만들어 좌표만 갱신한다.
+   재생성하면 시작값이 없어 transition이 영원히 발동하지 않는다(라인만 모핑하고
+   꼭짓점은 순간이동하는 desync의 원인). */
+.dot{fill:var(--card);stroke:var(--pt);stroke-width:1.6;
+ transition:cx .34s cubic-bezier(.2,.7,.2,1),cy .34s cubic-bezier(.2,.7,.2,1),r .2s}
+.dot.g-tr{stroke:var(--amber)}
+.dot.g-ac{stroke:var(--ink);fill:var(--ink)}
+/* 가이드도 동일 — x1/x2/y2 대신 <g> translate. 길이는 고정하고 상단을
+   상하 clip으로 잘라 낸다(핸들 위 268 = 플롯 높이라 항상 위끝까지 닿는다).
+   clip은 세로만 자른다 — 좌우까지 자르면 첫해/마지막해에서 선이 반쪽 난다. */
+#guide{stroke:var(--ink);stroke-width:1;stroke-dasharray:2 4;opacity:.35}
+/* 핸들·헤일로는 가이드와 한 몸으로 움직여야 하므로 시간·곡선을 위와 통일한다.
+   여기만 기본 ease로 두면 340ms 내내 가이드와 핸들이 어긋나 보인다. */
+#handle{fill:var(--pt);stroke:var(--card);stroke-width:3;cursor:grab;
+ transition:cx .34s cubic-bezier(.2,.7,.2,1),cy .34s cubic-bezier(.2,.7,.2,1)}
+#handle:active{cursor:grabbing}
+#hgrp:focus-visible #halo{opacity:1}
+#halo{fill:none;stroke:var(--pt);stroke-width:2;opacity:0;
+ transition:opacity .2s,cx .34s cubic-bezier(.2,.7,.2,1),cy .34s cubic-bezier(.2,.7,.2,1)}
+#hgrp:focus{outline:none}
+
+.readout{margin-top:var(--s4);border-top:1px solid var(--line);padding-top:var(--s4)}
+.readout .top{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s4);flex-wrap:wrap}
+.bigval{font-size:var(--t-3xl);font-weight:800;letter-spacing:-.035em;line-height:1;white-space:nowrap}
+.bigval span{font-size:var(--t-base);font-weight:600;color:var(--mut2);margin-left:var(--s2);letter-spacing:0;white-space:nowrap}
+.delta{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2);margin-top:var(--s2)}
+/* 판독 등급 배지 — 여기가 '조치=빨강'을 거부한 자리다 */
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:var(--t-xs);font-weight:800;letter-spacing:.06em;
+ padding:7px 13px;border-radius:100px;border:1px solid currentColor;white-space:nowrap;transition:.2s}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.badge.g-ok{color:var(--pt)}
+.badge.g-tr{color:var(--amber)}
+.badge.g-ac{color:var(--bg);background:var(--ink);border-color:var(--ink)}
+.verdict{font-size:var(--t-sm);color:var(--mut);line-height:1.75;margin-top:var(--s4);min-height:3.5em}
+.verdict b{color:var(--ink);font-weight:700}
+/* 리더 → 예약 요약 인계. 두 시그니처를 한 흐름으로 잇는 접점(P14 원본은 위젯 2개가
+   서로를 모른 채 독립적이었다 — 이 페이지는 리더의 판독이 예약 입력이 된다) */
+.tobook{display:inline-block;margin-top:var(--s2);font-family:var(--mono);font-size:var(--t-xs);
+ letter-spacing:.08em;color:var(--pt);background:none;border:0;padding:0;cursor:pointer;
+ text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
+.tobook:hover{color:var(--pt-d)}
+.tobook:focus-visible{outline:2px solid var(--pt);outline-offset:3px}
+.yrow{display:flex;align-items:center;gap:var(--s4);margin-top:var(--s4);border-top:1px solid var(--line);padding-top:var(--s4)}
+.yrow label{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;color:var(--mut2);white-space:nowrap}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;min-width:0;height:2px;background:var(--line2);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+ background:var(--pt);border:3px solid var(--card);cursor:grab;box-shadow:0 0 0 1px var(--line2)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--pt);border:3px solid var(--card);cursor:grab}
+input[type=range]:focus-visible{outline:2px solid var(--pt);outline-offset:6px}
+/* 플로팅 판독 배지 칩 1개 — 카드 상단 모서리에 걸쳐 띄운다.
+   카드 안쪽에 두면 본문 위를 덮으므로 반드시 경계 밖으로 걸친다. */
+.float-chip{position:absolute;left:calc(-1 * var(--s5));top:calc(-1 * var(--s4));background:var(--ink);color:var(--bg);
+ font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em;padding:9px 14px;border-radius:2px;z-index:3;white-space:nowrap}
+.float-chip i{font-style:normal;color:#9fd8cc}
+@media(max-width:1080px){.hgrid{grid-template-columns:1fr;gap:var(--s8)}.float-chip{left:auto;right:var(--s4)}}
+
+/* ── ③ 판독 등급 정의 — 3단 list-rows ─────────────────────────────────── */
+.grades{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+ padding-top:var(--s9);padding-bottom:var(--s9)}
+.grow{display:grid;grid-template-columns:150px 1fr 300px;gap:var(--s6);align-items:baseline;
+ border-top:1px solid var(--line2);padding-top:var(--s5);padding-bottom:var(--s5)}
+.grow>*{min-width:0}
+.grow:last-of-type{border-bottom:1px solid var(--line2)}
+.grow .nm{font-size:var(--t-lg);font-weight:800;letter-spacing:-.02em}
+.grow .ds{font-size:var(--t-base);color:var(--mut);line-height:1.75}
+.grow .ac{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2);line-height:1.9}
+.gwrapper{margin-top:var(--s7)}
+.nored{margin-top:var(--s7);display:grid;grid-template-columns:1fr 1fr;gap:var(--s7);
+ border:1px solid var(--line2);border-left:3px solid var(--pt);padding:var(--s6)}
+.nored>*{min-width:0}
+.nored h3{font-size:var(--t-xl);font-weight:800;letter-spacing:-.03em;line-height:1.25}
+.nored p{font-size:var(--t-sm);color:var(--mut);line-height:1.85}
+.nored p+p{margin-top:var(--s4)}
+@media(max-width:900px){.grow{grid-template-columns:1fr;gap:var(--s3)}.nored{grid-template-columns:1fr;gap:var(--s5)}}
+
+/* ── ④ 검사 항목 인덱스 — 세로 sticky 레일 + 행 리스트 ────────────────── */
+.index{padding-top:var(--s9);padding-bottom:var(--s9)}
+.ixgrid{display:grid;grid-template-columns:260px 1fr;gap:var(--s8);margin-top:var(--s7);align-items:start}
+.ixgrid>*{min-width:0}
+.rail{position:sticky;top:100px}
+.rail .rt{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--mut2);
+ padding-bottom:var(--s3);border-bottom:1px solid var(--line2)}
+.rail a{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s3);
+ padding-top:var(--s3);padding-bottom:var(--s3);border-bottom:1px solid var(--line);
+ font-size:var(--t-base);font-weight:600;color:var(--mut);transition:color .2s,padding-left .2s}
+.rail a:hover{color:var(--pt);padding-left:var(--s2)}
+.rail a.on{color:var(--pt)}
+.rail a.on::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--pt);
+ position:absolute;left:calc(-1 * var(--s4));transform:translateY(.7em)}
+.rail a{position:relative}
+.rail a em{font-style:normal;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2);white-space:nowrap}
+.rail .thumb{margin:var(--s5) 0 0}
+/* 원색 해부 모형은 브랜드의 '적색 금지' 규칙과 충돌 → 그레이스케일로 중성화 */
+.rail .thumb img{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--bg2);border:1px solid var(--line);
+ filter:grayscale(1) contrast(1.04) brightness(1.03);opacity:.9}
+.rail .thumb figcaption{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2);margin-top:var(--s2)}
+
+.cat{scroll-margin-top:110px}
+.cat+.cat{margin-top:var(--s8)}
+.cat h3{font-size:var(--t-lg);font-weight:800;letter-spacing:-.025em;display:flex;align-items:baseline;gap:var(--s3)}
+.cat h3 em{font-style:normal;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2);letter-spacing:.1em}
+.thead,.trow{display:grid;grid-template-columns:1fr 84px 116px 1fr;gap:var(--s4);align-items:baseline}
+.thead{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--mut2);
+ border-bottom:1px solid var(--line2);padding-bottom:var(--s2);margin-top:var(--s4)}
+.trow{border-bottom:1px solid var(--line);padding-top:var(--s4);padding-bottom:var(--s4);transition:background .18s,padding-left .18s}
+.trow>*{min-width:0}
+.trow:hover{background:var(--bg2);padding-left:var(--s2)}
+.trow .n{font-size:var(--t-base);font-weight:600}
+.trow .n i{font-style:normal;font-size:var(--t-xs);font-weight:700;color:var(--pt);border:1px solid var(--pt);
+ border-radius:2px;padding:1px 5px;margin-left:var(--s2);white-space:nowrap}
+.trow .m{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut)}
+.trow .f{font-size:var(--t-xs);color:var(--mut)}
+.trow .f b{color:var(--pt);font-weight:700}
+.trow .r{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2)}
+@media(max-width:900px){
+ /* 900px 이하: sticky 해제 → 가로 scroll-snap 칩 바로 폴백 (빈 구간 방지) */
+ .ixgrid{grid-template-columns:1fr;gap:var(--s6)}
+ .rail{position:static;display:flex;gap:var(--s2);overflow-x:auto;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;padding-bottom:var(--s2)}
+ .rail .rt,.rail .thumb{display:none}
+ .rail a{scroll-snap-align:start;border:1px solid var(--line2);border-radius:100px;white-space:nowrap;
+  padding:8px 14px;font-size:var(--t-sm)}
+ .rail a.on{background:var(--pt);color:var(--bg);border-color:var(--pt)}
+ .rail a.on::before{display:none}
+ .rail a em{display:none}
+ .thead{display:none}
+ .trow{grid-template-columns:1fr;gap:var(--s1)}
+}
+
+/* ── ⑤ 판독의 — 에디토리얼 split ──────────────────────────────────────── */
+.doc{background:var(--ink);color:var(--bg);padding-top:var(--s10);padding-bottom:var(--s10)}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s8);align-items:center}
+.dgrid>*{min-width:0}
+.doc h2{font-size:clamp(var(--t-xl),4vw,var(--t-3xl));font-weight:800;letter-spacing:-.035em;line-height:1.16;margin-top:var(--s4)}
+.doc .eyb{color:#8f9a95}
+.doc p{color:#b6bebb;font-size:var(--t-base);line-height:1.85;margin-top:var(--s5);max-width:50ch}
+.doc .prof{margin-top:var(--s6);border-top:1px solid #333a37;padding-top:var(--s5)}
+.doc .prof .nm{font-size:var(--t-md);font-weight:800}
+.doc .prof .nm em{font-style:normal;font-size:var(--t-sm);color:#9fd8cc;margin-left:var(--s3);font-weight:600}
+.doc .prof ul{list-style:none;padding:0;margin-top:var(--s3)}
+.doc .prof li{font-size:var(--t-sm);color:#9aa39f;line-height:1.85;padding-left:var(--s4);position:relative}
+.doc .prof li::before{content:"—";position:absolute;left:0;color:#5d6663}
+.dstack{display:grid;grid-template-columns:1fr;gap:var(--s3)}
+.ph{position:relative;overflow:hidden;background:#222725}
+.ph img{width:100%;height:100%;object-fit:cover;filter:saturate(.72) contrast(1.02);
+ transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.ph:hover img{transform:scale(1.035)}
+.ph.a{aspect-ratio:4/3}
+.ph.b{aspect-ratio:21/9}
+/* 사진 위 캡션은 어두운 중성색 금지 — 밝은 값 + 그림자 + 스크림 */
+.ph figcaption{position:absolute;left:var(--s4);bottom:var(--s4);right:var(--s4);z-index:2;
+ font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.06em;color:#eef2f0;
+ text-shadow:0 1px 10px rgba(0,0,0,.9),0 0 3px rgba(0,0,0,.7)}
+.ph .scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(0,0,0,0) 42%,rgba(0,0,0,.62))}
+.docstat{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s5);margin-top:var(--s8);
+ border-top:1px solid #333a37;padding-top:var(--s6)}
+.docstat>*{min-width:0}
+.docstat .v{font-size:var(--t-xl);font-weight:800;letter-spacing:-.03em;white-space:nowrap}
+.docstat .v span{font-size:var(--t-sm);font-weight:600;color:#9fd8cc;margin-left:4px;white-space:nowrap}
+.docstat .l{font-size:var(--t-xs);color:#8f9a95;margin-top:var(--s1)}
+@media(max-width:900px){.dgrid{grid-template-columns:1fr;gap:var(--s6)}.docstat{grid-template-columns:1fr}}
+
+/* ── ⑥ 검진 당일 여정 — 세로 시간 레일 (가로 스크럽 폐기) ───────────────── */
+.jour{padding-top:var(--s9);padding-bottom:var(--s9)}
+.jph{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-top:var(--s7)}
+.jph>*{min-width:0}
+.ph.c{aspect-ratio:16/9;border:1px solid var(--line)}
+@media(max-width:820px){.jph{grid-template-columns:1fr}}
+.tl{margin-top:var(--s7);position:relative;padding-left:var(--s8)}
+.tl::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:1px;background:var(--line2)}
+.tstep{display:grid;grid-template-columns:96px 1fr 220px;gap:var(--s6);align-items:baseline;position:relative;
+ padding-top:var(--s5);padding-bottom:var(--s5);border-bottom:1px solid var(--line)}
+.tstep>*{min-width:0}
+.tstep:first-child{border-top:1px solid var(--line)}
+.tstep::before{content:"";position:absolute;left:calc(-1 * var(--s8) + 3px);top:calc(var(--s5) + .45em);
+ width:9px;height:9px;border-radius:50%;background:var(--bg);border:1.5px solid var(--pt)}
+.tstep.key::before{background:var(--pt)}
+.tstep .hm{font-family:var(--mono);font-size:var(--t-md);font-weight:700;letter-spacing:-.02em;color:var(--pt);white-space:nowrap}
+.tstep .ti{font-size:var(--t-md);font-weight:700;letter-spacing:-.02em}
+.tstep .td{font-size:var(--t-sm);color:var(--mut);margin-top:var(--s1);line-height:1.7}
+.tstep .tm{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2);line-height:1.8}
+@media(max-width:900px){.tstep{grid-template-columns:1fr;gap:var(--s2)}.tl{padding-left:var(--s6)}
+ .tstep::before{left:calc(-1 * var(--s6) + 3px)}}
+
+/* ── ⑦ 조용한 스탯 밴드 ────────────────────────────────────────────────── */
+.stats{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+ padding-top:var(--s9);padding-bottom:var(--s9)}
+.srow{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s7)}
+.srow>*{min-width:0}
+.st{border-left:1px solid var(--line2);padding-left:var(--s5)}
+/* 단위는 <span>+nowrap 분리 — 좁은 칸에서 줄바꿈되면 베이스라인이 어긋난다 */
+.st .v{font-size:clamp(var(--t-2xl),5vw,var(--t-4xl));font-weight:800;letter-spacing:-.04em;line-height:1;white-space:nowrap}
+.st .v span{font-size:var(--t-md);font-weight:700;color:var(--pt);margin-left:var(--s2);letter-spacing:-.01em;white-space:nowrap}
+.st .l{font-size:var(--t-sm);color:var(--mut);margin-top:var(--s3);line-height:1.6}
+.st .n{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2);margin-top:var(--s1)}
+@media(max-width:820px){.srow{grid-template-columns:1fr;gap:var(--s6)}}
+
+/* ── ⑧ 후기 + 크레딧 ───────────────────────────────────────────────────── */
+.revs{padding-top:var(--s9);padding-bottom:var(--s9)}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:var(--s7)}
+.rgrid>*{min-width:0}
+.rev{background:var(--bg);padding:var(--s6);transition:background .2s}
+.rev:hover{background:var(--card)}
+.rev .q{font-size:var(--t-md);font-weight:600;letter-spacing:-.015em;line-height:1.6}
+.rev .who{margin-top:var(--s5);border-top:1px solid var(--line);padding-top:var(--s3);
+ font-size:var(--t-sm);color:var(--mut)}
+.rev .who b{color:var(--ink);font-weight:700}
+.rev .meta{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2);margin-top:var(--s1)}
+.credits{margin-top:var(--s7);border-top:1px solid var(--line2);padding-top:var(--s6);
+ display:grid;grid-template-columns:280px 1fr;gap:var(--s7);align-items:start}
+.credits>*{min-width:0}
+.credits .cph{aspect-ratio:16/10;overflow:hidden;border:1px solid var(--line);background:var(--bg2)}
+/* 해외 병원 외관 컷 — 그레이스케일로 중성화해 지면 톤을 깨지 않게 */
+.credits .cph img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.06) brightness(1.04);opacity:.85}
+.crlist{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s5)}
+.crlist>*{min-width:0}
+.cr .k{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--mut2)}
+.cr .v{font-size:var(--t-sm);font-weight:600;margin-top:var(--s1);line-height:1.6}
+.cr .s{font-size:var(--t-xs);color:var(--mut2);margin-top:var(--s1)}
+@media(max-width:900px){.rgrid,.credits,.crlist{grid-template-columns:1fr}}
+
+/* ── ⑨ 검진 코스 — grid-2-big ─────────────────────────────────────────── */
+.plans{background:var(--bg2);border-top:1px solid var(--line);padding-top:var(--s9);padding-bottom:var(--s9)}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s5);margin-top:var(--s7)}
+.pgrid>*{min-width:0}
+.pk{background:var(--bg);border:1px solid var(--line2);padding:var(--s7);display:flex;flex-direction:column;
+ transition:transform .22s cubic-bezier(.2,.7,.2,1),border-color .22s}
+.pk:hover{transform:translateY(-4px);border-color:var(--pt)}
+.pk.hi{background:var(--card);border-color:var(--pt);border-width:1.5px}
+.pk .tag{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--mut2)}
+.pk .nm{font-size:var(--t-md);font-weight:700;letter-spacing:-.02em;margin-top:var(--s3)}
+/* 가격 > 코스명 — 치환 후에도 원래 위계(가격이 더 큼)가 유지되는지 확인한 쌍 */
+.pk .pr{font-size:var(--t-2xl);font-weight:800;letter-spacing:-.04em;margin-top:var(--s2);line-height:1.1;white-space:nowrap}
+.pk .pr span{font-size:var(--t-base);font-weight:600;color:var(--mut2);margin-left:var(--s1);white-space:nowrap}
+.pk .du{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2);margin-top:var(--s2)}
+.pk ul{list-style:none;padding:0;margin-top:var(--s6);border-top:1px solid var(--line);flex:1}
+.pk li{font-size:var(--t-sm);color:var(--mut);line-height:1.6;padding-top:var(--s3);padding-bottom:var(--s3);
+ border-bottom:1px solid var(--line);display:flex;gap:var(--s3);align-items:flex-start}
+.pk li i{font-style:normal;font-family:var(--mono);font-size:var(--t-xs);color:var(--pt);flex:0 0 auto;padding-top:2px}
+.pk li.off{color:var(--mut2)}
+.pk li.off i{color:var(--line2)}
+.pk .btn{margin-top:var(--s6);text-align:center}
+@media(max-width:900px){.pgrid{grid-template-columns:1fr}}
+
+/* ── ⑩ CTA: 예약 split-form (배너가 아니라 조작 가능한 폼) ───────────────── */
+.book{padding-top:var(--s10);padding-bottom:var(--s10)}
+.bgrid{display:grid;grid-template-columns:1fr 420px;gap:var(--s8);align-items:start;margin-top:var(--s7)}
+.bgrid>*{min-width:0}
+.fld+.fld{margin-top:var(--s6)}
+.fld .fl{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--mut2);
+ border-bottom:1px solid var(--line);padding-bottom:var(--s2)}
+.fld .chips{margin-top:var(--s4)}
+.chip.wide{border-radius:2px;padding:11px 16px;font-size:var(--t-sm);text-align:left;line-height:1.3}
+/* 보조 줄에는 소요·가격·잔여석이 들어간다 — 장식이 아니라 판단 근거이므로
+   opacity로 감쇠하지 않는다. 칩은 선택 시 배경이 반전되므로 opacity 기반
+   감쇠는 대비를 예측 불가능하게 만든다. 두 상태 모두 색을 명시한다. */
+.chip.wide em{display:block;font-style:normal;font-size:var(--t-xs);color:var(--mut2);opacity:1;font-weight:500;margin-top:2px}
+.chip[aria-pressed="true"] em{color:var(--pt-w)}
+.sum{background:var(--ink);color:var(--bg);padding:var(--s7);position:sticky;top:88px}
+.sum .st{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:#8f9a95;
+ border-bottom:1px solid #333a37;padding-bottom:var(--s3)}
+.sum .big{font-size:var(--t-xl);font-weight:800;letter-spacing:-.03em;line-height:1.2;margin-top:var(--s4)}
+.sum .big em{font-style:normal;color:#9fd8cc}
+.sum dl{margin:0;margin-top:var(--s6);border-top:1px solid #333a37}
+.sum .r{display:flex;justify-content:space-between;gap:var(--s4);align-items:baseline;
+ padding-top:var(--s3);padding-bottom:var(--s3);border-bottom:1px solid #333a37}
+.sum dt{font-size:var(--t-xs);color:#8f9a95;font-family:var(--mono);letter-spacing:.06em;white-space:nowrap}
+.sum dd{margin:0;font-size:var(--t-sm);font-weight:700;text-align:right}
+.sum dd.hl{color:#9fd8cc}
+.sum .fastnote{font-size:var(--t-xs);color:#8f9a95;line-height:1.8;margin-top:var(--s4)}
+.sum .btn{display:block;width:100%;text-align:center;margin-top:var(--s5);background:var(--bg);color:var(--ink);border-color:var(--bg)}
+.sum .btn:hover{background:#9fd8cc;border-color:#9fd8cc;color:#0e3f38}
+.flash{animation:fl .26s ease}
+@keyframes fl{0%{opacity:.3;transform:translateY(-3px)}100%{opacity:1;transform:none}}
+@media(max-width:960px){.bgrid{grid-template-columns:1fr;gap:var(--s7)}.sum{position:static}}
+
+/* ── footer — 파이프라인 메타는 절대 넣지 않는다 (주석으로만) ────────────── */
+footer{background:var(--bg2);border-top:1px solid var(--line2);padding-top:var(--s8);padding-bottom:var(--s8)}
+.fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:var(--s7)}
+.fgrid>*{min-width:0}
+.fgrid .lg{font-size:var(--t-md);font-weight:800;letter-spacing:.12em}
+.fgrid .lg i{font-style:normal;color:var(--pt)}
+.fgrid p{font-size:var(--t-sm);color:var(--mut);line-height:1.85;margin-top:var(--s3)}
+.fgrid .h{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--mut2)}
+.fgrid dl{margin:0;margin-top:var(--s3)}
+.fgrid .fr{display:flex;justify-content:space-between;gap:var(--s3);font-size:var(--t-sm);color:var(--mut);
+ padding-top:var(--s2);padding-bottom:var(--s2);border-bottom:1px solid var(--line)}
+.fgrid .fr b{color:var(--ink);font-weight:600;white-space:nowrap}
+.legal{margin-top:var(--s8);border-top:1px solid var(--line);padding-top:var(--s5);
+ font-size:var(--t-xs);color:var(--mut2);line-height:1.9;max-width:82ch}
+@media(max-width:820px){.fgrid{grid-template-columns:1fr;gap:var(--s6)}}
+
+/* ── 모션 절제 규약 ─────────────────────────────────────────────────────
+   패럴랙스·마퀴·자동재생 없음. 전 구간 180~260ms opacity/transform만.
+   이 범주(의료)에서는 절제가 곧 점수다. */
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+  transition-duration:.001ms!important}
+ .rise{opacity:1;transform:none}
+ .rail{position:static}
+ .sum{position:static}
+}
+
+/* ── 캡처 모드 (?capture=1) — 피그마 반출용 정적 스냅샷 ──────────────────
+   리빌 강제 표시 · sticky 해제 후 세로로 펼침 · 카운트업 최종값 고정.
+   없으면 캡처 시 절반이 빈 프레임으로 넘어간다. */
+html.capture .rise{opacity:1!important;transform:none!important;transition:none!important}
+html.capture .hero h1 mark::after{transform:scaleX(1);transition:none}
+html.capture .rail{position:static}
+html.capture .sum{position:static}
+html.capture .nav{position:absolute}
+html.capture .docket{padding-top:calc(60px + var(--s6))}
+html.capture #line,html.capture #band,html.capture .dot,html.capture #handle,
+html.capture #bandtg,html.capture #bandbg,html.capture #guideg{transition:none}
+html.capture .flash{animation:none}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ═══ nav ═══ -->
+<nav class="nav" id="nav">
+  <a href="#top" class="lg">BASE<i>LINE</i></a>
+  <span class="sp"></span>
+  <a href="#index" class="m">검사 항목</a>
+  <a href="#journey" class="m">당일 여정</a>
+  <a href="#plans" class="m">검진 코스</a>
+  <a href="#book" class="bk">검진 예약</a>
+</nav>
+
+<!-- ═══ ① 표제부 밴드 — 트러스트 신호를 페이지 최상단 1번 위치에 ═══ -->
+<header class="docket" id="top">
+  <div class="wrap row">
+    <div class="dk rise"><div class="k">발급기관</div><div class="v">베이스라인 기준선검진센터</div><div class="s">서울 종로구 · 2011년 개소</div></div>
+    <div class="dk rise d1"><div class="k">판독기준</div><div class="v">2025년 개정 참고범위</div><div class="s">대한진단검사의학회 권고치 적용</div></div>
+    <div class="dk rise d2"><div class="k">인증</div><div class="v">보건복지부 의료기관 인증</div><div class="s">3주기 (2024–2028)</div></div>
+    <div class="dk rise d3"><div class="k">수검자 평점</div><div class="v"><em>4.8</em> / 5.0 <span class="stars">★★★★★</span></div><div class="s">예약 플랫폼 누적 1,247건 기준</div></div>
+  </div>
+</header>
+
+<!-- ═══ ② 히어로 — 툴이 첫 화면에 있다 (랜딩 관성 제거) ═══ -->
+<section class="hero wrap">
+  <div class="hgrid">
+    <div>
+      <p class="eyb rise"><b>판독 안내서</b> · 2026년판 / 종합검진</p>
+      <h1 class="rise" id="h1">정상범위가 아니라,<br>당신의 <mark>기준선</mark>.</h1>
+      <p class="sub rise d1">같은 88 mg/dL이라도 3년째 88인 사람과 올해 처음 88이 된 사람의 판독은 다릅니다. 베이스라인은 남들의 정상범위가 아니라, 해마다 이어지는 당신 자신의 선 위에서 올해의 점을 읽습니다.</p>
+      <div class="hbtns rise d2">
+        <a href="#book" class="btn">검진 예약하기</a>
+        <a href="#index" class="btn gh">검사 항목 전체 보기</a>
+      </div>
+      <div class="hnote rise d3">
+        <span>평균 소요 2시간 40분 ~ 3시간 40분</span>
+        <span>판독 상담 당일 진행</span>
+        <span>재검 안내 평균 1.4일</span>
+      </div>
+    </div>
+
+    <!-- ★ 시그니처 ① 기준선 리더 — 항목 칩 + 연도 슬라이더 + 드래그 포인트.
+         값만 바뀌는 슬라이더가 아니라 그래프 형태·참고범위 밴드 위치·배지 색·
+         판독 문장이 동시에 바뀐다. -->
+    <div class="reader rise d1" id="reader">
+      <div class="float-chip" aria-hidden="true">MRN <i>2019-0416</i> · 8개년 누적</div>
+      <div class="rhd">
+        <span class="t">기준선 리더</span>
+        <span class="id">참고범위 <span id="refTxt">70–99 mg/dL</span></span>
+      </div>
+
+      <div class="chips" role="group" aria-label="검사 항목 선택" id="mchips">
+        <button class="chip" type="button" data-m="0" aria-pressed="true">공복혈당</button>
+        <button class="chip" type="button" data-m="1" aria-pressed="false">LDL 콜레스테롤</button>
+        <button class="chip" type="button" data-m="2" aria-pressed="false">수축기혈압</button>
+        <button class="chip" type="button" data-m="3" aria-pressed="false">ALT</button>
+      </div>
+
+      <div class="chartbox">
+        <svg id="chart" viewBox="0 0 620 330" role="img" aria-labelledby="chartTitle">
+          <title id="chartTitle">연도별 기준선 추이 그래프</title>
+          <defs><clipPath id="plotClip"><rect x="0" y="20" width="620" height="268"></rect></clipPath></defs>
+          <rect id="band" x="52" y="120" width="550" height="80" rx="1"></rect>
+          <g id="bandtg" transform="translate(0,120)"><line id="bandtop" x1="52" y1="0" x2="602" y2="0"></line></g>
+          <g id="bandbg" transform="translate(0,200)"><line id="bandbot" x1="52" y1="0" x2="602" y2="0"></line></g>
+          <g id="grid"></g>
+          <text id="bandLab" class="band-lab" x="58" y="0">참고범위</text>
+          <line class="axis" x1="52" y1="288" x2="602" y2="288"></line>
+          <!-- clip은 transform 없는 바깥 g에 건다 — 같은 g에 걸면 클립창이 선과
+               함께 움직여 잘라내는 의미가 사라진다 -->
+          <g clip-path="url(#plotClip)">
+            <g id="guideg" transform="translate(52,120)"><line id="guide" x1="0" y1="-268" x2="0" y2="0"></line></g>
+          </g>
+          <path id="line" d=""></path>
+          <g id="dots"></g>
+          <g id="xlabs"></g>
+          <g id="hgrp" tabindex="0" role="slider" aria-label="측정 연도 지점 (좌우 화살표로 이동)"
+             aria-valuemin="2019" aria-valuemax="2026" aria-valuenow="2023" aria-valuetext="2023년">
+            <circle id="halo" cx="52" cy="120" r="15"></circle>
+            <circle id="handle" cx="52" cy="120" r="8"></circle>
+          </g>
+        </svg>
+      </div>
+
+      <div class="readout">
+        <div class="top">
+          <div>
+            <div class="bigval"><span id="yrTag" style="margin-left:0;margin-right:var(--s2)">2023년</span><b id="val">104</b><span id="unit">mg/dL</span></div>
+            <div class="delta" id="delta">전년 대비 +5 mg/dL</div>
+          </div>
+          <span class="badge g-tr" id="badge">추적</span>
+        </div>
+        <p class="verdict" id="verdict"></p>
+        <button type="button" class="tobook" id="toBook">이 판독을 예약 요약으로 넘기기 →</button>
+        <div class="yrow">
+          <label for="yr">연도</label>
+          <input type="range" id="yr" min="0" max="7" step="1" value="4" aria-label="측정 연도 선택">
+          <span class="chip" style="cursor:default;pointer-events:none" id="yrChip">2023</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ③ 판독 등급 정의 + 색 규칙을 콘텐츠로 ═══ -->
+<section class="grades">
+  <div class="wrap">
+    <p class="eyb rise">// 판독 등급</p>
+    <h2 class="sec-h rise">등급은 셋뿐입니다.</h2>
+    <p class="lede rise d1">숫자 옆에 붙는 글자는 세 가지밖에 없습니다. 등급이 곧 다음 행동이고, 다음 행동이 없으면 등급도 없습니다.</p>
+
+    <div class="gwrapper">
+      <div class="grow rise">
+        <div class="nm"><span class="badge g-ok">관찰</span></div>
+        <div class="ds">참고범위 안이거나, 당신의 지난 3개년 기준선에서 유의하게 벗어나지 않은 항목입니다. 별도 조치 없이 다음 정기 검진에서 같은 그래프에 점을 하나 더 찍습니다.</div>
+        <div class="ac">다음 행동 · 없음<br>재측정 · 12개월 뒤 정기</div>
+      </div>
+      <div class="grow rise d1">
+        <div class="nm"><span class="badge g-tr">추적</span></div>
+        <div class="ds">참고범위를 벗어났으나 즉시 진료 기준에는 이르지 않은 구간입니다. 전체 재검이 아니라 해당 항목만 다시 봅니다. 예약 안내 문자는 자동으로 발송됩니다.</div>
+        <div class="ac">다음 행동 · 해당 항목 단독 재검<br>재측정 · 3~6개월 뒤</div>
+      </div>
+      <div class="grow rise d2">
+        <div class="nm"><span class="badge g-ac">조치</span></div>
+        <div class="ds">진료 기준에 해당하는 항목입니다. 원내 내과 협진으로 연결하거나, 협약된 상급종합병원으로 판독 자료와 함께 회송합니다. 회송 시 영상 원본을 동봉합니다.</div>
+        <div class="ac">다음 행동 · 협진 또는 회송<br>연락 · 판독 확정 후 영업일 2일 이내</div>
+      </div>
+    </div>
+
+    <div class="nored rise d1">
+      <div>
+        <h3>우리는 결과지에 빨강을 쓰지 않습니다.</h3>
+      </div>
+      <div>
+        <p>빨강은 정보가 아니라 반응입니다. 붉은 글씨를 본 수검자는 그 줄부터 문서를 덮습니다. 실제로 재검 안내에 응답하지 않은 사례를 되짚었을 때 가장 흔한 이유는 &ldquo;무서워서 안 읽었다&rdquo;였습니다.</p>
+        <p>그래서 이 센터의 결과지와 이 페이지에는 경고색이 없습니다. 가장 무거운 등급인 <b style="color:var(--ink)">조치</b>는 색이 아니라 <b style="color:var(--ink)">검은 배지</b>로 표시하고, 대신 담당 판독의의 이름과 연락 예정일을 같은 줄에 적습니다. 불안을 만드는 대신 다음에 할 일을 적는 쪽을 택했습니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ④ 검사 항목 인덱스 — 세로 sticky 레일 ═══ -->
+<section class="index wrap" id="index">
+  <p class="eyb rise">// 검사 항목 인덱스</p>
+  <h2 class="sec-h rise">무엇을, 몇 분 동안, 어떤 기준으로.</h2>
+  <p class="lede rise d1">코스에 포함되는 항목 전체와 각 항목의 소요 시간·공복 조건·참고범위를 그대로 공개합니다. <i style="font-style:normal;font-size:var(--t-xs);font-weight:700;color:var(--pt);border:1px solid var(--pt);border-radius:2px;padding:1px 5px">플러스</i> 표시는 기준선 플러스 코스에만 포함됩니다.</p>
+
+  <div class="ixgrid">
+    <aside class="rail" id="rail" aria-label="검사 카테고리">
+      <div class="rt">카테고리</div>
+      <a href="#cat-blood" data-t="cat-blood">혈액 <em>6</em></a>
+      <a href="#cat-img" data-t="cat-img">영상 <em>5</em></a>
+      <a href="#cat-endo" data-t="cat-endo">내시경 <em>4</em></a>
+      <a href="#cat-cardio" data-t="cat-cardio">심폐·체성분 <em>4</em></a>
+      <figure class="thumb">
+        <img src="https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=800&q=80&auto=format&fit=crop"
+             alt="순환기 검사 설명에 쓰는 심장 해부 모형" loading="lazy" decoding="async"
+             onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(140deg,#e7e9e3,#c9cfc6)'">
+        <figcaption>판독 기준은 2025년 개정 참고범위를 따릅니다.</figcaption>
+      </figure>
+    </aside>
+
+    <div>
+      <div class="cat rise" id="cat-blood">
+        <h3>혈액 <em>BLOOD · 6</em></h3>
+        <div class="thead"><span>항목</span><span>소요</span><span>공복</span><span>참고범위</span></div>
+        <div class="trow"><div class="n">공복혈당 (FBS)</div><div class="m">5분</div><div class="f"><b>공복 필수</b></div><div class="r">70–99 mg/dL</div></div>
+        <div class="trow"><div class="n">당화혈색소 (HbA1c)</div><div class="m">5분</div><div class="f">공복 불필요</div><div class="r">5.6 % 이하</div></div>
+        <div class="trow"><div class="n">지질 4종 (총·LDL·HDL·TG)</div><div class="m">5분</div><div class="f"><b>공복 12시간</b></div><div class="r">LDL 129 mg/dL 이하</div></div>
+        <div class="trow"><div class="n">간기능 6종 (AST·ALT·GGT 등)</div><div class="m">5분</div><div class="f"><b>공복 필수</b></div><div class="r">ALT 40 U/L 이하</div></div>
+        <div class="trow"><div class="n">갑상선 3종 (TSH·FT4·T3)</div><div class="m">5분</div><div class="f">공복 불필요</div><div class="r">TSH 0.4–4.1 mIU/L</div></div>
+        <div class="trow"><div class="n">신장기능 (크레아티닌·eGFR)</div><div class="m">5분</div><div class="f"><b>공복 필수</b></div><div class="r">eGFR 90 이상</div></div>
+      </div>
+
+      <div class="cat rise" id="cat-img">
+        <h3>영상 <em>IMAGING · 5</em></h3>
+        <div class="thead"><span>항목</span><span>소요</span><span>공복</span><span>참고범위</span></div>
+        <div class="trow"><div class="n">흉부 X선 (2방향)</div><div class="m">10분</div><div class="f">공복 불필요</div><div class="r">판독 소견 서술</div></div>
+        <div class="trow"><div class="n">복부 초음파</div><div class="m">20분</div><div class="f"><b>공복 8시간</b></div><div class="r">간·담낭·췌장·신장·비장</div></div>
+        <div class="trow"><div class="n">갑상선 초음파 <i>플러스</i></div><div class="m">10분</div><div class="f">공복 불필요</div><div class="r">결절 최대경 mm 기재</div></div>
+        <div class="trow"><div class="n">저선량 흉부 CT <i>플러스</i></div><div class="m">15분</div><div class="f">공복 불필요</div><div class="r">Lung-RADS 1–4 분류</div></div>
+        <div class="trow"><div class="n">심장 CT 칼슘 스코어 <i>플러스</i></div><div class="m">20분</div><div class="f"><b>공복 4시간</b></div><div class="r">Agatston 0–10 권장</div></div>
+      </div>
+
+      <div class="cat rise" id="cat-endo">
+        <h3>내시경 <em>ENDOSCOPY · 4</em></h3>
+        <div class="thead"><span>항목</span><span>소요</span><span>공복</span><span>참고범위</span></div>
+        <div class="trow"><div class="n">위내시경 (비수면)</div><div class="m">10분</div><div class="f"><b>공복 8시간</b></div><div class="r">조직검사 시 +5분</div></div>
+        <div class="trow"><div class="n">위내시경 (수면) <i>플러스</i></div><div class="m">40분</div><div class="f"><b>공복 8시간</b></div><div class="r">회복실 30분 포함</div></div>
+        <div class="trow"><div class="n">대장내시경 (수면) <i>플러스</i></div><div class="m">60분</div><div class="f"><b>전날 장정결</b></div><div class="r">용종 절제 시 별도 안내</div></div>
+        <div class="trow"><div class="n">헬리코박터 검사</div><div class="m">5분</div><div class="f"><b>공복 8시간</b></div><div class="r">요소분해효소 음성</div></div>
+      </div>
+
+      <div class="cat rise" id="cat-cardio">
+        <h3>심폐·체성분 <em>CARDIO · 4</em></h3>
+        <div class="thead"><span>항목</span><span>소요</span><span>공복</span><span>참고범위</span></div>
+        <div class="trow"><div class="n">안정 심전도 (12유도)</div><div class="m">5분</div><div class="f">공복 불필요</div><div class="r">PR·QT 간격 기재</div></div>
+        <div class="trow"><div class="n">혈압 3회 측정 평균</div><div class="m">10분</div><div class="f">카페인 2시간 금지</div><div class="r">수축기 90–119 mmHg</div></div>
+        <div class="trow"><div class="n">폐기능 검사 (FVC·FEV1) <i>플러스</i></div><div class="m">15분</div><div class="f">공복 불필요</div><div class="r">FEV1/FVC 0.70 이상</div></div>
+        <div class="trow"><div class="n">체성분·기초대사량</div><div class="m">5분</div><div class="f"><b>공복 필수</b></div><div class="r">골격근량·체지방률</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ⑤ 판독의 ═══ -->
+<section class="doc">
+  <div class="wrap">
+    <div class="dgrid">
+      <div class="dstack">
+        <figure class="ph a rise">
+          <img src="https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?w=1400&q=80&auto=format&fit=crop"
+               alt="판독실에서 영상 소견을 함께 확인하는 두 명의 전문의" loading="lazy" decoding="async"
+               onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(140deg,#2c322f,#14584f)'">
+          <span class="scrim"></span>
+          <figcaption>2판독 원칙 — 모든 영상은 서로 다른 두 전문의가 독립적으로 읽습니다</figcaption>
+        </figure>
+        <figure class="ph b rise d1">
+          <img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1400&q=80&auto=format&fit=crop"
+               alt="판독 결과지를 들고 수검자와 상담 중인 의료진" loading="lazy" decoding="async"
+               onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(140deg,#14584f,#2c322f)'">
+          <span class="scrim"></span>
+          <figcaption>판독 상담은 검진 당일, 결과지를 직접 넘기며 진행합니다</figcaption>
+        </figure>
+      </div>
+
+      <div>
+        <p class="eyb rise">// 판독의</p>
+        <h2 class="rise">읽는 사람의 이름을<br>결과지에 적습니다.</h2>
+        <p class="rise d1">외부 판독 대행을 쓰지 않습니다. 영상의학과 전문의 4인과 내과 전문의 3인이 원내에 상주하며, 결과지 각 항목의 우측 하단에는 그 항목을 읽은 사람의 이름이 인쇄됩니다. 궁금한 줄이 있으면 그 이름으로 연락하면 됩니다.</p>
+        <div class="prof rise d2">
+          <div class="nm">서정우 <em>대표 판독의 · 영상의학과 전문의</em></div>
+          <ul>
+            <li>대한영상의학회 정회원, 복부영상 세부전문의</li>
+            <li>상급종합병원 영상의학과 12년 · 검진센터 판독 9년</li>
+            <li>연 18,400건 판독 (2025년 기준, 흉부·복부·갑상선)</li>
+          </ul>
+        </div>
+        <div class="docstat rise d3">
+          <div><div class="v">7<span>인</span></div><div class="l">상주 전문의 (영상 4 · 내과 3)</div></div>
+          <div><div class="v">2<span>회</span></div><div class="l">영상 1건당 독립 판독 횟수</div></div>
+          <div><div class="v">18,400<span>건</span></div><div class="l">대표 판독의 연간 판독량</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ⑥ 검진 당일 여정 — 세로 시간 레일 ═══ -->
+<section class="jour wrap" id="journey">
+  <p class="eyb rise">// 검진 당일</p>
+  <h2 class="sec-h rise">08:00에 들어와 11:40에 나갑니다.</h2>
+  <p class="lede rise d1">기준선 플러스 기준의 표준 동선입니다. 대기 시간을 줄이려고 순서를 바꾸지 않습니다. 공복이 필요한 검사부터 차례로 끝내야 채혈 값이 흔들리지 않기 때문입니다.</p>
+
+  <div class="jph">
+    <figure class="ph c rise">
+      <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1400&q=80&auto=format&fit=crop"
+           alt="검진센터 접수 데스크와 대기 동선" loading="lazy" decoding="async"
+           onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(140deg,#e7e9e3,#c9cfc6)'">
+      <span class="scrim"></span>
+      <figcaption>08:00 · 접수 — 한 회차당 최대 6명만 받습니다</figcaption>
+    </figure>
+    <figure class="ph c rise d1">
+      <img src="https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=1400&q=80&auto=format&fit=crop"
+           alt="진찰에 사용하는 청진기" loading="lazy" decoding="async"
+           onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(140deg,#e7e9e3,#c9cfc6)'">
+      <span class="scrim"></span>
+      <figcaption>08:45 · 기초 계측 — 혈압은 5분 간격 3회 평균으로만 기록</figcaption>
+    </figure>
+  </div>
+
+  <div class="tl">
+    <div class="tstep key rise"><div class="hm">08:00</div><div><div class="ti">접수 · 문진</div><div class="td">신분 확인과 문진표 작성. 지난 검진 기록이 있으면 이 시점에 기준선 그래프가 불러와집니다.</div></div><div class="tm">소요 20분<br>1층 접수데스크</div></div>
+    <div class="tstep key rise"><div class="hm">08:20</div><div><div class="ti">채혈 · 체성분</div><div class="td">공복이 필요한 항목을 가장 먼저 처리합니다. 채혈 직후 간단한 음료가 제공됩니다.</div></div><div class="tm">소요 25분<br>혈액 6항목 · 체성분</div></div>
+    <div class="tstep rise"><div class="hm">08:45</div><div><div class="ti">기초 계측 · 심전도 · 혈압</div><div class="td">혈압은 5분 간격 3회 측정 후 평균값을 기록합니다. 1회 측정값은 결과지에 싣지 않습니다.</div></div><div class="tm">소요 25분<br>심폐 4항목</div></div>
+    <div class="tstep key rise"><div class="hm">09:10</div><div><div class="ti">영상 검사</div><div class="td">흉부 X선 → 복부 초음파 → 저선량 흉부 CT → 심장 CT 순으로 이동 거리를 최소화해 배치합니다.</div></div><div class="tm">소요 50분<br>영상 5항목</div></div>
+    <div class="tstep key rise"><div class="hm">10:00</div><div><div class="ti">내시경 · 회복</div><div class="td">수면 내시경 선택 시 회복실에서 30분 안정 후 보호자 동반 없이도 귀가 가능한지 확인합니다.</div></div><div class="tm">소요 60분<br>위·대장 (수면)</div></div>
+    <div class="tstep key rise"><div class="hm">11:00</div><div><div class="ti">판독 상담</div><div class="td">혈액·영상 1차 판독 결과를 그 자리에서 설명합니다. 등급이 &lsquo;추적&rsquo; 이상인 항목은 재측정 시점을 함께 정합니다.</div></div><div class="tm">소요 40분 (베이직 25분)<br>판독의 직접 상담</div></div>
+    <div class="tstep rise"><div class="hm">11:40</div><div><div class="ti">종료 · 최종 결과지 발송</div><div class="td">조직검사·세포검사가 포함된 경우 최종 결과지는 영업일 5일 이내에 우편과 모바일로 함께 발송됩니다.</div></div><div class="tm">재검 안내 평균 1.4일<br>이의 제기 30일 이내</div></div>
+  </div>
+</section>
+
+<!-- ═══ ⑦ 조용한 스탯 밴드 ═══ -->
+<section class="stats">
+  <div class="wrap">
+    <div class="srow">
+      <div class="st rise"><div class="v"><b class="countup" data-to="386000" data-fmt="1">0</b><span>건</span></div><div class="l">누적 판독 건수 (수검자 1인당 복수 항목)</div><div class="n">2011년 개소 이후 2025년 12월까지 · 영상·내시경·검체 항목 합산</div></div>
+      <div class="st rise d1"><div class="v"><b class="countup" data-to="1.4" data-dec="1">0</b><span>일</span></div><div class="l">재검 안내까지 평균 소요</div><div class="n">2025년 &lsquo;추적&rsquo; 이상 등급 3,102건 기준</div></div>
+      <div class="st rise d2"><div class="v"><b class="countup" data-to="61">0</b><span>%</span></div><div class="l">3년 이상 이어서 받은 수검자</div><div class="n">기준선이 3점 이상 쌓인 비율</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ⑧ 후기 + 크레딧 ═══ -->
+<section class="revs wrap">
+  <p class="eyb rise">// 수검자 후기</p>
+  <h2 class="sec-h rise">받은 사람들이 남긴 말.</h2>
+
+  <div class="rgrid">
+    <div class="rev rise"><p class="q">&ldquo;3년째 같은 그래프 위에 점이 찍히니까, 올해 숫자가 무슨 뜻인지 처음으로 이해가 됐습니다. 그 전엔 매년 새 종이를 받는 기분이었어요.&rdquo;</p><div class="who"><b>정혜란</b> (54)</div><div class="meta">중학교 교사 · 4회차 수검 · 2026.03</div></div>
+    <div class="rev rise d1"><p class="q">&ldquo;빨간 글씨가 하나도 없다는 게 이렇게 다를 줄 몰랐습니다. 결과지를 끝까지 읽어본 게 이번이 처음이에요.&rdquo;</p><div class="who"><b>오세중</b> (47)</div><div class="meta">물류회사 운영팀장 · 2회차 수검 · 2026.01</div></div>
+    <div class="rev rise d2"><p class="q">&ldquo;예약할 때 금식 시작 시각을 정확히 알려줘서 전날 저녁 약속을 안 망쳤습니다. 사소한데 이게 제일 좋았어요.&rdquo;</p><div class="who"><b>배수현</b> (39)</div><div class="meta">프리랜서 개발자 · 1회차 수검 · 2025.11</div></div>
+    <div class="rev rise d3"><p class="q">&ldquo;추적 등급이 뜬 두 항목만 6개월 뒤에 다시 보자고 했고, 실제로 그때 연락이 왔습니다. 전체를 다시 받으라고 하지 않는 게 신뢰가 갔어요.&rdquo;</p><div class="who"><b>문교식</b> (61)</div><div class="meta">자영업 · 5회차 수검 · 2025.09</div></div>
+  </div>
+
+  <div class="credits">
+    <figure class="cph rise">
+      <img src="https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?w=1200&q=80&auto=format&fit=crop"
+           alt="협력 상급종합병원 전경" loading="lazy" decoding="async"
+           onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(140deg,#e7e9e3,#c9cfc6)'">
+    </figure>
+    <div class="crlist">
+      <div class="cr rise"><div class="k">회송 체계</div><div class="v">서울권 상급종합병원 3곳 진료협력 협약</div><div class="s">&lsquo;조치&rsquo; 등급 시 영상 원본·판독지 동봉 회송</div></div>
+      <div class="cr rise d1"><div class="k">기관 인증</div><div class="v">보건복지부 의료기관 인증 (3주기)</div><div class="s">인증 유효기간 2024.06 – 2028.05</div></div>
+      <div class="cr rise d2"><div class="k">검사실 신임</div><div class="v">진단검사의학재단 우수검사실 신임인증</div><div class="s">A등급 · 연 2회 외부 정도관리 참여</div></div>
+      <div class="cr rise d3"><div class="k">내시경 질관리</div><div class="v">대한소화기내시경학회 우수내시경실</div><div class="s">세척·소독 공정 연 4회 자체 감사</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ⑨ 검진 코스 ═══ -->
+<section class="plans" id="plans">
+  <div class="wrap">
+    <p class="eyb rise">// 검진 코스</p>
+    <h2 class="sec-h rise">두 가지뿐입니다.</h2>
+    <p class="lede rise d1">옵션을 잘게 쪼개 파는 대신 두 개만 둡니다. 개별 항목 추가는 판독 상담에서 필요하다고 판단된 경우에만 안내합니다.</p>
+
+    <div class="pgrid">
+      <div class="pk rise">
+        <div class="tag">Course A</div>
+        <div class="nm">기준선 베이직</div>
+        <div class="pr">480,000<span>원</span></div>
+        <div class="du">총 소요 2시간 40분 · 판독 상담 25분</div>
+        <ul>
+          <li><i>+</i><span>혈액 6항목 전체 (당·지질·간·갑상선·신장)</span></li>
+          <li><i>+</i><span>흉부 X선 2방향 · 복부 초음파</span></li>
+          <li><i>+</i><span>위내시경 (비수면) · 헬리코박터 검사</span></li>
+          <li><i>+</i><span>심전도 · 혈압 3회 평균 · 체성분</span></li>
+          <li><i>+</i><span>당일 판독 상담 및 기준선 그래프 발급</span></li>
+          <li class="off"><i>—</i><span>수면 내시경 · 대장내시경</span></li>
+          <li class="off"><i>—</i><span>저선량 흉부 CT · 심장 CT 칼슘 스코어</span></li>
+        </ul>
+        <a href="#book" class="btn gh">이 코스로 예약</a>
+      </div>
+
+      <div class="pk hi rise d1">
+        <div class="tag">Course B · 3년 이상 추적 수검자 71% 선택</div>
+        <div class="nm">기준선 플러스</div>
+        <div class="pr">960,000<span>원</span></div>
+        <div class="du">총 소요 3시간 40분 · 판독 상담 40분</div>
+        <ul>
+          <li><i>+</i><span>베이직 전 항목 포함</span></li>
+          <li><i>+</i><span>위내시경 (수면) · 대장내시경 (수면)</span></li>
+          <li><i>+</i><span>저선량 흉부 CT (Lung-RADS 분류)</span></li>
+          <li><i>+</i><span>심장 CT 칼슘 스코어 (Agatston)</span></li>
+          <li><i>+</i><span>갑상선 초음파 · 폐기능 검사</span></li>
+          <li><i>+</i><span>판독의 40분 상담 + 항목별 재측정 일정 확정</span></li>
+          <li><i>+</i><span>&lsquo;조치&rsquo; 등급 시 상급종합병원 회송 대행</span></li>
+        </ul>
+        <a href="#book" class="btn">이 코스로 예약</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ⑩ CTA: 예약 split-form (배너가 아니라 조작 가능한 폼) ═══ -->
+<section class="book wrap" id="book">
+  <p class="eyb rise">// 예약</p>
+  <h2 class="sec-h rise">날짜를 고르면 금식 시작 시각이 나옵니다.</h2>
+  <p class="lede rise d1">검진에서 가장 흔한 실패는 전날 밤에 일어납니다. 언제부터 먹지 말아야 하는지 예약 화면에서 먼저 확정합니다.</p>
+
+  <div class="bgrid">
+    <div class="rise">
+      <div class="fld">
+        <div class="fl">1 · 코스</div>
+        <div class="chips" role="group" aria-label="코스 선택" id="cChips">
+          <button class="chip wide" type="button" data-c="0" aria-pressed="false">기준선 베이직<em>2시간 40분 · 480,000원</em></button>
+          <button class="chip wide" type="button" data-c="1" aria-pressed="true">기준선 플러스<em>3시간 40분 · 960,000원</em></button>
+        </div>
+      </div>
+      <div class="fld">
+        <div class="fl">2 · 날짜</div>
+        <div class="chips" role="group" aria-label="날짜 선택" id="dChips">
+          <button class="chip wide" type="button" data-d="2026-08-12" aria-pressed="true">8월 12일<em>수요일 · 잔여 3</em></button>
+          <button class="chip wide" type="button" data-d="2026-08-13" aria-pressed="false">8월 13일<em>목요일 · 잔여 5</em></button>
+          <button class="chip wide" type="button" data-d="2026-08-14" aria-pressed="false">8월 14일<em>금요일 · 잔여 1</em></button>
+          <button class="chip wide" type="button" data-d="2026-08-17" aria-pressed="false">8월 17일<em>월요일 · 잔여 6</em></button>
+          <button class="chip wide" type="button" data-d="2026-08-18" aria-pressed="false">8월 18일<em>화요일 · 잔여 4</em></button>
+        </div>
+      </div>
+      <div class="fld">
+        <div class="fl">3 · 접수 시각</div>
+        <div class="chips" role="group" aria-label="접수 시각 선택" id="tChips">
+          <button class="chip wide" type="button" data-t="480" aria-pressed="true">08:00<em>가장 이른 회차</em></button>
+          <button class="chip wide" type="button" data-t="520" aria-pressed="false">08:40</button>
+          <button class="chip wide" type="button" data-t="560" aria-pressed="false">09:20</button>
+          <button class="chip wide" type="button" data-t="600" aria-pressed="false">10:00<em>오전 마지막 회차</em></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ★ 시그니처 ② 예약 요약 계산기 — 칩을 고르면 즉시 재계산 -->
+    <aside class="sum rise d1" aria-live="polite">
+      <div class="st">예약 요약</div>
+      <div class="big" id="sumBig">8월 12일(수) <em>08:00</em> 접수</div>
+      <dl>
+        <div class="r"><dt>코스</dt><dd id="sCourse">기준선 플러스</dd></div>
+        <div class="r"><dt>금식 시작</dt><dd class="hl" id="sFast">8월 11일(화) 21:40</dd></div>
+        <div class="r"><dt>총 소요</dt><dd id="sDur">3시간 40분</dd></div>
+        <div class="r"><dt>판독 상담</dt><dd id="sTalk">11:00 (40분)</dd></div>
+        <div class="r"><dt>종료 예정</dt><dd id="sEnd">11:40</dd></div>
+        <!-- 기준선 리더에서 인계된 판독 — 두 시그니처가 한 흐름으로 이어지는 지점 -->
+        <div class="r"><dt>연계 재측정</dt><dd id="sLink">—</dd></div>
+        <div class="r"><dt>검진비</dt><dd id="sPrice">960,000원</dd></div>
+      </dl>
+      <p class="fastnote">금식은 접수 10시간 20분 전부터입니다. 물은 200 mL까지 허용되며, 복용 중인 혈압약은 평소대로 드시고 오시면 됩니다. 대장내시경 포함 시 전날 장정결제 복용 안내가 별도 발송됩니다.</p>
+      <a href="#book" class="btn">이 조건으로 예약 신청</a>
+    </aside>
+  </div>
+</section>
+
+<!-- ═══ footer ═══ -->
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <div class="lg">BASE<i>LINE</i></div>
+        <p>베이스라인 기준선검진센터<br>서울특별시 종로구 새문안로 9길 24, 3–5층<br>대표전화 02-6203-4180 · 검진예약 02-6203-4181</p>
+      </div>
+      <div>
+        <div class="h">진료시간</div>
+        <dl>
+          <div class="fr"><span>월–금</span><b>07:30 – 16:30</b></div>
+          <div class="fr"><span>토요일</span><b>07:30 – 12:30</b></div>
+          <div class="fr"><span>일요일 · 공휴일</span><b>휴진</b></div>
+          <div class="fr"><span>판독 상담 접수</span><b>–15:30</b></div>
+        </dl>
+      </div>
+      <div>
+        <div class="h">안내</div>
+        <dl>
+          <div class="fr"><span>검사 결과 문의</span><b>02-6203-4185</b></div>
+          <div class="fr"><span>결과지 재발급</span><b>본인 확인 후</b></div>
+          <div class="fr"><span>판독 이의 제기</span><b>수령 30일 이내</b></div>
+          <div class="fr"><span>주차</span><b>지하 3시간 무료</b></div>
+        </dl>
+      </div>
+    </div>
+    <p class="legal">
+      본 페이지에 게재된 의료광고는 의료법 제57조에 따라 의료광고 심의를 받은 내용입니다. 심의번호 제2026-서울종로-0417호.<br>
+      검사 항목·소요 시간·참고범위는 2025년 개정 참고범위를 기준으로 하며, 개인의 연령·성별·복용 약제·기저질환에 따라 판독 결과와 등급은 달라질 수 있습니다. 본 페이지의 기준선 그래프는 판독 방식을 설명하기 위한 예시 데이터이며 특정 개인의 검사 결과가 아닙니다. 검진 결과는 진단 및 치료를 대체하지 않으며, 이상 소견이 확인된 경우 반드시 의료진의 진료를 받으시기 바랍니다.<br>
+      &copy; 2026 베이스라인 기준선검진센터. 사업자등록번호 214-91-30772.
+    </p>
+  </div>
+</footer>
+
+<script>
+/* ══ 스크롤 복원 가드 ══════════════════════════════════════════════════════
+   html{scroll-behavior:smooth}는 스크롤 복원 가드를 무력화한다.
+   초기 리셋 동안만 auto로 내렸다가 되돌린다. */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){var h=document.documentElement,p=h.style.scrollBehavior;h.style.scrollBehavior='auto';
+ scrollTo(0,0);addEventListener('load',function(){scrollTo(0,0);
+ setTimeout(function(){h.style.scrollBehavior=p},60)})})();
+
+/* 캡처 모드: ?capture=1 → 정적 스냅샷용으로 펼치고 모든 모션을 끈다 (피그마 반출) */
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+var REDUCE=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+/* ══ ★ 시그니처 ① 기준선 리더 ═════════════════════════════════════════════
+   설계 의도: 슬라이더가 '값'만 바꾸면 도구가 아니라 장식이다.
+   여기서는 조작 시 ①라인 형태 ②참고범위 밴드의 높이/위치 ③점의 등급색
+   ④수치 ⑤배지 ⑥판독 문장이 동시에 다시 그려진다. */
+var YEARS=[2019,2020,2021,2022,2023,2024,2025,2026];
+var M=[
+ {n:'공복혈당',u:'mg/dL',ref:[70,99],refTxt:'70–99 mg/dL',dom:[60,140],trk:125,
+  v:[88,91,95,99,104,108,103,97],
+  s:{ok:'참고범위 안입니다. 다음 정기 검진까지 별도 조치는 없습니다.',
+     tr:'공복혈당장애 구간입니다. 전체 재검이 아니라 이 항목만 6개월 뒤 다시 봅니다.',
+     ac:'당뇨 진단 기준에 해당합니다. 내분비내과 협진으로 연결합니다.'},
+  rc:{ok:'다음 정기 검진까지 유지',tr:'6개월 뒤 재측정',ac:'내분비내과 협진 후 재측정'}},
+ {n:'LDL 콜레스테롤',u:'mg/dL',ref:[0,129],refTxt:'129 mg/dL 이하',dom:[80,200],trk:159,
+  v:[118,124,131,142,168,149,138,126],
+  s:{ok:'참고범위 안입니다. LDL은 연 1회 추적으로 충분합니다.',
+     tr:'경계 상승입니다. 식이·운동 상담 후 6개월 뒤 재측정을 권합니다.',
+     ac:'고LDL콜레스테롤혈증 구간입니다. 순환기내과 상담을 안내합니다.'},
+  rc:{ok:'연 1회 추적 유지',tr:'6개월 뒤 재측정',ac:'순환기내과 상담 후 재측정'}},
+ {n:'수축기혈압',u:'mmHg',ref:[90,119],refTxt:'90–119 mmHg',dom:[85,150],trk:139,
+  v:[112,115,118,124,129,133,127,117],
+  s:{ok:'정상 혈압입니다. 가정혈압 기록만 이어가면 됩니다.',
+     tr:'주의 혈압 구간입니다. 2주간 가정혈압을 기록해 오시면 함께 판단합니다.',
+     ac:'고혈압 1기 이상입니다. 순환기내과 진료를 안내합니다.'},
+  rc:{ok:'가정혈압 기록만 유지',tr:'2주 가정혈압 기록 후 재판단',ac:'순환기내과 진료 후 재측정'}},
+ {n:'ALT',u:'U/L',ref:[0,40],refTxt:'40 U/L 이하',dom:[10,80],trk:60,
+  v:[22,25,31,38,46,52,41,33],
+  s:{ok:'간효소 수치는 참고범위 안입니다.',
+     tr:'경도 상승입니다. 음주·체중 조정 후 3개월 뒤 재검을 권합니다.',
+     ac:'중등도 상승입니다. 간초음파와 간염 표지자 확인이 필요합니다.'},
+  rc:{ok:'연 1회 추적 유지',tr:'3개월 뒤 재검',ac:'간초음파 확인 후 재검'}}
+];
+var PX0=52,PX1=602,PY0=20,PY1=288,STEP=(PX1-PX0)/(YEARS.length-1);
+var mi=0,yi=4;
+
+var $=function(s){return document.querySelector(s)};
+var svg=$('#chart'),band=$('#band'),bandTg=$('#bandtg'),bandBg=$('#bandbg'),bandLab=$('#bandLab'),
+    grid=$('#grid'),line=$('#line'),dots=$('#dots'),xlabs=$('#xlabs'),guideG=$('#guideg'),
+    handle=$('#handle'),halo=$('#halo'),hgrp=$('#hgrp');
+
+/* 점 8개는 여기서 단 한 번만 만든다. draw()에서 innerHTML로 갈아끼우면
+   새 노드에 시작값이 없어 cx/cy 전이가 절대 발동하지 않는다. */
+var dotEls=(function(){
+ var h='',i;
+ for(i=0;i<YEARS.length;i++)h+='<circle class="dot" cx="52" cy="288" r="3.6"></circle>';
+ dots.innerHTML=h;return [].slice.call(dots.children);
+})();
+/* transform은 SVG에서 전이되는 프로퍼티다 — 프레젠테이션 속성 대신 style로
+   써야 전이 발동이 보장된다(px = 사용자 단위) */
+function tf(el,x,y){el.style.transform='translate('+x+'px,'+y+'px)'}
+
+function xOf(i){return PX0+i*STEP}
+function yOf(v,m){var d=m.dom;return PY1-(v-d[0])/(d[1]-d[0])*(PY1-PY0)}
+function clampY(y){return Math.max(PY0,Math.min(PY1,y))}
+/* 등급 판정 — 참고범위 안이면 관찰, 항목별 조치 임계 미만이면 추적, 그 이상이면 조치 */
+function gradeOf(v,m){if(v>=m.ref[0]&&v<=m.ref[1])return'ok';return v<=m.trk?'tr':'ac'}
+var GN={ok:'관찰',tr:'추적',ac:'조치'};
+
+function draw(){
+ var m=M[mi],v=m.v[yi],g=gradeOf(v,m);
+
+ /* 참고범위 밴드 — 항목이 바뀌면 밴드의 높이와 위치가 함께 이동한다 */
+ var bt=clampY(yOf(m.ref[1],m)),bb=clampY(yOf(m.ref[0],m));
+ band.setAttribute('y',bt);band.setAttribute('height',Math.max(2,bb-bt));
+ tf(bandTg,0,bt);tf(bandBg,0,bb);
+ bandLab.setAttribute('y',bt-7);bandLab.textContent='참고범위 '+m.refTxt;
+ $('#refTxt').textContent=m.refTxt;
+
+ /* y축 눈금 4단 */
+ var gh='',i,tv,ty;
+ for(i=0;i<4;i++){
+  tv=m.dom[0]+(m.dom[1]-m.dom[0])*i/3;ty=yOf(tv,m);
+  gh+='<line class="gridline" x1="52" y1="'+ty.toFixed(1)+'" x2="602" y2="'+ty.toFixed(1)+'" opacity="'+(i===0?0:.55)+'"/>';
+  gh+='<text class="cy-lab" x="46" y="'+(ty+4).toFixed(1)+'" text-anchor="end">'+Math.round(tv)+'</text>';
+ }
+ grid.innerHTML=gh;
+
+ /* 라인 + 점 */
+ var d='',x,y,el;
+ for(i=0;i<YEARS.length;i++){
+  x=xOf(i);y=yOf(m.v[i],m);
+  d+=(i?' L':'M')+x.toFixed(1)+' '+y.toFixed(1);
+  el=dotEls[i];                                  /* 재생성 금지 — 좌표만 갱신 */
+  el.setAttribute('class','dot g-'+gradeOf(m.v[i],m));
+  el.setAttribute('cx',x.toFixed(1));el.setAttribute('cy',y.toFixed(1));
+  el.setAttribute('r',i===yi?0:3.6);
+ }
+ line.setAttribute('d',d);
+
+ var xl='';
+ for(i=0;i<YEARS.length;i++){
+  xl+='<text class="cx-lab" x="'+xOf(i).toFixed(1)+'" y="310" text-anchor="middle" opacity="'+(i===yi?1:.6)+'">'+
+      (i===yi?'<tspan font-weight="700">'+YEARS[i]+'</tspan>':YEARS[i])+'</text>';
+ }
+ xlabs.innerHTML=xl;
+
+ var hx=xOf(yi),hy=yOf(v,m);
+ tf(guideG,hx,+hy.toFixed(1));                    /* 핸들과 같은 곡선으로 따라간다 */
+ handle.setAttribute('cx',hx);handle.setAttribute('cy',hy.toFixed(1));
+ halo.setAttribute('cx',hx);halo.setAttribute('cy',hy.toFixed(1));
+ handle.style.fill=g==='tr'?'var(--amber)':(g==='ac'?'var(--ink)':'var(--pt)');
+ hgrp.setAttribute('aria-valuenow',YEARS[yi]);
+ hgrp.setAttribute('aria-valuetext',YEARS[yi]+'년 '+m.n+' '+v+' '+m.u+' · 판독 '+GN[g]);
+
+ /* 판독부 — 수치·배지·문장이 함께 바뀐다 */
+ $('#yrTag').textContent=YEARS[yi]+'년';
+ $('#val').textContent=v;
+ $('#unit').textContent=m.u;
+ $('#yrChip').textContent=YEARS[yi];
+ var dl=$('#delta');
+ if(yi===0){dl.textContent='기준선 최초 등록 연도 · 비교 대상 없음'}
+ else{var df=v-m.v[yi-1];
+  dl.textContent='전년 대비 '+(df>0?'+':'')+(df===0?'변화 없음':df+' '+m.u)}
+ var b=$('#badge');b.className='badge g-'+g;b.textContent=GN[g];
+ var vd=$('#verdict');
+ vd.innerHTML='<b>'+m.n+' · '+GN[g]+'</b> — '+m.s[g];
+ if(!REDUCE){vd.classList.remove('flash');void vd.offsetWidth;vd.classList.add('flash')}
+}
+
+/* 항목 칩 */
+document.querySelectorAll('#mchips .chip').forEach(function(c){
+ c.addEventListener('click',function(){
+  document.querySelectorAll('#mchips .chip').forEach(function(o){o.setAttribute('aria-pressed','false')});
+  c.setAttribute('aria-pressed','true');mi=+c.dataset.m;draw();
+ });
+});
+/* 연도 슬라이더 */
+var yrIn=$('#yr');
+yrIn.addEventListener('input',function(){yi=+yrIn.value;draw()});
+
+/* 라인 위 포인트 드래그 — 포인터/터치 (svg 좌표계로 환산) */
+function setFromClientX(cx){
+ var r=svg.getBoundingClientRect();
+ var vx=(cx-r.left)/r.width*620;
+ var i=Math.round((vx-PX0)/STEP);
+ i=Math.max(0,Math.min(YEARS.length-1,i));
+ if(i!==yi){yi=i;yrIn.value=i;draw()}
+}
+var dragging=false;
+svg.addEventListener('pointerdown',function(e){
+ dragging=true;if(svg.setPointerCapture)svg.setPointerCapture(e.pointerId);
+ setFromClientX(e.clientX);hgrp.focus();e.preventDefault();
+});
+svg.addEventListener('pointermove',function(e){if(dragging)setFromClientX(e.clientX)});
+addEventListener('pointerup',function(){dragging=false});
+addEventListener('pointercancel',function(){dragging=false});
+/* 키보드 — 화살표로 연도 이동 (aria-valuenow 갱신) */
+hgrp.addEventListener('keydown',function(e){
+ var k=e.key,n=yi;
+ if(k==='ArrowRight'||k==='ArrowUp')n=yi+1;
+ else if(k==='ArrowLeft'||k==='ArrowDown')n=yi-1;
+ else if(k==='Home')n=0;else if(k==='End')n=YEARS.length-1;else return;
+ e.preventDefault();yi=Math.max(0,Math.min(YEARS.length-1,n));yrIn.value=yi;draw();
+});
+draw();
+
+/* ★ 시그니처 ①→② 인계 — 리더에서 읽은 항목·등급·재측정 간격이 예약 요약
+   카드의 입력이 된다. 두 위젯이 서로를 모르는 독립 부품이면 계산기가 두 개
+   놓인 것에 불과하다. 여기서는 그래프에서 집은 판독이 예약 조건으로 확정된다. */
+var linkTxt='—';
+$('#toBook').addEventListener('click',function(){
+ var m=M[mi],v=m.v[yi],g=gradeOf(v,m);
+ linkTxt=m.n+' · '+GN[g]+' · '+m.rc[g];
+ recalc();
+ var b=document.getElementById('book');
+ if(b.scrollIntoView)b.scrollIntoView({behavior:REDUCE?'auto':'smooth',block:'start'});
+});
+
+/* ══ ★ 시그니처 ② 예약 요약 계산기 ════════════════════════════════════════
+   날짜·시각·코스 칩을 고르면 금식 시작 시각과 총 소요·상담·종료 시각이
+   즉시 재계산되어 요약 카드가 통째로 갱신된다. */
+/* dur = 접수→종료 총 소요, talk = 판독 상담 길이(종료 직전에 붙는다).
+   상담 시작 = 접수 + dur - talk. talk을 상수 20으로 못박으면 ⑨코스의
+   '판독 상담 25/40분'·⑥타임라인과 요약 카드가 서로 반박한다. */
+var COURSE=[{n:'기준선 베이직',dur:160,talk:25,price:'480,000원'},
+            {n:'기준선 플러스',dur:220,talk:40,price:'960,000원'}];
+var FAST=620; /* 금식 리드타임 10시간 20분 */
+var ci=1,di='2026-08-12',ti=480;
+var WD=['일','월','화','수','목','금','토'];
+function hm(mins){mins=((mins%1440)+1440)%1440;
+ return String(Math.floor(mins/60)).padStart(2,'0')+':'+String(mins%60).padStart(2,'0')}
+function durTxt(m){var h=Math.floor(m/60),mm=m%60;return (h?h+'시간 ':'')+(mm?mm+'분':'')}
+function recalc(){
+ var c=COURSE[ci],p=di.split('-');
+ var start=new Date(+p[0],+p[1]-1,+p[2],0,0,0);
+ var fastAbs=ti-FAST;                       /* 음수면 전날 */
+ var fd=new Date(start);fd.setDate(fd.getDate()+Math.floor(fastAbs/1440));
+ var sameDay=fastAbs>=0;
+ $('#sumBig').innerHTML=(start.getMonth()+1)+'월 '+start.getDate()+'일('+WD[start.getDay()]+') <em>'+hm(ti)+'</em> 접수';
+ $('#sCourse').textContent=c.n;
+ $('#sFast').textContent=(sameDay?'당일 ':(fd.getMonth()+1)+'월 '+fd.getDate()+'일('+WD[fd.getDay()]+') ')+hm(fastAbs);
+ $('#sDur').textContent=durTxt(c.dur);
+ $('#sTalk').textContent=hm(ti+c.dur-c.talk)+' ('+c.talk+'분)';
+ $('#sEnd').textContent=hm(ti+c.dur);
+ $('#sPrice').textContent=c.price;
+ $('#sLink').textContent=linkTxt;                 /* 리더에서 인계된 판독 */
+ if(!REDUCE){var s=$('.sum dl');s.classList.remove('flash');void s.offsetWidth;s.classList.add('flash')}
+}
+function bindChips(sel,fn){
+ document.querySelectorAll(sel+' .chip').forEach(function(c){
+  c.addEventListener('click',function(){
+   document.querySelectorAll(sel+' .chip').forEach(function(o){o.setAttribute('aria-pressed','false')});
+   c.setAttribute('aria-pressed','true');fn(c);recalc();
+  });
+ });
+}
+bindChips('#cChips',function(c){ci=+c.dataset.c});
+bindChips('#dChips',function(c){di=c.dataset.d});
+bindChips('#tChips',function(c){ti=+c.dataset.t});
+recalc();
+
+/* ══ 스크롤 리빌 + 카운트업 ═══════════════════════════════════════════════ */
+function fmt(n,dec,thou){
+ var s=dec?n.toFixed(dec):String(Math.round(n));
+ return thou?s.replace(/\B(?=(\d{3})+(?!\d))/g,','):s;
+}
+function runCount(el){
+ if(el.dataset.done)return;el.dataset.done='1';
+ var to=parseFloat(el.dataset.to),dec=+(el.dataset.dec||0),thou=el.dataset.fmt==='1';
+ if(REDUCE){el.textContent=fmt(to,dec,thou);return}
+ var t0=performance.now(),dur=1000;
+ (function tick(t){var k=Math.min(1,(t-t0)/dur);var e=1-Math.pow(1-k,3);
+  el.textContent=fmt(to*e,dec,thou);
+  if(k<1)requestAnimationFrame(tick);else el.textContent=fmt(to,dec,thou)})(t0);
+}
+if(REDUCE){
+ document.querySelectorAll('.rise').forEach(function(el){el.classList.add('vis')});
+ document.querySelectorAll('.countup').forEach(runCount);
+}else{
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){
+  if(!e.isIntersecting)return;
+  e.target.classList.add('vis');
+  if(e.target.classList.contains('countup'))runCount(e.target);
+  else e.target.querySelectorAll&&e.target.querySelectorAll('.countup').forEach(runCount);
+  io.unobserve(e.target);
+ })},{rootMargin:'0px 0px -8% 0px',threshold:.08});
+ document.querySelectorAll('.rise,.countup').forEach(function(el){io.observe(el)});
+ /* load 폴백 — 첫 화면 안 요소는 IO를 기다리지 않고 즉시 표시 */
+ addEventListener('load',function(){
+  document.querySelectorAll('.rise').forEach(function(el){
+   if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis')});
+  document.querySelectorAll('.countup').forEach(function(el){
+   if(el.getBoundingClientRect().top<innerHeight)runCount(el)});
+ });
+}
+/* 헤드라인 언더마커 */
+requestAnimationFrame(function(){$('#h1').classList.add('go')});
+
+/* ══ 인덱스 레일 활성 표시 ═══════════════════════════════════════════════ */
+(function(){
+ var links=[].slice.call(document.querySelectorAll('#rail a'));
+ var cats=links.map(function(a){return document.getElementById(a.dataset.t)});
+ if(!cats.length||!cats[0])return;
+ function mark(id){links.forEach(function(a){a.classList.toggle('on',a.dataset.t===id)})}
+ mark(links[0].dataset.t);
+ if(REDUCE)return;
+ var cio=new IntersectionObserver(function(es){
+  es.forEach(function(e){if(e.isIntersecting)mark(e.target.id)});
+ },{rootMargin:'-18% 0px -62% 0px',threshold:0});
+ cats.forEach(function(c){if(c)cio.observe(c)});
+})();
+
+/* ══ nav 괘선 — 스크롤 시에만 진해진다 (그림자 없이 상태만 표시) ═════════ */
+addEventListener('scroll',function(){
+ $('#nav').style.borderBottomColor=scrollY>12?'var(--line2)':'var(--line)';
+},{passive:true});
+</script>
+
+<!--
+  추적 정보 (화면 비노출)
+  run: 19 / slug: baseline / 카테고리: 의료·헬스케어
+  구조 프리셋: P14 — 표제부 → 히어로+툴 → 등급정의 → 인덱스
+              → 판독의 → 타임라인 → 스탯 → 후기 → 코스 → 예약폼
+
+  ※ 비교 대상 정정: 직전 동일 프리셋은 P12/P13이 아니라 RUN 17(basis)이다.
+    RUN 17이 P14(Disclosure Sheet)와 "문서로 행세하는 랜딩" 아카이타입을
+    이미 선점했다. P12/P13과만 비교하면 재탕을 감추는 비교가 된다.
+  RUN 17(P14) 대비 실제 delta — 정직하게 적는다:
+   [동일·재사용] 타입 스케일 12단 / 간격 스케일 10단(주석 문구까지 동일) ·
+     1번 모듈을 히어로가 아닌 문서 메타 밴드로 두는 오프닝 · '단일 포인트색에
+     서사 규칙을 부여한다'는 색 주석 프레이밍 · .rise/.vis + countup + IO +
+     load 폴백 스크립트 · "시그니처 ①계산기 + ②조작형 위젯" 명명 규약
+   [갈라진 축] ① RUN 17이 의도적으로 버린 큰 클로징 CTA를 여기서는 되살리되,
+     배너가 아니라 리더의 출력을 받는 폼으로 만들어 두 시그니처를 한 흐름으로
+     묶었다 — #toBook이 리더의 항목·등급·재측정 간격을 예약 요약의 '연계 재측정'
+     행으로 인계한다(RUN 17의 두 위젯은 서로를 모르는 독립 부품이었다).
+     ② 서사축: 공시된 숫자(RUN 17) → 개인의 시계열 기준선(여기).
+   [남은 부채] 토큰 레이어는 여전히 공유 자산이다. 구조를 P15로 부르지 않는다.
+
+  시그니처: ① 기준선 리더(칩+슬라이더+드래그, 밴드/라인/배지/문장 동시 갱신)
+            ② 예약 요약 계산기(금식 시작 시각 역산) — ①의 판독을 인계받는다
+  이미지 6컷: 1666214280391(판독실) / 1631217868264(상담) / 1519494026892(접수)
+             1584982751601(계측) / 1530026405186(모형·그레이스케일)
+             1587351021759(회송 협력병원·그레이스케일)
+  ※ 뒤 두 컷은 원본 채도가 '적색 금지' 규칙과 충돌 → filter:grayscale(1)로 중성화
+-->
+</body></html>

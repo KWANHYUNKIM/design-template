@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CUMUL 큐물 — 사진 한 장으로 구름 10속을 판별하는 주머니 속 도감</title>
+<meta name="description" content="이름을 알면 하늘이 예보가 된다. 구름 판별 앱 CUMUL 큐물.">
+<!-- .js 플래그는 반드시 첫 페인트 전에 붙어야 한다. 리빌(.rise)의 opacity:0이
+     html.js로 스코핑돼 있어, 여기서 붙이면 JS 없이도 본문이 그대로 보이고
+     JS가 있을 때는 콘텐츠가 번쩍였다 사라지는 플래시가 생기지 않는다 -->
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   CUMUL — 포켓 필드 가이드 / 앱 핸드북
+   캐논은 390px 세로. 데스크톱은 "주석 달린 펼침면" 폴백이다:
+   중앙 430px 컬럼(= 기기)이 그대로 유지되고, 좌우 여백에 설계 주석이 붙는다.
+   → 그래서 반응형 분기가 보통과 반대다. 넓어질수록 컬럼이 커지는 게 아니라
+     주석이 나타난다. 모바일에서 잘린 정보가 아니라, 데스크톱에서 더해진 정보.
+
+   색 원칙(직전 RUN 학습 계승): 색이 제품이면 UI는 무채색.
+   하늘 사진이 전부 쿨 블루라 UI까지 파랗게 하면 사진과 싸운다.
+   UI = 웜 뉴스프린트 종이 + 쿨 슬레이트 중성. 채도는 오직 사진에만.
+   포인트색 #c2561f는 적란운 밑면에 걸린 저녁빛 — 사진 안에 실제로 있는 웜 톤.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+--sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+--mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+
+/* 색 — 포인트 1개 + 중성 램프. 순백 없음 */
+--pt:#c2561f;              /* 적란운 밑면 저녁빛 앰버-테라코타 */
+--pt-d:#9d4317;
+--paper:#efece6;           /* 야외 수첩 뉴스프린트 크림 */
+--paper2:#f6f4ef;
+--line:#dcd9d2;
+--line2:#c9c5bc;
+--mut:#616a72;             /* 쿨 슬레이트 — 웜 종이와 대비되는 중성. #efece6 위 4.67:1 (AA) */
+--slate:#4b5560;
+--ink:#12171b;
+--nink:#0c0f12;            /* 야간 관측 모드 */
+--nink2:#161b20;
+--nline:#242b31;
+
+/* 타입 스케일 — 모듈러 1.25배(base 16) + 디스플레이 3단 */
+--t-xs:12px;--t-sm:14px;--t-base:16px;--t-md:20px;--t-lg:25px;--t-xl:31px;
+--t-2xl:39px;--t-3xl:49px;--t-4xl:61px;--t-d1:76px;--t-d2:96px;--t-d3:132px;
+
+/* 간격 스케일 — 4배수 */
+--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+
+/* 캐논 폭 — 390px 기기 + 좌우 20px 여유 */
+--col:430px;
+--bar:72px;                /* 하단 상주 엄지 바 높이 */
+--gut:var(--s5);           /* 컬럼 좌우 거터 — .col과 상주 바가 같은 정렬선을 쓴다 */
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:var(--sans);background:var(--paper);color:var(--ink);
+  -webkit-font-smoothing:antialiased;line-height:1.6;
+  overflow-x:hidden;                       /* 가로 스크롤 절대 금지 */
+  word-break:keep-all;overflow-wrap:break-word;  /* 한글 단어 중간 끊김 방지 */
+  padding-bottom:calc(var(--bar) + env(safe-area-inset-bottom));
+}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font-family:inherit;color:inherit}
+::selection{background:var(--pt);color:var(--paper2)}
+
+/* 그레인 한 겹 — 뉴스프린트 질감 */
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.4;mix-blend-mode:multiply;z-index:80;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E")}
+
+/* 스크롤 리빌 — 고유명 .rise/.vis (.in 금지: 레이아웃 클래스와 충돌)
+   ★ html.js로 스코핑: JS가 없거나 실패하면 .rise는 처음부터 보이는 상태로 남는다.
+     (스코핑이 없으면 opacity:0이 영구 고착되어 본문 전체가 사라진다) */
+.rise{transition:.8s cubic-bezier(.2,.7,.2,1)}
+html.js .rise{opacity:0;transform:translateY(22px)}
+html.js .rise.vis{opacity:1;transform:none}
+
+/* ── 모듈 골격 ────────────────────────────────────────────────
+   모든 섹션이 같은 3열 그리드를 공유한다: [주석] [기기 컬럼] [주석]
+   1080px 미만에서는 주석이 사라지고 컬럼만 남는다 = 모바일 캐논 */
+.mod{display:grid;grid-template-columns:1fr minmax(0,var(--col)) 1fr;position:relative}
+.mod>*{min-width:0}                       /* Grid 자식 min-width:0 — 이미지가 텍스트 열을 찌그러뜨리는 사고 방지 */
+.col{grid-column:2;padding:var(--s8) var(--gut);position:relative}
+.note{display:none;font-family:var(--mono);font-size:var(--t-xs);line-height:1.85;color:var(--mut);
+  letter-spacing:.01em;padding:var(--s9) var(--s6);align-self:start}
+.note b{display:block;color:var(--slate);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:var(--s2)}
+.note.nl{grid-column:1;text-align:right;border-right:1px dashed var(--line2)}
+.note.nr{grid-column:3;border-left:1px dashed var(--line2)}
+.note em{font-style:normal;color:var(--pt)}
+
+/* 공통 타이포 */
+.eyb{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.18em;text-transform:uppercase;color:var(--mut);margin:0}
+.eyb i{font-style:normal;color:var(--pt-d)}   /* 12px 본문성 텍스트라 --pt(3.83:1) 대신 --pt-d(5.48:1) */
+h2{font-size:var(--t-xl);font-weight:800;letter-spacing:-.035em;line-height:1.18;margin:var(--s3) 0 0}
+.lead{font-size:var(--t-base);color:var(--slate);margin:var(--s4) 0 0;max-width:34em}
+.mn{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.06em;color:var(--mut)}
+
+/* ── 01 topbar ─────────────────────────────────────────────── */
+.top{position:sticky;top:0;z-index:60;background:rgba(239,236,230,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .col{padding-top:var(--s3);padding-bottom:var(--s3);display:flex;align-items:center;gap:var(--s3)}
+.wm{font-size:var(--t-md);font-weight:900;letter-spacing:-.05em;line-height:1}
+.wm i{font-style:normal;color:var(--pt)}
+.wm span{font-size:var(--t-xs);font-weight:600;letter-spacing:.2em;color:var(--mut);margin-left:var(--s2);vertical-align:2px}
+.top .sp{flex:1}
+.ratechip{display:flex;align-items:center;gap:var(--s2);border:1px solid var(--line2);border-radius:100px;padding:5px 11px;white-space:nowrap}
+.ratechip b{font-size:var(--t-sm);font-weight:800;letter-spacing:-.02em}
+.ratechip u{text-decoration:none;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut)}
+.stars{color:var(--pt);font-size:var(--t-xs);letter-spacing:1px}
+
+/* ── 02 handson-hero ───────────────────────────────────────── */
+.hero .col{padding-top:var(--s7);padding-bottom:var(--s8)}
+.h1{font-size:var(--t-2xl);font-weight:900;letter-spacing:-.05em;line-height:1.06;margin:var(--s4) 0 0}
+.h1 em{font-style:normal;color:var(--pt)}     /* 강조어는 페이지 통틀어 이것 하나 */
+.hero .sub{font-size:var(--t-sm);color:var(--slate);margin:var(--s4) 0 0;max-width:30em}
+/* 폰 + 세로 다이얼: 읽기 전에 만지게 하는 배치. 헤드라인은 위, 장비는 아래 — 비대칭 */
+.rig{display:flex;gap:var(--s4);align-items:stretch;margin-top:var(--s6);position:relative}
+.phonewrap{flex:1 1 auto;min-width:0;position:relative}
+
+/* 폰 목업 */
+.phone{position:relative;width:100%;aspect-ratio:9/18.6;background:#0b0e11;border-radius:36px;padding:6px;
+  box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 18px 44px -18px rgba(18,23,27,.55),0 0 0 1px rgba(18,23,27,.28)}
+.screen{position:relative;width:100%;height:100%;border-radius:30px;overflow:hidden;background:#0b0e11;isolation:isolate}
+.scr{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .38s ease}
+.scr.on{opacity:1;visibility:visible}
+/* 카메라 판정 뷰 */
+.sky{position:absolute;inset:0}
+.sky img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s ease}
+.sky img.on{opacity:1}
+.skyveil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,14,17,.55) 0%,rgba(11,14,17,0) 26%,rgba(11,14,17,.05) 46%,rgba(11,14,17,.86) 84%)}
+.sbar{position:absolute;top:0;left:0;right:0;height:26px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 14px;font-family:var(--mono);font-size:var(--t-xs);color:#f2f4f6;text-shadow:0 1px 6px rgba(0,0,0,.7);z-index:3}
+.sbar u{text-decoration:none;letter-spacing:.02em;opacity:.85}
+/* 판정 크로스헤어 */
+.xh{position:absolute;left:16%;right:16%;top:26%;height:24%;z-index:2}
+.xh i{position:absolute;width:16px;height:16px;border:1.5px solid rgba(242,244,246,.9)}
+.xh i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}
+.xh i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
+.xh i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}
+.xh i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
+/* 스캔라인 미세 루프 */
+.scan{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(180deg,rgba(242,244,246,.055) 0 1px,transparent 1px 4px);
+  animation:scanmove 5.5s linear infinite}
+@keyframes scanmove{to{background-position-y:44px}}
+/* 화면 하단 판정 카드 = 엄지 영역 */
+.vcard{position:absolute;left:10px;right:10px;bottom:52px;z-index:4;
+  background:rgba(11,14,17,.5);backdrop-filter:blur(9px);border:1px solid rgba(242,244,246,.16);border-radius:16px;padding:11px 13px 13px}
+.vcard .r1{display:flex;align-items:baseline;gap:var(--s2)}
+.vcard .nm{font-size:var(--t-md);font-weight:800;letter-spacing:-.03em;color:#f6f7f8;line-height:1.1}
+.vcard .ab{font-family:var(--mono);font-size:var(--t-xs);color:var(--paper2);background:var(--pt);border-radius:4px;padding:2px 6px;letter-spacing:.06em;font-weight:700}
+.vcard .r2{display:flex;justify-content:space-between;gap:var(--s2);font-family:var(--mono);font-size:var(--t-xs);
+  color:#dfe3e6;margin-top:7px;letter-spacing:.02em;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.cfbar{height:3px;border-radius:3px;background:rgba(242,244,246,.2);margin-top:9px;overflow:hidden}
+.cfbar i{display:block;height:100%;width:0;background:var(--pt);transition:width .45s cubic-bezier(.2,.7,.2,1)}
+.cflab{display:flex;justify-content:space-between;font-family:var(--mono);font-size:var(--t-xs);color:#c6ccd1;margin-top:5px}
+.cflab b{color:#f6f7f8;font-weight:700}
+/* 탭바 — 실제로 화면을 바꾼다 */
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:46px;z-index:5;display:flex;
+  background:rgba(11,14,17,.72);backdrop-filter:blur(10px);border-top:1px solid rgba(242,244,246,.13)}
+.tabbar button{flex:1;background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  font-family:var(--mono);font-size:var(--t-xs);color:#8f979e;letter-spacing:.04em;transition:color .2s;padding:0}
+.tabbar button svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.6}
+.tabbar button[aria-selected=true]{color:var(--pt)}
+/* 도감 그리드 화면 */
+.gscr{position:absolute;inset:0;background:#0f1317;padding:32px 10px 52px;overflow:hidden}
+.ggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.ggrid>*{min-width:0}
+.gcell{position:relative;aspect-ratio:1;border-radius:7px;overflow:hidden;background:#1a2026}
+.gcell img{width:100%;height:100%;object-fit:cover}
+.gcell b{position:absolute;left:0;right:0;bottom:0;font-family:var(--mono);font-size:var(--t-xs);font-weight:600;
+  color:#f2f4f6;background:linear-gradient(180deg,transparent,rgba(11,14,17,.85));padding:8px 5px 3px;text-align:center;letter-spacing:.02em}
+.gscr .gh{font-family:var(--mono);font-size:var(--t-xs);color:#8f979e;letter-spacing:.1em;margin:0 0 9px;padding-left:2px}
+/* 기록 타임라인 화면 */
+.tscr{position:absolute;inset:0;background:#0f1317;padding:32px 12px 52px}
+.tscr .gh{font-family:var(--mono);font-size:var(--t-xs);color:#8f979e;letter-spacing:.1em;margin:0 0 10px}
+.trow{display:flex;gap:9px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #1e252b}
+.trow .dot{flex:0 0 6px;width:6px;height:6px;border-radius:50%;background:var(--pt);margin-top:6px}
+.trow .tx{min-width:0}
+.trow .tx b{display:block;font-size:var(--t-sm);font-weight:700;color:#eef1f3;letter-spacing:-.01em;line-height:1.3}
+.trow .tx u{text-decoration:none;display:block;font-family:var(--mono);font-size:var(--t-xs);color:#7f878e;margin-top:2px}
+
+/* 플로팅 판정 배지 — 폰 밖으로 살짝 흘러나온 비대칭 디테일 */
+.fbadge{position:absolute;z-index:9;top:14%;left:-10px;background:var(--paper2);border:1px solid var(--line2);
+  border-radius:12px;padding:7px 11px;box-shadow:0 10px 26px -14px rgba(18,23,27,.6);white-space:nowrap}
+.fbadge b{display:block;font-family:var(--mono);font-size:var(--t-xs);color:var(--pt-d);letter-spacing:.1em;font-weight:700}
+.fbadge u{text-decoration:none;display:block;font-size:var(--t-sm);font-weight:800;letter-spacing:-.02em;margin-top:1px}
+
+/* 세로 고도 다이얼 */
+.dial{flex:0 0 74px;position:relative;touch-action:none;cursor:grab;user-select:none;outline:none;padding:10px 0}
+.dial:active{cursor:grabbing}
+.dial:focus-visible .knob{box-shadow:0 0 0 3px var(--paper),0 0 0 5px var(--pt)}
+.dtrk{position:absolute;left:20px;top:16px;bottom:16px;width:2px;background:var(--line2)}
+.dfill{position:absolute;left:20px;bottom:16px;width:2px;background:var(--pt);height:0}
+.dial .tick{position:absolute;left:26px;transform:translateY(-50%);font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);white-space:nowrap;letter-spacing:.02em}
+.dial .tick::before{content:'';position:absolute;left:-9px;top:50%;width:6px;height:1px;background:var(--line2)}
+.knob{position:absolute;left:21px;width:30px;height:30px;border-radius:50%;background:var(--pt);
+  transform:translate(-50%,-50%);box-shadow:0 6px 16px -6px rgba(194,86,31,.9);display:flex;align-items:center;justify-content:center}
+.knob::after{content:'';width:12px;height:2px;background:var(--paper2);box-shadow:0 -4px 0 var(--paper2),0 4px 0 var(--paper2)}
+/* 다이얼 상단 판독값 */
+.readout{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s3);margin-top:var(--s5);
+  border-top:1px solid var(--line);padding-top:var(--s3)}
+.readout .big{font-family:var(--mono);font-size:var(--t-lg);font-weight:700;letter-spacing:-.03em;line-height:1;white-space:nowrap}
+.readout .big span{font-size:var(--t-sm);color:var(--mut);margin-left:2px}
+.readout .rl{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:5px}
+.hint{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin:var(--s3) 0 0;letter-spacing:.02em}
+.hint i{font-style:normal;color:var(--pt-d)}
+
+/* ── 03 verdict-band ───────────────────────────────────────── */
+.verdict{background:var(--ink);color:var(--paper2)}
+.verdict .col{padding-top:var(--s7);padding-bottom:var(--s7)}
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#2a3138;border:1px solid #2a3138;margin-top:var(--s5)}
+.vgrid>*{min-width:0;background:var(--ink);padding:var(--s4) var(--s4) var(--s5)}
+.vg .n{font-size:var(--t-lg);font-weight:900;letter-spacing:-.04em;line-height:1.1}
+.vg .n .u{font-size:var(--t-md);color:#98a1a9}
+.vg .st{color:var(--pt);font-size:var(--t-xs);letter-spacing:2px;margin-top:2px}
+.vg .l{font-family:var(--mono);font-size:var(--t-xs);color:#98a1a9;margin-top:7px;letter-spacing:.02em}
+.verdict .eyb{color:#8d949b}
+.verdict h2{color:var(--paper2)}
+.quote{border-left:2px solid var(--pt);padding-left:var(--s4);margin-top:var(--s5)}
+.quote p{font-size:var(--t-base);color:#d8dde1;margin:0;line-height:1.65}
+.quote .who{font-family:var(--mono);font-size:var(--t-xs);color:#98a1a9;margin-top:var(--s3);letter-spacing:.02em}
+
+/* ── 04 snap-story ─────────────────────────────────────────── */
+.story .col{padding-top:var(--s8);padding-bottom:var(--s8)}
+.snap{position:relative;margin-top:var(--s5);height:74svh;min-height:460px;border-radius:26px;overflow:hidden;
+  overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;background:#0b0e11;
+  box-shadow:0 0 0 1px rgba(18,23,27,.25)}
+.snap::-webkit-scrollbar{width:0;display:none}
+.snap{scrollbar-width:none}
+.snapwrap{position:relative}   /* 도트는 스크롤러 바깥에 둔다 — 안에 넣으면 같이 스크롤돼 사라진다 */
+.pan{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden}
+.pan img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pan .sc{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,14,17,.62) 0%,rgba(11,14,17,.02) 30%,rgba(11,14,17,.1) 48%,rgba(11,14,17,.9) 88%)}
+/* 사진 위 모노 캡션은 어두운 중성색 금지 — 밝은 값 + 그림자 */
+.pan .sbar{color:#f2f4f6}
+.pcard{position:absolute;left:14px;right:14px;bottom:16px;z-index:3}
+.pcard .tag{display:inline-block;font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;font-weight:700;
+  background:var(--pt);color:var(--paper2);padding:3px 8px;border-radius:4px}
+.pcard .tag.q{background:rgba(242,244,246,.9);color:var(--ink)}
+.pcard h3{font-size:var(--t-lg);font-weight:800;letter-spacing:-.035em;color:#f6f7f8;margin:var(--s3) 0 0;line-height:1.2;
+  text-shadow:0 2px 14px rgba(0,0,0,.5)}
+.pcard p{font-size:var(--t-sm);color:#dde1e5;margin:var(--s2) 0 0;text-shadow:0 1px 10px rgba(0,0,0,.6);max-width:26em}
+.pcard .mrow{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);font-family:var(--mono);font-size:var(--t-xs);
+  color:#e6eaed;margin-top:var(--s3);text-shadow:0 1px 8px rgba(0,0,0,.7)}
+.dots{position:absolute;right:9px;top:50%;transform:translateY(-50%);z-index:6;display:flex;flex-direction:column;gap:6px}
+.dots i{width:5px;height:5px;border-radius:50%;background:rgba(242,244,246,.4);transition:.25s}
+.dots i.on{background:var(--pt);transform:scale(1.6)}
+
+/* ── 05 codex-rows ─────────────────────────────────────────── */
+.codex .col{padding-top:var(--s8);padding-bottom:var(--s8);border-top:1px solid var(--line)}
+.plate{position:relative;aspect-ratio:16/10;border-radius:14px;overflow:hidden;margin-top:var(--s5);background:#1a2026}
+.plate img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s ease}
+.plate img.on{opacity:1}
+.plate .pl{position:absolute;left:12px;bottom:11px;z-index:2;font-family:var(--mono);font-size:var(--t-xs);
+  color:#f2f4f6;letter-spacing:.1em;text-shadow:0 1px 10px rgba(0,0,0,.8)}
+.rows{margin-top:var(--s4);border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:1fr auto;gap:var(--s3);align-items:center;width:100%;
+  padding:var(--s4) var(--s1);background:none;border:0;border-bottom:1px solid var(--line);cursor:pointer;text-align:left;transition:.2s}
+.row>*{min-width:0;display:block}
+.row .sub{display:block}
+.row:hover,.row.act{background:var(--paper2);padding-left:var(--s3);padding-right:var(--s3)}
+.row .nm{font-size:var(--t-md);font-weight:800;letter-spacing:-.03em;line-height:1.15;display:flex;align-items:baseline;gap:var(--s2)}
+.row .nm u{text-decoration:none;font-family:var(--mono);font-size:var(--t-xs);font-weight:700;letter-spacing:.08em;color:var(--mut)}
+.row.act .nm u,.row:hover .nm u{color:var(--pt)}
+.row .sub{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:3px;letter-spacing:.02em}
+.row .acc{text-align:right;white-space:nowrap}
+.row .acc b{font-family:var(--mono);font-size:var(--t-md);font-weight:700;letter-spacing:-.02em;display:block;line-height:1}
+.row .acc u{text-decoration:none;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);display:block;margin-top:3px}
+
+/* ── 06 thumbzone ──────────────────────────────────────────── */
+.thumb .col{padding-top:var(--s8);padding-bottom:var(--s8);border-top:1px solid var(--line)}
+.tz{display:grid;grid-template-columns:1fr 1fr;gap:var(--s5);margin-top:var(--s6);align-items:center}
+.tz>*{min-width:0}
+.tzsvg{width:100%;height:auto;display:block}
+.tzsvg .lab{font-family:var(--mono);font-size:var(--t-xs);fill:var(--mut);letter-spacing:.06em}
+.tzsvg .lab.hot{fill:var(--pt)}
+.tzlist{list-style:none;margin:0;padding:0}
+.tzlist li{font-size:var(--t-sm);color:var(--slate);padding:var(--s3) 0;border-bottom:1px solid var(--line);line-height:1.5}
+.tzlist li b{display:block;font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;color:var(--ink);text-transform:uppercase;margin-bottom:3px}
+.tzlist li.on b{color:var(--pt)}
+.tzbar{display:flex;border:1px solid var(--line2);border-radius:12px;overflow:hidden;margin-top:var(--s5);background:var(--paper2)}
+.tzbar button{flex:1;background:none;border:0;border-right:1px solid var(--line);padding:var(--s3) var(--s2);cursor:pointer;
+  font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em;color:var(--mut);transition:.2s}
+.tzbar button:last-child{border-right:0}
+.tzbar button[aria-selected=true]{background:var(--pt);color:var(--paper2);font-weight:700}
+
+/* ── 07 night-band ─────────────────────────────────────────── */
+.night{background:var(--nink);color:#e7ebee;position:relative;overflow:hidden}
+.night .col{padding-top:var(--s9);padding-bottom:var(--s9);position:relative;z-index:2}
+.night .nbg{position:absolute;inset:0;z-index:0}
+.night .nbg img{width:100%;height:100%;object-fit:cover;filter:brightness(.3) saturate(.35) contrast(1.1)}
+.night .nbg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,15,18,.9),rgba(12,15,18,.72),rgba(12,15,18,.95))}
+.night .eyb{color:#7d868e}
+.night h2{color:#f0f3f5}
+.night .lead{color:#a8b1b8}
+.night .note{color:#7d868e}
+.night .note b{color:#c4ccd2}
+.night .note.nl{border-right-color:var(--nline)}
+.night .note.nr{border-left-color:var(--nline)}
+/* 적색광 UI 목업 */
+.redui{margin-top:var(--s6);border:1px solid var(--nline);border-radius:18px;background:#101418;padding:var(--s5) var(--s4);
+  box-shadow:0 0 44px -18px rgba(194,86,31,.55) inset}
+.redui .rh{display:flex;justify-content:space-between;font-family:var(--mono);font-size:var(--t-xs);color:#b8552a;letter-spacing:.12em}
+.redui .rv{font-size:var(--t-2xl);font-weight:900;letter-spacing:-.05em;color:#d4622a;line-height:1;margin-top:var(--s4)}
+.redui .rs{font-family:var(--mono);font-size:var(--t-xs);color:#9c4a24;margin-top:var(--s2);letter-spacing:.04em}
+.redui .rlist{margin-top:var(--s5);border-top:1px solid #2a1d16;padding-top:var(--s4);display:grid;gap:var(--s3)}
+.redui .rlist div{display:flex;justify-content:space-between;font-family:var(--mono);font-size:var(--t-xs);color:#a8532a;letter-spacing:.03em}
+.redui .rlist div u{text-decoration:none;color:#d4622a}
+.nnote{font-family:var(--mono);font-size:var(--t-xs);color:#7d868e;margin-top:var(--s4);letter-spacing:.02em;line-height:1.8}
+
+/* ── 08 ledger ─────────────────────────────────────────────── */
+.ledger .col{padding-top:var(--s8);padding-bottom:var(--s8)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:var(--s5)}
+.stats>*{min-width:0;background:var(--paper);padding:var(--s5) var(--s4)}
+/* 모노 숫자는 폭이 넓다 — 좁은 칸(약 146px)에서 잘리지 않도록 t-lg가 상한 */
+.stat .v{font-family:var(--mono);font-size:var(--t-lg);font-weight:700;letter-spacing:-.045em;line-height:1;white-space:nowrap}
+.stat .v .u{font-size:var(--t-sm);color:var(--mut);margin-left:2px;white-space:nowrap} /* 단위 분리 + nowrap: 좁은 칸 줄바꿈 방지 */
+.stat .l{font-size:var(--t-sm);color:var(--slate);margin-top:var(--s3);line-height:1.45}
+.stat .s{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s1)}
+
+/* ── 09 voices ─────────────────────────────────────────────── */
+.voices .col{padding-top:var(--s8);padding-bottom:var(--s8);border-top:1px solid var(--line)}
+.rev{border-top:1px solid var(--line);padding:var(--s5) 0}
+.rev:first-of-type{border-top:0}
+.rev .st{color:var(--pt);font-size:var(--t-xs);letter-spacing:2px}
+.rev p{font-size:var(--t-base);color:var(--ink);margin:var(--s3) 0 0;line-height:1.62}
+.rev .who{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s3);letter-spacing:.02em;line-height:1.7}
+.rev .who b{color:var(--slate);font-weight:700}
+.credit{border:1px solid var(--line2);border-radius:12px;padding:var(--s4);margin-top:var(--s5);background:var(--paper2)}
+.credit b{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--mut);display:block}
+.credit p{font-size:var(--t-sm);color:var(--slate);margin:var(--s2) 0 0;line-height:1.6}
+
+/* ── 10 plans-inline ───────────────────────────────────────── */
+.plans .col{padding-top:var(--s7);padding-bottom:var(--s7)}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-top:var(--s5)}
+.pgrid>*{min-width:0}
+.pk{border:1px solid var(--line2);border-radius:14px;padding:var(--s4);background:var(--paper2)}
+.pk.on{border-color:var(--pt);background:var(--paper2);box-shadow:0 0 0 1px var(--pt)}
+.pk .pn{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+.pk.on .pn{color:var(--pt)}
+.pk .pv{font-size:var(--t-lg);font-weight:900;letter-spacing:-.04em;margin-top:var(--s2);line-height:1.1}
+.pk .pv small{font-size:var(--t-xs);font-weight:600;color:var(--mut);letter-spacing:0}
+.pk ul{list-style:none;margin:var(--s3) 0 0;padding:0}
+.pk li{font-size:var(--t-sm);color:var(--slate);padding:3px 0;line-height:1.45}
+.pk li::before{content:'—';color:var(--mut);margin-right:6px}
+
+/* ── 11 CTA ────────────────────────────────────────────────── */
+.shot{position:relative;overflow:hidden;background:#0b0e11}
+.shot .shbg{position:absolute;inset:0;z-index:0}
+.shot .shbg img{width:100%;height:100%;object-fit:cover;filter:saturate(1.05) contrast(1.04)}
+.shot .shbg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,14,17,.72),rgba(11,14,17,.42) 42%,rgba(11,14,17,.94))}
+.shot .col{position:relative;z-index:2;padding-top:var(--s10);padding-bottom:var(--s10);text-align:left}
+.shot h2{font-size:var(--t-2xl);color:#f6f7f8;letter-spacing:-.05em;line-height:1.08;text-shadow:0 2px 20px rgba(0,0,0,.5)}
+.shot .eyb{color:#cfd5da;text-shadow:0 1px 10px rgba(0,0,0,.7)}
+.shot p{font-size:var(--t-sm);color:#dde1e5;margin-top:var(--s4);text-shadow:0 1px 10px rgba(0,0,0,.6);max-width:28em}
+/* 마그네틱은 버튼 + 소반경 래퍼로만 스코핑 (섹션 전체에 걸면 가장자리에서 수백px 튄다) */
+.mag-zone{display:inline-block;padding:46px;margin:-46px -46px 0}
+.btn{display:inline-flex;align-items:center;gap:var(--s2);background:var(--pt);color:var(--paper2);
+  border:0;border-radius:100px;padding:15px 28px;font-size:var(--t-sm);font-weight:800;letter-spacing:-.01em;cursor:pointer;
+  transition:transform .18s cubic-bezier(.2,.7,.2,1),background .2s;box-shadow:0 12px 30px -12px rgba(194,86,31,.85)}
+.btn:hover{background:var(--pt-d)}
+.shot .stores{display:flex;gap:var(--s4);flex-wrap:wrap;font-family:var(--mono);font-size:var(--t-xs);color:#cfd5da;margin-top:var(--s5);
+  text-shadow:0 1px 8px rgba(0,0,0,.7);letter-spacing:.02em}
+
+/* ── 12 하단 상주 엄지 바 ─────────────────────────────────── */
+.thumbbar{position:fixed;left:0;right:0;bottom:0;z-index:70;background:rgba(18,23,27,.94);backdrop-filter:blur(12px);
+  border-top:1px solid #2a3138;padding-bottom:env(safe-area-inset-bottom)}
+.thumbbar .in{max-width:var(--col);margin:0 auto;height:var(--bar);display:flex;align-items:center;gap:var(--s3);padding:0 var(--gut)}
+.thumbbar .tx{flex:1;min-width:0}
+.thumbbar .tx b{display:block;font-size:var(--t-sm);font-weight:800;color:var(--paper2);letter-spacing:-.02em;line-height:1.2}
+.thumbbar .tx u{text-decoration:none;display:block;font-family:var(--mono);font-size:var(--t-xs);color:#98a1a9;margin-top:2px}
+.thumbbar .btn{padding:12px 20px;box-shadow:none;white-space:nowrap}
+
+/* ── footer ────────────────────────────────────────────────── */
+.ft{border-top:1px solid var(--line)}
+.ft .col{padding-top:var(--s6);padding-bottom:var(--s7)}
+.ft .fr{display:flex;justify-content:space-between;gap:var(--s4);flex-wrap:wrap;align-items:flex-end}
+.ft .lk{display:flex;gap:var(--s4);flex-wrap:wrap;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.02em}
+.ft .lk a:hover{color:var(--pt-d)}
+.ft .cp{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s4);line-height:1.8}
+
+/* ── 반응형: 넓어질수록 "주석이 나타난다" ───────────────── */
+@media(min-width:1080px){
+  .note{display:block}
+  .col{border-left:1px solid var(--line2);border-right:1px solid var(--line2)}
+  .night .col{border-color:var(--nline)}
+  .shot .col{border-color:rgba(242,244,246,.14)}
+  .verdict .col{border-color:#2a3138}
+  .top .col{border-left:0;border-right:0}
+}
+/* 컬럼 폭이 430px로 고정이므로 데스크톱에서 헤드라인을 더 키우지 않는다 —
+   기기 안의 타이포는 기기 폭이 정한다. 넓어질 때 더해지는 건 주석뿐 */
+/* 좁은 기기: 다이얼/그리드가 짓눌리지 않게 */
+@media(max-width:400px){
+  :root{--gut:var(--s4)}   /* .col과 하단 상주 바가 함께 줄어든다 — 정렬선 유지 */
+  .dial{flex:0 0 62px}
+  .dial .tick{font-size:var(--t-xs)}
+  .tz{grid-template-columns:1fr}
+  .h1{font-size:var(--t-xl)}
+}
+/* 900px 이하에서 해제할 스크럽/핀은 애초에 없다 —
+   세로 scroll-snap은 중첩 스크롤러라 어느 폭에서도 빈 구간을 만들지 않는다.
+   다만 짧은 뷰포트에서는 스냅을 풀어 갇히지 않게 한다 */
+@media(max-height:560px){
+  .snap{height:auto;overflow:visible;scroll-snap-type:none;min-height:0}
+  .pan{height:auto;aspect-ratio:9/13}
+  .dots{display:none}
+}
+
+/* prefers-reduced-motion — 스냅/무한 모션 정지, 리빌 즉시 표시 */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rise,html.js .rise{opacity:1;transform:none;transition:none}
+  .scan{animation:none}
+  .snap{height:auto;overflow:visible;scroll-snap-type:none;min-height:0}
+  .pan{height:auto;aspect-ratio:9/13}
+  .dots{display:none}
+  .sky img,.plate img,.scr{transition:none}
+}
+
+/* ── 캡처 모드 (?capture=1) — 피그마 반출용 정적 스냅샷 ─────
+   리빌 강제 표시 · 중첩 스크롤러를 세로로 펼침 · 무한 애니 정지 ·
+   고정 바 해제. 없으면 캡처 시 절반이 빈 프레임으로 넘어간다 */
+html.capture .rise,html.js.capture .rise{opacity:1;transform:none;transition:none}
+html.capture .snap{height:auto;overflow:visible;scroll-snap-type:none;min-height:0;border-radius:0}
+html.capture .pan{height:auto;aspect-ratio:9/13;border-bottom:1px solid #2a3138}
+html.capture .dots{display:none}
+html.capture .scan{animation:none}
+html.capture .top{position:static}
+html.capture .thumbbar{position:static}
+html.capture body{padding-bottom:0}
+/* 폰 화면 3장은 겹쳐 있으므로 캡처에서도 활성 1장만 남긴다 (펼치면 aspect-ratio에 잘린다) */
+html.capture .scr{transition:none}
+html.capture .sky img,html.capture .plate img{transition:none}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ══ 01 topbar-min ══════════════════════════════════════════ -->
+<header class="mod top">
+  <div class="col">
+    <div class="wm">CUMUL<i>.</i><span>큐물</span></div>
+    <div class="sp"></div>
+    <div class="ratechip"><span class="stars" aria-hidden="true">★★★★★</span><b>4.8</b><u>App Store</u></div>
+  </div>
+</header>
+
+<!-- ══ 02 handson-hero — 히어로 자리에 도구. 읽기 전에 만지게 한다 ══ -->
+<section class="mod hero">
+  <aside class="note nl">
+    <b>Canon 390 × auto</b>
+    이 페이지의 기준 폭은 390px입니다.<br>
+    지금 보고 계신 넓은 화면은<br>
+    그 기준을 펼쳐 놓고<br>
+    여백에 주석을 단 상태입니다.<br><br>
+    <em>→</em> 오른쪽 세로 트랙을<br>
+    끌어 보세요.
+  </aside>
+  <div class="col">
+    <p class="eyb rise">/ 구름 도감 앱 · 10속 14종 9변종</p>
+    <h1 class="h1 rise">하늘을 들어 올리면,<br><em>이름</em>이 생깁니다.</h1>
+    <p class="sub rise">사진 한 장이면 됩니다. 셔터를 누르면 고도·형태·밑면 질감을 읽어 10속 중 하나로 판별하고, 그 이름이 무엇을 예보하는지까지 알려줍니다.</p>
+
+    <div class="rig rise">
+      <div class="phonewrap">
+        <!-- 플로팅 판정 배지 — 폰 밖으로 흘러나온 비대칭 디테일 -->
+        <div class="fbadge" aria-hidden="true"><b id="fbAb">CB</b><u id="fbNm">적란운</u></div>
+        <div class="phone">
+          <div class="screen">
+            <!-- 화면 1: 관측(카메라 판정 뷰) -->
+            <div class="scr on" id="scr0">
+              <div class="sky" id="sky"></div>
+              <div class="skyveil"></div>
+              <div class="scan" aria-hidden="true"></div>
+              <div class="sbar"><u>14:32</u><u>5G · 82%</u></div>
+              <div class="xh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+              <div class="vcard">
+                <div class="r1"><span class="nm" id="vNm">적란운</span><span class="ab" id="vAb">Cb</span></div>
+                <div class="r2"><span id="vBand">0.6–12 km</span><span id="vTemp">−33℃</span></div>
+                <div class="cfbar"><i id="vBar"></i></div>
+                <div class="cflab"><span>판정 신뢰도</span><b id="vAcc">95.2%</b></div>
+              </div>
+              <nav class="tabbar" role="tablist" aria-label="앱 하단 탭"></nav>
+            </div>
+            <!-- 화면 2: 도감 그리드 -->
+            <div class="scr" id="scr1">
+              <div class="gscr"><p class="gh">도감 · 10속</p><div class="ggrid" id="ggrid"></div></div>
+              <nav class="tabbar" role="tablist" aria-label="앱 하단 탭"></nav>
+            </div>
+            <!-- 화면 3: 관측 타임라인 -->
+            <div class="scr" id="scr2">
+              <div class="tscr"><p class="gh">기록 · 이번 주 11건</p>
+                <div class="trow"><span class="dot"></span><span class="tx"><b>적란운 Cb</b><u>08.07 16:41 · 대전 유성 · 신뢰도 96%</u></span></div>
+                <div class="trow"><span class="dot"></span><span class="tx"><b>층적운 Sc</b><u>08.06 07:12 · 인천 영종 · 신뢰도 93%</u></span></div>
+                <div class="trow"><span class="dot"></span><span class="tx"><b>권운 Ci</b><u>08.05 17:58 · 단양 활공장 · 신뢰도 95%</u></span></div>
+                <div class="trow"><span class="dot"></span><span class="tx"><b>난층운 Ns</b><u>08.03 11:20 · 서울 은평 · 신뢰도 87%</u></span></div>
+              </div>
+              <nav class="tabbar" role="tablist" aria-label="앱 하단 탭"></nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ★ 시그니처 1: 세로 고도 다이얼 0→13km.
+           값만 바뀌는 슬라이더가 아니라 폰 화면 전체가 바뀐다 -->
+      <div class="dial" id="dial" tabindex="0" role="slider" aria-label="고도 선택 (0에서 13킬로미터)"
+           aria-valuemin="0" aria-valuemax="13" aria-valuenow="9" aria-valuetext="9.0 km 적란운">
+        <div class="dtrk"></div><div class="dfill" id="dfill"></div>
+        <div class="knob" id="knob"></div>
+      </div>
+    </div>
+
+    <div class="readout rise">
+      <div><span class="rl">고도</span><span class="big" id="roAlt">9.0<span>km</span></span></div>
+      <div><span class="rl">기온</span><span class="big" id="roTemp">−33<span>℃</span></span></div>
+      <div><span class="rl">약어</span><span class="big" id="roAb">Cb</span></div>
+    </div>
+    <p class="hint rise"><i>↕</i> 트랙을 끌거나 휠·방향키로 고도를 바꿔 보세요 · 하단 3탭을 누르면 화면이 전환됩니다</p>
+  </div>
+  <aside class="note nr">
+    <b>Vertical dial</b>
+    지표 0km에서 대류권계면 13km까지.<br>
+    고도가 바뀌면 사진·이름·라틴 약어·<br>
+    기온·신뢰도가 동시에 바뀝니다.<br><br>
+    기온은 기온감률 5.7℃/km로<br>
+    계산합니다. 13km에서 <em>−56℃</em>.
+  </aside>
+</section>
+
+<!-- ══ 03 verdict-band — 제3자 검증을 3번째로 전진 ══════════ -->
+<section class="mod verdict">
+  <div class="col">
+    <p class="eyb rise">/ 남이 우리에 대해 한 말</p>
+    <h2 class="rise">숫자는 저희가 쓰지 않았습니다.</h2>
+    <div class="vgrid rise">
+      <div class="vg"><div class="n">4.8</div><div class="st" aria-hidden="true">★★★★★</div><div class="l">App Store · 리뷰 12,417</div></div>
+      <div class="vg"><div class="n">4.6</div><div class="st" aria-hidden="true">★★★★☆</div><div class="l">Google Play · 리뷰 8,930</div></div>
+      <div class="vg"><div class="n">오늘의 앱</div><div class="l">App Store 에디터 선정<br>2026.04.11</div></div>
+      <div class="vg"><div class="n">1,140<span class="u">명</span></div><div class="l">시민 관측자 사진 제공<br>2019–2026</div></div>
+    </div>
+    <blockquote class="quote rise">
+      <p>“구름 분류는 사람 눈으로도 훈련이 필요한 일입니다. 이 앱의 판별 근거가 밑면 고도와 강수 흔적까지 본다는 점을 확인했고, 감수 과정에서 오분류 사례 340건을 함께 검토했습니다.”</p>
+      <div class="who">오세형 · 대기과학 박사 · 구름 분류 체계 감수</div>
+    </blockquote>
+  </div>
+  <aside class="note nr">
+    <b>Trust, moved up</b>
+    보통 트러스트 밴드는 페이지<br>
+    후반부에 놓입니다. 여기서는<br>
+    세 번째입니다 — 도구를 만져 본<br>
+    직후가 가장 확인받고 싶은<br>
+    순간이기 때문입니다.
+  </aside>
+</section>
+
+<!-- ══ 04 snap-story — 앱을 스크롤하는 경험 자체가 서사 ═════ -->
+<section class="mod story">
+  <aside class="note nl">
+    <b>Snap story</b>
+    가로 스크럽 대신 세로 스냅.<br>
+    모바일에서 가로 스크럽은<br>
+    제스처가 겹쳐 실패합니다.<br><br>
+    <em>↓</em> 패널 안에서 밀어 보세요.<br>
+    마지막 장 뒤에 페이지 스크롤이<br>
+    이어집니다.
+  </aside>
+  <div class="col">
+    <p class="eyb rise">/ 하루 · 네 장면</p>
+    <h2 class="rise">같은 하늘이 네 번 이름을 바꿉니다.</h2>
+    <p class="lead rise">새벽부터 소나기 직전까지, 관측자가 실제로 마주치는 네 장면. 화면 아래 카드가 앱이 내린 판정입니다.</p>
+    <div class="snapwrap rise">
+      <div class="snap" id="snap" tabindex="0" aria-label="하루의 네 장면 — 세로로 넘기세요"></div>
+      <div class="dots" id="dots" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 05 codex-rows — 도감 5행 ═══════════════════════════════ -->
+<section class="mod codex">
+  <div class="col">
+    <p class="eyb rise">/ 도감 · 주요 5속</p>
+    <h2 class="rise">이름 아래에는 항상 고도가 있습니다.</h2>
+    <div class="plate rise" id="plate"><span class="pl" id="plateLab">권운 Cirrus</span></div>
+    <div class="rows rise" id="rows"></div>
+    <p class="hint rise">행에 커서를 올리거나 눌러 보세요 — 위 사진이 바뀝니다</p>
+  </div>
+  <aside class="note nr">
+    <b>Codex rows</b>
+    라틴 약어는 세계기상기구<br>
+    분류 체계를 그대로 씁니다.<br>
+    정확도는 감수 데이터셋<br>
+    <em>28,400장</em> 기준 상위 1순위<br>
+    적중률입니다.
+  </aside>
+</section>
+
+<!-- ══ 06 thumbzone — 데스크톱 페이지에는 존재할 수 없는 모듈 ══ -->
+<section class="mod thumb">
+  <aside class="note nl">
+    <b>Reach map</b>
+    한 손 조작 기준 엄지 회전<br>
+    반경을 세 구간으로 나눕니다.<br>
+    쉬움 / 늘임 / 닿지 않음.<br><br>
+    주요 액션은 <em>하단 40%</em>에만<br>
+    둡니다.
+  </aside>
+  <div class="col">
+    <p class="eyb rise">/ 설계 노트</p>
+    <h2 class="rise">엄지가 닿는 곳에만 버튼을 둡니다.</h2>
+    <p class="lead rise">관측은 대개 한 손으로 합니다. 다른 손에는 가방끈이나 커피가 있고, 고개는 하늘을 향해 있습니다. 그래서 판정 카드도, 탭바도, 설치 버튼도 전부 화면 아래쪽 40% 안에 있습니다.</p>
+    <div class="tz rise">
+      <div>
+        <svg class="tzsvg" viewBox="0 0 240 500" role="img" aria-label="엄지 도달 반경 도해">
+          <defs><clipPath id="clipPhone"><rect x="14" y="14" width="212" height="452" rx="30"/></clipPath></defs>
+          <g clip-path="url(#clipPhone)">
+            <rect x="14" y="14" width="212" height="452" fill="var(--paper2)"/>
+            <circle cx="120" cy="474" r="272" fill="none" stroke="var(--line2)" stroke-width="1.2" stroke-dasharray="4 5"/>
+            <circle cx="120" cy="474" r="206" fill="none" stroke="var(--line2)" stroke-width="1.2" stroke-dasharray="4 5"/>
+            <circle cx="120" cy="474" r="206" fill="var(--pt)" opacity="0.05"/>
+            <circle cx="120" cy="474" r="140" fill="var(--pt)" opacity="0.1"/>
+            <circle cx="120" cy="474" r="140" fill="none" stroke="var(--pt)" stroke-width="1.4"/>
+            <line x1="14" y1="285" x2="226" y2="285" stroke="var(--pt)" stroke-width="1" stroke-dasharray="2 4"/>
+          </g>
+          <rect x="14" y="14" width="212" height="452" rx="30" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+          <text class="lab hot" x="24" y="278">하단 40%</text>
+          <text class="lab" x="24" y="120">닿지 않음</text>
+          <text class="lab" x="24" y="200">늘임</text>
+          <text class="lab hot" x="24" y="340">쉬움</text>
+          <!-- 탭 3개 위치 + 하이라이트 -->
+          <g id="tzTabs">
+            <circle id="tzHi" cx="120" cy="432" r="21" fill="var(--pt)" opacity="0.22"/>
+            <circle cx="61" cy="432" r="13" fill="none" stroke="var(--mut)" stroke-width="1.2"/>
+            <circle cx="120" cy="432" r="13" fill="none" stroke="var(--mut)" stroke-width="1.2"/>
+            <circle cx="179" cy="432" r="13" fill="none" stroke="var(--mut)" stroke-width="1.2"/>
+            <text class="lab" x="61" y="462" text-anchor="middle">관측</text>
+            <text class="lab" x="120" y="462" text-anchor="middle">도감</text>
+            <text class="lab" x="179" y="462" text-anchor="middle">기록</text>
+          </g>
+        </svg>
+      </div>
+      <div>
+        <ul class="tzlist" id="tzlist">
+          <li data-z="0"><b>Zone A · 쉬움</b>반경 140px 이내. 탭바, 셔터, 판정 카드.</li>
+          <li data-z="1"><b>Zone B · 늘임</b>손목을 꺾어야 닿습니다. 필터, 정렬.</li>
+          <li data-z="2"><b>Zone C · 불가</b>두 손이 필요합니다. 읽기 전용만 둡니다.</li>
+        </ul>
+        <div class="tzbar" role="tablist" aria-label="탭 위치 확인"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 07 night-band — 다크 반전 ═══════════════════════════════ -->
+<section class="mod night">
+  <div class="nbg" aria-hidden="true">
+    <img src="https://images.unsplash.com/photo-1517483000871-1dbf64a6e1c6?w=1400&q=80&auto=format&fit=crop" alt=""
+      onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(180deg,#1a2128,#0c0f12)'">
+  </div>
+  <aside class="note nl">
+    <b>Night mode</b>
+    암순응은 회복에 <em>20–30분</em>이<br>
+    걸립니다. 흰 화면 한 번이면<br>
+    처음부터 다시입니다.
+  </aside>
+  <div class="col">
+    <p class="eyb rise">/ 야간 관측 모드</p>
+    <h2 class="rise">눈이 어둠에 적응한 상태를 깨지 않습니다.</h2>
+    <p class="lead rise">해가 지면 화면 전체가 적색광으로 바뀝니다. 흰 픽셀을 한 개도 쓰지 않고, 밝기 상한을 낮추고, 판정 결과만 남깁니다. 천문 관측자들이 쓰는 붉은 헤드램프와 같은 원리입니다.</p>
+    <div class="redui rise" aria-label="야간 관측 모드 화면 예시">
+      <div class="rh"><span>NIGHT · 21:47</span><span>RED ONLY</span></div>
+      <div class="rv">고적운 Ac</div>
+      <div class="rs">2–7 km · −9℃ · 신뢰도 90.6%</div>
+      <div class="rlist">
+        <div><span>화면 밝기 상한</span><u>18%</u></div>
+        <div><span>사용 색상</span><u>#c2561f 단색</u></div>
+        <div><span>플래시</span><u>영구 차단</u></div>
+        <div><span>자동 전환</span><u>일몰 +25분</u></div>
+      </div>
+    </div>
+    <p class="nnote rise">일몰 시각은 기기 위치의 실제 일몰을 씁니다. 수동으로 끌 수 있고, 끈 상태는 다음 일출까지만 유지됩니다.</p>
+  </div>
+</section>
+
+<!-- ══ 08 ledger — 스탯을 후반부로 후퇴 ══════════════════════ -->
+<section class="mod ledger">
+  <div class="col">
+    <p class="eyb rise">/ 기록</p>
+    <h2 class="rise">2019년부터 쌓인 판정.</h2>
+    <div class="stats rise">
+      <div class="stat"><div class="v countup" data-to="2140000">0</div><div class="l">누적 판정</div><div class="s">2019.03 – 2026.07</div></div>
+      <div class="stat"><div class="v countup" data-to="91.3" data-dec="1" data-suf="%">0</div><div class="l">판정 정확도</div><div class="s">감수 데이터셋 28,400장</div></div>
+      <div class="stat"><div class="v countup" data-to="48000" data-suf="명">0</div><div class="l">월간 관측자</div><div class="s">2026.07 기준</div></div>
+      <div class="stat"><div class="v countup" data-to="10" data-suf="속">0</div><div class="l">수록 분류</div><div class="s">10속 14종 9변종</div></div>
+    </div>
+  </div>
+  <aside class="note nr">
+    <b>Ledger, late</b>
+    스탯 밴드를 뒤로 미뤘습니다.<br>
+    도구를 만지고 도감을 넘긴 뒤에야<br>
+    숫자가 의미를 갖습니다.
+  </aside>
+</section>
+
+<!-- ══ 09 voices — 실명·직함·소속 ════════════════════════════ -->
+<section class="mod voices">
+  <div class="col">
+    <p class="eyb rise">/ 쓰는 사람들</p>
+    <h2 class="rise">현장에서 온 말.</h2>
+    <div class="rev rise">
+      <div class="st" aria-hidden="true">★★★★★</div>
+      <p>“지구과학 시간에 구름 단원이 제일 안 와닿습니다. 교과서 사진은 다 남의 하늘이니까요. 운동장에서 각자 찍어 판정하고 도감에 모으니 한 시간 만에 열 명이 권운을 구별했습니다.”</p>
+      <div class="who"><b>정하윤</b> · 중등 지구과학 교사 · 인천</div>
+    </div>
+    <div class="rev rise">
+      <div class="st" aria-hidden="true">★★★★★</div>
+      <p>“12년 동안 손으로 관측일지를 썼습니다. 종이에 적을 때 늘 애매했던 게 층적운과 고적운의 경계였는데, 밑면 고도 추정이 붙으니 제 기록이 정리됐습니다. 아직 난층운은 저도 앱도 헷갈립니다.”</p>
+      <div class="who"><b>박선우</b> · 아마추어 기상관측자 · 대전 · 관측일지 12년차</div>
+    </div>
+    <div class="rev rise">
+      <div class="st" aria-hidden="true">★★★★☆</div>
+      <p>“이륙 전에 하늘부터 봅니다. 적란운이 뜨면 그날은 접습니다. 앱이 적란운을 96%로 잡아주는 건 좋은데, 발달 단계까지 구분해 주면 더 좋겠습니다.”</p>
+      <div class="who"><b>문지현</b> · 패러글라이딩 강사 · 단양 활공장</div>
+    </div>
+    <div class="credit rise">
+      <b>사진 제공</b>
+      <p>KCON 시민관측 아카이브 2019–2026. 도감과 학습 데이터에 쓰인 사진은 관측자 1,140명이 촬영 위치·시각과 함께 제공했습니다. 판정 오류 신고 340건은 감수 과정에 그대로 반영됐습니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10 plans-inline — CTA 직전 소형 ═══════════════════════ -->
+<section class="mod plans">
+  <div class="col">
+    <p class="eyb rise">/ 요금</p>
+    <h2 class="rise">대부분은 무료로 충분합니다.</h2>
+    <div class="pgrid rise">
+      <div class="pk">
+        <div class="pn">Free</div>
+        <div class="pv">0<small>원</small></div>
+        <ul><li>하루 5회 판정</li><li>도감 열람</li><li>기록 30건 보관</li></ul>
+      </div>
+      <div class="pk on">
+        <div class="pn">Plus</div>
+        <div class="pv">19,000<small>원 / 년</small></div>
+        <ul><li>무제한 판정</li><li>오프라인 도감</li><li>기록 무제한 · 내보내기</li></ul>
+      </div>
+    </div>
+    <p class="hint rise">7일 무료 · 언제든 해지 · 결제 정보 없이 시작</p>
+  </div>
+</section>
+
+<!-- ══ 11 thumb-cta — 마지막 풀블리드 설치 ═══════════════════ -->
+<section class="mod shot">
+  <div class="shbg" aria-hidden="true">
+    <img src="https://images.unsplash.com/photo-1444927714506-8492d94b4e3d?w=1600&q=82&auto=format&fit=crop" alt=""
+      onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(180deg,#5b6a78,#0b0e11)'">
+  </div>
+  <div class="col">
+    <p class="eyb rise">/ 지금 하늘</p>
+    <h2 class="rise">오늘 저 구름의<br>이름을 아십니까.</h2>
+    <p class="rise">모르셔도 됩니다. 3초면 알려 드립니다.</p>
+    <div class="rise mag-zone"><button class="btn" type="button">앱 받기 · 무료로 시작 →</button></div>
+    <div class="stores rise"><span>iOS 16 이상</span><span>Android 10 이상</span><span>48MB · 오프라인 판정 지원</span></div>
+  </div>
+</section>
+
+<!-- ══ 12 footer-min ═════════════════════════════════════════ -->
+<footer class="mod ft">
+  <div class="col">
+    <div class="fr">
+      <div class="wm">CUMUL<i>.</i><span>큐물</span></div>
+      <nav class="lk"><a href="#">도감</a><a href="#">감수</a><a href="#">아카이브</a><a href="#">문의</a></nav>
+    </div>
+    <p class="cp">구름 분류는 세계기상기구 국제구름도감 체계를 따릅니다.<br>© 2026 CUMUL. 사진 저작권은 각 관측자에게 있습니다.</p>
+  </div>
+</footer>
+
+<!-- ══ 하단 상주 엄지 바 — 전 구간 고정 ═══════════════════════ -->
+<div class="thumbbar">
+  <div class="in">
+    <div class="tx"><b>큐물 받기</b><u>무료 · 하루 5회 판정</u></div>
+    <button class="btn" type="button">설치</button>
+  </div>
+</div>
+
+<script>
+/* ═══ CUMUL 런타임 ═══════════════════════════════════════════ */
+/* .js 플래그는 <head>에서 이미 붙였다 (첫 페인트 전 필수 — 리빌 스코핑용) */
+
+/* §A 스크롤복원 — scroll-behavior:smooth가 scrollTo를 애니메이션으로 만들어
+   복원 가드와 경합한다. 초기 리셋 동안만 auto로 내렸다 되돌린다 */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){var h=document.documentElement,p=h.style.scrollBehavior;h.style.scrollBehavior='auto';
+ window.scrollTo(0,0);
+ addEventListener('load',function(){window.scrollTo(0,0);setTimeout(function(){h.style.scrollBehavior=p},60)});})();
+
+/* §B 캡처 모드 — ?capture=1 이면 정적 스냅샷용으로 펼치고 모션을 끈다 */
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+var REDUCE=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+/* §C 이미지 URL 헬퍼 + 폴백 */
+function U(id,w,q){return 'https://images.unsplash.com/'+id+'?w='+w+'&q='+(q||80)+'&auto=format&fit=crop'}
+var FB="this.style.display='none';this.parentNode.style.background='linear-gradient(170deg,#7c8b99,#2b333b 70%)'";
+
+/* §D 구름 데이터 — 다이얼 고도 오름차순. 밴드는 실제 운저 고도 범위 */
+var CLOUDS=[
+ {ko:'층적운',la:'Stratocumulus',ab:'Sc',band:'0.5–2 km',acc:92.8,rec:508317,img:'photo-1534088568595-a066f410bcda',
+  lo:0,hi:1.5,note:'낮게 깔린 덩어리. 대개 비를 몰고 오지 않습니다.'},
+ {ko:'난층운',la:'Nimbostratus',ab:'Ns',band:'0.6–3 km',acc:88.4,rec:176922,img:'photo-1517483000871-1dbf64a6e1c6',
+  lo:1.5,hi:3.5,note:'하늘 전체를 덮는 회색. 몇 시간짜리 비입니다.'},
+ {ko:'고적운',la:'Altocumulus',ab:'Ac',band:'2–7 km',acc:90.6,rec:231504,img:'photo-1513002749550-c59d786b8e6c',
+  lo:3.5,hi:6.5,note:'양떼 모양 중층운. 오후에 소나기가 올 수 있습니다.'},
+ {ko:'적란운',la:'Cumulonimbus',ab:'Cb',band:'0.6–12 km',acc:95.2,rec:145663,img:'photo-1444927714506-8492d94b4e3d',
+  lo:6.5,hi:9.5,note:'수직으로 솟은 탑. 소나기·돌풍·낙뢰의 신호입니다.'},
+ {ko:'권운',la:'Cirrus',ab:'Ci',band:'5–13 km',acc:94.1,rec:412880,img:'photo-1504608524841-42fe6f032b4b',
+  lo:9.5,hi:13,note:'얼음 결정으로 된 새털. 날씨 변화의 예고입니다.'}
+];
+/* 도감 표시 순서는 고도순이 아니라 관측 빈도·교과 순서 */
+var CODEX=[4,2,0,1,3];
+
+/* §E 폰 화면 1 — 하늘 사진 레이어 (교차 전환용으로 미리 다 깔아 둔다) */
+(function(){var sky=document.getElementById('sky'),h='';
+ CLOUDS.forEach(function(c,i){
+  h+='<img src="'+U(c.img,760,78)+'" alt="'+c.ko+' '+c.la+'" loading="'+(i===3?'eager':'lazy')+'" onerror="'+FB+'">'});
+ sky.innerHTML=h;})();
+var skyImgs=document.querySelectorAll('#sky img');
+
+/* §F 폰 화면 2 — 도감 그리드 9칸 */
+(function(){var g=document.getElementById('ggrid'),
+ cells=[['photo-1504608524841-42fe6f032b4b','Ci'],['photo-1513002749550-c59d786b8e6c','Ac'],['photo-1534088568595-a066f410bcda','Sc'],
+        ['photo-1517483000871-1dbf64a6e1c6','Ns'],['photo-1444927714506-8492d94b4e3d','Cb'],['photo-1470252649378-9c29740c9fa8','St'],
+        ['photo-1419242902214-272b3f66ee7a','Cu'],['photo-1516912481808-3406841bd33c','As'],['photo-1499346030926-9a72daac6c63','Cs']],h='';
+ cells.forEach(function(c){h+='<div class="gcell"><img src="'+U(c[0],240,60)+'" alt="'+c[1]+'" loading="lazy" onerror="'+FB+'"><b>'+c[1]+'</b></div>'});
+ g.innerHTML=h;})();
+
+/* §G ★ 시그니처 2 — 살아있는 앱 탭바.
+   탭 상태는 전역 하나. 폰의 탭바와 thumbzone 도해가 같은 상태를 읽는다.
+   → 히어로에서 탭을 눌러도 아래 도해의 반경 하이라이트가 따라 움직인다 */
+var TABS=[
+ {ko:'관측',d:'M12 5.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zm0 3.6a2.9 2.9 0 110 5.8 2.9 2.9 0 010-5.8z'},
+ {ko:'도감',d:'M4 4.5h7v15H4zm9 0h7v15h-7z'},
+ {ko:'기록',d:'M4 6h16M4 12h16M4 18h10'}
+];
+var tab=0;
+document.querySelectorAll('.tabbar').forEach(function(bar,si){
+ TABS.forEach(function(t,i){
+  var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');
+  b.setAttribute('aria-selected',i===0?'true':'false');b.setAttribute('aria-label',t.ko+' 화면');
+  b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+t.d+'" stroke-linecap="round"/></svg><span>'+t.ko+'</span>';
+  b.addEventListener('click',function(){setTab(i)});
+  bar.appendChild(b)})});
+(function(){var bar=document.querySelector('.tzbar');
+ TABS.forEach(function(t,i){var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');
+  b.setAttribute('aria-selected',i===0?'true':'false');b.textContent=t.ko+' 탭';
+  b.addEventListener('click',function(){setTab(i)});bar.appendChild(b)})})();
+
+var TZX=[61,120,179];   /* 도해 상의 탭 x좌표 — 하이라이트가 이동할 자리 */
+function setTab(i){
+ tab=i;
+ document.querySelectorAll('.scr').forEach(function(s,j){s.classList.toggle('on',j===i)});
+ document.querySelectorAll('.tabbar button, .tzbar button').forEach(function(b){
+   b.setAttribute('aria-selected', (+b.dataset.i===i)?'true':'false')});
+ var hi=document.getElementById('tzHi');
+ if(hi){hi.setAttribute('cx',TZX[i]);hi.style.transition=REDUCE?'none':'cx .38s cubic-bezier(.2,.7,.2,1)'}
+ /* 하이라이트 좌표에서 실제 존을 계산한다 — 탭 3개는 모두 Zone A(r≤140) 안이므로
+    어느 탭을 눌러도 Zone A가 유지된다. 이게 이 도해의 논지다 */
+ var d=Math.hypot(TZX[i]-120,432-474), z=d<=140?0:(d<=206?1:2);
+ document.querySelectorAll('#tzlist li').forEach(function(li,j){li.classList.toggle('on',j===z)});
+}
+/* 버튼에 인덱스를 심어 두면 위 셀렉터가 바 3개(폰 3화면)+도해를 한 번에 갱신한다 */
+document.querySelectorAll('.tabbar').forEach(function(bar){
+ [].forEach.call(bar.children,function(b,i){b.dataset.i=i})});
+[].forEach.call(document.querySelector('.tzbar').children,function(b,i){b.dataset.i=i});
+setTab(0);
+
+/* §H ★ 시그니처 1 — 세로 고도 다이얼.
+   값만 바꾸는 슬라이더가 아니라 폰 화면 전체(사진·이름·약어·고도·기온·신뢰도)를 바꾼다 */
+var dial=document.getElementById('dial'),knob=document.getElementById('knob'),dfill=document.getElementById('dfill');
+var HMAX=13, PAD=16;   /* PAD = 트랙 상하 여백(px), CSS의 top/bottom과 일치 */
+/* 눈금 — 13/10/7/5/2/0 km. 위치는 layoutTicks()가 실제 높이를 재서 잡는다 */
+[13,10,7,5,2,0].forEach(function(v){
+ var e=document.createElement('span');e.className='tick';e.textContent=v+' km';
+ e.dataset.v=v; dial.appendChild(e)});
+function layoutTicks(){
+ var h=dial.clientHeight, span=h-PAD*2;
+ [].forEach.call(dial.querySelectorAll('.tick'),function(e){
+   e.style.top=(PAD+(1-e.dataset.v/HMAX)*span)+'px'})}
+function cloudAt(h){for(var i=0;i<CLOUDS.length;i++){if(h<CLOUDS[i].hi)return CLOUDS[i]}return CLOUDS[CLOUDS.length-1]}
+var curH=9;
+function renderDial(h){
+ curH=Math.min(Math.max(h,0),HMAX);
+ var box=dial.clientHeight, span=box-PAD*2, ratio=curH/HMAX;
+ var y=PAD+(1-ratio)*span;
+ knob.style.top=y+'px';
+ dfill.style.height=(box-PAD-y)+'px';
+ var c=cloudAt(curH);
+ /* 기온감률 5.7℃/km — 지표 +18℃ 기준, 13km에서 −56℃ */
+ var t=Math.round(18-5.69*curH);
+ var ts=(t<0?'−':'')+Math.abs(t);
+ document.getElementById('vNm').textContent=c.ko;
+ document.getElementById('vAb').textContent=c.ab;
+ document.getElementById('vBand').textContent=c.band;
+ document.getElementById('vTemp').textContent=ts+'℃';
+ document.getElementById('vAcc').textContent=c.acc.toFixed(1)+'%';
+ document.getElementById('vBar').style.width=c.acc+'%';
+ document.getElementById('fbAb').textContent=c.ab.toUpperCase();
+ document.getElementById('fbNm').textContent=c.ko;
+ document.getElementById('roAlt').innerHTML=curH.toFixed(1)+'<span>km</span>';
+ document.getElementById('roTemp').innerHTML=ts+'<span>℃</span>';
+ document.getElementById('roAb').textContent=c.ab;
+ var idx=CLOUDS.indexOf(c);
+ skyImgs.forEach(function(im,i){im.classList.toggle('on',i===idx)});
+ dial.setAttribute('aria-valuenow',curH.toFixed(1));
+ dial.setAttribute('aria-valuetext',curH.toFixed(1)+' km '+c.ko);
+ /* 탭이 관측 화면이 아니면 자동으로 관측 화면으로 되돌린다 — 조작 결과가 안 보이면 무의미 */
+ if(tab!==0)setTab(0);
+}
+function fromY(clientY){
+ var r=dial.getBoundingClientRect(),span=r.height-PAD*2;
+ var y=Math.min(Math.max(clientY-r.top-PAD,0),span);
+ renderDial((1-y/span)*HMAX)}
+var dragging=false;
+dial.addEventListener('pointerdown',function(e){dragging=true;dial.setPointerCapture(e.pointerId);fromY(e.clientY);e.preventDefault()});
+dial.addEventListener('pointermove',function(e){if(dragging)fromY(e.clientY)});
+['pointerup','pointercancel'].forEach(function(ev){dial.addEventListener(ev,function(){dragging=false})});
+/* 휠은 클램프 경계에서 기본 스크롤을 넘긴다 — 안 그러면 히어로 한복판에
+   폰 높이만큼 긴 스크롤 트랩이 생긴다 (0/13km에 닿아도 페이지가 안 움직임) */
+dial.addEventListener('wheel',function(e){
+ var next=curH-Math.sign(e.deltaY)*0.6;
+ if((next<=0&&curH<=0)||(next>=HMAX&&curH>=HMAX))return;
+ e.preventDefault();renderDial(next)},{passive:false});
+dial.addEventListener('keydown',function(e){
+ var k=e.key,d=0;
+ if(k==='ArrowUp'||k==='ArrowRight')d=.5; else if(k==='ArrowDown'||k==='ArrowLeft')d=-.5;
+ else if(k==='PageUp')d=2; else if(k==='PageDown')d=-2;
+ else if(k==='Home'){renderDial(HMAX);e.preventDefault();return}
+ else if(k==='End'){renderDial(0);e.preventDefault();return}
+ if(d){renderDial(curH+d);e.preventDefault()}});
+addEventListener('resize',function(){layoutTicks();renderDial(curH)});
+addEventListener('load',function(){layoutTicks();renderDial(curH)});
+layoutTicks();renderDial(9);
+
+/* §I snap-story — 세로 스냅 4패널. 가로 스크럽이 아니므로 폭 분기가 필요 없다 */
+var STORY=[
+ {t:'05:40',img:'photo-1470252649378-9c29740c9fa8',tag:'Sc',q:false,h:'새벽, 골짜기에 깔린 층운',
+  p:'해뜨기 전 지면이 식으면서 생긴 낮은 층. 두 시간 안에 걷힙니다.',m:['운저 320 m','+11℃','신뢰도 93%']},
+ {t:'12:15',img:'photo-1419242902214-272b3f66ee7a',tag:'Cu',q:false,h:'정오, 솟기 시작한 적운',
+  p:'지면이 데워지며 올라온 상승기류. 아직은 좋은 날씨의 구름입니다.',m:['운저 1.1 km','+24℃','신뢰도 95%']},
+ {t:'15:02',img:'photo-1516912481808-3406841bd33c',tag:'Ns',q:true,h:'오후, 하늘을 덮은 난층운',
+  p:'경계가 사라지고 회색이 균일해졌습니다. 우산을 챙기세요.',m:['운저 0.9 km','+19℃','신뢰도 87%']},
+ {t:'17:41',img:'photo-1499346030926-9a72daac6c63',tag:'Cb',q:false,h:'소나기 30분 전, 적란운 경보',
+  p:'수직으로 솟은 탑과 어두워진 밑면. 실외 활동을 정리할 시각입니다.',m:['운정 11.4 km','−47℃','신뢰도 96%']}   /* 운정 기온은 이 페이지가 명시한 감률 5.7℃/km로 검산된다: 18−5.69×11.4 ≈ −47 */
+];
+(function(){var s=document.getElementById('snap'),h='';
+ STORY.forEach(function(p,i){
+  h+='<div class="pan"><img src="'+U(p.img,900,80)+'" alt="'+p.h+'" loading="lazy" onerror="'+FB+'">'
+    +'<div class="sc"></div><div class="sbar"><u>'+p.t+'</u><u>관측 '+(i+1)+'/4</u></div>'
+    +'<div class="pcard"><span class="tag'+(p.q?' q':'')+'">'+p.tag+'</span>'
+    +'<h3>'+p.h+'</h3><p>'+p.p+'</p><div class="mrow">'
+    +p.m.map(function(x){return '<span>'+x+'</span>'}).join('')+'</div></div></div>'});
+ s.innerHTML=h;
+ var d=document.getElementById('dots'),dh='';
+ STORY.forEach(function(_,i){dh+='<i'+(i===0?' class="on"':'')+'></i>'});d.innerHTML=dh;
+ s.addEventListener('scroll',function(){
+   var idx=Math.round(s.scrollTop/s.clientHeight);
+   [].forEach.call(d.children,function(e,i){e.classList.toggle('on',i===idx)})},{passive:true});
+})();
+
+/* §J codex-rows — 행 hover/tap → 상단 플레이트 크로스페이드 */
+(function(){
+ var plate=document.getElementById('plate'),lab=document.getElementById('plateLab'),rows=document.getElementById('rows'),h='';
+ CODEX.forEach(function(ci,n){var c=CLOUDS[ci];
+  /* beforeend로 넣어 DOM 순서 = CODEX 순서를 그대로 유지한다 (역인덱스 매핑 불필요) */
+  plate.insertAdjacentHTML('beforeend','<img src="'+U(c.img,900,80)+'" alt="'+c.ko+' '+c.la+'" loading="lazy" onerror="'+FB+'">');
+  h+='<button class="row'+(n===0?' act':'')+'" type="button" data-n="'+n+'">'
+    +'<span><span class="nm">'+c.ko+'<u>'+c.ab+'</u></span><span class="sub">'+c.la+' · '+c.band+' · 기록 '+c.rec.toLocaleString('ko-KR')+'건</span></span>'
+    +'<span class="acc"><b>'+c.acc.toFixed(1)+'%</b><u>판정 정확도</u></span></button>'});
+ rows.innerHTML=h;
+ var imgs=plate.querySelectorAll('img');
+ function pick(n){
+   imgs.forEach(function(im,i){im.classList.toggle('on',i===n)});
+   lab.textContent=CLOUDS[CODEX[n]].ko+' '+CLOUDS[CODEX[n]].la;
+   [].forEach.call(rows.children,function(r,i){r.classList.toggle('act',i===n)})}
+ [].forEach.call(rows.children,function(r){
+   var n=+r.dataset.n;
+   r.addEventListener('mouseenter',function(){pick(n)});
+   r.addEventListener('focus',function(){pick(n)});
+   r.addEventListener('click',function(){pick(n)})});
+ pick(0);
+})();
+
+/* §K 마그네틱 — 버튼 + 소반경 래퍼로만 스코핑 (섹션에 걸면 가장자리에서 수백px 튄다) */
+document.querySelectorAll('.mag-zone').forEach(function(z){
+ var b=z.querySelector('.btn');
+ if(b&&matchMedia('(pointer:fine)').matches&&!REDUCE){
+  z.addEventListener('mousemove',function(e){var r=b.getBoundingClientRect();
+   b.style.transform='translate('+((e.clientX-(r.left+r.width/2))*.26)+'px,'+((e.clientY-(r.top+r.height/2))*.26)+'px)'});
+  z.addEventListener('mouseleave',function(){b.style.transform=''})}});
+
+/* §L 카운트업 + 스크롤 리빌 — 단위는 span 분리 + nowrap (좁은 칸 줄바꿈 방지) */
+function fmt(v,dec,suf){
+ var n=dec?v.toFixed(dec):Math.round(v).toLocaleString('ko-KR');
+ return n+(suf?'<span class="u">'+suf+'</span>':'')}
+function countTo(el){
+ var to=parseFloat(el.dataset.to),dec=+(el.dataset.dec||0),suf=el.dataset.suf||'',dur=1400,t0=performance.now();
+ (function step(t){var p=Math.min((t-t0)/dur,1),e=1-Math.pow(1-p,3);
+  el.innerHTML=fmt(to*e,dec,suf);if(p<1)requestAnimationFrame(step)})(performance.now())}
+
+if(CAPTURE){
+ /* 캡처 모드엔 스크롤이 없어 IO가 안 터진다 → 최종값 고정 + 리빌 강제 표시 */
+ document.querySelectorAll('.countup').forEach(function(el){
+   el.innerHTML=fmt(parseFloat(el.dataset.to),+(el.dataset.dec||0),el.dataset.suf||'')});
+ document.querySelectorAll('.rise').forEach(function(el){el.classList.add('vis')});
+}else{
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){
+   if(!e.isIntersecting)return;
+   e.target.classList.add('vis');
+   if(e.target.classList.contains('countup'))countTo(e.target);
+   io.unobserve(e.target)})},{threshold:.2});
+ document.querySelectorAll('.rise,.countup').forEach(function(el){io.observe(el)});
+}
+/* 로드 폴백 — 뷰포트 안 요소는 IO 실패와 무관하게 즉시 표시 */
+addEventListener('load',function(){requestAnimationFrame(function(){
+ document.querySelectorAll('.rise').forEach(function(el){
+  if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis')})})});
+</script>
+</body></html>
