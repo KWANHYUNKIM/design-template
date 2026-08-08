@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KELVIN Emulsion Vol.3 — 컬러 프로파일 (색온도 라이브러리)</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+/* 무드: 잉크 다크 + 무채색 UI + 단일 틸 포인트 · 아카이타입: 컬러 프로파일 라이브러리
+   구조 P13 Kinetic Spectrum (P12 리믹스: 웨이트 스케일 → 색온도 스펙트럼) · 티어 T3
+   원칙: UI는 무채색, 색은 오직 사진에만 — 컬러 브랜드가 UI까지 알록달록하면 싸구려 */
+:root{
+--sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+--mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+--ink:#0b0c0e;--ink2:#131519;--line:#262a30;--paper:#f2f1ed;--pline:#dcd9d2;
+--fg:#f4f5f6;--body:#9aa1aa;--mut:#666d76;--k:#22e0c8;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);background:var(--ink);color:var(--fg);-webkit-font-smoothing:antialiased;line-height:1.55;overflow-x:hidden;word-break:keep-all;overflow-wrap:break-word}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{max-width:1300px;margin:0 auto;padding:0 40px}
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.15;mix-blend-mode:overlay;z-index:3;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.rise{opacity:0;transform:translateY(28px);transition:.9s cubic-bezier(.2,.7,.2,1)}.rise.vis{opacity:1;transform:none}
+.k{color:var(--k)}
+.eyb{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.eyb b{color:var(--k);font-weight:700}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;height:72px;padding:0 40px;transition:.35s}
+.nav.solid{background:rgba(11,12,14,.78);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .lg{font-size:18px;font-weight:900;letter-spacing:-.4px}.nav .lg i{color:var(--k);font-style:normal}
+.nav .sp{flex:1}
+.nav a.m{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--body);margin-left:26px;transition:.2s}.nav a.m:hover{color:var(--fg)}
+.nav .buy{border:1px solid var(--k);color:var(--k);padding:9px 18px;font-size:12px;font-weight:700;letter-spacing:.06em;border-radius:100px;margin-left:26px;transition:.2s}
+.nav .buy:hover{background:var(--k);color:var(--ink)}
+
+/* hero — fullbleed */
+.hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden}
+.hero .bg{position:absolute;inset:0;z-index:0}
+.hero .bg img{width:100%;height:100%;object-fit:cover;transform:scale(1.06);filter:saturate(1.15) contrast(1.06)}
+.hero .veil{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(11,12,14,.72) 0%,rgba(11,12,14,.24) 34%,rgba(11,12,14,.82) 74%,rgba(11,12,14,.96) 100%)}
+/* 사진 위 모노 캡션은 --mut(#666d76)로는 밝은 영역에서 안 읽힌다 — 밝게 올리고 그림자로 분리 */
+.hero .eyb,.panel .eyb{color:#c3c9cf;text-shadow:0 1px 12px rgba(11,12,14,.85)}
+.hero .in{position:relative;z-index:2;width:100%;padding:0 40px 58px}
+.hero .wordmark{font-size:clamp(64px,15.5vw,220px);font-weight:900;letter-spacing:-.055em;line-height:.85;margin:18px 0 0}
+.hero .wordmark .ch{display:inline-block;transform:translateY(110%);opacity:0;transition:.9s cubic-bezier(.19,.9,.22,1)}
+.hero .wordmark.go .ch{transform:none;opacity:1}
+.hero .foot{display:flex;justify-content:space-between;align-items:flex-end;gap:34px;flex-wrap:wrap;margin-top:26px}
+.hero .foot p{max-width:520px;font-size:clamp(16px,1.7vw,20px);color:#d6dade;margin:0;font-weight:500}
+.hero .foot .meta{font-family:var(--mono);font-size:12px;color:var(--body);text-align:right;line-height:1.95;white-space:nowrap}
+.cue{position:absolute;left:40px;bottom:20px;z-index:2;font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--mut)}
+
+/* marquee */
+.mq{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--ink2);overflow:hidden;white-space:nowrap;padding:15px 0;position:relative;z-index:2}
+.mq .t{display:inline-block;animation:mqa 30s linear infinite}
+.mq .t span{font-family:var(--mono);font-size:13px;letter-spacing:.1em;margin:0 24px;color:var(--body)}
+.mq .t span i{font-style:normal;color:var(--k)}
+@keyframes mqa{to{transform:translateX(-50%)}}
+
+/* ★ spectrum pin — 가로 스크롤 스크럽 (P12 계승·강화) */
+.pin{height:560vh;position:relative;z-index:2}
+.pin .stick{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;align-items:center}
+.track{display:flex;will-change:transform}
+.panel{flex:0 0 100vw;height:100svh;position:relative;display:flex;align-items:flex-end;overflow:hidden}
+.panel .ph{position:absolute;inset:0}
+.panel .ph img{width:100%;height:100%;object-fit:cover}
+.panel .tint{position:absolute;inset:0;mix-blend-mode:soft-light;opacity:.55}
+.panel .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,12,14,.5),rgba(11,12,14,.1) 45%,rgba(11,12,14,.9))}
+.panel .cap{position:relative;z-index:2;padding:0 46px 92px;width:100%}
+.panel .kv{font-size:clamp(52px,9vw,132px);font-weight:900;letter-spacing:-.05em;line-height:.9;margin:6px 0 0}
+.panel .kv small{font-size:.3em;font-weight:800;letter-spacing:.02em;color:var(--k);margin-left:.3em;vertical-align:.9em}
+.panel .desc{display:flex;gap:28px;flex-wrap:wrap;font-family:var(--mono);font-size:12.5px;color:#c3c9cf;margin-top:20px;letter-spacing:.02em}
+.tempbar{position:absolute;left:46px;right:46px;bottom:44px;z-index:4;height:3px;background:#ffffff1f;border-radius:3px;overflow:hidden}
+.tempbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff8a3d,#ffd9a0,#eef3f7,#8fc3ff,#3f7dff)}
+.tempcue{position:absolute;left:46px;bottom:56px;z-index:4;font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:#c3c9cf}
+
+/* ★ live grader */
+/* .wrap과 클래스를 겸하는 섹션은 padding 단축 금지 — .wrap의 좌우 40px를 덮어써 이 섹션만 어긋난다 */
+.grader{padding-top:120px;padding-bottom:120px;position:relative;z-index:2;border-top:1px solid var(--line)}
+.grader h2{font-size:clamp(30px,4.6vw,60px);font-weight:900;letter-spacing:-.035em;line-height:1.05;margin:14px 0 0}
+.gwrap{margin-top:44px;display:grid;grid-template-columns:1.55fr 1fr;gap:40px;align-items:stretch}
+.gwrap>*{min-width:0}
+.cmp{position:relative;aspect-ratio:16/10;overflow:hidden;border:1px solid var(--line);background:var(--ink2);cursor:ew-resize;user-select:none;touch-action:none}
+.cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cmp .base{filter:saturate(.42) contrast(.9) brightness(1.06)}
+.cmp .over{clip-path:inset(0 50% 0 0)}
+.cmp .tag{position:absolute;top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.13em;background:rgba(11,12,14,.66);padding:6px 11px;border-radius:4px;z-index:3;backdrop-filter:blur(4px)}
+.cmp .tag.l{left:14px;color:var(--k)}.cmp .tag.r{right:14px;color:#c3c9cf}
+.cmp .handle{position:absolute;top:0;bottom:0;width:2px;background:#fff;left:50%;z-index:4;pointer-events:none;box-shadow:0 0 22px rgba(0,0,0,.5)}
+.cmp .handle b{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;letter-spacing:-1px}
+.gpanel{display:flex;flex-direction:column;justify-content:center;gap:26px;border:1px solid var(--line);padding:30px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;padding:8px 13px;border:1px solid var(--line);border-radius:100px;color:var(--body);cursor:pointer;transition:.18s;background:none}
+.chip:hover{color:var(--fg);border-color:#3a4048}
+.chip.on{background:var(--k);border-color:var(--k);color:var(--ink);font-weight:700}
+.slab{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--body);margin-bottom:10px}
+.slab b{color:var(--k)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:var(--line);outline:none;border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--k);cursor:grab;border:3px solid var(--ink)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--k);cursor:grab;border:3px solid var(--ink)}
+.gnote{font-size:13.5px;color:var(--body);line-height:1.7}
+.gnote b{color:var(--fg);font-weight:700}
+
+/* trust — 제3자 신호 */
+.trust{background:var(--paper);color:#16181b;padding:110px 0;position:relative;z-index:2}
+.trust .hd{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;border-bottom:1px solid var(--pline);padding-bottom:26px}
+.trust h2{font-size:clamp(26px,3.4vw,42px);font-weight:900;letter-spacing:-.035em;margin:0;max-width:640px;line-height:1.14}
+.rate{text-align:right;white-space:nowrap}
+.rate .n{font-size:44px;font-weight:900;letter-spacing:-.03em;line-height:1}
+.rate .st{color:#e8a33d;font-size:14px;letter-spacing:2px}
+.rate .c{font-family:var(--mono);font-size:11.5px;color:#6c6f75;margin-top:4px}
+.revs{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--pline);border:1px solid var(--pline);margin-top:2px}
+.revs>*{min-width:0}
+.rev{background:var(--paper);padding:34px 30px}
+.rev .q{font-size:16px;line-height:1.65;color:#24272b;font-weight:500}
+.rev .q em{font-style:normal;background:linear-gradient(transparent 62%,#22e0c855 62%)}
+.rev .who{display:flex;align-items:center;gap:12px;margin-top:24px}
+.rev .who img{width:42px;height:42px;border-radius:50%;object-fit:cover;flex:0 0 42px;background:#ddd}
+.rev .who .nm{font-size:13.5px;font-weight:800}
+.rev .who .rl{font-family:var(--mono);font-size:11px;color:#6c6f75;margin-top:2px}
+.vf{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:10px;color:#1a7f6f;background:#22e0c826;padding:2px 7px;border-radius:100px;margin-left:6px;letter-spacing:.04em}
+.credits{margin-top:52px}
+.credits .l{font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:#6c6f75;text-transform:uppercase}
+.credits .row{display:flex;flex-wrap:wrap;gap:14px 40px;margin-top:18px;align-items:baseline}
+.credits .row span{font-size:17px;font-weight:800;letter-spacing:-.01em;color:#3c4046}
+.credits .row span i{font-style:normal;font-family:var(--mono);font-size:10.5px;color:#8b8f95;font-weight:400;margin-left:7px;letter-spacing:.04em}
+
+/* spec band */
+.spec{border-top:1px solid var(--line);position:relative;z-index:2}
+.spec .g{display:grid;grid-template-columns:repeat(4,1fr)}
+.spec .g>*{min-width:0}
+.spec .c{padding:54px 32px;border-right:1px solid var(--line)}
+/* 양 끝 칸은 안쪽 여백을 지워, 숫자가 .wrap 콘텐츠 열과 정확히 맞물리게 한다 */
+.spec .c:first-child{padding-left:0}
+.spec .c:last-child{padding-right:0;border-right:none}
+.spec .v{font-size:clamp(44px,6.4vw,76px);font-weight:900;letter-spacing:-.035em;line-height:1;white-space:nowrap}
+.spec .v .u{font-size:.4em;font-weight:800;letter-spacing:0;margin-left:.1em;color:var(--body)}
+.spec .l{font-family:var(--mono);font-size:11.5px;color:var(--body);margin-top:13px;letter-spacing:.05em}
+
+/* packs */
+.packs{padding-top:118px;padding-bottom:118px;border-top:1px solid var(--line);position:relative;z-index:2}
+.packs .g{display:grid;grid-template-columns:1.45fr 1fr;gap:2px;background:var(--line);border:1px solid var(--line);margin-top:40px}
+.packs .g>*{min-width:0}
+.pk{background:var(--ink);padding:38px 34px;display:flex;flex-direction:column;transition:.25s}
+.pk:hover{background:var(--ink2)}
+.pk.big{grid-row:span 2;justify-content:space-between}
+.pk .nm{font-size:22px;font-weight:900;letter-spacing:-.02em}
+.pk.big .nm{font-size:34px}
+.pk .tg{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--k);text-transform:uppercase}
+.pk .ds{font-size:14px;color:var(--body);margin-top:12px;line-height:1.7;max-width:440px}
+.pk ul{list-style:none;padding:0;margin:22px 0 0;font-size:13.5px;color:#c3c9cf}
+.pk ul li{padding:7px 0 7px 20px;position:relative}
+.pk ul li:before{content:"";position:absolute;left:0;top:15px;width:7px;height:1px;background:var(--k)}
+.pk .pr{font-size:28px;font-weight:900;letter-spacing:-.02em;margin-top:26px}
+.pk.big .pr{font-size:40px}
+.pk .pr small{display:block;font-family:var(--mono);font-size:11px;font-weight:400;color:var(--mut);margin-top:5px;letter-spacing:.03em}
+
+/* cta */
+.cta{min-height:86svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-top:1px solid var(--line);position:relative;z-index:2;overflow:hidden;padding:60px 40px}
+.cta .aur{position:absolute;width:min(1100px,120vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(34,224,200,.16),transparent 62%);filter:blur(30px);animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate(-8%,-6%) scale(1)}to{transform:translate(8%,6%) scale(1.16)}}
+.cta h2{position:relative;font-size:clamp(38px,7.6vw,108px);font-weight:900;letter-spacing:-.05em;line-height:.98;margin:0}
+.cta p{position:relative;color:var(--body);margin:22px 0 0;font-size:16px;max-width:480px}
+.mag-zone{position:relative;padding:46px;margin-top:30px}
+.btn{display:inline-flex;gap:10px;align-items:center;background:var(--k);color:var(--ink);font-weight:800;font-size:15px;padding:17px 34px;border-radius:100px;transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+footer{border-top:1px solid var(--line);padding:30px 40px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-family:var(--mono);font-size:11.5px;color:var(--mut);position:relative;z-index:2}
+footer a:hover{color:var(--k)}
+
+@media(max-width:900px){
+.wrap{padding:0 22px}.nav{padding:0 22px}.nav a.m{display:none}
+.hero .in{padding:0 22px 46px}.hero .foot .meta{text-align:left}.cue{left:22px}
+.pin{height:auto}.pin .stick{position:static;height:auto;display:block;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.track{transform:none!important;width:max-content}
+.panel{flex:0 0 86vw;height:74svh;scroll-snap-align:center;border-right:1px solid var(--line)}
+.panel .cap{padding:0 24px 34px}.tempbar,.tempcue{display:none}
+.gwrap{grid-template-columns:1fr}.gpanel{padding:24px}
+.revs{grid-template-columns:1fr}
+.spec .g{grid-template-columns:1fr 1fr}.spec .c{border-bottom:1px solid var(--line)}
+.packs .g{grid-template-columns:1fr}.pk.big{grid-row:auto}
+}
+@media(prefers-reduced-motion:reduce){
+.pin{height:auto}.pin .stick{position:static;height:auto;overflow-x:auto}.track{transform:none!important;width:max-content}
+.panel{flex:0 0 88vw;height:76svh}.tempbar,.tempcue{display:none}
+.hero .wordmark .ch{transform:none;opacity:1}.mq .t{animation:none}.cta .aur{animation:none}
+.rise{opacity:1;transform:none;transition:none}
+}
+</style></head><body>
+<div class="grain"></div>
+
+<div class="nav" id="nav">
+<span class="lg">KELVIN<i>°</i></span><span class="sp"></span>
+<a class="m" href="#spectrum">스펙트럼</a><a class="m" href="#grader">그레이더</a><a class="m" href="#packs">팩</a>
+<a class="buy" href="#packs">Vol.3 받기</a>
+</div>
+
+<!-- HERO : fullbleed -->
+<section class="hero">
+  <div class="bg"><img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=2000&q=82&auto=format&fit=crop" alt="해질녘 능선" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(160deg,#3a2418,#0b0c0e 62%)'"></div>
+  <div class="veil"></div>
+  <div class="in">
+    <p class="eyb"><b>KELVIN°</b> &nbsp;COLOR PROFILE HOUSE &nbsp;· &nbsp;SEOUL &nbsp;· &nbsp;EMULSION VOL.3</p>
+    <h1 class="wordmark" id="wm">KELVIN</h1>
+    <div class="foot">
+      <p>빛에는 온도가 있습니다. 2,900K의 텅스텐부터 7,800K의 블루아워까지, <span class="k">한 장의 사진이 다섯 번</span> 다르게 숨 쉬는 필름 에멀전 프로파일.</p>
+      <p class="meta">5 PROFILES · 15 LOOKS<br>.CUBE LUT + .XMP<br>VOL.3 — 2026.07</p>
+    </div>
+  </div>
+  <span class="cue">SCROLL — 색온도가 흐릅니다</span>
+</section>
+
+<div class="mq" aria-hidden="true"><div class="t" id="mq"></div></div>
+
+<!-- ★ SPECTRUM : sticky pin + 가로 스크롤 스크럽 -->
+<section class="pin" id="spectrum">
+  <div class="stick">
+    <div class="track" id="track"></div>
+    <div class="tempcue">색온도 —</div>
+    <div class="tempbar"><i id="pbar"></i></div>
+  </div>
+</section>
+
+<!-- ★ LIVE GRADER -->
+<section class="grader wrap" id="grader">
+  <p class="eyb rise">// 직접 돌려보기</p>
+  <h2 class="rise">RAW 한 장을 <span class="k">끌어서</span> 비교하세요.</h2>
+  <div class="gwrap">
+    <div class="cmp rise" id="cmp">
+      <img class="base" src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=1400&q=82&auto=format&fit=crop" alt="보정 전 원본" onerror="this.style.display='none';this.parentNode.style.background='#1a1d21'">
+      <img class="over" id="over" src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=1400&q=82&auto=format&fit=crop" alt="KELVIN 프로파일 적용" onerror="this.style.display='none'">
+      <span class="tag l" id="tagL">KELVIN 5600K</span>
+      <span class="tag r">RAW · FLAT</span>
+      <div class="handle" id="handle"><b>◀▶</b></div>
+    </div>
+    <div class="gpanel rise">
+      <div>
+        <p class="slab"><span>프로파일</span></p>
+        <div class="chips" id="chips"></div>
+      </div>
+      <div>
+        <p class="slab"><span>강도 / INTENSITY</span><b id="iv">85%</b></p>
+        <input type="range" id="ir" min="0" max="100" value="85" step="1" aria-label="프로파일 강도">
+      </div>
+      <p class="gnote"><b>전부 비파괴 방식입니다.</b> .cube LUT은 다빈치 리졸브·프리미어·파이널컷에, .xmp는 라이트룸·카메라 RAW에 그대로 들어갑니다. 강도는 불러온 뒤에도 다시 조절할 수 있습니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST : 제3자 신호 -->
+<section class="trust">
+  <div class="wrap">
+    <div class="hd rise">
+      <h2>1,240명의 콜로리스트가<br>납품 전에 이걸 씁니다.</h2>
+      <div class="rate">
+        <div class="n">4.9</div>
+        <div class="st">★★★★★</div>
+        <div class="c">구매 검증 리뷰 386건</div>
+      </div>
+    </div>
+    <div class="revs">
+      <div class="rev rise">
+        <p class="q">"텅스텐 프로파일은 <em>실내 인터뷰 톤을 살려주는</em> 유일한 프리셋이었습니다. 스킨톤이 노랗게 뜨지 않아요."</p>
+        <div class="who"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&q=70&auto=format&fit=crop" alt="" onerror="this.style.display='none'"><div><div class="nm">임세라<span class="vf">✓ 구매 검증</span></div><div class="rl">COLORIST · 스튜디오 반사</div></div></div>
+      </div>
+      <div class="rev rise">
+        <p class="q">"광고 5편을 이걸로 납품했습니다. <em>클라이언트가 룩을 먼저 지목</em>하는 일은 처음이었어요."</p>
+        <div class="who"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&q=70&auto=format&fit=crop" alt="" onerror="this.style.display='none'"><div><div class="nm">고민재<span class="vf">✓ 구매 검증</span></div><div class="rl">DI SUPERVISOR · 목요일필름</div></div></div>
+      </div>
+      <div class="rev rise">
+        <p class="q">"블루아워 하나 때문에 샀는데, <em>정작 매일 쓰는 건 오버캐스트</em>입니다. 흐린 날이 아깝지 않아요."</p>
+        <div class="who"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=160&q=70&auto=format&fit=crop" alt="" onerror="this.style.display='none'"><div><div class="nm">차유진<span class="vf">✓ 구매 검증</span></div><div class="rl">PHOTOGRAPHER · 프리랜스</div></div></div>
+      </div>
+    </div>
+    <div class="credits rise">
+      <p class="l">Vol.1—2가 쓰인 작업</p>
+      <div class="row">
+        <span>서림 SEORIM<i>브랜드 필름</i></span>
+        <span>NOON MOTORS<i>TVC 2025</i></span>
+        <span>한옥스테이 담<i>캠페인</i></span>
+        <span>ATLAS COFFEE<i>패키지 화보</i></span>
+        <span>VERA<i>뮤직비디오</i></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPEC BAND -->
+<section class="spec">
+  <div class="wrap g">
+    <div class="c rise"><div class="v countup" data-to="5" data-suf="">0</div><div class="l">프로파일 (2900—7800K)</div></div>
+    <div class="c rise"><div class="v countup" data-to="15" data-suf="">0</div><div class="l">룩 / 프로파일당 3강도</div></div>
+    <div class="c rise"><div class="v countup" data-to="14" data-suf="종">0</div><div class="l">검증 카메라 바디</div></div>
+    <div class="c rise"><div class="v countup" data-to="1240" data-suf="명">0</div><div class="l">사용 중인 콜로리스트</div></div>
+  </div>
+</section>
+
+<!-- PACKS -->
+<section class="packs wrap" id="packs">
+  <p class="eyb rise">// 구성</p>
+  <h2 class="rise" style="font-size:clamp(30px,4.6vw,58px);font-weight:900;letter-spacing:-.035em;margin:14px 0 0;line-height:1.05">필요한 온도만 가져가세요.</h2>
+  <div class="g">
+    <div class="pk big rise">
+      <div>
+        <p class="tg">Vol.3 — 전체</p>
+        <p class="nm">Emulsion Vol.3</p>
+        <p class="ds">2900K부터 7800K까지 다섯 온도 전부. 프로파일마다 소프트·스탠다드·딥 세 강도가 들어 있어, 같은 룩을 장면 밝기에 맞춰 세 단계로 씁니다.</p>
+        <ul>
+          <li>.cube LUT 15개 (33pt · 32-bit)</li>
+          <li>라이트룸 .xmp 15개</li>
+          <li>카메라별 보정 차트 14종</li>
+          <li>평생 업데이트 · 상업적 사용 포함</li>
+        </ul>
+      </div>
+      <p class="pr">₩148,000<small>단품 5개 대비 ₩192,000 절약</small></p>
+    </div>
+    <div class="pk rise">
+      <p class="tg">단품</p>
+      <p class="nm">프로파일 1종</p>
+      <p class="ds">원하는 색온도 하나만. 소프트·스탠다드·딥 3강도 포함.</p>
+      <p class="pr">₩68,000<small>/ 프로파일</small></p>
+    </div>
+    <div class="pk rise">
+      <p class="tg">팀</p>
+      <p class="nm">스튜디오 라이선스</p>
+      <p class="ds">최대 10석 · 납품물 무제한 · 신규 Vol. 자동 포함.</p>
+      <p class="pr">₩390,000<small>/ 년</small></p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="aur"></div>
+  <h2>온도를<br>고르세요.</h2>
+  <p>5600K 데이라이트 프로파일은 무료입니다. 받아서 오늘 촬영분에 얹어보세요.</p>
+  <div class="mag-zone"><a class="btn" href="#packs">5600K 무료로 받기 →</a></div>
+</section>
+
+<footer>
+  <span>© 2026 KELVIN° Color Profile House · Seoul</span>
+  <span>Emulsion Vol.3 · <a href="#packs">라이선스</a> · <a href="#grader">그레이더</a></span>
+</footer>
+
+<script>
+/* ── 프로파일 정의: 스크럽 패널·그레이더·마퀴가 모두 이 배열 하나를 참조 ── */
+var PROFILES=[
+ {k:2900,name:'TUNGSTEN',ko:'텅스텐',sat:1.20,con:1.07,sep:.30,hue:-10,br:1.02,tint:'#ff8a3d',
+  note:['실내 · 인터뷰','스킨톤 보호','앰버 리프트'],img:'photo-1470071459604-3b5ec3a7fe05'},
+ {k:4300,name:'OVERCAST',ko:'오버캐스트',sat:.86,con:.94,sep:.10,hue:6,br:1.06,tint:'#cfd8e0',
+  note:['흐린 날','저대비 매트','하이라이트 회복'],img:'photo-1441974231531-c6227db76b6e'},
+ {k:5600,name:'DAYLIGHT',ko:'데이라이트',sat:1.24,con:1.13,sep:.04,hue:0,br:1.01,tint:'#ffffff',
+  note:['기준값','뉴트럴 화이트','제품·화보'],img:'photo-1500530855697-b586d89ba3ee'},
+ {k:6500,name:'SHADE',ko:'셰이드',sat:1.06,con:1.06,sep:.06,hue:15,br:.98,tint:'#8fc3ff',
+  note:['그늘 · 북향광','쿨 섀도우','도심 스냅'],img:'photo-1506905925346-21bda4d32df4'},
+ {k:7800,name:'BLUE HOUR',ko:'블루아워',sat:1.32,con:1.20,sep:.08,hue:24,br:.88,tint:'#3f7dff',
+  note:['일몰 직후 20분','딥 블루','야외 무드'],img:'photo-1518837695005-2083093ee35b'}
+];
+var U=function(id,w,q){return 'https://images.unsplash.com/'+id+'?w='+w+'&q='+q+'&auto=format&fit=crop'};
+/* 강도 t(0~1)로 항등필터 → 목표필터 보간. 슬라이더가 실제로 색을 바꾼다 */
+function filterOf(p,t){
+  var L=function(a,b){return (a+(b-a)*t)};
+  return 'saturate('+L(1,p.sat).toFixed(3)+') contrast('+L(1,p.con).toFixed(3)+') sepia('+L(0,p.sep).toFixed(3)+') hue-rotate('+L(0,p.hue).toFixed(1)+'deg) brightness('+L(1,p.br).toFixed(3)+')';
+}
+
+document.documentElement.classList.add('js');
+/* §D 스크롤복원 — scroll-behavior:smooth가 scrollTo를 애니메이션으로 만들어 복원과 경합하므로
+   초기 리셋 동안만 auto로 내렸다 되돌린다 (RUN15 학습) */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){var h=document.documentElement,prev=h.style.scrollBehavior;h.style.scrollBehavior='auto';window.scrollTo(0,0);
+ addEventListener('load',function(){window.scrollTo(0,0);setTimeout(function(){h.style.scrollBehavior=prev},60)});})();
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* nav */
+var nav=document.getElementById('nav');
+addEventListener('scroll',function(){nav.classList.toggle('solid',scrollY>40)},{passive:true});
+
+/* 히어로 글자 리빌 */
+var wm=document.getElementById('wm');
+(function(){var s=wm.textContent;wm.textContent='';
+ s.split('').forEach(function(c,i){var e=document.createElement('span');e.className='ch';e.textContent=c;e.style.transitionDelay=(0.15+i*0.075)+'s';wm.appendChild(e)});})();
+addEventListener('load',function(){requestAnimationFrame(function(){wm.classList.add('go')})});
+setTimeout(function(){wm.classList.add('go')},450);
+
+/* 마퀴 — 프로파일 목록 2회 반복(이음매 없는 -50% 순환) */
+(function(){var h='';for(var r=0;r<2;r++){PROFILES.forEach(function(p){h+='<span><i>'+p.k+'K</i> &nbsp;'+p.name+' &nbsp;·&nbsp; '+p.ko+'</span>'})}
+ document.getElementById('mq').innerHTML=h;})();
+
+/* ★ 스펙트럼 패널 생성 — 프로파일별 필터가 실제로 적용된 같은 계열 사진 */
+var track=document.getElementById('track');
+(function(){var h='';PROFILES.forEach(function(p,i){
+ h+='<div class="panel"><div class="ph"><img src="'+U(p.img,1600,80)+'" alt="'+p.k+'K '+p.ko+' 프로파일 적용 예" style="filter:'+filterOf(p,1)+'" onerror="this.style.display=\'none\';this.parentNode.style.background=\'linear-gradient(160deg,'+p.tint+'55,#0b0c0e 68%)\'"></div>'
+   +'<div class="tint" style="background:'+p.tint+'"></div><div class="shade"></div>'
+   +'<div class="cap"><p class="eyb">/ 0'+(i+1)+' — '+p.name+'</p><p class="kv">'+p.k+'<small>K</small></p>'
+   +'<p class="desc"><b style="color:#fff">'+p.ko+'</b>'+p.note.map(function(n){return '<span>'+n+'</span>'}).join('')+'</p></div></div>'});
+ track.innerHTML=h;})();
+
+/* ★ 가로 스크롤 스크럽 (T3) */
+var pin=document.getElementById('spectrum'),pbar=document.getElementById('pbar');
+function scrub(){
+  if(reduce||innerWidth<=900)return;
+  var r=pin.getBoundingClientRect(),total=pin.offsetHeight-innerHeight;
+  if(total<=0)return;
+  var p=Math.min(Math.max(-r.top/total,0),1);
+  var dist=track.scrollWidth-innerWidth;
+  track.style.transform='translateX('+(-p*dist)+'px)';
+  pbar.style.width=(p*100)+'%';
+}
+addEventListener('scroll',scrub,{passive:true});addEventListener('resize',scrub);scrub();
+
+/* ★ 라이브 그레이더 — 프로파일 칩 + 강도 슬라이더 + 드래그 비교 */
+var over=document.getElementById('over'),ir=document.getElementById('ir'),iv=document.getElementById('iv'),
+    tagL=document.getElementById('tagL'),chips=document.getElementById('chips'),
+    cmp=document.getElementById('cmp'),handle=document.getElementById('handle');
+var cur=2; /* 5600K 데이라이트 기본 */
+(function(){PROFILES.forEach(function(p,i){
+  var b=document.createElement('button');b.className='chip'+(i===cur?' on':'');b.type='button';
+  b.textContent=p.k+'K '+p.ko;b.addEventListener('click',function(){cur=i;paint();
+    [].forEach.call(chips.children,function(c,j){c.classList.toggle('on',j===i)})});
+  chips.appendChild(b)});})();
+function paint(){var p=PROFILES[cur],t=ir.value/100;
+  over.style.filter=filterOf(p,t);iv.textContent=ir.value+'%';tagL.textContent='KELVIN '+p.k+'K';}
+ir.addEventListener('input',paint);paint();
+
+/* 드래그 비교 — 포인터 이벤트로 마우스·터치 동시 지원 */
+function setSplit(clientX){var r=cmp.getBoundingClientRect();
+  var x=Math.min(Math.max(clientX-r.left,0),r.width),pct=x/r.width*100;
+  over.style.clipPath='inset(0 '+(100-pct)+'% 0 0)';handle.style.left=pct+'%';}
+var dragging=false;
+cmp.addEventListener('pointerdown',function(e){dragging=true;cmp.setPointerCapture(e.pointerId);setSplit(e.clientX)});
+cmp.addEventListener('pointermove',function(e){if(dragging)setSplit(e.clientX)});
+['pointerup','pointercancel'].forEach(function(ev){cmp.addEventListener(ev,function(){dragging=false})});
+
+/* 마그네틱 — 버튼+소반경 래퍼로만 스코핑 (RUN13 학습) */
+document.querySelectorAll('.mag-zone').forEach(function(z){var b=z.querySelector('.btn');
+ if(b&&matchMedia('(pointer:fine)').matches&&!reduce){
+  z.addEventListener('mousemove',function(e){var r=b.getBoundingClientRect();
+    b.style.transform='translate('+((e.clientX-(r.left+r.width/2))*.28)+'px,'+((e.clientY-(r.top+r.height/2))*.28)+'px)'});
+  z.addEventListener('mouseleave',function(){b.style.transform=''})}});
+
+/* 카운트업 + 리빌 — 단위는 span 분리 (RUN15 학습: 좁은 칸에서 줄바꿈 방지) */
+function countTo(el){var to=parseFloat(el.dataset.to),suf=el.dataset.suf||'',dur=1300,t0=performance.now();
+ var unit=suf?'<span class="u">'+suf+'</span>':'';
+ function s(t){var p=Math.min((t-t0)/dur,1),e=1-Math.pow(1-p,3);
+  el.innerHTML=Math.round(to*e).toLocaleString('ko-KR')+unit;if(p<1)requestAnimationFrame(s)}requestAnimationFrame(s)}
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){
+  e.target.classList.add('vis');
+  if(e.target.classList.contains('countup'))countTo(e.target);
+  io.unobserve(e.target)}})},{threshold:.2});
+document.querySelectorAll('.rise,.countup').forEach(function(el){io.observe(el)});
+/* 로드 폴백 — 뷰포트 안 요소는 IO 실패와 무관하게 즉시 표시 */
+addEventListener('load',function(){requestAnimationFrame(function(){
+  document.querySelectorAll('.rise').forEach(function(el){
+    if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis')})})});
+</script>
+</body></html>
