@@ -1,0 +1,14 @@
+{
+  "_readme": [
+    "피그마 디자인 시스템이 있는 RUN의 매핑. 갤러리(index.html)가 읽어 버튼을 붙인다.",
+    "public:false 면 버튼을 렌더하지 않는다 — 비공개 파일을 링크하면 방문자에게 403이 뜨기 때문.",
+    "공개하려면 피그마에서 파일 열기 → 우상단 Share → 'Anyone with the link' + 'can view'",
+    "→ 링크 복사 후 여기 public을 true로 바꾸면 갤러리에 버튼이 나타난다."
+  ],
+  "16": {
+    "url": "https://www.figma.com/design/vzvHs6efjZCsOewy71muHE/",
+    "label": "디자인 시스템",
+    "note": "Variables 37개(ui 9 · spectrum 5 · type 13 · space 10) + 컴포넌트 6종",
+    "public": false
+  }
+}
