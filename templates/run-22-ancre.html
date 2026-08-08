@@ -24,7 +24,8 @@
       + 주장 밴드만 sp-10 상하로 호흡을 크게 벌려 리듬을 만든다.
   색 규칙: 포인트 1색 = 블루드 스틸 #1d5083 (열처리 청염 바늘의 색 — 브랜드 서사와 직결).
     2차색 --ruby 는 무브먼트 도해의 '주얼 도트' 전용(콘텐츠 유래 예외, UI 사용 금지).
-    지면은 실버 페이퍼(#edeff1, 순백 금지). 본문 --mut #454c54 ≈ 7.4:1, --pt ≈ 7.1:1 → AA 통과.
+    지면은 실버 페이퍼(#edeff1, 순백 금지). 본문 --mut #454c54 = bg 7.54:1 · bg2 6.94:1 · card 7.97:1,
+    --pt 7.21:1(bg), 캡션 --mut2 #5a626b = bg 5.37:1 · bg2 4.94:1 · card 5.67:1 → 3면 모두 AA 통과.
     제품 렌더(다이얼·스트랩·케이스) 안의 색은 '제품 그 자체'로 허용 — UI는 끝까지 무채색+포인트 1.
   ※ SVG 내부 좌표/문자 크기는 viewBox 단위(화면 px 아님) — 타입 토큰 규칙의 대상 밖.
 -->
@@ -45,7 +46,7 @@
 --ink:#14181d;         /* 잉크 / 다크 밴드 지면 */
 --ink2:#242a31;
 --mut:#454c54;         /* 본문 — 7.4:1 */
---mut2:#6a727b;        /* 캡션/메타 */
+--mut2:#5a626b;        /* 캡션/메타 — 실측 대비 bg 5.37:1 · bg2 4.94:1 · card 5.67:1 (모두 AA 4.5:1 이상) */
 --line:#d2d6db;
 --line2:#bcc2c9;
 --dk-tx:#c3c9d0;       /* 다크 밴드 본문 */
@@ -62,6 +63,8 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
+/* 고정 헤더(58px) 아래로 앵커 목적지가 파묻히지 않게 */
+#top,#report,#claim,#trust,#movement,#atelier,#collection,#notes,#lookup{scroll-margin-top:calc(58px + var(--sp-4))}
 body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);
  -webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden;
  word-break:keep-all;overflow-wrap:break-word;font-size:var(--t-base)}
@@ -117,7 +120,8 @@ sup.fn{font-family:var(--mono);font-size:var(--t-xs);color:var(--pt);font-weight
 /* 시계 스테이지 */
 .stage{position:relative;background:radial-gradient(120% 90% at 50% 30%,var(--card) 0%,var(--bg2) 68%,#d7dbdf 100%);
  border:1px solid var(--line2);overflow:hidden;display:flex;align-items:center;justify-content:center;
- padding-top:var(--sp-6);padding-bottom:var(--sp-6)}
+ padding:var(--sp-6)}
+/* 스트랩은 버클·라운드 팁으로 뷰박스 안에서 마감 — 뭉툭한 절단면 없음 */
 .stage svg{width:min(76%,420px);height:auto;display:block;filter:drop-shadow(0 22px 34px rgba(20,24,29,.22))}
 .stage .live{position:absolute;left:var(--sp-4);top:var(--sp-4);display:inline-flex;align-items:center;gap:8px;
  font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em;color:var(--mut);
@@ -135,10 +139,10 @@ sup.fn{font-family:var(--mono);font-size:var(--t-xs);color:var(--pt);font-weight
 
 /* 컨트롤 패널 */
 .panel{border:1px solid var(--line2);background:var(--card);display:flex;flex-direction:column}
-.panel .ph{display:flex;justify-content:space-between;align-items:baseline;gap:var(--sp-4);
+.panel .phd{display:flex;justify-content:space-between;align-items:baseline;gap:var(--sp-4);
  border-bottom:1px solid var(--line);padding:var(--sp-4) var(--sp-5)}
-.panel .ph .t{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--mut2)}
-.panel .ph .n{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2)}
+.panel .phd .t{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--mut2)}
+.panel .phd .n{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2)}
 .panel .grp{padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--line)}
 .panel .gl{display:flex;justify-content:space-between;align-items:baseline;gap:var(--sp-3)}
 .panel .gl .k{font-size:var(--t-sm);font-weight:700;letter-spacing:-.01em}
@@ -162,6 +166,15 @@ sup.fn{font-family:var(--mono);font-size:var(--t-xs);color:var(--pt);font-weight
 .flash{animation:fl .28s ease}
 @keyframes fl{0%{opacity:.35;transform:translateY(-3px)}100%{opacity:1;transform:none}}
 @media(max-width:980px){.cfg{grid-template-columns:1fr;gap:var(--sp-5)}.stage svg{width:min(88%,360px)}}
+/* 좁은 폭 — 오버레이 두 개를 스테이지 위/아래 캡션 줄로 이동 (스트랩·시계와 겹침 0) */
+@media(max-width:640px){
+ .stage{flex-direction:column;align-items:stretch;padding:0}
+ .stage svg{align-self:center;margin-top:var(--sp-4);margin-bottom:var(--sp-4)}
+ .stage .live{position:static;border:0;border-bottom:1px solid var(--line2);border-radius:0;
+  padding:var(--sp-2) var(--sp-4);background:rgba(244,245,247,.85)}
+ .stage .sn{position:static;border-top:1px solid var(--line2);padding:var(--sp-2) var(--sp-4);
+  text-align:right;background:rgba(244,245,247,.85)}
+}
 
 /* 시계 SVG 내부 */
 .w-tick{stroke:var(--tickC,#3a4149)}
@@ -187,19 +200,22 @@ sup.fn{font-family:var(--mono);font-size:var(--t-xs);color:var(--pt);font-weight
 .float-chip{position:absolute;right:calc(-1 * var(--sp-3));top:calc(-1 * var(--sp-4));background:var(--ink);color:var(--bg);
  font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em;padding:9px 14px;border-radius:2px;z-index:3;white-space:nowrap}
 .float-chip i{font-style:normal;color:var(--pt-l)}
-.prow{display:grid;grid-template-columns:132px 1fr;gap:var(--sp-4);align-items:center;
+.prow{display:grid;grid-template-columns:132px 1fr 52px;gap:var(--sp-4);align-items:center;
  padding-top:var(--sp-3);padding-bottom:var(--sp-3);border-bottom:1px solid var(--line)}
 .prow>*{min-width:0}
 .prow .pl{font-size:var(--t-sm);font-weight:600;line-height:1.35}
 .prow .pl em{display:block;font-style:normal;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut2);letter-spacing:.1em}
 .ptrack{position:relative;height:30px;background:var(--bg);border:1px solid var(--line)}
-.ptrack .zero{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--line2)}
+/* 0선 — JS가 축 범위에서 계산해 .cert에 --zero로 주입 (하드코딩 금지) */
+.ptrack .zero{position:absolute;left:var(--zero,50%);top:0;bottom:0;width:1px;background:var(--line2)}
 .ptrack .pbar{position:absolute;top:6px;bottom:6px;background:var(--pt);opacity:.88;
  transition:width .5s cubic-bezier(.2,.7,.2,1),left .5s cubic-bezier(.2,.7,.2,1)}
-.ptrack .pv{position:absolute;right:8px;top:50%;transform:translateY(-50%);
- font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);white-space:nowrap}
-.paxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:var(--t-xs);
- color:var(--mut2);margin-top:var(--sp-2);padding-left:calc(132px + var(--sp-4))}
+/* 값 라벨 — 트랙 밖 고정폭 셀 (막대와 겹침 원천 제거) */
+.prow .pv{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);white-space:nowrap;text-align:right}
+.paxis{display:grid;grid-template-columns:132px 1fr 52px;gap:var(--sp-4);font-family:var(--mono);
+ font-size:var(--t-xs);color:var(--mut2);margin-top:var(--sp-2)}
+.paxis .ax{position:relative;display:flex;justify-content:space-between;min-width:0}
+.paxis .az{position:absolute;left:var(--zero,50%);transform:translateX(-50%)}
 .cavg{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--sp-4);flex-wrap:wrap;
  border-top:1px solid var(--line2);margin-top:var(--sp-4);padding-top:var(--sp-4)}
 .cavg .bigval{font-size:var(--t-2xl);font-weight:800;letter-spacing:-.035em;line-height:1;white-space:nowrap}
@@ -218,8 +234,10 @@ sup.fn{font-family:var(--mono);font-size:var(--t-xs);color:var(--pt);font-weight
 @media(max-width:980px){.rgrid{grid-template-columns:1fr;gap:var(--sp-6)}
  .float-chip{right:var(--sp-4)}}
 @media(max-width:700px){.specs{grid-template-columns:1fr;gap:var(--sp-5)}
- .prow{grid-template-columns:1fr;gap:var(--sp-2)}
- .paxis{padding-left:0}}
+ .prow{grid-template-columns:1fr 52px;gap:var(--sp-2) var(--sp-4)}
+ .prow .pl{grid-column:1/-1}
+ .paxis{grid-template-columns:1fr 52px}
+ .paxis .sp0{display:none}}
 
 /* ── ③ 주장 밴드 — 여기서 처음 디스플레이 타입이 나온다 ─────────────────── */
 .claim{background:var(--ink);color:var(--dk-tx);padding-top:var(--sp-10);padding-bottom:var(--sp-10)}
@@ -485,11 +503,20 @@ html.capture .flash{animation:none}
           </linearGradient>
         </defs>
 
-        <!-- 스트랩 -->
-        <path id="strapT" class="w-strap" d="M160 0 h120 l7 148 h-134 z"/>
-        <path class="w-stitch" d="M172 6 l5 132 M268 6 l-5 132"/>
-        <path id="strapB" class="w-strap" d="M152 432 h136 l-8 128 h-120 z"/>
-        <path class="w-stitch" d="M164 444 l6 108 M276 444 l-6 108"/>
+        <!-- 스트랩 — 위는 버클, 아래는 라운드 팁 + 홀로 마감 (절단면 없음) -->
+        <g id="buckleG">
+          <rect id="buckleF" x="158" y="8" width="124" height="34" rx="10" fill="none" stroke="url(#gradSteel)" stroke-width="8"/>
+          <rect id="tang" x="217.5" y="12" width="5" height="34" rx="2.5" fill="url(#gradSteel)"/>
+        </g>
+        <path id="strapT" class="w-strap" d="M166 40 q-2 -8 6 -8 h96 q8 0 6 8 l7 108 h-122 z"/>
+        <rect id="keeperT" class="w-strap" x="158" y="58" width="124" height="16" rx="4" opacity=".8"/>
+        <path class="w-stitch" d="M176 78 l4 64 M264 78 l-4 64"/>
+        <path id="strapB" class="w-strap" d="M152 432 h136 l-6 92 q-1 26 -27 26 h-70 q-26 0 -27 -26 z"/>
+        <path class="w-stitch" d="M164 444 l4 76 M276 444 l-4 76"/>
+        <g id="holesB" fill="rgba(20,24,29,.4)">
+          <circle cx="220" cy="472" r="4"/><circle cx="220" cy="492" r="4"/>
+          <circle cx="220" cy="512" r="4"/><circle cx="220" cy="532" r="4"/>
+        </g>
 
         <!-- 케이스 · 크라운 -->
         <rect id="crown" x="366" y="278" width="16" height="24" rx="4" fill="url(#gradSteel)"/>
@@ -535,7 +562,7 @@ html.capture .flash{animation:none}
 
     <!-- 컨트롤 — 누르면 시계와 성적표가 즉시 바뀐다 -->
     <div class="panel rise d1">
-      <div class="ph"><span class="t">구성 — 앵크르 01 「등시」 기반</span><span class="n" id="cfgCode">—</span></div>
+      <div class="phd"><span class="t">구성 — 앵크르 01 「등시」 기반</span><span class="n" id="cfgCode">—</span></div>
       <div class="grp">
         <div class="gl"><span class="k">다이얼 마감</span><span class="v" id="vDial">실버 프로스트</span></div>
         <div class="chips" role="group" aria-label="다이얼 마감 선택" id="gDial">
@@ -599,12 +626,12 @@ html.capture .flash{animation:none}
       <div class="cert rise d2" aria-live="polite">
         <span class="float-chip">측정기 <i>TM-8</i> · 23±1°C</span>
         <div class="chd"><span class="t">개체 성적표 — 일차 편차</span><span class="id" id="certSn">—</span></div>
-        <div class="prow"><span class="pl">문자판 위<em>DIAL UP</em></span><div class="ptrack"><i class="zero"></i><b class="pbar" id="pb0"></b><span class="pv" id="pv0">—</span></div></div>
-        <div class="prow"><span class="pl">문자판 아래<em>DIAL DOWN</em></span><div class="ptrack"><i class="zero"></i><b class="pbar" id="pb1"></b><span class="pv" id="pv1">—</span></div></div>
-        <div class="prow"><span class="pl">3시 아래<em>CROWN DOWN</em></span><div class="ptrack"><i class="zero"></i><b class="pbar" id="pb2"></b><span class="pv" id="pv2">—</span></div></div>
-        <div class="prow"><span class="pl">6시 아래<em>CROWN LEFT</em></span><div class="ptrack"><i class="zero"></i><b class="pbar" id="pb3"></b><span class="pv" id="pv3">—</span></div></div>
-        <div class="prow" style="border-bottom:0"><span class="pl">9시 아래<em>CROWN UP</em></span><div class="ptrack"><i class="zero"></i><b class="pbar" id="pb4"></b><span class="pv" id="pv4">—</span></div></div>
-        <div class="paxis" aria-hidden="true"><span>-5 s/일</span><span>0</span><span>+6.5 s/일</span></div>
+        <div class="prow"><span class="pl">문자판 위<em>DIAL UP</em></span><div class="ptrack"><i class="zero"></i><b class="pbar" id="pb0"></b></div><span class="pv" id="pv0">—</span></div>
+        <div class="prow"><span class="pl">문자판 아래<em>DIAL DOWN</em></span><div class="ptrack"><i class="zero"></i><b class="pbar" id="pb1"></b></div><span class="pv" id="pv1">—</span></div>
+        <div class="prow"><span class="pl">3시 아래<em>CROWN DOWN</em></span><div class="ptrack"><i class="zero"></i><b class="pbar" id="pb2"></b></div><span class="pv" id="pv2">—</span></div>
+        <div class="prow"><span class="pl">6시 아래<em>CROWN LEFT</em></span><div class="ptrack"><i class="zero"></i><b class="pbar" id="pb3"></b></div><span class="pv" id="pv3">—</span></div>
+        <div class="prow" style="border-bottom:0"><span class="pl">9시 아래<em>CROWN UP</em></span><div class="ptrack"><i class="zero"></i><b class="pbar" id="pb4"></b></div><span class="pv" id="pv4">—</span></div>
+        <div class="paxis" aria-hidden="true"><span class="sp0"></span><span class="ax"><span>-5 s/일</span><span class="az">0</span><span>+6.5 s/일</span></span><span></span></div>
         <div class="cavg">
           <div>
             <div class="bigval" id="avgVal">+0.0<span>s/일</span></div>
@@ -717,13 +744,33 @@ html.capture .flash{animation:none}
               </g>
               <circle cx="330" cy="330" r="5" fill="#3a444f"/>
             </g>
-            <!-- 주얼 -->
+            <!-- 주얼 — 카피의 "25개의 붉은 점"과 동수: 주요 피벗 5 + 보조 피벗·캡스톤 20 = 25 -->
             <g id="g-jewel" class="apart">
               <circle cx="150" cy="150" r="5" fill="#7d3140"/>
               <circle cx="262" cy="118" r="4.4" fill="#7d3140"/>
               <circle cx="326" cy="172" r="4.4" fill="#7d3140"/>
               <circle cx="286" cy="252" r="4.4" fill="#7d3140"/>
               <circle cx="330" cy="330" r="5" fill="#7d3140"/>
+              <circle cx="240" cy="240" r="3" fill="#7d3140"/>
+              <circle cx="196" cy="208" r="2.8" fill="#7d3140"/>
+              <circle cx="214" cy="132" r="2.8" fill="#7d3140"/>
+              <circle cx="302" cy="144" r="2.8" fill="#7d3140"/>
+              <circle cx="352" cy="220" r="2.8" fill="#7d3140"/>
+              <circle cx="356" cy="286" r="2.8" fill="#7d3140"/>
+              <circle cx="296" cy="388" r="2.8" fill="#7d3140"/>
+              <circle cx="238" cy="360" r="2.8" fill="#7d3140"/>
+              <circle cx="172" cy="330" r="2.8" fill="#7d3140"/>
+              <circle cx="130" cy="270" r="2.8" fill="#7d3140"/>
+              <circle cx="118" cy="208" r="2.8" fill="#7d3140"/>
+              <circle cx="176" cy="96" r="2.8" fill="#7d3140"/>
+              <circle cx="300" cy="86" r="2.8" fill="#7d3140"/>
+              <circle cx="368" cy="150" r="2.8" fill="#7d3140"/>
+              <circle cx="390" cy="248" r="2.8" fill="#7d3140"/>
+              <circle cx="376" cy="330" r="2.8" fill="#7d3140"/>
+              <circle cx="330" cy="398" r="2.8" fill="#7d3140"/>
+              <circle cx="256" cy="412" r="2.8" fill="#7d3140"/>
+              <circle cx="180" cy="396" r="2.8" fill="#7d3140"/>
+              <circle cx="120" cy="330" r="2.8" fill="#7d3140"/>
             </g>
             <circle id="anaRing" cx="150" cy="150" r="86"/>
           </svg>
@@ -739,7 +786,7 @@ html.capture .flash{animation:none}
           <article class="step" data-ring="270,260,64">
             <span class="no">02 / 04 — 배분</span>
             <h3>탈진기 — 우리 이름의 자리</h3>
-            <p>닻 모양의 레버가 기어 트레인을 붙잡았다 놓으며 동력을 초당 여덟 번으로 쪼갭니다. 이 닻의 프랑스어 이름이 앙크르(ancre) — 우리 공방의 이름은 여기서 왔습니다. 팔레트 스톤의 물림 깊이는 현미경 아래에서 개체별로 맞춥니다.</p>
+            <p>닻 모양의 레버가 기어 트레인을 붙잡았다 놓으며 동력을 초당 여덟 번으로 쪼갭니다. 이 닻의 프랑스어 이름이 앵크르(ancre) — 우리 공방의 이름은 여기서 왔습니다. 팔레트 스톤의 물림 깊이는 현미경 아래에서 개체별로 맞춥니다.</p>
             <p class="sm">임펄스 각 개체별 기록 · 팔레트 스톤 인조 루비</p>
           </article>
           <article class="step" data-ring="330,330,78">
@@ -997,7 +1044,8 @@ function seedOf(){return st.d*29+st.h*13+st.c*7+st.s*3+11}
 function ratesOf(seed){
  var r=[],i,v;
  for(i=0;i<5;i++){
-  v=Math.sin(seed*2.13+i*1.91)*2.9+Math.cos(seed*1.37+i*0.83)*1.5+1.3;
+  /* 오프셋 +0.4 — 전 81구성 전수 시뮬레이션: 평균 일차 -0.9 ~ +1.8 (음수 20구성, 보증 ±4.0 이내) */
+  v=Math.sin(seed*2.13+i*1.91)*2.9+Math.cos(seed*1.37+i*0.83)*1.5+0.4;
   v=Math.max(-4.6,Math.min(6.2,v));
   r.push(Math.round(v*10)/10);
  }
@@ -1021,6 +1069,8 @@ function tween(el,from,to,dec,suffixEl){
 function updateReport(){
  var seed=seedOf(),r=ratesOf(seed),sn=serialOf(seed),i,sum=0,mn=99,mx=-99;
  var MIN=-5,MAX=6.5,SPAN=MAX-MIN,zero=(0-MIN)/SPAN*100;
+ /* 0선·축 라벨 위치를 축 범위에서 계산해 주입 — CSS 하드코딩 없음 */
+ $('.cert').style.setProperty('--zero',zero.toFixed(3)+'%');
  for(i=0;i<5;i++){
   var v=r[i];sum+=v;if(v<mn)mn=v;if(v>mx)mx=v;
   var bar=document.getElementById('pb'+i),val=document.getElementById('pv'+i);
@@ -1046,6 +1096,8 @@ function updateWatch(){
  $('#dialFace').setAttribute('fill',d.fill);
  $('#caseC').setAttribute('fill',c.grad);
  $('#crown').setAttribute('fill',c.grad);
+ $('#buckleF').setAttribute('stroke',c.grad);
+ $('#tang').setAttribute('fill',c.grad);
  w.style.setProperty('--tickC',d.tick);
  w.style.setProperty('--dtxtC',d.dtxt);
  w.style.setProperty('--handC',d.hand);
@@ -1148,7 +1200,8 @@ $('#lkForm').addEventListener('submit',function(e){
   return;
  }
  var h=0,i;for(i=0;i<q.length;i++)h=(h*31+q.charCodeAt(i))>>>0;
- var yy=q.slice(3,5),avg=((h%56)/10-1.4).toFixed(1),amp=280+(h%31),
+ /* 평균 일차 -3.7 ~ +3.7 + 보증 범위(±4.0) 클램프 — 보증 초과 표기 불가 */
+ var yy=q.slice(3,5),avg=Math.max(-4,Math.min(4,(h%75)/10-3.7)).toFixed(1),amp=280+(h%31),
      mth=1+(h%12),wm=['김한결','서은호','박도경'][h%3];
  res.innerHTML='<span class="ok">개체 <b>'+q+'</b> · 20'+yy+'년 '+mth+'월 출고</span><br>'+
   '평균 일차 <b>'+(avg>0?'+':'')+avg+' s/일</b> · 수평 진폭 '+amp+'° · 조립·조정 '+wm+
