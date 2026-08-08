@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>이미지 → 랜딩 · 실행 기록</title>
+<style>
+:root{
+--font:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+--mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+--ink:#16181c;--body:#3c4149;--mut:#727781;--line:#e6e8eb;--soft:#f4f5f7;--paper:#fff;--acc:#2f7d4c;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font);color:var(--body);background:#fbfbfc;-webkit-font-smoothing:antialiased;line-height:1.6}
+a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+/* header */
+.top{border-bottom:1px solid var(--line);background:var(--paper);position:sticky;top:0;z-index:10}
+.top .in{display:flex;align-items:center;gap:16px;height:64px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--acc)}
+.top b{color:var(--ink);font-size:15px;font-weight:800;letter-spacing:-.2px}
+.top .meta{margin-left:auto;font-size:12.5px;color:var(--mut);font-family:var(--mono)}
+/* hero intro */
+.intro{padding:56px 0 40px}
+.kick{font-size:12px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)}
+.intro h1{font-size:34px;font-weight:800;letter-spacing:-1px;color:var(--ink);margin:14px 0 14px;line-height:1.25}
+.intro p{font-size:16px;color:var(--body);max-width:720px;margin:0}
+.goal{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px}
+.goal div{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.goal .n{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--mut);text-transform:uppercase}
+.goal .t{font-size:14px;color:var(--ink);font-weight:600;margin-top:6px;line-height:1.5}
+/* section title */
+.sec-h{display:flex;align-items:baseline;gap:12px;margin:46px 0 20px}
+.sec-h h2{font-size:15px;font-weight:800;color:var(--ink);letter-spacing:.02em;margin:0}
+.sec-h .c{font-family:var(--mono);font-size:12px;color:var(--mut);background:var(--soft);padding:3px 9px;border-radius:20px}
+.sec-h .line{flex:1;height:1px;background:var(--line)}
+/* run card */
+.run{background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:22px}
+.run .bar{display:flex;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line);background:linear-gradient(var(--paper),var(--soft))}
+.run .id{font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;background:var(--ink);padding:4px 10px;border-radius:6px}
+.run .name{font-size:15px;font-weight:800;color:var(--ink)}
+.run .date{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--mut)}
+.run .grid{display:grid;grid-template-columns:230px 1fr;gap:0}
+.run .left{border-right:1px solid var(--line);padding:22px}
+.run .right{padding:22px}
+.lbl{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 10px}
+/* image thumb (css mock of chosen instagram tile) */
+.thumb{position:relative;height:200px;border-radius:12px;overflow:hidden;background:radial-gradient(120% 100% at 30% 20%,#3a4a3c,#26301f 55%,#171f16);border:1px solid var(--line)}
+.thumb .grain{position:absolute;inset:0;opacity:.4;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.thumb .pouch{position:absolute;width:96px;height:110px;border-radius:10px;background:radial-gradient(circle at 42% 34%,#efe7d6,#d8ccb2);left:26px;top:64px;transform:rotate(-6deg);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+.thumb .box{position:absolute;width:64px;height:86px;border-radius:6px;background:linear-gradient(160deg,#3a9e5e,#256b3c);right:34px;top:40px;transform:rotate(5deg);box-shadow:0 12px 26px rgba(0,0,0,.45)}
+.thumb .cap{position:absolute;left:12px;bottom:10px;color:rgba(255,255,255,.8);font-size:10px;letter-spacing:.12em;font-family:var(--mono)}
+.src{font-size:12.5px;color:var(--mut);margin:10px 0 0;line-height:1.55}
+.src b{color:var(--body)}
+.why{font-size:13px;color:var(--body);margin:14px 0 0;padding:12px 14px;background:var(--soft);border-radius:10px;line-height:1.6}
+/* change table */
+.change{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:6px}
+.change .row{display:grid;grid-template-columns:96px 1fr 1fr;border-bottom:1px solid var(--line)}
+.change .row:last-child{border-bottom:0}
+.change .h{background:var(--soft);font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--mut);text-transform:uppercase}
+.change .c{padding:11px 14px;font-size:13px;border-left:1px solid var(--line)}
+.change .c:first-child{border-left:0;font-weight:700;color:var(--ink);display:flex;align-items:center}
+.sw{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12px}
+.sw i{width:15px;height:15px;border-radius:4px;border:1px solid rgba(0,0,0,.12);display:inline-block}
+.arrow{color:var(--mut)}
+.kw{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.kw span{font-size:12px;font-weight:600;color:var(--body);background:var(--soft);border:1px solid var(--line);padding:5px 11px;border-radius:20px}
+/* result */
+.result{margin-top:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 16px;border:1px dashed var(--line);border-radius:12px;background:#fbfdfb}
+.result .ok{font-size:12px;font-weight:800;color:var(--acc);letter-spacing:.06em}
+.result a.btn{font-size:13px;font-weight:700;color:#fff;background:var(--acc);padding:9px 16px;border-radius:8px}
+.result a.btn:hover{text-decoration:none;background:#27663f}
+.result .path{font-family:var(--mono);font-size:12px;color:var(--mut)}
+/* human-likeness checklist */
+.human{margin-top:16px}
+.human ul{list-style:none;padding:0;margin:8px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.human li{font-size:12.5px;color:var(--body);padding-left:20px;position:relative;line-height:1.5}
+.human li::before{content:'✓';position:absolute;left:0;color:var(--acc);font-weight:800}
+.human li.todo::before{content:'○';color:var(--mut)}
+footer{margin:50px 0 40px;text-align:center;font-size:12px;color:var(--mut);font-family:var(--mono)}
+@media(max-width:720px){.run .grid{grid-template-columns:1fr}.run .left{border-right:0;border-bottom:1px solid var(--line)}.goal,.human ul{grid-template-columns:1fr}}
+</style></head><body>
+
+<div class="top"><div class="wrap in"><span class="dot"></span><b>이미지 → 랜딩 · 실행 기록</b><span class="meta">image-driven landing / build log</span></div></div>
+
+<div class="wrap">
+<section class="intro">
+<span class="kick">Project Log</span>
+<h1>이미지 한 장으로,<br>사람이 만든 것처럼 그럴싸한 랜딩을 뽑는다</h1>
+<p>매 실행마다 <b>어떤 사진을 채택했는지 · 어떤 MUDS를 썼는지 · 무엇을 어떻게 바꿨는지 · 결과물이 무엇인지</b>를 이 메인에 누적 기록합니다. 목표는 "AI가 찍어낸 티"가 아니라 <b>디자이너가 손으로 만든 듯한 완성도</b>.</p>
+<div class="goal">
+<div><div class="n">Input</div><div class="t">Instagram #디자인 사진 1장</div></div>
+<div><div class="n">Engine</div><div class="t">MUDS 디자인 시스템 (토큰 전부 재설정)</div></div>
+<div><div class="n">Output</div><div class="t">고정 규격 랜딩 + 무드 이식</div></div>
+</div>
+</section>
+
+<div class="sec-h"><h2>실행 기록</h2><span class="c">23 runs</span><span class="line"></span></div>
+
+
+<!-- ── RUN 23 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 23</span><span class="name">들물 DEULMUL · 해안 물때 알림 (챔피언 리믹스)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#ffd400;color:#171200;padding:3px 9px;border-radius:6px;font-size:11px">35/40</b>2026-08-08</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:linear-gradient(160deg,#1d2b34,#0d1114);display:flex;align-items:center;justify-content:center"><span class="cap" style="color:#ffd400;font-weight:900;font-size:28px;letter-spacing:-1px">들물°</span></div>
+    <p class="why"><b>아카이타입 = 안전 알림 도구.</b> "물은 앞이 아니라 <b>뒤에서</b> 옵니다" — 연안 고립 사고는 돌아 나올 길이 먼저 잠긴 뒤 알아차려서 일어난다는 한 가지 사실만 다룬다.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6"><b>리믹스</b>: RUN18 CUMUL의 <b>"390px가 캐논, 데스크톱이 펼침면"</b>(오리지널리티 5)을 계승 + RUN16 KELVIN의 <b>"UI는 무채색, 색은 사진에만"</b>(컬러 5)을 이식. 무채색 슬레이트 + <span class="sw"><i style="background:#ffd400"></i>고시인성 옐로</span> 1색을 <b>안전 신호에만</b> 사용. 툴이 히어로보다 먼저 온다.</div>
+    <div class="kw"><span>연안 안전</span><span>물때 스크러버</span><span>모바일 캐논</span><span>무채색 UI</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 크리틱 → 35/40 (목표 2축 달성 · 챔피언 미달)</p>
+      <ul><li><b>노린 두 축 적중</b>: 컬러 3→<b>5</b> · 완성도 3→<b>5</b>. 토큰 정의 줄에 대비비를 실측 주석으로 남김</li><li><b>인터랙션의 "종류"를 바꿨다</b> — 시간을 끌면 단면도에 물이 실제로 차오르고 귀환 한계가 재계산. 09:00에 "조위 326cm인데 귀환로는 이미 +116cm 잠김"이 화면으로 증명됨</li><li>결함 3종 자체 발견·수정: <code>.wrap</code> 겸용 섹션 <code>padding</code> 단축(<b>내가 EVOLUTION에 쓴 규칙을 내가 어김</b>) · "발목" 카피가 조위와 불일치 · 단면 지형이 배경과 같은 밝기</li><li class="todo"><b>베이스가 32라 두 축을 다 올려도 35</b> — 리믹스 대상은 약점이 뚜렷한 것이 아니라 <b>총점이 높은 것</b>(KELVIN 37)을 골랐어야 했다. 다음 표적: 임팩트 4 · 오리지널리티 4</li></ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 진화 루프 · 검증됨</span><a class="btn" href="templates/run-23-deulmul.html">랜딩 열기 →</a><span class="path">templates/run-23-deulmul.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 22 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 22</span><span class="name">ANCRE 앵크르 · 기계식 시계 공방 (에이전트 자율 산출)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#e8e8e8;color:#666;padding:3px 9px;border-radius:6px;font-size:11px">미채점</b>2026-08-08</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:linear-gradient(150deg,#eef0f3,#c9cfd8);display:flex;align-items:center;justify-content:center"><span class="cap" style="color:#1f3a6b;font-weight:900;font-size:26px;letter-spacing:-.5px">ANCRE</span></div>
+    <p class="why"><b>아카이타입 = 라이브 컨피규레이터.</b> "먼저 만져 보세요. 광고는 그다음입니다." 히어로 자리에 광고 카피가 아니라 <b>실시각으로 도는 CSS 시계</b>를 놓았다.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">밝은 회청 + 딥 블루 1색. 다이얼·핸즈·케이스·스트랩 4축을 고르면 시계 그림이 바뀌고 <b>예상 일차(+0.4 s/일)·개체 예정번호까지 함께 바뀐다</b>. 조작 결과가 제품 사양으로 이어지는 구성.</div>
+    <div class="kw"><span>시계 공방</span><span>라이브 시계</span><span>컨피규레이터</span><span>자율 산출</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 크리틱 → 미채점</p><ul><li>브라우저 검증 통과: overflow-x 없음 · 이미지 2장 정상 · 규격(하드코딩 px 0·onerror·keep-all·웹폰트·캡처모드) 전부 충족</li><li class="todo">워크플로우가 주문한 4개 밖에서 <b>에이전트가 자율로 만든 산출물</b> — 독립 크리틱 점수를 신뢰성 있게 귀속할 수 없어 미채점</li></ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 병렬 워크플로우 · 검증됨</span><a class="btn" href="templates/run-22-ancre.html">랜딩 열기 →</a><span class="path">templates/run-22-ancre.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 21 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 21</span><span class="name">TANSO · 소량 생산 금속 하드웨어 사양서 (신규 방향 · T3)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#ee5a1e;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">28/40</b>2026-08-08</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 채택 사진 (인스타 #디자인 · <code>millist_official</code>)</p>
+    <div class="thumb" style="background:linear-gradient(140deg,#33302a,#1c1a17 46%,#2a2620 62%,#ee5a1e)"><span class="cap" style="color:#edeae3;font-weight:900;font-size:30px;letter-spacing:-1px">TANSO®</span></div>
+    <p class="why"><b>왜 이 컷:</b> 흰 목장갑이 검은 스틸 디스크를 프레스 다이에 올리는 순간 + 하단에 쌓인 파우더코트 오렌지 부품. <b>기름 낀 웜 차콜 + 안전색 오렌지 1색</b>이라는 팔레트가 한 장에 다 있다. <b>아카이타입 = 카탈로그/사양서(Spec Sheet)</b> — 문래동 소량 생산 금속 공방 "TANSO", 빅아이디어 "도면 한 장이면 됩니다".</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">웜 차콜 <span class="sw"><i style="background:#1c1a17"></i></span> + 스틸 페이퍼 반전 <span class="sw"><i style="background:#e3e1db;border-color:#c8c5bc"></i></span> + <span class="sw"><i style="background:#ee5a1e"></i>파우더코트 오렌지 1색</span>(RAL 2004). <b>신규 구조 P14 Spec Sheet / Industrial Index</b> — land-book 조사(AKLR 밀도형 인덱스 + Airmee 선(先)스탯)로 새로 만든 프리셋. <b>순서 파괴: 스탯·트러스트 밴드가 히어로보다 먼저</b>, 그다음 좌우로 잘려 나가는 초대형 워드마크 히어로. ★인터랙션 = <b>사양 컨피규레이터</b>(마감칩+두께 슬라이더 → 부품 표면·측면 두께·중량·단가·납기가 동시에 변함).</div>
+    <div class="kw"><span>스펙시트</span><span>선(先)스탯</span><span>크롭 워드마크</span><span>컨피규레이터</span><span>3D 틸트</span><span>T3</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 적대적 크리틱 → 28/40 · 챔피언 미달 (KELVIN 37 유지)</p>
+      <ul><li>강점: 하드코딩 px <b>0개</b>(font-size 48개 전부 <code>--t-*</code>) — RUN 16이 남긴 "무작위 18단계" 문제 완전 해소 / 발명한 수치가 서로 맞물림(품번 합 12+8+6+5=31 = "표준품 31종", 리뷰어 3인 = 납품 크레딧 3업체, MOQ 50EA 3곳 일치)</li>
+      <li>수정 9종: <b>후크 도판이 "T자+뜬 호"로 깨짐</b>(<code>class="art hook-fig"</code> 겸용 → <code>.fig .art</code> 특이도가 width를 덮어씀 → 중첩으로 교체) · 스탯밴드 981~1300px 가로 오버플로(<code>minmax(max-content,1fr)</code>) · 모바일 고아 칸 · 본문 대비 3.3:1 → <b>5.0:1</b>(AA) · <b>"CNC 3축 밀링" 캡션 아래 사진이 석유화학 플랜트</b>였음 → 선반 공방 컷으로 교체 · 중량 공식 11% 과다(유효면적 110→99cm²) · 슬라이더 8T가 자사 공시 6.0T 초과 · reduced-motion 누락 2건 · 미사용 디스플레이 토큰</li>
+      <li>검증: 실렌더 재확인(이미지 6/6 로드 · 가로 오버플로 0 · 후크가 후크로 읽힘 · 컨피규레이터 233g/₩5,600 정합) · <code>?capture=1</code> 동작 · 파이프라인 메타 노출 0</li>
+      <li class="todo">남은 약점 = <b>오리지널리티 3</b> — 스탯밴드 한 군데만 앞으로 옮겼을 뿐, 꼬리 4모듈(마퀴→칩+슬라이더→라이트 반전 트러스트→다크 풀스크린 CTA)이 RUN 16과 동일. <b>"순서를 깬다"는 페이지가 닫히는 방식을 바꾸는 것</b> → RUN 22는 꼬리부터 폐기</li></ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 진화 루프 · 채점됨</span><a class="btn" href="templates/run-21-tanso.html">랜딩 열기 →</a><span class="path">templates/run-21-tanso.html</span></div>
+  </div>
+</div>
+</article>
+
+
+<!-- ── RUN 20 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 20</span><span class="name">BEVEL · 주문 제작 주방칼 (이커머스)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#1b3a8a;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">30/40</b>2026-08-08</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:linear-gradient(150deg,#e8e3d9,#cfc7b8);display:flex;align-items:center;justify-content:center"><span class="cap" style="color:#1b3a8a;font-weight:900;font-size:26px;letter-spacing:-.5px">BEVEL</span></div>
+    <p class="why"><b>아카이타입 = 컨피규레이터 PDP.</b> 페이지 전체가 하나의 구성 상태에 묶인 "주문서형" 랜딩. 날 길이·강재·손잡이·물림각을 고르면 아래 전체가 따라 바뀐다.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">크림 + 코발트 블루 1색. <b>구조 P14 Configurator PDP</b> — 스크럽 없이 <b>상태 동기화</b>로 밀어붙인다. 옵션 선택이 가격·중량·납기·비교표까지 동시에 갱신.</div>
+    <div class="kw"><span>주방칼</span><span>컨피규레이터</span><span>상태 동기화</span><span>이커머스</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 크리틱 → 30/40 (독립 크리틱)</p><ul><li>타이포 4 · 모션 5 · 설득력 4 · 오리지널리티 4</li><li>결함 13건 지적 → 수정 반영 완료</li><li class="todo">약점: 여백 리듬 3 · 컬러 3 · 완성도 3 → 다음엔 이 세 칸</li></ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 병렬 워크플로우 · 검증됨</span><a class="btn" href="templates/run-20-bevel.html">랜딩 열기 →</a><span class="path">templates/run-20-bevel.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 19 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 19</span><span class="name">BASELINE 기준선검진센터 · 판독 안내서 (의료)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#2f5d4b;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">31/40</b>2026-08-08</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:linear-gradient(150deg,#eef1ec,#2f5d4b);display:flex;align-items:center;justify-content:center"><span class="cap" style="color:#ffffff;font-weight:900;font-size:26px;letter-spacing:-.5px">BASELINE</span></div>
+    <p class="why"><b>아카이타입 = 임상 판독 안내서.</b> 광고 랜딩이 아니라 "수검자에게 발급되는 판독 문서" 자체를 페이지 형식으로 삼았다. 빅 아이디어: <b>"정상범위가 아니라, 당신의 기준선."</b></p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">차분한 세이지 그린 + 크림. <b>구조 P14 Read-out Chart</b>. 8개년 추이 차트에 항목칩(공복혈당·LDL·수축기혈압·ALT) + 연도 슬라이더 — 고르면 그래프와 <b>판독 문장이 함께</b> 바뀐다.</div>
+    <div class="kw"><span>건강검진</span><span>판독 문서</span><span>추이 차트</span><span>접근성</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 크리틱 → 31/40 (독립 크리틱)</p><ul><li>모션 5 · 완성도 4 — 의료 영역에서 절제로 승부한 게 통했다</li><li>결함 14건 지적 → 수정 반영 완료 (6개 중 최다)</li><li class="todo">약점: 오리지널리티 3 · 컬러 3 → 판독 문서 형식은 좋았으나 실행이 관습적</li></ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 병렬 워크플로우 · 검증됨</span><a class="btn" href="templates/run-19-baseline.html">랜딩 열기 →</a><span class="path">templates/run-19-baseline.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 18 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 18</span><span class="name">CUMUL 큐물 · 구름 도감 앱 (모바일 우선)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#c2410c;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">32/40</b>2026-08-08</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:linear-gradient(150deg,#dfe6ec,#f0ece3);display:flex;align-items:center;justify-content:center"><span class="cap" style="color:#c2410c;font-weight:900;font-size:26px;letter-spacing:-.5px">CUMUL</span></div>
+    <p class="why"><b>아카이타입 = 포켓 필드 가이드.</b> 사진 한 장으로 구름 10속을 판별하는 앱. <b>390px가 캐논이고 데스크톱이 주석 달린 펼침면</b> — 16개 RUN 전부 데스크톱 우선이었던 걸 뒤집었다.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">흐린 하늘빛 + 크림 + 테라코타 1색. <b>구조 P14 Handheld Field Guide</b> — 세로 스냅 · 툴 선행형. 디바이스 목업 옆에 고도 스케일(13km~5km)이 붙어 구름 높이를 같이 읽힌다.</div>
+    <div class="kw"><span>구름 도감</span><span>모바일 우선</span><span>세로 스냅</span><span>390px 캐논</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 크리틱 → 32/40 (이번 배치 최고점)</p><ul><li>오리지널리티 <b>5</b> · 모션 5 — 모바일 우선이 실제로 새 근육이었다</li><li>결함 11건 지적 → 수정 반영 완료</li><li class="todo">약점: 컬러 3 · 완성도 3 → 다음엔 이 둘</li></ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 병렬 워크플로우 · 검증됨</span><a class="btn" href="templates/run-18-cumul.html">랜딩 열기 →</a><span class="path">templates/run-18-cumul.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 17 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 17</span><span class="name">베이시스 BASIS · 정기예금 상품설명서 (은행/핀테크)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#b3271e;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">31/40</b>2026-08-08</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:linear-gradient(150deg,#e7e9ea,#cdd2d5);display:flex;align-items:center;justify-content:center"><span class="cap" style="color:#b3271e;font-weight:900;font-size:26px;letter-spacing:-.5px">BASIS</span></div>
+    <p class="why"><b>아카이타입 = 공시 명세서.</b> 랜딩 페이지 자체가 문서번호(BS-2026-04)·시행일·개정이력을 가진 <b>금융상품 공시 문서</b>다. "각주를 본문 크기로 인쇄합니다"가 빅 아이디어.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">인쇄지 회색 + <b>인주 레드 1색</b>. 색이 장식이 아니라 <b>회계 기호</b>로 쓰인다 — 금리 인하·세금 차감·유료 수수료에만 붙고, "수수료 하락=이득"일 때는 레드를 억제한다. <b>구조 P14 Disclosure Sheet</b>: 히어로가 3번째, 큰 클로징 CTA 없음.</div>
+    <div class="kw"><span>정기예금</span><span>공시 문서</span><span>각주 12항</span><span>은행</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 크리틱 → 31/40 (오리지널리티 5)</p><ul><li>오리지널리티 <b>5</b> · 모션 5 — 히어로로 시작해 CTA로 끝나는 틀을 처음으로 깼다</li><li>설득력 근거: 5개 기관 세후이자를 직접 검산 → 소수점까지 일치. 외부감사 적정의견·BIS 비율·실명 리뷰</li><li>결함 11건 지적 → 8건 수정, 3건은 "지적이 틀림"으로 근거와 함께 반려</li><li class="todo">약점: 컬러 3 · 설득력 3 · 완성도 3 → 다음엔 이 세 칸</li></ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 병렬 워크플로우 · 검증됨</span><a class="btn" href="templates/run-17-basis.html">랜딩 열기 →</a><span class="path">templates/run-17-basis.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 16 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 16</span><span class="name">KELVIN · 컬러 프로파일 하우스 (챔피언 리믹스 · T3)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#22e0c8;color:#0b0c0e;padding:3px 9px;border-radius:6px;font-size:11px">37/40 🏆</b>2026-08-08</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:linear-gradient(100deg,#ff8a3d,#ffd9a0 26%,#eef3f7 50%,#8fc3ff 74%,#3f7dff)"><span class="cap" style="color:#0b0c0e;font-weight:900;font-size:30px;letter-spacing:-1px">KELVIN°</span></div>
+    <p class="why"><b>아카이타입 = 컬러 프로파일 라이브러리.</b> 발명: 서울의 필름 에멀전 프로파일 하우스 "KELVIN" Vol.3. 2900K 텅스텐 → 7800K 블루아워, 색온도 자체가 제품.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">잉크 다크 <span class="sw"><i style="background:#0b0c0e"></i></span> + 페이퍼 반전 <span class="sw"><i style="background:#f2f1ed;border-color:#dcd9d2"></i></span> + <span class="sw"><i style="background:#22e0c8"></i>단일 틸</span>. 원칙 <b>"UI는 무채색, 색은 오직 사진에만"</b>. <b>신규 구조 P13 Kinetic Spectrum</b>(P12 리믹스: 웨이트 스케일 → 색온도 스펙트럼). 계승+강화: 가로 스크럽 패널이 <b>필터로 실제 그레이딩</b>된 사진 5장 · 텍스트 테스터 → <b>드래그 before/after 그레이더</b>(칩+강도 슬라이더가 CSS filter를 실시간 보간). 실사 11장 전부 로드 검증.</div>
+    <div class="kw"><span>컬러 프로파일</span><span>색온도 스크럽</span><span>드래그 비교</span><span>제3자 트러스트</span><span>T3</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 크리틱 → 37/40 · 챔피언 교체 (RUN 15 KERN 35 → KELVIN 37)</p>
+      <ul><li>목표 달성: 직전 RUN이 지목한 <b>약점 2축만 정조준</b> → 비주얼 임팩트 4→<b>5</b>, 콘텐츠 설득력 4→<b>5</b> (컬러&amp;대비·모션도 5)</li><li>설득력 근거: 평점 4.9/386건 · 콜로리스트 3인 리뷰(이름·직함·스튜디오·검증배지) · 사용 크레딧 5건 — KERN에 없던 <b>제3자 신호</b></li><li>수정 5종: 사진 위 모노 캡션 가독성(--mut→밝은값+shadow) · 히어로 하단 스크림 강화 · <code>padding</code> 단축이 <code>.wrap</code> 좌우 40px를 덮어써 2개 섹션 어긋남 · 스튜디오명 오타 · 스펙밴드 정렬</li><li>검증: 386px 폴백(pin 해제 → x scroll-snap) · overflow-x 없음 · reduced-motion 폴백 · 깊은 스크롤 리로드 시 히어로 복귀</li><li class="todo">남은 약점 = 오리지널리티 4 — 골격이 P12 직계 리믹스라 모듈 <b>순서</b>가 거의 동일 → RUN 17(홀수=새 방향)은 구조 순서부터 깰 것</li></ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 진화 루프 · 채점됨</span><a class="btn" href="templates/run-16-kelvin.html">랜딩 열기 →</a><span class="path">templates/run-16-kelvin.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 15 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 15</span><span class="name">KERN · 타입 스페시멘 (신규 방향 · T3)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#f0300d;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">35/40</b>2026-08-08</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:#f3efe6;display:flex;align-items:center;justify-content:center"><span class="cap" style="color:#17150f;font-weight:900;font-size:34px;letter-spacing:-2px">KERN<i style="color:#f0300d;font-style:normal">®</i></span></div>
+    <p class="why"><b>아카이타입 = 타입 스페시멘/카탈로그</b> (RUN 01~14에 없던 종류). 발명: 서울 활자 파운드리 "KERN"의 디스플레이 산세리프 v1.2 출시 페이지. 웜 페이퍼+잉크에 버밀리언 1색.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">웜 페이퍼 <span class="sw"><i style="background:#f3efe6;border-color:#d9d2c4"></i></span> + 잉크 <span class="sw"><i style="background:#17150f"></i></span> + <span class="sw"><i style="background:#f0300d"></i>버밀리언</span> 1색. <b>신규 구조 P12 Kinetic Type Specimen</b>. <b>T3 진입</b>: sticky pin + <b>가로 스크롤-스크럽</b> 웨이트 패널(라이브러리 0) · <b>라이브 테스터</b>(텍스트 입력+웨이트 슬라이더) · 글자 리빌 · 마퀴 · 카운트업 · 마그네틱. 이미지 0(활자가 비주얼).</div>
+    <div class="kw"><span>활자 파운드리</span><span>페이퍼+잉크</span><span>스크롤 스크럽</span><span>라이브 테스터</span><span>T3</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 크리틱 → 35/40 · 챔피언 교체 (RUN 09 NOIR 34 → KERN 35)</p>
+      <ul><li>강점: 타이포 위계 <b>5</b>·모션 <b>5</b> / 아카이타입 교체로 이전 RUN과 섹션 <b>0겹침</b> / 라이선스 표(영구·PV·타이틀당) 설득력</li><li>수정 4종: 한글 <code>word-break:keep-all</code> · 웹폰트 미로드(Pretendard CDN 추가) · <code>71개국</code> 줄바꿈+라벨 불일치 → <code>71개</code>/지원 언어 · <code>scroll-behavior:smooth</code>가 스크롤복원 가드 무력화</li><li>검증: 386px 모바일 폴백(pin 해제 → x scroll-snap 캐러셀) · overflow-x 없음 · reduced-motion 폴백</li><li class="todo">남은 약점 = 비주얼 임팩트 4(페이퍼&amp;잉크라 조용함) · 설득력 4(제3자 트러스트 신호 0) → RUN 16은 이 둘만 노려 37</li></ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 진화 루프 · 채점됨</span><a class="btn" href="templates/run-15-kern.html">랜딩 열기 →</a><span class="path">templates/run-15-kern.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 14 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 14</span><span class="name">RESON · 이머시브 오디오 (챔피언 리믹스)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#e6b25f;color:#231602;padding:3px 9px;border-radius:6px;font-size:11px">30/40</b>2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:radial-gradient(circle at 50% 42%,#cfd6df,#8b95a4 38%,#08080b 74%)"><span class="cap" style="color:#e6b25f;font-weight:900;letter-spacing:3px">RESON</span></div>
+    <p class="why"><b>아카이타입 = 프리미엄 오디오.</b> 발명: 오픈백 레퍼런스 헤드폰 "RESON". 챔피언 RUN 09(다크+크롬) 리믹스에 앰버 글로우·오디오 정체성.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">이머시브 다크 + <b>크롬</b> <span class="sw"><i style="background:#cfd6df;border-color:#ccc"></i></span> + <span class="sw"><i style="background:#e6b25f"></i>웜 앰버</span>. <b>구조 P7 리믹스</b>. <b>T2 이펙트 5종</b>: 커스텀 커서(폴백)·펄스+회전+스윕 크롬 디스크·웨이브폼/EQ·카운트업·마그네틱(소반경). 이미지 의존 0.</div>
+    <div class="kw"><span>오디오</span><span>크롬+앰버</span><span>웨이브폼</span><span>T2</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 크리틱 → 30/40 (수정 반영)</p>
+      <ul><li>강점: 마그네틱 스코핑·로드폴백 / 오디오 서사·리뷰</li><li>수정: 크롬 회전+스윕 임팩트 복원 · 20Hz 현실화 · 커서 폴백</li><li class="todo">2연속 챔피언(34) 미달 — 다음 홀수 RUN 새 방향(정체 시 T3 상승)</li></ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 진화 루프 · 채점됨</span><a class="btn" href="templates/run-14-reson.html">랜딩 열기 →</a><span class="path">templates/run-14-reson.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 13 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 13</span><span class="name">SIGNAL · 스플릿 다이프틱 (T2)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#ff2d78;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px;letter-spacing:.02em">30/40</b>2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:linear-gradient(90deg,#0d0d10 50%,#ff2d78 50%)"><span class="cap" style="color:#fff;font-weight:900">SIGNAL</span></div>
+    <p class="why"><b>아카이타입 = 리포트/데이터.</b> 발명: "SIGNAL 2026 디자인 트렌드 리포트". 신호별 스플릿 패널·데이터 지표.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">잉크 <span class="sw"><i style="background:#0d0d10"></i></span> + <span class="sw"><i style="background:#ff2d78"></i>마젠타</span>. <b>신규 구조 P11 Split Diptych</b> — 세로 스플릿 히어로 → 교차 스플릿 패널 → 데이터 밴드(카운트업 차트) → 풀쿼트 → 마그네틱 CTA. <b>티어 T2 이펙트: 커스텀 커서·글자 리빌·카운트업·마그네틱 버튼(5종).</b></div>
+    <div class="kw"><span>데이터 리포트</span><span>마젠타</span><span>스플릿</span><span>T2 모션</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 크리틱 (적대적 심사) → 30/40</p>
+      <ul><li>강점: 스플릿 임팩트·응집력 / T2 모션 5종</li><li>약점→수정: 마그네틱 트리거 스코핑 · footer 메타 제거</li><li class="todo">챔피언 RUN 09(34) 미달 — 다음 RUN 오리지널리티↑로 재도전</li></ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 진화 루프 · 채점됨</span><a class="btn" href="templates/run-13-signal.html">랜딩 열기 →</a><span class="path">templates/run-13-signal.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 12 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 12</span><span class="name">PULSE · SaaS 랜딩</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:#f7f8fa"><span class="cap" style="color:#0e9f8e;font-weight:800">Pulse</span></div>
+    <p class="why"><b>아카이타입 = 서비스/소프트웨어.</b> 발명: 팀 성과 대시보드 SaaS "Pulse". 기능·연동·요금·FAQ.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">클린 라이트 + <span class="sw"><i style="background:#0e9f8e"></i>틸</span>. <b>구조 P6 SaaS</b> — Hero split-L(<b>CSS 대시보드 목업</b>) → 로고 클라우드 → 기능 교차 2행 → 메트릭 밴드 → 요금 3티어 → <b>FAQ 아코디언</b> → CTA. 이미지 의존 0(CSS UI 목업).</div>
+    <div class="kw"><span>SaaS</span><span>틸</span><span>대시보드</span><span>클린</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료 (자율 루프)</span><a class="btn" href="templates/run-12-pulse.html">랜딩 열기 →</a><span class="path">templates/run-12-pulse.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 11 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 11</span><span class="name">SLOW · 스크롤리텔링</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:radial-gradient(circle at 40% 35%,#8a5a2e,#231710 72%)"><span class="cap" style="color:#c56a3f;font-weight:900;letter-spacing:2px">SLOW</span></div>
+    <p class="why"><b>아카이타입 = 스토리/저널.</b> 발명: 싱글 오리진 커피 "SLOW". 농장→가공→로스팅→한 잔 스크롤 내러티브.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">에스프레소 다크 <span class="sw"><i style="background:#231710"></i></span> + <span class="sw"><i style="background:#c56a3f"></i>테라코타</span> · 세리프·그레인. <b>구조 P4 Scrollytelling</b> — 다크 히어로 → <b>sticky 비주얼 + 4스텝 스크롤 서사</b> → 스탯 밴드 → 인용 → 다크 CTA. <b>이펙트: 스텝별 sticky disc 색/번호 전환.</b></div>
+    <div class="kw"><span>커피</span><span>내러티브</span><span>느림</span><span>세리프</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료 (자율 루프)</span><a class="btn" href="templates/run-11-slow.html">랜딩 열기 →</a><span class="path">templates/run-11-slow.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 10 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 10</span><span class="name">MONO · 벤토 카탈로그</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:#2b45e6"><span class="cap" style="color:#fff;font-weight:900">MONO</span></div>
+    <p class="why"><b>아카이타입 = 제품 카탈로그.</b> 발명: 데스크 오브젝트 편집샵 "MONO". 벤토 카탈로그·비교표·멤버십.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">크림 + <span class="sw"><i style="background:#2b45e6"></i>코발트</span> · 볼드 클린. <b>구조 P3 Bento</b> — 중앙 히어로 → 로고 스트립 → <b>혼합 벤토 카탈로그</b> → 비교표 → 리뷰 3열 → <b>sticky CTA</b> → Footer. 컬러 블록 타일(이미지 의존 0).</div>
+    <div class="kw"><span>문구</span><span>코발트</span><span>벤토</span><span>플레이풀 클린</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료 (자율 루프)</span><a class="btn" href="templates/run-10-mono.html">랜딩 열기 →</a><span class="path">templates/run-10-mono.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 09 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 09</span><span class="name">NOIR 01 · 이머시브 다크 + 리퀴드 크롬</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:radial-gradient(circle at 50% 45%,#cfd8e3,#8a97a6 40%,#12151b 75%)"><span class="cap" style="color:#eef4fa;font-weight:800;letter-spacing:3px">NOIR</span></div>
+    <p class="why"><b>아카이타입 = 프리미엄 제품 쇼케이스.</b> 발명: 리퀴드 메탈 향수 "NOIR 01 · 한정 999병".</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">이머시브 다크 <span class="sw"><i style="background:#060709"></i></span> + <b>리퀴드 크롬</b> <span class="sw"><i style="background:#cfd8e3;border-color:#ccc"></i></span>. <b>구조 P7 Immersive Dark</b> — 풀블리드 히어로(크롬 오브 센터피스) → 텍스트 밴드 → 스펙 4열 → 컬렉션 인덱스 → 풀스크린 CTA. <b>이펙트: CSS 애니메이션 리퀴드 크롬 오브(회전+모프) — 외부 레포 0.</b></div>
+    <div class="kw"><span>다크 럭셔리</span><span>메탈 크롬</span><span>미니멀</span><span>한정판</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 렌더 검증됨</span><a class="btn" href="templates/run-09-noir.html">랜딩 열기 →</a><span class="path">templates/run-09-noir.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 08 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 08</span><span class="name">FORM · 매니페스토</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:#0c0b0a"><span class="cap" style="color:#ff4d26;font-weight:900">FORM</span></div>
+    <p class="why"><b>아카이타입 = 매니페스토/선언.</b> 발명: 디자인 스튜디오 "FORM — 우리는 형태로 말한다". 초대형 선언문·원칙·구호.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">니어블랙 <span class="sw"><i style="background:#ff4d26"></i>버밀리언</span> · 초대형 타이포. <b>구조 P10 Manifesto</b> — 풀스크린 선언 섹션 ×3 → 원칙 → 구호 마퀴 → CTA. <b>이미지 0 · 단어 분할 스크롤 리빌.</b></div>
+    <div class="kw"><span>선언</span><span>고대비</span><span>타이포 중심</span><span>버밀리언</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 렌더 검증됨</span><a class="btn" href="templates/run-08-form.html">랜딩 열기 →</a><span class="path">templates/run-08-form.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 07 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 07</span><span class="name">NOON · 룩북</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:#efece5"><span class="cap" style="color:#181613;font-weight:600;letter-spacing:3px">NOON</span></div>
+    <p class="why"><b>아카이타입 = 룩북/갤러리.</b> 발명: 오브제 스튜디오 "NOON — Still Life No.03". 이미지 중심·룩 넘버.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">본 화이트 <span class="sw"><i style="background:#efece5;border-color:#ccc"></i>#efece5</span> · 극미니멀 산세리프(웨이트 300). <b>구조 P5 Showcase</b> — 콜라주 히어로 → <b>마소니 갤러리</b> → 피처 split → 인덱스 → 컨택트. 카피 최소.</div>
+    <div class="kw"><span>미니멀</span><span>이미지 중심</span><span>여백</span><span>정적</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료</span><a class="btn" href="templates/run-07-noon.html">랜딩 열기 →</a><span class="path">templates/run-07-noon.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 06 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 06</span><span class="name">MARGIN · 에디토리얼</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:#f4f0e6"><span class="cap" style="color:#a8432e;font-family:Georgia,serif;font-style:italic">MARGIN</span></div>
+    <p class="why"><b>아카이타입 = 에디토리얼/매거진.</b> 발명: 디자인 저널 피처 "여백이 말한다". 기사 본문·드롭캡·풀쿼트.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">웜 페이퍼 <span class="sw"><i style="background:#f4f0e6;border-color:#ccc"></i></span> + <span class="sw"><i style="background:#a8432e"></i>벽돌 레드</span> · 세리프·그레인. <b>구조 P2 Magazine</b> — 마스트헤드 → 기사 헤드/바이라인 → 커버 → 본문(드롭캡·풀쿼트·피규어) → 관련기사 → 레터.</div>
+    <div class="kw"><span>잡지</span><span>세리프</span><span>롱폼</span><span>그레인</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료</span><a class="btn" href="templates/run-06-margin.html">랜딩 열기 →</a><span class="path">templates/run-06-margin.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 05 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 05</span><span class="name">LOUD 2026 · 이벤트</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 채택 사진 · 컨셉</p>
+    <div class="thumb" style="background:#0e1016"><span class="cap" style="color:#d8ff33;font-weight:900">LOUD.26</span></div>
+    <p class="src">영감 — Instagram "레몬 코어" 라임 포스터</p>
+    <p class="why"><b>아카이타입 = 이벤트/런칭.</b> 발명: 크리에이티브 컨퍼런스 "LOUD 2026". 카운트다운·라인업·일정·티켓.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">잉크 <span class="sw"><i style="background:#0e1016"></i></span> + <span class="sw"><i style="background:#d8ff33;border-color:#ccc"></i>일렉트릭 라임</span> · 포스터 타이포. <b>구조 P9 Event</b> — 풀블리드 히어로+카운트다운 → 라임 티커 → 스피커 라인업 → 3일 일정표 → 티켓 3티어 → 베뉴 → 빅 CTA. <b>이미지 0(CSS 아바타).</b></div>
+    <div class="kw"><span>이벤트</span><span>라임/잉크</span><span>포스터</span><span>카운트다운</span></div>
+    <p class="lbl" style="margin-top:16px">③ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료</span><a class="btn" href="templates/run-05-loud.html">랜딩 열기 →</a><span class="path">templates/run-05-loud.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 04 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 04</span><span class="name">LUMEN · 프리미엄 글래스</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 채택한 사진 · 컨셉</p>
+    <div class="thumb" style="background:radial-gradient(45% 45% at 15% 12%,#c7b6ff,transparent 60%),radial-gradient(50% 45% at 85% 8%,#ffc9e3,transparent 60%),radial-gradient(55% 55% at 80% 85%,#b6e3ff,transparent 60%),linear-gradient(160deg,#f4f2ff,#eaf3ff)">
+      <span class="cap" style="color:#5b5bd6;font-weight:800">soft mesh</span></div>
+    <p class="src">홀로그래픽/글래스모피즘 무드에서 <b>발명한 컨셉</b></p>
+    <p class="why"><b>발명한 콘텐츠:</b> "LUMEN — 피부를 데이터로 읽는 홈 뷰티 디바이스". 콘텐츠 아카이타입 = <b>제품+가격(SaaS형)</b> (이전 RUN들과 다른 종류).</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② MUDS를 이렇게 바꿨다</p>
+    <div class="change">
+      <div class="row"><div class="c h">항목</div><div class="c h">Before</div><div class="c h">After</div></div>
+      <div class="row"><div class="c">브랜드</div><div class="c">단색 포인트</div><div class="c"><span class="sw"><i style="background:#5b5bd6"></i>#5b5bd6 인디고</span></div></div>
+      <div class="row"><div class="c">배경</div><div class="c">단색/크림</div><div class="c">소프트 <b>메시 그라데이션</b>(라일락·핑크·민트)</div></div>
+      <div class="row"><div class="c">표면</div><div class="c">불투명 카드</div><div class="c"><b>Liquid Glass</b>(backdrop-blur+굴절)</div></div>
+      <div class="row"><div class="c">헤드라인</div><div class="c">-</div><div class="c">그라데이션 텍스트 · 중앙 정렬</div></div>
+    </div>
+    <div class="kw"><span>프리미엄</span><span>글래스모피즘</span><span>소프트</span><span>뷰티테크</span><span>미래적</span></div>
+
+    <div class="human">
+      <p class="lbl" style="margin-top:18px">③ 구조 레시피 (§A-5)</p>
+      <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6"><b>P8 · Glass Premium</b> — Header(glass) → Hero:<b>centered</b> → glass <b>bento</b> → <b>pricing</b> 3-tier → testimonial → glass CTA → Footer. <b>이전 P1(split→grid-3)과 완전히 다른 뼈대.</b></div>
+    </div>
+
+    <div class="human">
+      <p class="lbl" style="margin-top:16px">④ 이펙트 · 체크</p>
+      <ul>
+        <li>Liquid Glass (CSS backdrop-filter)</li>
+        <li>메시 그라데이션 배경</li>
+        <li>스크롤 리빌 (scrollRestoration 폴백 적용)</li>
+        <li>중앙 히어로 + 벤토 + 가격표 = 신규 구조</li>
+      </ul>
+    </div>
+
+    <p class="lbl" style="margin-top:16px">⑤ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료</span><a class="btn" href="templates/run-04-lumen.html">랜딩 열기 →</a><span class="path">templates/run-04-lumen.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 03 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 03</span><span class="name">APEX · 다크 크롬 퍼포먼스</span><span class="date">2026-08-03</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 채택한 사진</p>
+    <div class="thumb" style="background:linear-gradient(180deg,#0a0d12,#12303a)"><div class="grain"></div>
+      <div class="pouch" style="width:110px;height:70px;border-radius:8px;background:linear-gradient(120deg,#5b6b7a,#c7d3dd);left:60px;top:70px;transform:rotate(-4deg);opacity:.85"></div>
+      <span class="cap" style="color:#22d3d8;font-weight:800">2026 트렌드</span></div>
+    <p class="src">출처 — Instagram <b>#디자인</b> 피드<br>"2026 디자인 트렌드" (크롬 말 + 시안)</p>
+    <p class="why"><b>왜 이 사진?</b> 니어블랙 배경 + 메탈 크롬 + 시안 네온 + 속도감. 앞선 두 RUN(밝은 자연)과 정반대인 다크 테마로 재현성 확인용.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② MUDS를 이렇게 바꿨다</p>
+    <div style="font-size:12.5px;color:var(--mut);margin:-2px 0 12px">base: <b style="color:var(--body)">깨끗한 MUDS 복제</b> · <b style="color:var(--body)">라이트 → 다크 테마 반전</b></div>
+    <div class="change">
+      <div class="row"><div class="c h">항목</div><div class="c h">Before (base)</div><div class="c h">After (사진 무드)</div></div>
+      <div class="row"><div class="c">브랜드</div><div class="c"><span class="sw"><i style="background:#3a9e4e"></i>#3a9e4e 그린</span></div><div class="c"><span class="sw"><i style="background:#22d3d8"></i>#22d3d8 시안</span></div></div>
+      <div class="row"><div class="c">배경(surface)</div><div class="c"><span class="sw"><i style="background:#f5f8f5"></i>#f5f8f5 라이트</span></div><div class="c"><span class="sw"><i style="background:#0a0d12;border-color:#333"></i>#0a0d12 니어블랙</span></div></div>
+      <div class="row"><div class="c">본문 텍스트</div><div class="c"><span class="sw"><i style="background:#182119"></i>#182119 진한글씨</span></div><div class="c"><span class="sw"><i style="background:#aab6c2"></i>#aab6c2 라이트</span></div></div>
+      <div class="row"><div class="c">헤드라인</div><div class="c">세리프 / 산세리프</div><div class="c">헤비 산세리프 · 크롬 그라데이션 · 대문자</div></div>
+      <div class="row"><div class="c">라운드</div><div class="c">둥근 26~32px (RUN02)</div><div class="c">샤프 6~16px · 테크</div></div>
+    </div>
+    <div class="kw"><span>다크</span><span>미래적</span><span>크롬/메탈</span><span>시안 네온</span><span>속도감</span><span>하이컨트라스트</span></div>
+
+    <div class="human">
+      <p class="lbl" style="margin-top:18px">③ "사람이 만든 티" 체크</p>
+      <ul>
+        <li>실사 애슬레틱컷 6컷 + 다크-시안 톤 오버레이</li>
+        <li>크롬 그라데이션·시안 글로우·스피드라인</li>
+        <li>스크롤 리빌·카드 보더 글로우 모션</li>
+        <li class="todo">히어로컷 Brooks 로고 희미하게 노출 → 교체</li>
+      </ul>
+    </div>
+
+    <p class="lbl" style="margin-top:18px">④ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료</span><a class="btn" href="templates/run-03-apex.html">랜딩 열기 →</a><span class="path">templates/run-03-apex.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 02 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 02</span><span class="name">RIPE · 제철 프레시</span><span class="date">2026-08-02</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 채택한 사진</p>
+    <div class="thumb" style="background:radial-gradient(120% 100% at 40% 20%,#f7d9d0,#ec5b45 70%,#d8392a)"><div class="grain"></div>
+      <div class="pouch" style="width:70px;height:70px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#ff8a6b,#d8392a);left:30px;top:60px;transform:none"></div>
+      <div class="box" style="width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#ffd24a,#e0a41f);right:40px;top:52px;transform:none"></div>
+      <span class="cap" style="color:#fff">여름 제철</span></div>
+    <p class="src">출처 — Instagram <b>#디자인</b> 피드<br>"다가오는 여름 · 제철 디자인 공식"</p>
+    <p class="why"><b>왜 이 사진?</b> 피치→코랄→레드 그라데이션 + 신선한 과일 + 볼드 편집형 타이포. RUN 01(차분·크림·그린)과 정반대인 따뜻·생기·볼드 무드.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② MUDS를 이렇게 바꿨다</p>
+    <div style="font-size:12.5px;color:var(--mut);margin:-2px 0 12px">base: <b style="color:var(--body)">깨끗한 MUDS 복제</b> · <b style="color:var(--body)">토큰 이름 유지, 값만 교체</b></div>
+    <div class="change">
+      <div class="row"><div class="c h">항목</div><div class="c h">Before (base)</div><div class="c h">After (사진 무드)</div></div>
+      <div class="row"><div class="c">브랜드</div><div class="c"><span class="sw"><i style="background:#3a9e4e"></i>#3a9e4e 그린</span></div><div class="c"><span class="sw"><i style="background:#e5462f"></i>#e5462f 코랄레드</span></div></div>
+      <div class="row"><div class="c">중성 배경</div><div class="c"><span class="sw"><i style="background:#f5f8f5"></i>#f5f8f5 그린틴트</span></div><div class="c"><span class="sw"><i style="background:#fdf4f0"></i>#fdf4f0 피치크림</span></div></div>
+      <div class="row"><div class="c">보조 포인트</div><div class="c">—</div><div class="c"><span class="sw"><i style="background:#f2b02e"></i>#f2b02e 선옐로</span></div></div>
+      <div class="row"><div class="c">헤드라인</div><div class="c">세리프 (RUN 01)</div><div class="c">볼드 헤비 산세리프 900</div></div>
+      <div class="row"><div class="c">라운드</div><div class="c">부드러운 16~20px</div><div class="c">둥근 26~32px · 하이라이트 마커</div></div>
+    </div>
+    <div class="kw"><span>싱그러운</span><span>juicy</span><span>따뜻한</span><span>생기</span><span>볼드</span><span>여름 제철</span></div>
+
+    <div class="human">
+      <p class="lbl" style="margin-top:18px">③ "사람이 만든 티" 체크</p>
+      <ul>
+        <li>실사 주스/과일컷 6컷</li>
+        <li>옐로 하이라이트 마커 · 배지</li>
+        <li>스크롤 리빌·카드 리프트 모션</li>
+        <li>제철 캘린더 등 브랜드 서사</li>
+      </ul>
+    </div>
+
+    <p class="lbl" style="margin-top:18px">④ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료</span><a class="btn" href="templates/run-02-ripe.html">랜딩 열기 →</a><span class="path">templates/run-02-ripe.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 01 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 01</span><span class="name">BARE · 느좋 내추럴</span><span class="date">2026-08-02</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 채택한 사진</p>
+    <div class="thumb"><div class="grain"></div><div class="pouch"></div><div class="box"></div><span class="cap">VOLCANIC</span></div>
+    <p class="src">출처 — Instagram <b>#디자인</b> 피드<br>"느좋 브랜드는…" (Innisfree 브랜딩 컷)</p>
+    <p class="why"><b>왜 이 사진?</b> 차콜 배경 위 크림 코튼 + 딥 그린 제품 한 점의 대비가 "조용한 자연주의" 무드로 명확히 읽혀 토큰화가 쉬움.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② MUDS를 이렇게 바꿨다</p>
+    <div style="font-size:12.5px;color:var(--mut);margin:-2px 0 12px">base: <b style="color:var(--body)">MUDS (Farm-In-Main-Website)</b> → 복제본 Project_1 · <b style="color:var(--body)">토큰 이름 유지, 값만 교체</b></div>
+    <div class="change">
+      <div class="row"><div class="c h">항목</div><div class="c h">Before (base)</div><div class="c h">After (사진 무드)</div></div>
+      <div class="row"><div class="c">브랜드</div><div class="c"><span class="sw"><i style="background:#3a9e4e"></i>#3a9e4e 잔디</span></div><div class="c"><span class="sw"><i style="background:#2f7d4c"></i>#2f7d4c 볼케닉</span></div></div>
+      <div class="row"><div class="c">중성 배경</div><div class="c"><span class="sw"><i style="background:#f5f8f5"></i>#f5f8f5 그린틴트</span></div><div class="c"><span class="sw"><i style="background:#f8f5ef"></i>#f8f5ef 크림</span></div></div>
+      <div class="row"><div class="c">다크 표면</div><div class="c"><span class="sw"><i style="background:#182119"></i>#182119 쿨</span></div><div class="c"><span class="sw"><i style="background:#1c1913"></i>#1c1913 웜차콜</span></div></div>
+      <div class="row"><div class="c">헤드라인</div><div class="c">산세리프</div><div class="c">세리프 디스플레이 (Playfair/명조)</div></div>
+      <div class="row"><div class="c">라운드</div><div class="c">각진 8px</div><div class="c">부드러운 16~20px · 버튼 pill</div></div>
+    </div>
+    <div class="kw"><span>차분한</span><span>촉각적</span><span>내추럴</span><span>미니멀</span><span>웜 뉴트럴</span><span>프리미엄 여백</span></div>
+
+    <div class="human">
+      <p class="lbl" style="margin-top:18px">③ "사람이 만든 티" 체크</p>
+      <ul>
+        <li>세리프+국문 혼합 타이포 위계</li>
+        <li>단색 포인트 절제(그린 1곳)</li>
+        <li>비대칭 히어로 · 넉넉한 여백</li>
+        <li>그레인 질감으로 디지털 티 제거</li>
+        <li>실사 제품컷 적용 (Unsplash 7컷)</li>
+        <li>스크롤 리빌·호버·마퀴 모션</li>
+        <li class="todo">브랜드 전용 촬영컷으로 교체</li>
+        <li class="todo">세리프 웹폰트 로딩 최적화</li>
+      </ul>
+    </div>
+
+    <p class="lbl" style="margin-top:18px">④ 결과물</p>
+    <div class="result"><span class="ok">● 생성 완료</span><a class="btn" href="templates/run-01-bare.html">랜딩 열기 →</a><span class="path">templates/run-01-bare.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- 다음 실행은 여기에 RUN 02, 03 … 으로 누적 -->
+
+<div class="sec-h"><h2>파이프라인</h2><span class="c">3 steps</span><span class="line"></span></div>
+<div class="goal" style="margin-top:0">
+<div><div class="n">Step 1</div><div class="t">인스타 #디자인에서 무드 뚜렷한 사진 1장 채택</div></div>
+<div><div class="n">Step 2</div><div class="t">MUDS 토큰(컬러·타이포·라운드) 전부 그 사진으로 재설정</div></div>
+<div><div class="n">Step 3</div><div class="t">고정 홈페이지 규격에 무드 입혀 랜딩 생성</div></div>
+</div>
+<p style="font-size:13px;color:var(--mut);margin-top:14px">상세 명세 → <a href="design-automation-workflow.md">design-automation-workflow.md</a></p>
+
+<footer>image-driven landing · build log · 계속 누적됩니다</footer>
+</div>
+
+</body></html>
