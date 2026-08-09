@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- 시스템 출처: refs/samsung.md (2026-08-09 실측 · 표본 2장) · 브랜드·제품·수치·인물은 전부 발명 -->
+<!-- 옮긴 것: 2px 등차 타입 · 크기에 비례하는 -0.02em 트래킹(20px 이상은 0) · 행간 1.0 라벨 ·
+     순검정 본문 · 검정이 포인트색 · 고정 높이 밴드(810/390) 교대 · 알약 버튼 동일 기하 ·
+     6px 앵커 여백 · 1440 컨테이너 + 24 패딩 · 0.5s cubic-bezier(0,.18,.07,1) · 그림자 0
+     옮기지 않은 것: 로고·워드마크·서체 원본·사진·문장. 업종도 소비자 가전 → 산업 시험장비로 옮겼다 -->
+<title>담금 — 온도·습도 시험 챔버</title>
+<meta name="description" content="설정값이 아니라 시료 중심 온도로 시험 시간을 셉니다. 담금 C40·C150·C400 온도·습도 시험 챔버.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/variable/woff2/SUIT-Variable.css">
+<style>
+:root{
+  /* 서체 — 원본은 본문 서체 하나에 디스플레이 서체를 「24px/700 한 조합에만」 쓴다.
+     그 규칙만 옮기고 서체 자체는 공개 한글 웹폰트로 대체했다 */
+  --sans:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --disp:'SUIT Variable','Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+
+  /* 색 — 원본 실측. 본문의 90%가 순검정이고 회색 본문이 거의 없다.
+     회색은 축 눈금·표 라벨·단위 같은 「값이 아닌 것」에만 남긴다.
+     원본이 링크에 쓴 #007AFF 는 흰 배경에서 4.02:1 로 AA 미달이라 쓰지 않고,
+     원본이 이미 쓰고 있는 #006BEA(4.89:1)로 올렸다 */
+  --paper:#f7f7f7;
+  --card:#ffffff;
+  --ink:#000000;    /* --card 위 21:1 (실측) */
+  --body:#000000;   /* --paper 위 19.6:1 (실측) */
+  --mut:#555555;    /* --paper 위 6.96:1 (실측) — 원본의 두 번째 텍스트 회색 */
+  --onk:#ffffff;    /* --ink 위 21:1 (실측) — 검정 밴드 위 글자 */
+  --k:#006bea;      /* --card 위 4.89:1 (실측) — 원본 팔레트 안에서 고른 링크색 */
+  --hair:#dddddd;   /* 비텍스트 전용 — 원본 실측 테두리 연회색 */
+  --line:#8f8f8f;   /* 비텍스트 전용 — 원본 실측 테두리 중간회색 */
+
+  /* 타입 — 원본은 배수 스케일이 아니라 +2px 등차다. 히어로만 24에서 40으로 건너뛴다 */
+  --t-12:12px;--t-13:13px;--t-14:14px;--t-16:16px;--t-18:18px;
+  --t-20:20px;--t-22:22px;--t-24:24px;--t-40:40px;
+  /* 행간 — 여러 줄은 1.31~1.43, 한 줄 라벨은 1.00(=크기와 같은 값을 그대로 쓴다).
+     원본에서 행간 1.0 은 14·16·40 에서만 나왔다 */
+  --lh-12:16px;--lh-13:17px;--lh-14:20px;--lh-16:22px;--lh-18:25px;
+  --lh-20:26px;--lh-22:29px;--lh-24:32px;
+  /* 트래킹 — 작은 글자에만 -0.02em, 20px 이상은 0. 통상과 반대다.
+     ★ em 은 「선언한 요소의 크기」로 px 이 되고 그 px 이 상속된다.
+       body 에 한 번만 걸면 전 크기가 -0.28px 로 고정된다 — 크기별로 다시 선언해야 한다 */
+  --ls-s:-.02em;
+
+  /* 간격 — 원본 최빈은 6px(링크 상하) · 10px(버튼 상하) · 24px(텍스트 블록). 4의 배수 격자가 아니다 */
+  --s2:2px;--s4:4px;--s6:6px;--s8:8px;--s10:10px;--s14:14px;
+  --s16:16px;--s24:24px;--s40:40px;--s60:60px;
+
+  /* 라운드 — 두 표본에 모두 있는 값만 남겼다. 4px 은 표본 B 최빈이지만 A 에 없어 시스템으로 안 본다 */
+  --r8:8px;--r20:20px;
+  --w:1440px;--pad:24px;--head:106px;
+  /* 세로 리듬은 패딩이 아니라 밴드 높이다. 원본 홈은 810 / 390 을 여섯 번 교대한다 */
+  --band-lg:810px;--band-sm:390px;
+  --plot-h:440px;
+  --dur:.5s;--dur-s:.2s;--ease:cubic-bezier(0,.18,.07,1);
+}
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--body);font-family:var(--sans);
+  font-size:var(--t-14);line-height:var(--lh-14);letter-spacing:var(--ls-s);
+  font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;
+  word-break:keep-all;overflow-wrap:break-word;overflow-x:hidden}
+h1,h2,h3,p,ul,ol,table{margin:0}
+figure,blockquote,dd,dl{margin:0}
+ul{padding:0;list-style:none}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;letter-spacing:inherit}
+img{max-width:100%;display:block}
+[id]{scroll-margin-top:126px}
+.wrap{max-width:var(--w);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
+
+/* 층위는 그림자가 아니라 배경색과 1px 선으로만 만든다 — 원본은 노드의 0.3%만 그림자를 쓴다 */
+.rise{opacity:1}
+.js .rise{opacity:0;transform:translateY(10px)}
+.js .rise.vis{opacity:1;transform:none;
+  transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease)}
+
+/* ── 밴드 ── 원본은 section 의 상하 패딩이 0이고 높이가 고정돼 있다 ── */
+.band{min-height:var(--band-sm);display:flex;align-items:center;
+  padding-top:var(--s40);padding-bottom:var(--s40)}
+.band-lg{min-height:var(--band-lg)}
+.band-k{background:var(--ink);color:var(--onk)}
+.band-w{background:var(--card)}
+.band>.wrap{width:100%}
+
+/* ── 헤더 106px ── */
+.top{height:var(--head);background:var(--card);border-bottom:1px solid var(--hair);
+  position:sticky;top:0;z-index:30}
+.top-in{max-width:var(--w);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad);
+  height:var(--head);display:flex;align-items:center;gap:var(--s24)}
+.mark{font-family:var(--disp);font-size:var(--t-24);line-height:var(--t-24);
+  font-weight:700;color:var(--ink);letter-spacing:normal}
+.mark small{display:block;font-family:var(--sans);font-size:var(--t-12);line-height:var(--lh-12);
+  font-weight:400;color:var(--mut);letter-spacing:var(--ls-s);margin-top:var(--s4)}
+.nav{display:flex;gap:var(--s24);margin-left:auto}
+.nav a{font-size:var(--t-14);line-height:var(--t-14);font-weight:700;color:var(--ink);
+  letter-spacing:var(--ls-s);padding-top:var(--s6);padding-bottom:var(--s6);
+  border-bottom:1px solid transparent;transition:border-color var(--dur) var(--ease)}
+.nav a:hover{border-bottom-color:var(--ink)}
+
+/* ── 버튼 ── 원본은 채움과 외곽선의 기하학이 완전히 같다. 채우기만 뒤집는다
+      실측: radius 20px · padding 10px 24px · border 1px solid #000 · 14px/700 ── */
+.btn{display:inline-block;font-size:var(--t-14);line-height:var(--t-14);font-weight:700;
+  padding:var(--s10) var(--s24);border-radius:var(--r20);border:1px solid var(--ink);
+  background:var(--ink);color:var(--onk);letter-spacing:var(--ls-s);
+  transition:background-color var(--dur-s) var(--ease),color var(--dur-s) var(--ease)}
+.btn-o{background:transparent;color:var(--ink)}
+.btn:hover{background:var(--card);color:var(--ink)}
+.btn-o:hover{background:var(--ink);color:var(--onk)}
+.band-k .btn{border-color:var(--onk);background:var(--onk);color:var(--ink)}
+.band-k .btn-o{background:transparent;color:var(--onk)}
+.band-k .btn:hover{background:transparent;color:var(--onk)}
+.band-k .btn-o:hover{background:var(--onk);color:var(--ink)}
+.btns{display:flex;gap:var(--s8);flex-wrap:wrap;margin-top:var(--s24)}
+
+/* ── 히어로 ── */
+.h1{font-size:var(--t-40);line-height:var(--t-40);font-weight:700;color:var(--ink);
+  letter-spacing:normal;max-width:19ch}
+.lead{font-size:var(--t-16);line-height:var(--lh-16);color:var(--body);
+  letter-spacing:var(--ls-s);margin-top:var(--s24);max-width:52ch}
+.eyebrow{font-size:var(--t-12);line-height:var(--lh-12);font-weight:700;color:var(--ink);
+  letter-spacing:var(--ls-s);margin-bottom:var(--s16)}
+
+/* ── 사진 밴드 ── */
+.shot{display:grid;grid-template-columns:1fr 360px;gap:var(--s40);align-items:end}
+.shot>*{min-width:0}
+.shot figure{grid-area:1/1/2/2;position:relative;background:var(--ink)}
+.shot img{width:100%;aspect-ratio:3/2;object-fit:cover;object-position:42% 44%}
+.shot figcaption{font-size:var(--t-14);line-height:var(--lh-14);color:var(--onk);
+  letter-spacing:var(--ls-s);margin-top:var(--s10)}
+.shot .say{grid-area:1/2/2/3}
+.say h2{font-family:var(--disp);font-size:var(--t-24);line-height:var(--lh-24);
+  font-weight:700;letter-spacing:normal}
+.say p{font-size:var(--t-14);line-height:var(--lh-14);letter-spacing:var(--ls-s);
+  color:var(--onk);margin-top:var(--s24)}
+
+/* ── 제품 3종 ── */
+.line{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s24)}
+.line>*{min-width:0}
+.card{border:1px solid var(--ink);border-radius:var(--r8);background:var(--card);
+  padding:var(--s24);display:flex;flex-direction:column}
+.card h3{font-size:var(--t-22);line-height:var(--lh-22);font-weight:700;letter-spacing:normal}
+.card .vol{font-size:var(--t-14);line-height:var(--lh-14);letter-spacing:var(--ls-s);
+  color:var(--ink);margin-top:var(--s6)}
+.card dl{margin-top:var(--s24);display:grid;grid-template-columns:auto 1fr;gap:var(--s6) var(--s16)}
+.card dt{font-size:var(--t-14);line-height:var(--lh-14);letter-spacing:var(--ls-s);color:var(--mut)}
+.card dd{font-size:var(--t-14);line-height:var(--lh-14);letter-spacing:var(--ls-s);
+  font-weight:700;text-align:right;white-space:nowrap}
+.card .more{margin-top:var(--s24);font-size:var(--t-14);line-height:var(--t-14);
+  letter-spacing:var(--ls-s);font-weight:700;color:var(--k);border-bottom:1px solid var(--k);
+  align-self:flex-start;padding-bottom:var(--s2)}
+
+/* ── 그래프 ── */
+.h2{font-family:var(--disp);font-size:var(--t-24);line-height:var(--lh-24);
+  font-weight:700;color:var(--ink);letter-spacing:normal}
+.sub{font-size:var(--t-16);line-height:var(--lh-16);letter-spacing:var(--ls-s);
+  color:var(--ink);margin-top:var(--s10);max-width:62ch}
+.chart{margin-top:var(--s24);display:grid;grid-template-columns:52px 1fr;
+  grid-template-areas:"ygut plot" "corner xlab";column-gap:var(--s8)}
+.chart>*{min-width:0}
+.ygut{grid-area:ygut;position:relative}
+.corner{grid-area:corner}
+.ylab{position:absolute;right:0;transform:translateY(-50%);text-align:right;
+  font-size:var(--t-12);line-height:var(--lh-12);letter-spacing:var(--ls-s);
+  color:var(--mut);white-space:nowrap}
+.plot{grid-area:plot;position:relative;height:var(--plot-h);border:1px solid var(--hair);
+  background:var(--card);touch-action:pan-y;cursor:ew-resize}
+.plot svg{display:block;width:100%;height:100%}
+.plot:focus-visible{outline:2px solid var(--k);outline-offset:2px}
+.xlab{grid-area:xlab;position:relative;height:28px}
+.xlab span{position:absolute;top:var(--s6);transform:translateX(-50%);
+  font-size:var(--t-12);line-height:var(--lh-12);letter-spacing:var(--ls-s);
+  color:var(--mut);white-space:nowrap}
+.xlab span.x0{transform:none;left:0}
+.xlab span.xe{transform:translateX(-100%)}
+.w-air{fill:none;stroke:var(--line);stroke-width:2}
+.w-spec{fill:none;stroke:var(--ink);stroke-width:3;stroke-linejoin:round}
+.grid-l{stroke:var(--hair);stroke-width:1}
+.zone{fill:var(--paper)}
+.zone-e{stroke:var(--hair);stroke-width:1;fill:none}
+.cur{stroke:var(--ink);stroke-width:1}
+.dot-a{fill:var(--card);stroke:var(--line);stroke-width:2}
+.dot-s{fill:var(--ink)}
+.legend{display:flex;gap:var(--s24);flex-wrap:wrap;margin-top:var(--s16)}
+.legend b{display:inline-flex;align-items:center;gap:var(--s8);
+  font-size:var(--t-14);line-height:var(--t-14);letter-spacing:var(--ls-s);font-weight:700}
+.legend i{display:block;width:22px;height:3px;background:var(--ink)}
+.legend b.a i{height:2px;background:var(--line)}
+.read{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s24);margin-top:var(--s24);
+  border-top:1px solid var(--ink);padding-top:var(--s16)}
+.read>*{min-width:0}
+.read dt{font-size:var(--t-13);line-height:var(--lh-13);letter-spacing:var(--ls-s);color:var(--ink)}
+.read dd{font-size:var(--t-24);line-height:var(--lh-24);font-weight:700;margin-top:var(--s4);
+  letter-spacing:normal;white-space:nowrap}
+.read dd .u{font-size:var(--t-14);line-height:var(--t-14);font-weight:400;color:var(--mut);
+  letter-spacing:var(--ls-s)}
+.hint{font-size:var(--t-14);line-height:var(--lh-14);letter-spacing:var(--ls-s);
+  color:var(--ink);margin-top:var(--s10)}
+.facts{margin-top:var(--s24);display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s24)}
+.facts>*{min-width:0}
+.facts li{border-top:1px solid var(--ink);padding-top:var(--s14)}
+.facts b{display:block;font-size:var(--t-18);line-height:var(--lh-18);
+  letter-spacing:var(--ls-s);font-weight:700}
+.facts p{font-size:var(--t-14);line-height:var(--lh-14);letter-spacing:var(--ls-s);
+  color:var(--ink);margin-top:var(--s6)}
+.check{margin-top:var(--s24);border-left:3px solid var(--ink);padding-left:var(--s16);
+  font-size:var(--t-14);line-height:var(--lh-14);letter-spacing:var(--ls-s);max-width:70ch}
+
+/* ── 증언 ── */
+.says{display:grid;grid-template-columns:repeat(2,1fr) 300px;gap:var(--s40)}
+.says>*{min-width:0}
+.says blockquote p{font-size:var(--t-18);line-height:var(--lh-18);
+  letter-spacing:var(--ls-s);font-weight:700}
+.says figcaption{font-size:var(--t-14);line-height:var(--lh-14);letter-spacing:var(--ls-s);
+  color:var(--ink);margin-top:var(--s14)}
+.tally{border-left:1px solid var(--hair);padding-left:var(--s24)}
+.tally dt{font-size:var(--t-13);line-height:var(--lh-13);letter-spacing:var(--ls-s);color:var(--ink)}
+.tally dd{font-size:var(--t-20);line-height:var(--lh-20);font-weight:700;letter-spacing:normal;
+  margin-top:var(--s4);margin-bottom:var(--s16)}
+.tally dd:last-child{margin-bottom:0}
+
+/* ── 사양표 ── 단위는 셀마다 반복하지 않고 항목 이름에 한 번만 적는다 ── */
+.tbl{width:100%;border-collapse:collapse;margin-top:var(--s24)}
+.tbl caption{text-align:left;font-size:var(--t-14);line-height:var(--lh-14);
+  letter-spacing:var(--ls-s);color:var(--ink);margin-bottom:var(--s16);max-width:76ch}
+.tbl th,.tbl td{text-align:left;padding-top:var(--s16);padding-bottom:var(--s16);
+  padding-right:var(--s16);border-bottom:1px solid var(--hair);vertical-align:baseline}
+.tbl thead th{font-size:var(--t-16);line-height:var(--t-16);letter-spacing:var(--ls-s);
+  font-weight:700;border-bottom:1px solid var(--ink);padding-bottom:var(--s10)}
+.tbl tbody th{font-size:var(--t-14);line-height:var(--lh-14);letter-spacing:var(--ls-s);
+  font-weight:400;color:var(--mut);width:28%}
+.tbl td{font-size:var(--t-14);line-height:var(--lh-14);letter-spacing:var(--ls-s);
+  font-weight:400;color:var(--ink);white-space:nowrap}
+.tbl tbody tr:last-child th,.tbl tbody tr:last-child td{border-bottom:1px solid var(--ink)}
+.close{margin-top:var(--s40);display:flex;gap:var(--s24);align-items:center;flex-wrap:wrap}
+.close p{font-size:var(--t-14);line-height:var(--lh-14);letter-spacing:var(--ls-s);
+  color:var(--ink);max-width:46ch}
+
+/* ── 푸터 ── 원본은 앵커 상하 6px 이 지면 전체 최빈 간격이고, 푸터가 본문만큼 길다 ── */
+.foot{background:var(--card);border-top:1px solid var(--ink);
+  padding-top:var(--s60);padding-bottom:var(--s60)}
+.fcols{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s24)}
+.fcols>*{min-width:0}
+.fcols h4{font-size:var(--t-14);line-height:var(--t-14);letter-spacing:var(--ls-s);
+  font-weight:700;margin-bottom:var(--s14)}
+.fcols a{display:block;font-size:var(--t-14);line-height:var(--lh-14);
+  letter-spacing:var(--ls-s);color:var(--ink);
+  padding-top:var(--s6);padding-bottom:var(--s6);
+  transition:color var(--dur) var(--ease)}
+.fcols a:hover{color:var(--k)}
+.fine{margin-top:var(--s40);padding-top:var(--s24);border-top:1px solid var(--hair);
+  font-size:var(--t-12);line-height:var(--lh-12);letter-spacing:var(--ls-s);
+  color:var(--mut);max-width:80ch}
+
+/* ── 1200 이하 ── 고정 밴드는 1440 컨테이너가 살아 있는 폭에서만 성립한다.
+      그 아래에서 810 을 유지하면 사진이 줄어든 만큼 밴드 위아래가 빈다 ── */
+@media(max-width:1200px){
+  :root{--band-lg:auto;--band-sm:auto}
+  .band{min-height:0}
+  .band-lg{min-height:0;padding-top:var(--s60);padding-bottom:var(--s60)}
+  .shot{grid-template-columns:1fr 320px}
+}
+/* ── 900 이하 ── 밴드 고정 높이를 풀고, 주 도판은 오히려 키운다 ── */
+@media(max-width:900px){
+  :root{--band-lg:auto;--band-sm:auto;--head:76px;--plot-h:440px;--pad:16px}
+  .band{min-height:0;padding-top:var(--s40);padding-bottom:var(--s40)}
+  .band-lg{min-height:0}
+  .top-in{gap:var(--s16)}
+  .nav{gap:var(--s16)}
+  .h1{max-width:none}
+  .shot{grid-template-columns:1fr;gap:var(--s24)}
+  .shot figure{grid-area:auto}
+  .shot .say{grid-area:auto}
+  .line{grid-template-columns:1fr}
+  .says{grid-template-columns:1fr}
+  .tally{border-left:0;border-top:1px solid var(--hair);padding-left:0;padding-top:var(--s24)}
+  .facts{grid-template-columns:1fr}
+  .fcols{grid-template-columns:repeat(2,1fr)}
+}
+/* ── 640 이하 ── 4열 표를 항목 카드로 접는다 ── */
+@media(max-width:640px){
+  .tbl,.tbl thead,.tbl tbody,.tbl tr,.tbl th,.tbl td{display:block}
+  .tbl caption{display:block}
+  .tbl thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .tbl tbody tr{border:1px solid var(--ink);border-radius:var(--r8);background:var(--card);
+    padding:var(--s16);margin-bottom:var(--s16)}
+  .tbl tbody th{width:auto;font-size:var(--t-16);line-height:var(--t-16);
+    letter-spacing:var(--ls-s);font-weight:700;color:var(--ink);
+    padding-top:0;padding-bottom:var(--s10);border-bottom:1px solid var(--hair)}
+  .tbl tbody td{display:grid;grid-template-columns:64px 1fr;column-gap:var(--s16);
+    padding-top:var(--s10);padding-bottom:var(--s10);padding-right:0;
+    border-bottom:1px solid var(--hair);white-space:normal}
+  .tbl tbody td::before{content:attr(data-m);font-size:var(--t-14);line-height:var(--lh-14);
+    letter-spacing:var(--ls-s);font-weight:400;color:var(--mut)}
+  .tbl tbody td span{white-space:nowrap}
+  /* 마지막 카드만 잉크 괘선으로 조각나지 않게 같은 특이도로 되받는다 */
+  .tbl tbody tr:last-child th{border-bottom:1px solid var(--hair)}
+  .tbl tbody tr:last-child td{border-bottom:1px solid var(--hair)}
+  .tbl tbody tr td:last-child{border-bottom:0}
+  .tbl tbody tr:last-child td:last-child{border-bottom:0}
+  .read{grid-template-columns:repeat(2,1fr);gap:var(--s16)}
+  .chart{grid-template-columns:40px 1fr}
+  :root{--plot-h:420px}
+}
+@media(max-width:400px){:root{--plot-h:400px}}
+
+/* ── 폴백 ── 끄는 대상에 실제로 트랜지션이 있고, 특이도로 이기게 같은 접두를 붙인다 ── */
+@media(prefers-reduced-motion:reduce){
+  .js .rise,.js .rise.vis{opacity:1;transform:none;transition:none}
+  .js .nav a,.js .btn,.js .fcols a{transition:none}
+}
+.js.capture .rise,.js.capture .rise.vis{opacity:1;transform:none;transition:none}
+.js.capture .nav a,.js.capture .btn,.js.capture .fcols a{transition:none}
+</style>
+<script>
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){var h=document.documentElement;h.className+=' js';
+ if(/[?&]capture=1/.test(location.search))h.className+=' capture';
+ var p=h.style.scrollBehavior;h.style.scrollBehavior='auto';scrollTo(0,0);
+ addEventListener('load',function(){scrollTo(0,0);setTimeout(function(){h.style.scrollBehavior=p},60)})})();
+</script>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <a class="mark" href="#top">담금<small>온도·습도 시험 챔버</small></a>
+    <nav class="nav">
+      <a href="#lineup">제품</a>
+      <a href="#cycle">사이클</a>
+      <a href="#spec">사양</a>
+    </nav>
+    <a class="btn" href="#spec">시험 의뢰</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ── 밴드 390 · 히어로 ── -->
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow rise">신뢰성 시험 장비 · 1998년부터</p>
+    <h1 class="h1 rise">챔버가 −40 ℃에 닿아도 시료는 아직 아니다</h1>
+    <p class="lead rise">담금은 설정 온도와 함께 <b>시료 중심 온도</b>를 기록합니다.
+      시험 시간을 챔버가 아니라 시료가 실제로 지난 온도로 셉니다.</p>
+    <div class="btns rise">
+      <a class="btn" href="#cycle">사이클 보기</a>
+      <a class="btn btn-o" href="#lineup">3종 비교</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── 밴드 810 · 검정 ── -->
+<section class="band band-lg band-k">
+  <div class="wrap">
+    <div class="shot">
+      <figure class="rise">
+        <img src="https://images.unsplash.com/photo-1580983218765-f663bec07b37?w=1600&amp;q=80&amp;auto=format&amp;fit=crop"
+             alt="시험 챔버 도어를 여는 기술자. 도어 관찰창과 스테인리스 본체가 보인다." loading="lazy"
+             onerror="this.onerror=null;this.removeAttribute('src');this.style.aspectRatio='16/9';this.style.background='linear-gradient(160deg,#2a2a2a,#0a0a0a)'">
+        <figcaption>C150 · 도어 개방 상태. 관찰창 아래가 시료 거치대이고, 오른쪽 관통구로 중심 열전대를 넣습니다.</figcaption>
+      </figure>
+      <div class="say rise">
+        <h2>열 점을 잽니다</h2>
+        <p>챔버 안 아홉 점과 시료 중심 한 점. 담금은 이 열 점을 1초 간격으로 남기고,
+          성적서에는 <b>시료 중심 기록</b>을 기준으로 한 유지 시간을 적습니다.
+          설정값만 적힌 성적서와 숫자가 달라지는 이유입니다.</p>
+        <div class="btns"><a class="btn btn-o" href="#cycle">기록 방식</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 밴드 390 · 제품 3종 ── -->
+<section class="band band-w" id="lineup">
+  <div class="wrap">
+    <div class="line">
+      <div class="card rise">
+        <h3>담금 C40</h3>
+        <p class="vol">내부 용적 40 L · 소형 부품</p>
+        <dl>
+          <dt>승온</dt><dd>6.0 K/min</dd>
+          <dt>강온</dt><dd>4.8 K/min</dd>
+          <dt>소비 전력</dt><dd>3.4 kW</dd>
+        </dl>
+        <a class="more" href="#spec">사양 보기</a>
+      </div>
+      <div class="card rise">
+        <h3>담금 C150</h3>
+        <p class="vol">내부 용적 150 L · 모듈·기판</p>
+        <dl>
+          <dt>승온</dt><dd>4.5 K/min</dd>
+          <dt>강온</dt><dd>3.6 K/min</dd>
+          <dt>소비 전력</dt><dd>6.8 kW</dd>
+        </dl>
+        <a class="more" href="#spec">사양 보기</a>
+      </div>
+      <div class="card rise">
+        <h3>담금 C400</h3>
+        <p class="vol">내부 용적 400 L · 완제품</p>
+        <dl>
+          <dt>승온</dt><dd>3.0 K/min</dd>
+          <dt>강온</dt><dd>2.4 K/min</dd>
+          <dt>소비 전력</dt><dd>12.5 kW</dd>
+        </dl>
+        <a class="more" href="#spec">사양 보기</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 밴드 810 · 사이클 그래프 ── -->
+<section class="band band-lg" id="cycle">
+  <div class="wrap">
+    <h2 class="h2 rise">C150 표준 1주기</h2>
+    <p class="sub rise">저온 유지 20분 → 승온 → 고온 유지 20분 → 강온.
+      가로로 끌면 그 시각의 챔버 온도와 시료 중심 온도가 함께 나옵니다.
+      시료 곡선은 시정수 6.0분의 1차 지연으로 계산했습니다.</p>
+
+    <div class="chart rise">
+      <!-- 라벨의 top% = (95 − T) ÷ 145 × 100, 격자선의 viewBox y = (95 − T) ÷ 145 × 400.
+           둘은 4배 차이다 — 같은 수를 양쪽에 쓰면 라벨과 선이 어긋난다 -->
+      <div class="ygut" aria-hidden="true">
+        <span class="ylab" style="top:6.90%">85 ℃</span>
+        <span class="ylab" style="top:37.93%">40 ℃</span>
+        <span class="ylab" style="top:65.52%">0 ℃</span>
+        <span class="ylab" style="top:93.10%">−40 ℃</span>
+      </div>
+
+      <div class="plot" id="plot" role="slider" tabindex="0"
+           aria-label="시험 경과 시간" aria-valuemin="0" aria-valuemax="102.5" aria-valuenow="0"
+           aria-valuetext="0.0분 — 챔버 −40.0 ℃, 시료 −40.0 ℃, 편차 0.0 K">
+        <svg viewBox="0 0 1000 400" preserveAspectRatio="none" aria-hidden="true">
+          <!-- 고온 유지 목표대 80~85 ℃ -->
+          <rect class="zone" x="0" y="27.59" width="1000" height="13.79"></rect>
+          <path class="zone-e" vector-effect="non-scaling-stroke" d="M0 41.38L1000 41.38"></path>
+          <path class="grid-l" vector-effect="non-scaling-stroke" d="M0 27.59L1000 27.59"></path>
+          <path class="grid-l" vector-effect="non-scaling-stroke" d="M0 151.72L1000 151.72"></path>
+          <path class="grid-l" vector-effect="non-scaling-stroke" d="M0 262.07L1000 262.07"></path>
+          <path class="grid-l" vector-effect="non-scaling-stroke" d="M0 372.41L1000 372.41"></path>
+          <path class="grid-l" vector-effect="non-scaling-stroke" d="M195.12 0L195.12 400"></path>
+          <path class="grid-l" vector-effect="non-scaling-stroke" d="M466.12 0L466.12 400"></path>
+          <path class="grid-l" vector-effect="non-scaling-stroke" d="M661.25 0L661.25 400"></path>
+          <path class="w-air" id="wAir" vector-effect="non-scaling-stroke"
+                d="M0 372.41L195.12 372.41L466.12 27.59L661.25 27.59L1000 372.41"></path>
+          <path class="w-spec" id="wSpec" vector-effect="non-scaling-stroke"
+                d="M0 372.41L4.88 372.41L9.76 372.41L14.63 372.41L19.51 372.41L24.39 372.41L29.27 372.41L34.15 372.41L39.02 372.41L43.9 372.41L48.78 372.41L53.66 372.41L58.54 372.41L63.41 372.41L68.29 372.41L73.17 372.41L78.05 372.41L82.93 372.41L87.8 372.41L92.68 372.41L97.56 372.41L102.44 372.41L107.32 372.41L112.2 372.41L117.07 372.41L121.95 372.41L126.83 372.41L131.71 372.41L136.59 372.41L141.46 372.41L146.34 372.41L151.22 372.41L156.1 372.41L160.98 372.41L165.85 372.41L170.73 372.41L175.61 372.41L180.49 372.41L185.37 372.41L190.24 372.41L195.12 372.41L200 372.19L204.88 371.48L209.76 370.33L214.63 368.77L219.51 366.85L224.39 364.57L229.27 361.99L234.15 359.11L239.02 355.96L243.9 352.57L248.78 348.95L253.66 345.13L258.54 341.11L263.41 336.92L268.29 332.56L273.17 328.06L278.05 323.42L282.93 318.66L287.8 313.78L292.68 308.79L297.56 303.7L302.44 298.53L307.32 293.27L312.2 287.94L317.07 282.53L321.95 277.06L326.83 271.53L331.71 265.95L336.59 260.32L341.46 254.64L346.34 248.92L351.22 243.16L356.1 237.36L360.98 231.53L365.85 225.67L370.73 219.79L375.61 213.87L380.49 207.94L385.37 201.98L390.24 196L395.12 190L400 183.99L404.88 177.96L409.76 171.92L414.63 165.86L419.51 159.79L424.39 153.71L429.27 147.62L434.15 141.52L439.02 135.42L443.9 129.3L448.78 123.18L453.66 117.05L458.54 110.91L463.41 104.77L468.29 98.66L473.17 92.96L478.05 87.71L482.93 82.88L487.8 78.44L492.68 74.36L497.56 70.61L502.44 67.15L507.32 63.98L512.2 61.06L517.07 58.37L521.95 55.9L526.83 53.62L531.71 51.53L536.59 49.61L541.46 47.84L546.34 46.22L551.22 44.72L556.1 43.35L560.98 42.08L565.85 40.92L570.73 39.85L575.61 38.86L580.49 37.96L585.37 37.13L590.24 36.36L595.12 35.66L600 35.01L604.88 34.41L609.76 33.86L614.63 33.36L619.51 32.9L624.39 32.47L629.27 32.08L634.15 31.72L639.02 31.39L643.9 31.08L648.78 30.8L653.66 30.54L658.54 30.3L663.41 30.12L668.29 30.27L673.17 30.82L678.05 31.71L682.93 32.94L687.8 34.46L692.68 36.26L697.56 38.32L702.44 40.6L707.32 43.11L712.2 45.81L717.07 48.69L721.95 51.74L726.83 54.94L731.71 58.29L736.59 61.76L741.46 65.36L746.34 69.06L751.22 72.87L756.1 76.77L760.98 80.75L765.85 84.82L770.73 88.95L775.61 93.16L780.49 97.42L785.37 101.74L790.24 106.11L795.12 110.53L800 114.99L804.88 119.5L809.76 124.04L814.63 128.61L819.51 133.22L824.39 137.86L829.27 142.52L834.15 147.2L839.02 151.91L843.9 156.64L848.78 161.39L853.66 166.15L858.54 170.94L863.41 175.73L868.29 180.54L873.17 185.36L878.05 190.2L882.93 195.04L887.8 199.9L892.68 204.76L897.56 209.63L902.44 214.51L907.32 219.4L912.2 224.29L917.07 229.19L921.95 234.09L926.83 239L931.71 243.91L936.59 248.83L941.46 253.75L946.34 258.67L951.22 263.6L956.1 268.53L960.98 273.47L965.85 278.4L970.73 283.34L975.61 288.28L980.49 293.23L985.37 298.17L990.24 303.12L995.12 308.06L1000 313.01"></path>
+          <path class="cur" id="cur" vector-effect="non-scaling-stroke" d="M0 0L0 400"></path>
+          <circle class="dot-a" id="dotA" cx="0" cy="372.41" r="5"></circle>
+          <circle class="dot-s" id="dotS" cx="0" cy="372.41" r="5"></circle>
+        </svg>
+      </div>
+
+      <div class="corner"></div>
+      <div class="xlab" aria-hidden="true">
+        <span class="x0">0분</span>
+        <span style="left:19.51%">20.0</span>
+        <span style="left:46.61%">47.8</span>
+        <span style="left:66.13%">67.8</span>
+        <span class="xe" style="left:100%">102.5분</span>
+      </div>
+    </div>
+
+    <div class="legend" aria-hidden="true">
+      <b><i></i>시료 중심</b>
+      <b class="a"><i></i>챔버 설정</b>
+    </div>
+
+    <dl class="read" id="read" aria-hidden="true">
+      <div><dt>경과</dt><dd><span data-r="t">0.0</span> <span class="u">분</span></dd></div>
+      <div><dt>챔버</dt><dd><span data-r="a">−40.0</span> <span class="u">℃</span></dd></div>
+      <div><dt>시료 중심</dt><dd><span data-r="s">−40.0</span> <span class="u">℃</span></dd></div>
+      <div><dt>편차</dt><dd><span data-r="d">0.0</span> <span class="u">K</span></dd></div>
+    </dl>
+    <p class="hint">가로로 끌거나 ← → 키로 움직입니다. 1주기는 <span data-drv="cyc">102.5</span>분이고
+      하루에 <span data-drv="day">14</span>주기가 들어갑니다.</p>
+  </div>
+</section>
+
+<!-- ── 밴드 390 · 그 곡선이 말하는 것 ── -->
+<section class="band band-w">
+  <div class="wrap">
+    <ul class="facts rise">
+      <li>
+        <b>고온 유지 20.0분 중 <span data-drv="above">14.4</span>분</b>
+        <p>시료 중심이 80 ℃ 이상이던 시간입니다. <span data-drv="rise">57.8</span>분에 올라와
+          <span data-drv="fall">72.2</span>분에 내려갑니다. 설정 기준의 <span data-drv="pct">72</span>%입니다.</p>
+      </li>
+      <li>
+        <b>최대 편차 <span data-drv="maxD">26.7</span> K</b>
+        <p><span data-drv="tmax">47.8</span>분, 승온이 끝나는 순간입니다.
+          챔버가 목표에 닿아도 시료는 아직 그만큼 아래에 있습니다.</p>
+      </li>
+      <li>
+        <b>1주기 끝에서 <span data-drv="end">−18.5</span> ℃</b>
+        <p>강온이 끝나도 시료는 −40 ℃가 아닙니다. 다음 주기의 저온 유지 20분이
+          여기서부터 시작합니다.</p>
+      </li>
+    </ul>
+
+    <p class="check" id="check">검산 — 편차의 상한은 승온속도 × 시정수입니다.
+      4.5 K/min × 6.0분 = <span data-drv="an">27.0</span> K.
+      수치적분으로 나온 최대 편차는 <span data-drv="maxD2">26.7</span> K로
+      <span data-drv="gap">0.26</span> K 낮습니다 — 승온 구간(<span data-drv="up">27.8</span>분)이
+      시정수의 4.6배라 아직 상한에 완전히 닿기 전이기 때문입니다.
+      해석식과 적분은 서로 다른 경로이므로 이 둘이 맞으면 곡선이 맞습니다.</p>
+  </div>
+</section>
+
+<!-- ── 밴드 810 · 사양표 ── -->
+<section class="band band-lg" id="spec">
+  <div class="wrap">
+    <h2 class="h2 rise">3종 사양</h2>
+    <table class="tbl rise">
+      <caption>승온·강온 속도는 무부하 기준입니다. 온도 편차는 안정 상태에서 챔버 내 아홉 점을 30분간 측정한 값이고,
+        시료 중심 온도는 여기에 포함되지 않습니다.</caption>
+      <thead><tr><th scope="col">항목</th><th scope="col">C40</th><th scope="col">C150</th><th scope="col">C400</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">내부 용적 (L)</th>
+          <td data-m="C40"><span>40</span></td>
+          <td data-m="C150"><span>150</span></td>
+          <td data-m="C400"><span>400</span></td></tr>
+        <tr><th scope="row">온도 범위 (℃)</th>
+          <td data-m="C40"><span>−45 ~ +150</span></td>
+          <td data-m="C150"><span>−45 ~ +150</span></td>
+          <td data-m="C400"><span>−45 ~ +150</span></td></tr>
+        <tr><th scope="row">습도 범위 (%RH)</th>
+          <td data-m="C40"><span>20 ~ 98</span></td>
+          <td data-m="C150"><span>20 ~ 98</span></td>
+          <td data-m="C400"><span>20 ~ 98</span></td></tr>
+        <tr><th scope="row">승온 속도 (K/min)</th>
+          <td data-m="C40"><span>6.0</span></td>
+          <td data-m="C150"><span>4.5</span></td>
+          <td data-m="C400"><span>3.0</span></td></tr>
+        <tr><th scope="row">강온 속도 (K/min)</th>
+          <td data-m="C40"><span>4.8</span></td>
+          <td data-m="C150"><span>3.6</span></td>
+          <td data-m="C400"><span>2.4</span></td></tr>
+        <tr><th scope="row">온도 편차 (K)</th>
+          <td data-m="C40"><span>±0.3</span></td>
+          <td data-m="C150"><span>±0.4</span></td>
+          <td data-m="C400"><span>±0.5</span></td></tr>
+        <tr><th scope="row">소비 전력 (kW)</th>
+          <td data-m="C40"><span>3.4</span></td>
+          <td data-m="C150"><span>6.8</span></td>
+          <td data-m="C400"><span>12.5</span></td></tr>
+        <tr><th scope="row">소음 (dB(A))</th>
+          <td data-m="C40"><span>54</span></td>
+          <td data-m="C150"><span>58</span></td>
+          <td data-m="C400"><span>62</span></td></tr>
+        <tr><th scope="row">외형 W×D×H (mm)</th>
+          <td data-m="C40"><span>640×860×1,420</span></td>
+          <td data-m="C150"><span>900×1,180×1,780</span></td>
+          <td data-m="C400"><span>1,240×1,520×2,050</span></td></tr>
+        <tr><th scope="row">본체 무게 (kg)</th>
+          <td data-m="C40"><span>185</span></td>
+          <td data-m="C150"><span>340</span></td>
+          <td data-m="C400"><span>620</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── 밴드 390 · 제3자 + 닫는 CTA ── -->
+<section class="band band-w">
+  <div class="wrap">
+    <div class="says">
+      <figure class="rise">
+        <blockquote><p>“설정값 기준 성적서를 받다가 시료 기준으로 바꾸니
+          우리 사출품 유지 시간이 모자랐다는 게 그제야 보였습니다.”</p></blockquote>
+        <figcaption>배소진 · 신뢰성기술팀장 · 한밭전자부품시험원</figcaption>
+      </figure>
+      <figure class="rise">
+        <blockquote><p>“열전대 관통구가 도어 쪽이 아니라 측면에 있어서
+          거치대를 안 옮기고도 중심을 잡습니다. 하루 두 시간은 벌었습니다.”</p></blockquote>
+        <figcaption>노태윤 · 시험소장 · 우일계측기술</figcaption>
+      </figure>
+      <dl class="tally rise">
+        <dt>도입 시험소·연구소</dt><dd>74곳</dd>
+        <dt>발급된 시험 성적서</dt><dd>11,820건</dd>
+        <dt>평균 회신</dt><dd>영업일 3일</dd>
+      </dl>
+    </div>
+    <div class="close rise">
+      <a class="btn" href="#top">견적 요청</a>
+      <a class="btn btn-o" href="#cycle">사이클 다시 보기</a>
+      <p>시료 형상과 무게를 알려 주시면 시정수를 추정해 예상 유지 시간을 함께 보내 드립니다.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="fcols">
+      <div>
+        <h4>제품</h4>
+        <a href="#lineup">담금 C40</a><a href="#lineup">담금 C150</a><a href="#lineup">담금 C400</a>
+        <a href="#spec">부속 거치대</a><a href="#spec">열전대 세트</a>
+        <a href="#spec">관통구 어댑터</a><a href="#spec">시료 트레이</a>
+      </div>
+      <div>
+        <h4>시험</h4>
+        <a href="#cycle">온도 변화</a><a href="#cycle">항온항습</a><a href="#cycle">열충격</a>
+        <a href="#cycle">저온 저장</a><a href="#cycle">고온 노출</a>
+        <a href="#cycle">결로</a><a href="#spec">성적서 양식</a>
+      </div>
+      <div>
+        <h4>지원</h4>
+        <a href="#spec">교정 주기</a><a href="#spec">소모품</a><a href="#spec">설치 조건</a>
+        <a href="#spec">전력·급배수</a><a href="#spec">배기 계획</a>
+        <a href="#spec">소음 대책</a><a href="#spec">원격 점검</a>
+      </div>
+      <div>
+        <h4>회사</h4>
+        <a href="#top">연혁</a><a href="#top">오시는 길</a><a href="#top">채용</a>
+        <a href="#top">공지</a><a href="#top">자료실</a><a href="#top">문의</a>
+      </div>
+    </div>
+    <p class="fine">담금 · 경기도 화성시 향남읍 발안공단로 00 · 사업자등록번호 000-00-00000 ·
+      이 지면의 수치는 예시이며 실제 계약 사양은 견적서를 따릅니다.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var CAPTURE=/[?&]capture=1/.test(location.search);
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+  /* ── 리빌 ── */
+  var rises=[].slice.call(document.querySelectorAll('.rise'));
+  if(reduce||!('IntersectionObserver' in window)){
+    rises.forEach(function(n){n.classList.add('vis')});
+  }else{
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})
+    },{rootMargin:'0px 0px -8% 0px'});
+    rises.forEach(function(n){io.observe(n)});
+    addEventListener('load',function(){
+      rises.forEach(function(n){
+        var r=n.getBoundingClientRect();
+        if(r.top<innerHeight&&r.bottom>0)n.classList.add('vis');
+      });
+    });
+  }
+
+  /* ── 사이클 모형 ── 화면에 인쇄되는 모든 수치가 여기서만 나온다 ── */
+  var C={lo:-40,hi:85,hold1:20,up:4.5,hold2:20,dn:3.6,tau:6.0};
+  var SPAN=C.hi-C.lo, T2=C.hold1+SPAN/C.up, T3=T2+C.hold2, T4=T3+SPAN/C.dn;
+  function air(t){
+    if(t<=C.hold1)return C.lo;
+    if(t<=T2)return C.lo+(t-C.hold1)*C.up;
+    if(t<=T3)return C.hi;
+    if(t<=T4)return C.hi-(t-T3)*C.dn;
+    return C.lo;
+  }
+  var DT=0.05, N=Math.round(T4/DT), S=new Float64Array(N+1);
+  S[0]=C.lo;
+  for(var i=0;i<N;i++)S[i+1]=S[i]+(air(i*DT)-S[i])*DT/C.tau;
+  function spec(t){
+    var x=Math.max(0,Math.min(N,t/DT)), j=Math.floor(x), f=x-j;
+    return j>=N?S[N]:S[j]+(S[j+1]-S[j])*f;
+  }
+  function X(t){return +(t/T4*1000).toFixed(2)}
+  function Y(T){return +((95-T)/145*400).toFixed(2)}
+  function airPath(){
+    return 'M'+X(0)+' '+Y(C.lo)+'L'+X(C.hold1)+' '+Y(C.lo)+'L'+X(T2)+' '+Y(C.hi)
+          +'L'+X(T3)+' '+Y(C.hi)+'L'+X(T4)+' '+Y(C.lo);
+  }
+  function specPath(){
+    var d='M'+X(0)+' '+Y(spec(0));
+    for(var t=0.5;t<=T4+1e-9;t+=0.5){var u=Math.min(t,T4);d+='L'+X(u)+' '+Y(spec(u))}
+    return d;
+  }
+
+  /* 파생 스칼라 */
+  var maxD=0,tMaxD=0;
+  for(i=0;i<=N;i++){var dd=air(i*DT)-S[i];if(dd>maxD){maxD=dd;tMaxD=i*DT}}
+  var rise80=null,fall80=null;
+  for(i=0;i<=N;i++){if(S[i]>=80){if(rise80===null)rise80=i*DT;fall80=i*DT}}
+  var minus=function(s){return String(s).replace('-','−')};
+  var f1=function(v){return minus(v.toFixed(1))};
+  var DRV={
+    cyc:f1(T4), day:String(Math.floor(1440/T4)),
+    up:f1(SPAN/C.up), dn:f1(SPAN/C.dn),
+    maxD:f1(maxD), maxD2:f1(maxD), tmax:f1(tMaxD),
+    an:f1(C.up*C.tau), gap:minus((C.up*C.tau-maxD).toFixed(2)),
+    rise:f1(rise80), fall:f1(fall80), above:f1(fall80-rise80),
+    pct:String(Math.round((fall80-rise80)/C.hold2*100)),
+    end:f1(spec(T4))
+  };
+
+  /* ── 자기검사 ── 정적 마크업이 계산값과 어긋나면 콘솔로 던진다.
+       (JS 가 소유하지 않는 텍스트가 조용히 틀리는 것이 이 저장소의 반복 결함이었다) ── */
+  var bad=[];
+  [].slice.call(document.querySelectorAll('[data-drv]')).forEach(function(n){
+    var key=n.getAttribute('data-drv'), want=DRV[key];
+    if(want===undefined){bad.push(key+' — 계산값 없음');return}
+    var had=n.textContent.trim();
+    if(had!==want)bad.push(key+' 정적 "'+had+'" ≠ 계산 "'+want+'"');
+    n.textContent=want;
+  });
+  var svgSpec=document.getElementById('wSpec'), svgAir=document.getElementById('wAir');
+  if(svgSpec.getAttribute('d')!==specPath())bad.push('시료 곡선 path 가 계산과 다름');
+  if(svgAir.getAttribute('d')!==airPath())bad.push('챔버 곡선 path 가 계산과 다름');
+  svgSpec.setAttribute('d',specPath());
+  svgAir.setAttribute('d',airPath());
+  if(bad.length)console.error('[담금] 정적↔계산 불일치 '+bad.length+'건:\n'+bad.join('\n'));
+  else console.log('[담금] 정적↔계산 대조 '+document.querySelectorAll('[data-drv]').length+'항목 + 곡선 2개 일치');
+
+  /* ── 스크럽 ── 연속값. 값만 바꾸는 것이 아니라 커서·점·리드아웃이 함께 움직인다 ── */
+  var plot=document.getElementById('plot'), cur=document.getElementById('cur'),
+      dotA=document.getElementById('dotA'), dotS=document.getElementById('dotS'),
+      out={}, t=0, dragging=false;
+  [].slice.call(document.querySelectorAll('#read [data-r]')).forEach(function(n){
+    out[n.getAttribute('data-r')]=n;
+  });
+
+  function render(){
+    var a=air(t), s=spec(t), x=X(t);
+    cur.setAttribute('d','M'+x+' 0L'+x+' 400');
+    dotA.setAttribute('cx',x); dotA.setAttribute('cy',Y(a));
+    dotS.setAttribute('cx',x); dotS.setAttribute('cy',Y(s));
+    out.t.textContent=f1(t);
+    out.a.textContent=f1(a);
+    out.s.textContent=f1(s);
+    out.d.textContent=f1(a-s);
+    plot.setAttribute('aria-valuenow',t.toFixed(1));
+    plot.setAttribute('aria-valuetext',
+      f1(t)+'분 — 챔버 '+f1(a)+' ℃, 시료 '+f1(s)+' ℃, 편차 '+f1(a-s)+' K');
+  }
+  function setFromX(clientX){
+    var r=plot.getBoundingClientRect();
+    t=Math.max(0,Math.min(T4,(clientX-r.left)/r.width*T4));
+    render();
+  }
+  plot.addEventListener('pointerdown',function(e){
+    dragging=true; plot.setPointerCapture(e.pointerId); setFromX(e.clientX); e.preventDefault();
+  });
+  plot.addEventListener('pointermove',function(e){if(dragging)setFromX(e.clientX)});
+  plot.addEventListener('pointerup',function(){dragging=false});
+  plot.addEventListener('pointercancel',function(){dragging=false});
+  plot.addEventListener('keydown',function(e){
+    var step=e.key==='PageUp'||e.key==='PageDown'?10:1, moved=true;
+    if(e.key==='ArrowRight'||e.key==='ArrowUp'||e.key==='PageUp')t=Math.min(T4,t+step);
+    else if(e.key==='ArrowLeft'||e.key==='ArrowDown'||e.key==='PageDown')t=Math.max(0,t-step);
+    else if(e.key==='Home')t=0;
+    else if(e.key==='End')t=T4;
+    else moved=false;
+    if(moved){render();e.preventDefault()}
+  });
+  render();
+  if(CAPTURE){t=tMaxD;render()}
+})();
+</script>
+</body></html>

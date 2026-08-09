@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>흔들림 — 한 지진, 여섯 관측소</title>
+<meta name="description" content="규모 3.4 지진 하나를 여섯 관측소가 기록한 파형. P파와 S파의 도달 시간차만으로 진앙까지의 거리가 나온다.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+:root{
+  --sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+
+  /* 잉크 + 종이 + 포인트 1색. AD-1 은 그라디언트를 쓰지 않는다. */
+  --paper:#eceae4;      /* 종이 */
+  --paper2:#e2dfd7;     /* 한 단 짙은 종이 — 좌표계 띠·원본 덤프 */
+  --ink:#14150f;        /* 제목 — 종이 위 15.26:1 · 짙은 종이 위 13.79:1 */
+  --fg:#23251c;         /* 본문 — 종이 위 12.90:1 · 짙은 종이 위 11.66:1 */
+  --body:#41443a;       /* 부속 본문 — 종이 위 8.26:1 · 짙은 종이 위 7.46:1 */
+  --mut:#585c50;        /* 라벨 — 종이 위 5.70:1 · 짙은 종이 위 5.15:1 (양쪽 AA) */
+  --k:#a3126b;          /* 포인트 1색 — 종이 위 6.11:1 · 짙은 종이 위 5.52:1 · 흰 글자 7.35:1 */
+  --rule:#b6b2a7;
+  --hair:#cbc7bc;
+
+  /* 타입 스케일 — AD-1 은 단계를 적게 쓰고 웨이트와 여백으로 위계를 만든다.
+     실제로 쓰는 단은 xs·sm·base·md·lg·xl·2xl·4xl 여덟이고, 900px 이하에서는 4xl→2xl 이
+     빠져 일곱이 된다. 처음엔 「다섯 단」이라 적어 두었는데 세어 보니 거짓이었다. */
+  --t-xs:12px;--t-sm:14px;--t-base:16px;--t-md:20px;--t-lg:25px;--t-xl:31px;
+  --t-2xl:39px;--t-3xl:49px;--t-4xl:61px;--t-d1:76px;--t-d2:96px;
+
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;
+  --s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+}
+*{box-sizing:border-box}
+figure,blockquote,dd,dl{margin:0}      /* UA 가로 마진 40px — 안 지우면 그 요소만 격자 밖으로 밀린다 (함정 31) */
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--fg);font-family:var(--sans);
+  font-size:var(--t-base);line-height:1.7;word-break:keep-all;overflow-wrap:break-word;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+h1,h2,h3{margin:0;color:var(--ink);font-weight:700;line-height:1.2;letter-spacing:-.02em}
+p{margin:0}
+button{font:inherit;color:inherit}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+caption{text-align:left;font-size:var(--t-sm);color:var(--mut);padding-bottom:var(--s3)}
+th,td{padding:var(--s3) var(--s4) var(--s3) 0;text-align:left;vertical-align:baseline;
+  border-bottom:1px solid var(--hair)}
+thead th{font-size:var(--t-xs);color:var(--ink);font-weight:700;letter-spacing:.08em;
+  border-bottom:2px solid var(--ink)}
+tbody tr:last-child td{border-bottom:2px solid var(--ink)}
+td.n,th.n{text-align:right;padding-right:0;font-family:var(--mono);white-space:nowrap}
+/* 브라우저 기본 sub 는 0.83배라 12px 토큰 아래(11.67px)로 떨어진다 — 토큰으로 되돌린다 */
+sub{font-size:var(--t-xs);line-height:0;vertical-align:baseline;position:relative;bottom:-.18em}
+
+/* ═══ 격자 — 이 지면은 하나의 좌표계 위에 있다 ═══
+   12칼럼을 숨기지 않는다. 그리고 **시간축 0~24초가 지면 전체를 관통한다** —
+   파형·눈금·표의 초 표기가 전부 같은 축을 쓴다. 눈금 하나로 때우지 않는다. */
+.grid12{max-width:1280px;margin:0 auto;padding-left:var(--s6);padding-right:var(--s6);
+  display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--s5)}
+.grid12>*{min-width:0}
+/* 격자는 하나지만 **판형은 셋**이다 — 도판은 넓게, 산문은 좁게, 나머지는 기본.
+   전 섹션이 같은 좌우 여백이면 여백 점수가 3에 묶인다(probe rhythmWarn 이 그렇게 말했다). */
+.grid12.wide {max-width:1440px;padding-left:var(--s5);padding-right:var(--s5)}
+.grid12.tight{max-width:1120px;padding-left:var(--s9);padding-right:var(--s7)}
+.c-full{grid-column:1/-1}
+.c-main{grid-column:1/9}
+.c-half{grid-column:1/7}
+.c-half2{grid-column:7/-1}
+
+.lbl{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;color:var(--mut)}
+
+.js .rise{opacity:0;transform:translateY(8px)}
+.js .rise.vis{opacity:1;transform:none;transition:opacity .45s ease,transform .45s ease}
+.js .rise.r1.vis{transition-delay:.05s}
+/* 활성 파형 전환. 폴백에서 되받으려면 폴백도 같은 `.js` 접두를 써야 한다 —
+   미디어쿼리는 특이도를 올리지 않으므로 `.trace .wave path.w`(0,3,1) 로는 못 이긴다. */
+.js .trace .wave path.w{transition:stroke .18s linear,stroke-width .18s linear}
+
+/* ═══ 1 · 표제 ═══ */
+.head{padding-top:var(--s8);padding-bottom:var(--s6);border-bottom:2px solid var(--ink)}
+.head .kicker{display:flex;gap:var(--s5);flex-wrap:wrap;align-items:baseline}
+.head h1{font-size:var(--t-4xl);margin-top:var(--s4);letter-spacing:-.035em}
+.head .say{font-size:var(--t-md);color:var(--body);margin-top:var(--s4);max-width:30em;line-height:1.6}
+.facts{margin-top:var(--s6);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:var(--s4) var(--s5);border-top:1px solid var(--hair);padding-top:var(--s4)}
+.facts>div{min-width:0}
+.facts dt{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut)}
+.facts dd{margin:2px 0 0;font-family:var(--mono);font-size:var(--t-md);color:var(--ink);font-weight:700}
+
+/* ═══ 2 · 기록 단면 (주 도판 · 조작형) ═══ */
+.rec{padding-top:var(--s7);padding-bottom:var(--s7)}
+.rec h2{font-size:var(--t-xl);max-width:15em}
+.rec .say{font-size:var(--t-base);color:var(--body);margin-top:var(--s3);max-width:38em}
+.stations{display:flex;flex-wrap:wrap;margin-top:var(--s5);border:2px solid var(--ink)}
+.stations button{flex:1 1 auto;background:transparent;border:0;border-right:1px solid var(--rule);
+  padding:var(--s3) var(--s3);font-family:var(--mono);font-size:var(--t-xs);cursor:pointer;
+  color:var(--fg);white-space:nowrap;text-align:center}
+.stations button:last-child{border-right:0}
+.stations button[aria-pressed="true"]{background:var(--k);color:#fff}
+.stations button:hover[aria-pressed="false"]{background:var(--paper2)}
+
+/* 주 도판 — 이 지면의 가장 큰 것. 390 에서 폭 358 · 높이 340 이상을 목표로 잡았다. */
+.section{margin-top:var(--s5);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);
+  background:var(--paper2);position:relative;padding:var(--s5) 0 0}
+.trace{display:grid;grid-template-columns:66px minmax(0,1fr) 74px;align-items:center;
+  gap:var(--s3);padding:0 var(--s4) var(--s4)}
+.trace>*{min-width:0}
+.trace .st{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);line-height:1.35}
+.trace .st b{display:block;color:var(--ink);font-size:var(--t-sm)}
+.trace .km{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);text-align:right;white-space:nowrap}
+.wave{display:block;width:100%;height:52px;overflow:visible}
+.wave path{fill:none;stroke:var(--ink);stroke-width:1.1;vector-effect:non-scaling-stroke}
+.wave .mark{stroke:var(--rule);stroke-width:1;vector-effect:non-scaling-stroke}
+.trace.on .wave path.w{stroke:var(--k);stroke-width:1.6}
+.trace.on .st b{color:var(--k)}
+/* 시간 눈금 — 파형 뒤가 아니라 지면의 축이다. 모든 행이 같은 x 를 쓴다. */
+.axis{display:grid;grid-template-columns:66px minmax(0,1fr) 74px;gap:var(--s3);
+  padding:0 var(--s4) var(--s4);align-items:start}
+.axis>*{min-width:0}
+.ticks{position:relative;height:22px;border-top:1px solid var(--ink)}
+.ticks i{position:absolute;top:0;width:1px;height:6px;background:var(--ink);font-style:normal}
+.ticks span{position:absolute;top:8px;transform:translateX(-50%);font-family:var(--mono);
+  font-size:var(--t-xs);color:var(--mut);white-space:nowrap}
+
+/* ═══ 3 · 거리 계산 ═══ */
+.calc{padding-top:var(--s7);padding-bottom:var(--s7);border-top:1px solid var(--hair)}
+.calc h2{font-size:var(--t-lg)}
+.formula{margin-top:var(--s4);border-left:3px solid var(--k);padding-left:var(--s4)}
+.formula .eq{font-family:var(--mono);font-size:var(--t-md);color:var(--ink);line-height:1.9}
+.formula .eq b{color:var(--k);font-weight:700}
+/* 분모는 한 항이다 — 390 에서 `(V_P` / `− V_S)` 로 쪼개져 식의 구조가 오독됐다 */
+.formula .eq .den{white-space:nowrap}
+.formula .note{font-size:var(--t-sm);color:var(--body);margin-top:var(--s3);max-width:36em}
+.readout{margin-top:var(--s5)}
+.rrow{display:grid;grid-template-columns:minmax(0,1fr) max-content;gap:var(--s4);
+  align-items:baseline;padding:var(--s2) 0;border-bottom:1px solid var(--hair)}
+.rrow>*{min-width:0}
+.rrow .rl{font-size:var(--t-sm);color:var(--body)}
+.rrow .rv{font-family:var(--mono);font-size:var(--t-md);color:var(--ink);font-weight:700;white-space:nowrap}
+.rrow.big .rv{font-size:var(--t-xl);color:var(--k)}
+.check{margin-top:var(--s5);border-top:2px solid var(--ink);padding-top:var(--s3);
+  font-size:var(--t-sm);color:var(--body);line-height:1.7}
+.check b{color:var(--ink)}
+
+/* ═══ 4 · 관측망 ═══ */
+.net{padding-top:var(--s6);padding-bottom:var(--s8);border-top:1px solid var(--hair)}
+.net h2{font-size:var(--t-lg)}
+.net .wrap2{margin-top:var(--s4)}
+.net .foot{font-size:var(--t-sm);color:var(--mut);margin-top:var(--s3)}
+
+/* ═══ 5 · 원본 덤프 (닫는 자리) ═══ */
+.raw{padding-top:var(--s8);padding-bottom:var(--s9);background:var(--paper2);
+  border-top:2px solid var(--ink)}
+.raw h2{font-size:var(--t-lg)}
+.raw .say{font-size:var(--t-sm);color:var(--body);margin-top:var(--s3);max-width:40em}
+.dump{margin-top:var(--s5);border:1px solid var(--rule);background:var(--paper);
+  padding:var(--s4);overflow-x:auto}
+.dump pre{margin:0;font-family:var(--mono);font-size:var(--t-xs);line-height:1.75;
+  color:var(--fg);white-space:pre}
+/* 밀어야 보인다는 사실을 선으로 말한다 — AD-1 은 그라디언트 페이드를 쓰지 않는다.
+   JS 가 실제 넘침을 재서 켠다. 안 넘치면 이 줄도 없다. */
+.raw .push{display:none;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);
+  border-top:1px solid var(--rule);margin-top:var(--s2);padding-top:var(--s2)}
+.raw .push.on{display:block}
+.raw .fine{font-size:var(--t-sm);color:var(--mut);margin-top:var(--s5);max-width:42em;line-height:1.7}
+
+@media (max-width:900px){
+  .grid12{padding-left:var(--s4);padding-right:var(--s4);column-gap:var(--s4)}
+  .grid12.wide {padding-left:var(--s3);padding-right:var(--s3)}
+  .grid12.tight{padding-left:var(--s6);padding-right:var(--s4)}
+  .c-main,.c-side,.c-half,.c-half2{grid-column:1/-1}
+  .head{padding-top:var(--s7);padding-bottom:var(--s5)}
+  .rec {padding-top:var(--s6);padding-bottom:var(--s6)}
+  .calc{padding-top:var(--s8);padding-bottom:var(--s4)}
+  .net {padding-top:var(--s5);padding-bottom:var(--s6)}
+  .raw {padding-top:var(--s7);padding-bottom:var(--s8)}
+  .head h1{font-size:var(--t-2xl)}
+  .rec h2{font-size:var(--t-lg)}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* 도판은 줄이지 않는다 — 이 지면에서 가장 큰 것이어야 한다 */
+  .trace,.axis{grid-template-columns:52px minmax(0,1fr);padding-left:var(--s3);padding-right:var(--s3)}
+  .trace .km{grid-column:2;text-align:left;margin-top:-6px}
+  .wave{height:46px}
+  .stations button{flex:1 1 30%}
+  /* 표를 카드로 접는다 (함정 12) */
+  .fold table,.fold thead,.fold tbody,.fold tr{display:block;width:auto}
+  .fold caption{display:block}
+  .fold thead{position:absolute;left:-9999px}
+  .fold tr{border-bottom:2px solid var(--ink);padding:var(--s3) 0}
+  .fold td{display:grid;grid-template-columns:6em minmax(0,1fr);gap:var(--s3);
+           border-bottom:0;padding:var(--s1) 0;text-align:left}
+  .fold td::before{content:attr(data-l);color:var(--mut);font-family:var(--mono);font-size:var(--t-xs)}
+  .fold td.n{text-align:left}
+  /* (0,1,3) 기본 규칙을 같은 셀렉터로 되받는다 (함정 27) */
+  .fold tbody tr:last-child td{border-bottom:0}
+  /* 식의 분모가 한 줄에 남게 한 단 내린다 */
+  .formula .eq{font-size:var(--t-base)}
+  /* 덤프는 좌우 여백을 줄여 보이는 폭을 늘린다 */
+  .dump{padding:var(--s3)}
+}
+/* ── 폴백 ── 끄는 대상과 같은 특이도로 되받고, 소스 순서상 뒤에 둔다.
+   `.js .rise`(0,2,0) 로는 `.js .rise.vis`(0,3,0) 를 못 이겨 페이드가 그대로 재생됐다. */
+@media (prefers-reduced-motion:reduce){
+  .js .rise,.js .rise.vis{opacity:1;transform:none;transition:none}
+  .js .rise.r1.vis{transition:none;transition-delay:0s}
+  .js .trace .wave path.w{transition:none}
+}
+.js.capture .rise,.js.capture .rise.vis{opacity:1;transform:none;transition:none}
+.js.capture .rise.r1.vis{transition:none;transition-delay:0s}
+.js.capture .trace .wave path.w{transition:none}
+</style></head><body>
+
+<!-- ═══ 1 · 표제 ═══ -->
+<section class="head">
+  <div class="grid12">
+    <div class="c-full">
+      <div class="kicker">
+        <span class="lbl">기록 번호 2026-0731-0214</span>
+        <span class="lbl" style="color:var(--k)">여섯 관측소 · 동시 기록</span>
+      </div>
+      <h1>같은 흔들림을 여섯 곳이 따로 적었다</h1>
+    </div>
+    <div class="c-main">
+      <p class="say">지진 하나가 났고, 여섯 관측소가 각자 종이에 선을 그었다. 그 선들만 놓고 진앙이 어디였는지 되짚는다. 지도는 쓰지 않는다 — <b>P파와 S파가 도착한 시각의 차이</b>만 쓴다.</p>
+    </div>
+    <div class="c-full">
+      <dl class="facts rise">
+        <div><dt>발생</dt><dd>02:14:37</dd></div>
+        <div><dt>규모</dt><dd>M 3.4</dd></div>
+        <div><dt>깊이</dt><dd>11 km</dd></div>
+        <div><dt>기록 길이</dt><dd>24 s</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2 · 기록 단면 (주 도판) ═══ -->
+<section class="rec">
+  <div class="grid12 wide">
+    <div class="c-main">
+      <p class="lbl">기록 단면</p>
+      <h2>먼 곳일수록 늦게, 그리고 작게 도착한다</h2>
+      <p class="say">여섯 줄은 같은 시간축 위에 있다. 왼쪽 끝이 발생 시각이고 오른쪽 끝이 24초 뒤다. 관측소를 고르면 그 줄이 짙어지고 아래 계산이 그 줄의 값으로 바뀐다.</p>
+    </div>
+    <div class="c-full">
+      <div class="stations rise" role="group" aria-label="관측소 선택">
+        <button type="button" data-id="DRA2" aria-pressed="true">두류 DRA2</button>
+        <button type="button" data-id="HNS1" aria-pressed="false">한내 HNS1</button>
+        <button type="button" data-id="GKP1" aria-pressed="false">금계 GKP1</button>
+        <button type="button" data-id="YDG1" aria-pressed="false">영덕 YDG1</button>
+        <button type="button" data-id="SCH2" aria-pressed="false">서창 SCH2</button>
+        <button type="button" data-id="MJU3" aria-pressed="false">무주 MJU3</button>
+      </div>
+    </div>
+    <div class="c-full">
+      <figure class="section rise r1" id="sect" aria-label="여섯 관측소의 24초 파형 기록. 위에서 아래로 진앙에서 가까운 순이다.">
+        <div class="trace on" data-id="DRA2">
+          <span class="st"><b>두류</b>DRA2</span>
+          <svg class="wave" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">
+            <path class="mark" d="M0 30L1000 30"/>
+            <path class="w" id="w-DRA2" d="M0.0 30.0L4.2 29.7L8.3 29.5L12.5 29.4L16.7 29.5L20.8 29.8L25.0 30.1L29.2 30.4L33.3 30.6L37.5 30.6L41.7 30.4L45.8 30.0L50.0 29.7L54.2 29.5L58.3 29.4L62.5 29.5L66.7 29.8L70.8 30.1L75.0 30.4L79.2 30.6L83.3 30.6L87.5 30.4L91.7 30.1L95.8 29.7L100.0 29.5L104.2 29.4L108.3 29.5L112.5 29.7L116.7 30.1L120.8 30.4L125.0 30.6L129.2 30.6L133.3 25.6L137.5 36.4L141.7 22.5L145.8 37.4L150.0 21.5L154.2 37.0L158.3 23.1L162.5 35.4L166.7 26.6L170.8 32.6L175.0 30.3L179.2 28.9L183.3 33.2L187.5 25.4L191.7 35.0L195.8 23.3L200.0 35.8L204.2 23.5L208.3 35.7L212.5 25.5L216.7 34.2L220.8 28.3L225.0 31.4L229.2 30.7L233.3 5.3L237.5 17.5L241.7 40.7L245.8 55.0L250.0 19.0L254.2 12.6L258.3 21.4L262.5 54.4L266.7 39.6L270.8 19.3L275.0 11.3L279.2 35.5L283.3 49.7L287.5 30.4L291.7 15.2L295.8 16.0L300.0 45.8L304.2 41.0L308.3 29.3L312.5 10.6L316.7 31.5L320.8 42.7L325.0 39.7L329.2 18.4L333.3 16.7L337.5 35.4L341.7 41.6L345.8 33.7L350.0 14.5L354.2 27.0L358.3 36.8L362.5 44.0L366.7 23.1L370.8 20.2L375.0 27.4L379.2 41.3L383.3 34.7L387.5 20.7L391.7 22.4L395.8 32.6L400.0 42.8L404.2 28.5L408.3 23.6L412.5 23.4L416.7 39.5L420.8 35.0L425.0 27.1L429.2 19.8L433.3 29.9L437.5 38.3L441.7 32.9L445.8 25.3L450.0 22.9L454.2 35.9L458.3 35.7L462.5 31.8L466.7 20.7L470.8 28.4L475.0 33.6L479.2 35.6L483.3 26.1L487.5 24.0L491.7 31.2L495.8 35.9L500.0 33.9L504.2 24.1L508.3 27.4L512.5 31.0L516.7 36.3L520.8 27.4L525.0 25.5L529.2 27.0L533.3 34.9L537.5 33.7L541.7 27.9L545.8 26.6L550.0 30.2L554.2 35.6L558.3 30.0L562.5 27.1L566.7 25.2L570.8 33.0L575.0 32.4L579.2 30.3L583.3 25.9L587.5 29.8L591.7 33.8L595.8 32.6L600.0 28.6L604.2 25.9L608.3 31.1L612.5 31.7L616.7 31.3L620.8 25.8L625.0 28.9L629.2 31.4L633.3 33.8L637.5 29.6L641.7 27.8L645.8 29.7L650.0 32.0L654.2 31.7L658.3 27.1L662.5 27.9L666.7 29.4L670.8 33.2L675.0 30.0L679.2 29.1L683.3 28.7L687.5 32.3L691.7 31.9L695.8 29.3L700.0 27.7L704.2 28.8L708.3 31.7L712.5 30.2L716.7 29.3L720.8 28.0L725.0 31.7L729.2 31.8L733.3 31.2L737.5 28.3L741.7 29.3L745.8 30.7L750.0 30.7L754.2 29.1L758.3 27.8L762.5 30.2L766.7 31.1L770.8 31.7L775.0 29.1L779.2 29.9L783.3 30.3L787.5 31.6L791.7 29.5L795.8 28.4L800.0 28.8L804.2 30.4L808.3 31.0L812.5 29.4L816.7 29.7L820.8 30.2L825.0 32.0L829.2 30.4L833.3 29.6L837.5 28.6L841.7 30.1L845.8 30.2L850.0 29.6L854.2 29.0L858.3 29.6L862.5 31.3L866.7 31.0L870.8 30.5L875.0 29.2L879.2 30.4L883.3 30.2L887.5 30.1L891.7 28.6L895.8 29.1L900.0 30.0L904.2 30.8L908.3 30.4L912.5 29.8L916.7 30.5L920.8 30.7L925.0 30.8L929.2 29.2L933.3 29.2L937.5 29.2L941.7 30.3L945.8 29.8L950.0 29.7L954.2 30.0L958.3 30.8L962.5 31.1L966.7 30.2L970.8 29.8L975.0 29.4L979.2 30.1L983.3 29.5L987.5 29.4L991.7 29.1L995.8 30.2L1000.0 30.7"/>
+          </svg>
+          <span class="km">24.3 km</span>
+        </div>
+        <div class="trace" data-id="HNS1">
+          <span class="st"><b>한내</b>HNS1</span>
+          <svg class="wave" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">
+            <path class="mark" d="M0 30L1000 30"/>
+            <path class="w" id="w-HNS1" d="M0.0 30.0L4.2 29.7L8.3 29.5L12.5 29.4L16.7 29.5L20.8 29.8L25.0 30.1L29.2 30.4L33.3 30.6L37.5 30.6L41.7 30.4L45.8 30.0L50.0 29.7L54.2 29.5L58.3 29.4L62.5 29.5L66.7 29.8L70.8 30.1L75.0 30.4L79.2 30.6L83.3 30.6L87.5 30.4L91.7 30.1L95.8 29.7L100.0 29.5L104.2 29.4L108.3 29.5L112.5 29.7L116.7 30.1L120.8 30.4L125.0 30.6L129.2 30.6L133.3 30.4L137.5 28.9L141.7 29.0L145.8 32.2L150.0 25.0L154.2 35.2L158.3 23.0L162.5 37.2L166.7 23.1L170.8 37.4L175.0 24.6L179.2 35.3L183.3 26.8L187.5 31.6L191.7 29.4L195.8 28.0L200.0 32.3L204.2 25.6L208.3 35.0L212.5 24.8L216.7 36.3L220.8 25.0L225.0 35.6L229.2 25.9L233.3 33.1L237.5 27.5L241.7 30.2L245.8 12.8L250.0 8.5L254.2 40.8L258.3 48.7L262.5 36.4L266.7 5.7L270.8 24.8L275.0 41.0L279.2 50.0L283.3 19.0L287.5 12.8L291.7 27.4L295.8 47.3L300.0 39.1L304.2 15.2L308.3 19.5L312.5 34.3L316.7 50.0L320.8 26.8L325.0 18.3L329.2 19.7L333.3 43.8L337.5 38.7L341.7 24.6L345.8 15.8L350.0 30.1L354.2 44.7L358.3 34.2L362.5 22.6L366.7 18.1L370.8 38.6L375.0 38.3L379.2 31.6L383.3 15.7L387.5 27.2L391.7 37.4L395.8 38.8L400.0 25.2L404.2 20.3L408.3 32.5L412.5 38.4L416.7 35.4L420.8 19.6L425.0 25.2L429.2 31.8L433.3 39.9L437.5 27.1L441.7 23.1L445.8 27.0L450.0 37.8L454.2 36.2L458.3 25.4L462.5 24.2L466.7 29.3L470.8 38.3L475.0 29.6L479.2 25.4L483.3 23.5L487.5 35.4L491.7 35.1L495.8 30.4L500.0 24.0L504.2 28.9L508.3 35.6L512.5 32.7L516.7 27.2L520.8 23.1L525.0 32.0L529.2 33.5L533.3 32.7L537.5 24.6L541.7 28.6L545.8 32.8L550.0 35.2L554.2 28.8L558.3 25.2L562.5 29.1L566.7 32.6L570.8 32.9L575.0 25.9L579.2 27.6L583.3 30.2L587.5 35.5L591.7 30.3L595.8 27.8L600.0 27.5L604.2 32.5L608.3 32.5L612.5 28.2L616.7 26.6L620.8 28.6L625.0 33.8L629.2 31.1L633.3 29.4L637.5 27.2L641.7 32.2L645.8 32.3L650.0 30.7L654.2 26.7L658.3 28.2L662.5 31.4L666.7 31.5L670.8 29.5L675.0 27.3L679.2 31.0L683.3 32.1L687.5 32.3L691.7 27.9L695.8 28.7L700.0 29.9L704.2 31.8L708.3 29.3L712.5 27.7L716.7 29.2L720.8 31.4L725.0 32.4L729.2 29.3L733.3 29.3L737.5 29.6L741.7 32.1L745.8 29.8L750.0 28.6L754.2 27.8L758.3 30.5L762.5 31.3L766.7 30.1L770.8 29.2L775.0 29.7L779.2 32.0L783.3 30.9L787.5 29.8L791.7 27.9L795.8 29.9L800.0 30.2L804.2 30.3L808.3 28.7L812.5 29.4L816.7 31.0L820.8 31.6L825.0 30.6L829.2 29.0L833.3 30.0L837.5 30.2L841.7 30.5L845.8 28.5L850.0 29.0L854.2 29.6L858.3 31.3L862.5 30.6L866.7 29.9L870.8 30.0L875.0 30.7L879.2 31.0L883.3 29.4L887.5 29.0L891.7 28.9L895.8 30.5L900.0 30.0L904.2 30.0L908.3 29.6L912.5 30.8L916.7 31.2L920.8 30.6L925.0 29.6L929.2 29.2L933.3 30.0L937.5 29.7L941.7 29.6L945.8 28.9L950.0 30.2L954.2 30.7L958.3 31.1L962.5 30.1L966.7 30.0L970.8 30.2L975.0 30.2L979.2 29.7L983.3 28.9L987.5 29.4L991.7 29.8L995.8 30.6L1000.0 30.0"/>
+          </svg>
+          <span class="km">25.7 km</span>
+        </div>
+        <div class="trace" data-id="GKP1">
+          <span class="st"><b>금계</b>GKP1</span>
+          <svg class="wave" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">
+            <path class="mark" d="M0 30L1000 30"/>
+            <path class="w" id="w-GKP1" d="M0.0 30.0L4.2 29.7L8.3 29.5L12.5 29.4L16.7 29.5L20.8 29.8L25.0 30.1L29.2 30.4L33.3 30.6L37.5 30.6L41.7 30.4L45.8 30.0L50.0 29.7L54.2 29.5L58.3 29.4L62.5 29.5L66.7 29.8L70.8 30.1L75.0 30.4L79.2 30.6L83.3 30.6L87.5 30.4L91.7 30.1L95.8 29.7L100.0 29.5L104.2 29.4L108.3 29.5L112.5 29.7L116.7 30.1L120.8 30.4L125.0 30.6L129.2 30.6L133.3 30.4L137.5 30.1L141.7 29.8L145.8 29.5L150.0 29.4L154.2 29.5L158.3 29.7L162.5 30.0L166.7 30.4L170.8 30.6L175.0 30.6L179.2 26.4L183.3 32.8L187.5 28.7L191.7 29.1L195.8 31.2L200.0 26.4L204.2 33.8L208.3 25.1L212.5 35.6L216.7 25.2L220.8 35.7L225.0 26.0L229.2 33.9L233.3 27.2L237.5 31.1L241.7 29.1L245.8 28.5L250.0 31.6L254.2 27.1L258.3 33.9L262.5 26.5L266.7 34.9L270.8 26.3L275.0 34.1L279.2 26.6L283.3 32.1L287.5 27.8L291.7 30.1L295.8 29.9L300.0 28.8L304.2 32.2L308.3 27.9L312.5 33.7L316.7 22.4L320.8 15.6L325.0 23.6L329.2 48.4L333.3 36.9L337.5 20.0L341.7 14.5L345.8 34.7L350.0 46.2L354.2 31.4L358.3 18.6L362.5 20.2L366.7 42.7L370.8 39.1L375.0 28.0L379.2 13.8L383.3 30.0L387.5 39.9L391.7 37.4L395.8 21.1L400.0 20.4L404.2 35.4L408.3 40.5L412.5 32.9L416.7 17.7L420.8 26.5L425.0 35.0L429.2 39.8L433.3 24.0L437.5 21.7L441.7 28.6L445.8 40.0L450.0 34.8L454.2 23.5L458.3 24.2L462.5 32.3L466.7 39.3L470.8 28.0L475.0 23.4L479.2 24.4L483.3 37.2L487.5 34.6L491.7 28.3L495.8 23.0L500.0 30.9L504.2 37.1L508.3 32.4L512.5 25.3L516.7 23.6L520.8 33.5L525.0 34.0L529.2 30.9L533.3 23.0L537.5 29.3L541.7 34.2L545.8 35.3L550.0 27.4L554.2 25.2L558.3 30.4L562.5 33.9L566.7 31.9L570.8 24.6L575.0 27.4L579.2 31.3L583.3 35.7L587.5 29.1L591.7 27.2L595.8 28.4L600.0 34.0L604.2 32.4L608.3 27.3L612.5 26.1L616.7 29.5L620.8 34.0L625.0 30.3L629.2 28.1L633.3 27.4L637.5 33.3L641.7 32.8L645.8 30.2L650.0 26.3L654.2 29.0L658.3 32.0L662.5 31.2L666.7 28.3L670.8 26.9L675.0 31.4L679.2 32.5L683.3 31.9L687.5 27.5L691.7 29.3L695.8 30.9L700.0 32.2L704.2 28.6L708.3 27.3L712.5 29.2L716.7 31.7L720.8 31.9L725.0 28.7L729.2 29.3L733.3 30.5L737.5 32.8L741.7 29.7L745.8 28.4L750.0 28.0L754.2 30.9L758.3 31.0L762.5 29.4L766.7 28.6L770.8 30.0L775.0 32.4L779.2 31.0L783.3 29.6L787.5 28.2L791.7 30.5L795.8 30.5L800.0 29.9L804.2 28.0L808.3 29.3L812.5 31.1L816.7 31.5L820.8 30.3L825.0 29.1L829.2 30.5L833.3 30.8L837.5 30.6L841.7 28.3L845.8 28.8L850.0 29.7L854.2 31.1L858.3 30.0L862.5 29.6L866.7 30.1L870.8 31.2L875.0 31.2L879.2 29.5L883.3 29.1L887.5 29.2L891.7 30.5L895.8 29.6L900.0 29.4L904.2 29.3L908.3 30.9L912.5 31.2L916.7 30.6L920.8 29.7L925.0 29.7L929.2 30.4L933.3 29.8L937.5 29.3L941.7 28.6L945.8 30.0L950.0 30.5L954.2 30.8L958.3 29.9L962.5 30.3L966.7 30.6L970.8 30.7L975.0 29.8L979.2 28.9L983.3 29.3L987.5 29.8L991.7 30.2L995.8 29.6L1000.0 30.1"/>
+          </svg>
+          <span class="km">33.4 km</span>
+        </div>
+        <div class="trace" data-id="YDG1">
+          <span class="st"><b>영덕</b>YDG1</span>
+          <svg class="wave" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">
+            <path class="mark" d="M0 30L1000 30"/>
+            <path class="w" id="w-YDG1" d="M0.0 30.0L4.2 29.7L8.3 29.5L12.5 29.4L16.7 29.5L20.8 29.8L25.0 30.1L29.2 30.4L33.3 30.6L37.5 30.6L41.7 30.4L45.8 30.0L50.0 29.7L54.2 29.5L58.3 29.4L62.5 29.5L66.7 29.8L70.8 30.1L75.0 30.4L79.2 30.6L83.3 30.6L87.5 30.4L91.7 30.1L95.8 29.7L100.0 29.5L104.2 29.4L108.3 29.5L112.5 29.7L116.7 30.1L120.8 30.4L125.0 30.6L129.2 30.6L133.3 30.4L137.5 30.1L141.7 29.8L145.8 29.5L150.0 29.4L154.2 29.5L158.3 29.7L162.5 30.0L166.7 30.4L170.8 30.6L175.0 30.6L179.2 30.4L183.3 30.1L187.5 29.8L191.7 29.5L195.8 29.4L200.0 29.5L204.2 29.7L208.3 30.0L212.5 30.3L216.7 30.5L220.8 30.6L225.0 30.5L229.2 30.2L233.3 29.9L237.5 29.6L241.7 28.2L245.8 29.5L250.0 30.7L254.2 27.9L258.3 33.2L262.5 27.0L266.7 34.6L270.8 26.4L275.0 34.2L279.2 26.3L283.3 32.6L287.5 27.1L291.7 30.9L295.8 29.1L300.0 29.5L304.2 31.5L308.3 28.5L312.5 33.2L316.7 27.5L320.8 33.5L325.0 26.7L329.2 32.7L333.3 26.8L337.5 31.5L341.7 28.1L345.8 30.7L350.0 30.2L354.2 29.8L358.3 31.9L362.5 28.7L366.7 32.5L370.8 27.5L375.0 32.2L379.2 26.9L383.3 31.7L387.5 27.6L391.7 31.3L395.8 29.3L400.0 30.8L404.2 30.9L408.3 29.7L412.5 31.6L416.7 28.3L420.8 31.6L425.0 27.4L429.2 25.4L433.3 14.7L437.5 31.8L441.7 41.3L445.8 36.4L450.0 20.3L454.2 21.6L458.3 36.3L462.5 40.2L466.7 30.3L470.8 17.3L475.0 27.0L479.2 36.5L483.3 38.9L487.5 23.6L491.7 22.3L495.8 30.5L500.0 40.4L504.2 33.3L508.3 22.4L512.5 24.0L516.7 33.2L520.8 38.3L525.0 27.3L529.2 23.1L533.3 26.3L537.5 38.2L541.7 34.7L545.8 27.4L550.0 23.1L554.2 31.5L558.3 36.6L562.5 31.2L566.7 24.2L570.8 24.5L575.0 34.3L579.2 34.7L583.3 30.3L587.5 23.7L591.7 30.1L595.8 34.6L600.0 34.3L604.2 26.2L608.3 24.9L612.5 30.6L616.7 34.1L620.8 31.3L625.0 25.0L629.2 28.2L633.3 32.6L637.5 35.4L641.7 28.6L645.8 26.6L650.0 28.5L654.2 33.7L658.3 31.6L662.5 26.9L666.7 26.4L670.8 30.7L675.0 34.4L679.2 30.5L683.3 28.0L687.5 27.9L691.7 33.1L695.8 32.1L700.0 29.1L704.2 25.9L708.3 29.3L712.5 32.4L716.7 31.4L720.8 28.4L725.0 27.8L729.2 31.9L733.3 32.7L737.5 31.0L741.7 27.0L745.8 28.8L750.0 30.8L754.2 31.8L758.3 28.5L762.5 27.7L766.7 30.1L770.8 32.5L775.0 31.9L779.2 28.7L783.3 29.0L787.5 30.3L791.7 32.0L795.8 29.1L800.0 28.0L804.2 28.4L808.3 31.5L812.5 31.4L816.7 29.8L820.8 29.0L825.0 30.4L829.2 32.1L833.3 30.4L837.5 28.8L841.7 28.0L845.8 30.4L850.0 30.6L854.2 30.1L858.3 28.6L862.5 30.0L866.7 31.6L870.8 31.5L875.0 29.8L879.2 28.7L883.3 30.0L887.5 30.4L891.7 30.1L895.8 28.3L900.0 29.2L904.2 30.4L908.3 31.6L912.5 30.3L916.7 29.7L920.8 30.0L925.0 30.9L929.2 30.5L933.3 28.9L937.5 28.7L941.7 29.4L945.8 30.8L950.0 30.1L954.2 29.9L958.3 29.8L962.5 31.2L966.7 31.0L970.8 30.0L975.0 29.0L979.2 29.3L983.3 30.1L987.5 29.8L991.7 29.5L995.8 29.3L1000.0 30.6"/>
+          </svg>
+          <span class="km">45.2 km</span>
+        </div>
+        <div class="trace" data-id="SCH2">
+          <span class="st"><b>서창</b>SCH2</span>
+          <svg class="wave" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">
+            <path class="mark" d="M0 30L1000 30"/>
+            <path class="w" id="w-SCH2" d="M0.0 30.0L4.2 29.7L8.3 29.5L12.5 29.4L16.7 29.5L20.8 29.8L25.0 30.1L29.2 30.4L33.3 30.6L37.5 30.6L41.7 30.4L45.8 30.0L50.0 29.7L54.2 29.5L58.3 29.4L62.5 29.5L66.7 29.8L70.8 30.1L75.0 30.4L79.2 30.6L83.3 30.6L87.5 30.4L91.7 30.1L95.8 29.7L100.0 29.5L104.2 29.4L108.3 29.5L112.5 29.7L116.7 30.1L120.8 30.4L125.0 30.6L129.2 30.6L133.3 30.4L137.5 30.1L141.7 29.8L145.8 29.5L150.0 29.4L154.2 29.5L158.3 29.7L162.5 30.0L166.7 30.4L170.8 30.6L175.0 30.6L179.2 30.4L183.3 30.1L187.5 29.8L191.7 29.5L195.8 29.4L200.0 29.5L204.2 29.7L208.3 30.0L212.5 30.3L216.7 30.5L220.8 30.6L225.0 30.5L229.2 30.2L233.3 29.9L237.5 29.6L241.7 29.4L245.8 29.4L250.0 29.6L254.2 30.0L258.3 30.3L262.5 30.5L266.7 30.6L270.8 30.0L275.0 29.6L279.2 31.4L283.3 27.2L287.5 32.4L291.7 26.0L295.8 33.3L300.0 26.3L304.2 33.7L308.3 27.6L312.5 32.9L316.7 28.9L320.8 31.0L325.0 30.0L329.2 28.8L333.3 31.0L337.5 27.3L341.7 32.2L345.8 27.0L350.0 33.2L354.2 27.7L358.3 33.1L362.5 28.4L366.7 31.9L370.8 29.0L375.0 29.9L379.2 29.8L383.3 28.4L387.5 31.1L391.7 27.9L395.8 32.4L400.0 28.1L404.2 32.9L408.3 28.4L412.5 32.2L416.7 28.5L420.8 30.7L425.0 29.0L429.2 29.4L433.3 30.1L437.5 28.8L441.7 31.5L445.8 28.8L450.0 32.4L454.2 28.7L458.3 32.1L462.5 28.4L466.7 31.1L470.8 28.5L475.0 30.0L479.2 29.3L483.3 18.7L487.5 23.6L491.7 36.8L495.8 41.8L500.0 26.4L504.2 21.1L508.3 26.7L512.5 40.6L516.7 34.2L520.8 23.8L525.0 20.4L529.2 32.7L533.3 39.3L537.5 31.4L541.7 23.0L545.8 24.9L550.0 37.2L554.2 36.0L558.3 28.5L562.5 20.5L566.7 29.5L570.8 35.7L575.0 34.3L579.2 24.6L583.3 24.5L587.5 33.1L591.7 36.9L595.8 31.6L600.0 23.2L604.2 27.5L608.3 33.1L612.5 35.3L616.7 26.4L620.8 24.7L625.0 29.1L629.2 36.0L633.3 32.9L637.5 26.6L641.7 26.5L645.8 31.8L650.0 35.3L654.2 29.0L658.3 25.6L662.5 26.6L666.7 33.9L670.8 32.8L675.0 29.0L679.2 26.0L683.3 30.8L687.5 34.4L691.7 31.8L695.8 27.1L700.0 26.3L704.2 31.6L708.3 32.4L712.5 30.1L716.7 25.9L720.8 29.5L725.0 32.7L729.2 33.4L733.3 28.7L737.5 27.4L741.7 30.1L745.8 32.4L750.0 30.7L754.2 26.7L758.3 28.0L762.5 30.8L766.7 33.2L770.8 29.8L775.0 28.5L779.2 29.3L783.3 32.6L787.5 31.5L791.7 28.4L795.8 27.4L800.0 29.5L804.2 32.0L808.3 30.2L812.5 28.8L816.7 28.7L820.8 32.1L825.0 32.0L829.2 30.3L833.3 27.9L837.5 29.3L841.7 30.9L845.8 30.5L850.0 28.6L854.2 28.1L858.3 30.7L862.5 31.8L866.7 31.3L870.8 28.9L875.0 29.7L879.2 30.7L883.3 31.2L887.5 29.0L891.7 28.1L895.8 29.2L900.0 30.9L904.2 31.0L908.3 29.5L912.5 29.7L916.7 30.6L920.8 31.8L925.0 30.0L929.2 28.9L933.3 28.7L937.5 30.3L941.7 30.3L945.8 29.5L950.0 29.1L954.2 30.2L958.3 31.6L962.5 31.0L966.7 30.0L970.8 29.2L975.0 30.2L979.2 30.2L983.3 29.7L987.5 28.6L991.7 29.4L995.8 30.5L1000.0 31.0"/>
+          </svg>
+          <span class="km">50.7 km</span>
+        </div>
+        <div class="trace" data-id="MJU3">
+          <span class="st"><b>무주</b>MJU3</span>
+          <svg class="wave" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">
+            <path class="mark" d="M0 30L1000 30"/>
+            <path class="w" id="w-MJU3" d="M0.0 30.0L4.2 29.7L8.3 29.5L12.5 29.4L16.7 29.5L20.8 29.8L25.0 30.1L29.2 30.4L33.3 30.6L37.5 30.6L41.7 30.4L45.8 30.0L50.0 29.7L54.2 29.5L58.3 29.4L62.5 29.5L66.7 29.8L70.8 30.1L75.0 30.4L79.2 30.6L83.3 30.6L87.5 30.4L91.7 30.1L95.8 29.7L100.0 29.5L104.2 29.4L108.3 29.5L112.5 29.7L116.7 30.1L120.8 30.4L125.0 30.6L129.2 30.6L133.3 30.4L137.5 30.1L141.7 29.8L145.8 29.5L150.0 29.4L154.2 29.5L158.3 29.7L162.5 30.0L166.7 30.4L170.8 30.6L175.0 30.6L179.2 30.4L183.3 30.1L187.5 29.8L191.7 29.5L195.8 29.4L200.0 29.5L204.2 29.7L208.3 30.0L212.5 30.3L216.7 30.5L220.8 30.6L225.0 30.5L229.2 30.2L233.3 29.9L237.5 29.6L241.7 29.4L245.8 29.4L250.0 29.6L254.2 30.0L258.3 30.3L262.5 30.5L266.7 30.6L270.8 30.5L275.0 30.2L279.2 29.9L283.3 29.6L287.5 29.4L291.7 29.4L295.8 29.6L300.0 27.6L304.2 31.8L308.3 29.9L312.5 30.4L316.7 31.6L320.8 28.4L325.0 32.4L329.2 26.7L333.3 32.6L337.5 26.2L341.7 32.6L345.8 27.2L350.0 32.4L354.2 28.9L358.3 31.5L362.5 30.4L366.7 29.7L370.8 31.2L375.0 27.9L379.2 31.6L383.3 27.0L387.5 32.1L391.7 27.4L395.8 32.5L400.0 28.5L404.2 32.1L408.3 29.6L412.5 30.7L416.7 30.2L420.8 29.0L425.0 30.6L429.2 27.8L433.3 31.4L437.5 27.8L441.7 32.2L445.8 28.5L450.0 32.3L454.2 29.2L458.3 31.3L462.5 29.5L466.7 29.8L470.8 29.8L475.0 28.6L479.2 30.6L483.3 28.4L487.5 31.7L491.7 28.8L495.8 32.2L500.0 29.1L504.2 31.6L508.3 29.1L512.5 30.4L516.7 29.2L520.8 29.3L525.0 29.9L529.2 29.0L533.3 21.6L537.5 22.1L541.7 37.9L545.8 38.7L550.0 29.9L554.2 19.3L558.3 28.2L562.5 37.1L566.7 35.6L570.8 24.0L575.0 21.6L579.2 32.3L583.3 38.0L587.5 33.3L591.7 22.4L595.8 26.6L600.0 34.0L604.2 37.4L608.3 27.0L612.5 22.9L616.7 27.7L620.8 36.1L625.0 34.0L629.2 25.8L633.3 25.4L637.5 31.7L641.7 37.3L645.8 30.4L650.0 25.3L654.2 25.5L658.3 33.9L662.5 33.6L666.7 28.4L670.8 24.5L675.0 29.6L679.2 35.4L683.3 33.0L687.5 27.6L691.7 25.7L695.8 32.0L700.0 33.4L704.2 30.5L708.3 24.8L712.5 28.0L716.7 32.5L720.8 33.8L725.0 29.0L729.2 26.8L733.3 30.4L737.5 33.5L741.7 32.1L745.8 26.5L750.0 27.1L754.2 30.2L758.3 33.3L762.5 29.6L766.7 27.5L770.8 28.8L775.0 33.0L779.2 32.8L783.3 29.0L787.5 27.4L791.7 29.3L795.8 32.4L800.0 30.2L804.2 28.0L808.3 27.5L812.5 31.7L816.7 32.5L820.8 30.8L825.0 28.1L829.2 29.5L833.3 31.8L837.5 31.2L841.7 28.7L845.8 27.2L850.0 29.9L854.2 31.4L858.3 31.2L862.5 28.6L866.7 29.5L870.8 31.2L875.0 32.2L879.2 29.8L883.3 28.1L887.5 29.0L891.7 30.6L895.8 30.8L900.0 28.7L904.2 28.9L908.3 30.3L912.5 32.3L916.7 30.8L920.8 29.4L925.0 29.0L929.2 30.6L933.3 30.7L937.5 29.2L941.7 28.3L945.8 29.3L950.0 31.3L954.2 31.0L958.3 30.1L962.5 29.4L966.7 30.8L970.8 31.0L975.0 30.2L979.2 28.5L983.3 28.8L987.5 30.0L991.7 30.5L995.8 29.9L1000.0 29.3"/>
+          </svg>
+          <span class="km">56.0 km</span>
+        </div>
+        <!-- 눈금은 정적으로 먼저 그려 둔다 — JS 가 만들어 넣기만 하면 스크립트가 꺼진 브라우저에서
+             이 지면의 축이 통째로 사라진다(함정 25). JS 는 같은 값을 다시 계산해 대조한 뒤 갈아 끼운다. -->
+        <div class="axis" aria-hidden="true">
+          <span class="lbl">경과</span>
+          <div class="ticks" id="ticks"><i style="left:0%"></i><span style="left:0%">0초</span><i style="left:16.666666666666664%"></i><span style="left:16.666666666666664%">4초</span><i style="left:33.33333333333333%"></i><span style="left:33.33333333333333%">8초</span><i style="left:50%"></i><span style="left:50%">12초</span><i style="left:66.66666666666666%"></i><span style="left:66.66666666666666%">16초</span><i style="left:83.33333333333334%"></i><span style="left:83.33333333333334%">20초</span><i style="left:100%"></i><span style="left:100%">24초</span></div>
+        </div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3 · 거리 계산 ═══ -->
+<section class="calc">
+  <div class="grid12 tight">
+    <div class="c-half">
+      <p class="lbl">되짚기</p>
+      <h2>시간차 하나로 거리가 나온다</h2>
+      <div class="formula rise">
+        <p class="eq">D = (t<sub>S</sub> − t<sub>P</sub>) × <b><span class="den">V<sub>P</sub>V<sub>S</sub></span> / <span class="den">(V<sub>P</sub> − V<sub>S</sub>)</span></b></p>
+        <p class="eq">= (t<sub>S</sub> − t<sub>P</sub>) × <b id="kconst">10.09</b> km/s</p>
+        <p class="note">P파는 초당 7.8 km, S파는 4.4 km로 달린다. 둘은 같은 곳에서 같은 순간에 출발했으므로, 도착이 벌어진 만큼이 곧 달려온 거리다. 표와 계산에 나오는 수치는 <b>진앙 좌표 · 관측소 좌표 · 두 속도</b>에서만 나온다. 파형의 모양에는 감쇠·진동수 상수 아홉 개가 더 들어가고, 그 목록은 아래 원본 덤프에 적어 두었다.</p>
+      </div>
+    </div>
+    <div class="c-half2">
+      <div class="readout rise r1" id="readout" aria-live="polite" aria-atomic="true">
+        <div class="rrow"><span class="rl">관측소</span><span class="rv">두류 DRA2</span></div>
+        <div class="rrow"><span class="rl">P파 도달</span><span class="rv">3.11 s</span></div>
+        <div class="rrow"><span class="rl">S파 도달</span><span class="rv">5.52 s</span></div>
+        <div class="rrow"><span class="rl">시간차 t<sub>S</sub> − t<sub>P</sub></span><span class="rv">2.40 s</span></div>
+        <div class="rrow big"><span class="rl">되짚은 진앙 거리</span><span class="rv">24.3 km</span></div>
+      </div>
+      <!-- 검산은 다른 경로여야 한다. dt×K 와 hypot 은 대수적으로 같은 식이라 절대 틀릴 수 없었다.
+           그래서 방향을 뒤집었다 — 인쇄된 거리 셋으로 진앙 좌표를 거꾸로 푼다(삼변측량). -->
+      <p class="check" id="check">검산 — 두류·영덕·무주 세 곳의 <b>인쇄된 거리</b>(24.3 · 45.2 · 56.0 km)만으로 진앙을 거꾸로 풀면 <b>x 128.41 · y 36.09</b> 가 나옵니다. 맨 위에 선언한 진앙에서 <b>0.02 km</b> 떨어진 점입니다. 되짚기는 거리를 구하고 삼변측량은 좌표를 구하니, 방향이 반대인 두 계산이 만나면 식과 좌표가 함께 맞다는 뜻입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 4 · 관측망 ═══ -->
+<section class="net">
+  <div class="grid12">
+    <div class="c-full">
+      <p class="lbl">관측망</p>
+      <h2>여섯 곳이 각각 무엇을 봤나</h2>
+      <div class="wrap2 fold rise">
+        <table>
+          <caption>거리는 시간차에서 되짚은 값이고, 좌표에서 직접 잰 값과 소수 첫째 자리까지 같다.</caption>
+          <thead><tr>
+            <th scope="col">관측소</th><th scope="col" class="n">P 도달</th><th scope="col" class="n">S 도달</th>
+            <th scope="col" class="n">시간차</th><th scope="col" class="n">거리</th><th scope="col" class="n">최대 진폭</th>
+          </tr></thead>
+          <tbody><tr>
+            <td data-l="관측소">두류 DRA2</td>
+            <td data-l="P 도달" class="n">3.11 s</td>
+            <td data-l="S 도달" class="n">5.52 s</td>
+            <td data-l="시간차" class="n">2.40 s</td>
+            <td data-l="거리" class="n">24.3 km</td>
+            <td data-l="최대 진폭" class="n">25.5</td>
+          </tr>
+          <tr>
+            <td data-l="관측소">한내 HNS1</td>
+            <td data-l="P 도달" class="n">3.29 s</td>
+            <td data-l="S 도달" class="n">5.84 s</td>
+            <td data-l="시간차" class="n">2.55 s</td>
+            <td data-l="거리" class="n">25.7 km</td>
+            <td data-l="최대 진폭" class="n">24.1</td>
+          </tr>
+          <tr>
+            <td data-l="관측소">금계 GKP1</td>
+            <td data-l="P 도달" class="n">4.28 s</td>
+            <td data-l="S 도달" class="n">7.58 s</td>
+            <td data-l="시간차" class="n">3.30 s</td>
+            <td data-l="거리" class="n">33.4 km</td>
+            <td data-l="최대 진폭" class="n">18.6</td>
+          </tr>
+          <tr>
+            <td data-l="관측소">영덕 YDG1</td>
+            <td data-l="P 도달" class="n">5.79 s</td>
+            <td data-l="S 도달" class="n">10.27 s</td>
+            <td data-l="시간차" class="n">4.47 s</td>
+            <td data-l="거리" class="n">45.2 km</td>
+            <td data-l="최대 진폭" class="n">13.7</td>
+          </tr>
+          <tr>
+            <td data-l="관측소">서창 SCH2</td>
+            <td data-l="P 도달" class="n">6.50 s</td>
+            <td data-l="S 도달" class="n">11.52 s</td>
+            <td data-l="시간차" class="n">5.02 s</td>
+            <td data-l="거리" class="n">50.7 km</td>
+            <td data-l="최대 진폭" class="n">12.2</td>
+          </tr>
+          <tr>
+            <td data-l="관측소">무주 MJU3</td>
+            <td data-l="P 도달" class="n">7.18 s</td>
+            <td data-l="S 도달" class="n">12.72 s</td>
+            <td data-l="시간차" class="n">5.55 s</td>
+            <td data-l="거리" class="n">56.0 km</td>
+            <td data-l="최대 진폭" class="n">11.1</td>
+          </tr></tbody>
+        </table>
+      </div>
+      <p class="foot">최대 진폭은 기하 감쇠(거리에 반비례)를 적용한 상대값이다. 단위 없는 비교용 수치다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 5 · 원본 덤프 (닫는 자리) ═══ -->
+<section class="raw">
+  <div class="grid12 tight">
+    <div class="c-full">
+      <p class="lbl">닫는 말 대신</p>
+      <h2>계산에 쓴 값 전부</h2>
+      <p class="say">위 지면의 어떤 수치도 손으로 적지 않았습니다. 아래가 전부이고, 나머지는 여기서 나옵니다. 다시 계산해 보고 다르면 알려 주십시오.</p>
+      <div class="dump rise r1"><pre id="dump">진앙        x=128.4  y=36.1        (국지 평면, km)
+P파 속도    7.8 km/s
+S파 속도    4.4 km/s
+大森 상수   Vp·Vs/(Vp−Vs) = 10.094 km/s
+진폭 상수   amp = min(26, 620/D)
+파형 상수   배경 0.6 / 0.9Hz · P 0.34 · 4.6Hz · τ5.5 · S 1.00 · 2.15Hz · τ4.5
+
+관측소      x        y        거리(좌표)  tP      tS      tS−tP
+두류 DRA2     151.7    29.3        24.3 km   3.11s   5.52s   2.40s
+한내 HNS1     118      12.6        25.7 km   3.29s   5.84s   2.55s
+금계 GKP1     96.2     44.8        33.4 km   4.28s   7.58s   3.30s
+영덕 YDG1     140.2    79.7        45.2 km   5.79s  10.27s   4.47s
+서창 SCH2     173.9    58.4        50.7 km   6.50s  11.52s   5.02s
+무주 MJU3     74.5     21          56.0 km   7.18s  12.72s   5.55s</pre></div>
+      <p class="push" id="push">→ 가로로 밀면 tP · tS · tS−tP 세 열이 이어집니다</p>
+      <p class="fine">좌표는 국지 평면(km) 기준이고 위경도가 아닙니다. 깊이는 표기만 하고 거리 계산에는 넣지 않았습니다 — 이 지면은 진원 거리가 아니라 <b>진앙 거리</b>를 구하는 평면 모형입니다. 11 km 깊이를 실제로 넣으면 진원 거리는 진앙 거리보다 길어지고, 그 차이는 가장 가까운 <span id="dmax">두류에서 2.4 km</span>, 가장 먼 <span id="dmin">무주에서도 1.1 km</span>입니다. 어느 관측소에서도 1 km 아래로 내려가지 않으므로, 이 단순화는 무시할 만한 것이 아니라 밝혀 두어야 할 것입니다.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  if('scrollRestoration' in history)history.scrollRestoration='manual';
+  var h=document.documentElement,p=h.style.scrollBehavior;h.style.scrollBehavior='auto';
+  scrollTo(0,0);addEventListener('load',function(){scrollTo(0,0);
+   setTimeout(function(){h.style.scrollBehavior=p},60)});
+})();
+document.documentElement.classList.add('js');
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+(function(){
+  var els=[].slice.call(document.querySelectorAll('.rise'));
+  if(reduce||!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('vis')});return;}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px'});
+  els.forEach(function(e){io.observe(e)});
+  addEventListener('load',function(){els.forEach(function(e){
+    if(e.getBoundingClientRect().top<innerHeight)e.classList.add('vis')})});
+})();
+
+(function(){
+  // ── 선언 ── 이 셋만 적는다. 지면의 나머지 수치는 전부 여기서 나온다.
+  var EPI={x:128.4,y:36.1};
+  var VP=7.8, VS=4.4;
+  var ST=[{id:'DRA2',name:'두류',x:151.7,y:29.3},
+           {id:'HNS1',name:'한내',x:118,y:12.6},
+           {id:'GKP1',name:'금계',x:96.2,y:44.8},
+           {id:'YDG1',name:'영덕',x:140.2,y:79.7},
+           {id:'SCH2',name:'서창',x:173.9,y:58.4},
+           {id:'MJU3',name:'무주',x:74.5,y:21}];
+
+  var K=VP*VS/(VP-VS);                        // 大森 상수
+  var T=24, W=1000, H=60, MID=30, N=240;      // 시간창·도판 좌표계
+
+  function derive(s){
+    var D=Math.hypot(s.x-EPI.x, s.y-EPI.y);
+    var tp=D/VP, ts=D/VS;
+    return {id:s.id,name:s.name,x:s.x,y:s.y,D:D,tp:tp,ts:ts,dt:ts-tp,amp:Math.min(26,620/D)};
+  }
+  // 파형도 파생이다 — 무작위가 없고 도달 시각과 거리만으로 결정된다.
+  function pathFor(d){
+    var A=d.amp, out='';
+    for(var i=0;i<=N;i++){
+      var t=i/N*T, x=t/T*W;
+      var a=0.6*Math.sin(2*Math.PI*0.9*t);
+      if(t>=d.tp) a+=A*0.34*Math.exp(-(t-d.tp)/5.5)*Math.sin(2*Math.PI*4.6*(t-d.tp));
+      if(t>=d.ts) a+=A*Math.exp(-(t-d.ts)/4.5)*Math.sin(2*Math.PI*2.15*(t-d.ts));
+      var y=MID-a;
+      out+=(i?'L':'M')+x.toFixed(1)+' '+Math.max(1,Math.min(H-1,y)).toFixed(1);
+    }
+    return out;
+  }
+
+  var D6=ST.map(derive);
+  var f1=function(n){return n.toFixed(1)}, f2=function(n){return n.toFixed(2)};
+
+  // 정적 마크업의 경로와 지금 계산한 경로가 같아야 한다. 다르면 둘 중 하나가 거짓말이다.
+  D6.forEach(function(d){
+    var el=document.getElementById('w-'+d.id);
+    if(el) el.setAttribute('d', pathFor(d));
+  });
+  document.getElementById('kconst').textContent=f2(K);
+
+  // 시간 눈금 — 4초마다. 지면의 축이므로 도판 폭에 맞춰 %로 놓는다.
+  // 정적 마크업에 같은 것이 이미 있다. 여기서는 다시 계산해 **대조한 뒤** 갈아 끼운다.
+  var ticksHTML=(function(){
+    var html='';
+    for(var s=0;s<=T;s+=4){
+      var pct=s/T*100;
+      html+='<i style="left:'+pct+'%"></i><span style="left:'+pct+'%">'+s+'초</span>';
+    }
+    return html;
+  })();
+  var tickEl=document.getElementById('ticks');
+  var tickStatic=tickEl.innerHTML.trim();
+  tickEl.innerHTML=ticksHTML;
+
+  // ── 깊이 무시 오차 ── 문장에 적을 값을 여기서 만든다. 손으로 적으면 틀려도 모른다.
+  var DEPTH=11;
+  var errs=D6.map(function(d){return {name:d.name, e:Math.hypot(d.D,DEPTH)-d.D}});
+  var eMax=errs.reduce(function(a,b){return b.e>a.e?b:a});
+  var eMin=errs.reduce(function(a,b){return b.e<a.e?b:a});
+  document.getElementById('dmax').textContent=eMax.name+'에서 '+f1(eMax.e)+' km';
+  document.getElementById('dmin').textContent=eMin.name+'에서도 '+f1(eMin.e)+' km';
+
+  // ── 삼변측량 ── 인쇄된 소수 첫째 자리 거리 셋만으로 진앙을 거꾸로 푼다.
+  // dt×K 와 hypot 은 대수적으로 같은 식이라 서로 검산이 되지 않는다. 방향을 뒤집어야 검산이다.
+  function trilaterate(a,b,c){
+    var Da=+f1(a.dt*K), Db=+f1(b.dt*K), Dc=+f1(c.dt*K);   // 화면에 인쇄된 값 그대로
+    var A=2*(b.x-a.x), B=2*(b.y-a.y),
+        C=Da*Da-Db*Db-a.x*a.x+b.x*b.x-a.y*a.y+b.y*b.y;
+    var E=2*(c.x-a.x), F=2*(c.y-a.y),
+        G=Da*Da-Dc*Dc-a.x*a.x+c.x*c.x-a.y*a.y+c.y*c.y;
+    var det=A*F-B*E;
+    return {x:(C*F-B*G)/det, y:(A*G-C*E)/det, D:[Da,Db,Dc]};
+  }
+  // 고른 관측소와 함께 삼각형이 가장 넓어지는 두 곳을 짝으로 쓴다 (셋이 한 줄에 서면 못 푼다)
+  function partners(a){
+    var o=D6.filter(function(d){return d.id!==a.id}), best=null;
+    for(var i=0;i<o.length;i++)for(var j=i+1;j<o.length;j++){
+      var ar=Math.abs((o[i].x-a.x)*(o[j].y-a.y)-(o[i].y-a.y)*(o[j].x-a.x));
+      if(!best||ar>best.ar) best={ar:ar,b:o[i],c:o[j]};
+    }
+    return best;
+  }
+
+  var rows=document.getElementById('readout');
+  function paint(id){
+    var d=D6.filter(function(x){return x.id===id})[0];
+    [].forEach.call(document.querySelectorAll('.trace'),function(tr){
+      tr.classList.toggle('on', tr.dataset.id===id)});
+    [].forEach.call(document.querySelectorAll('.stations button'),function(b){
+      b.setAttribute('aria-pressed', String(b.dataset.id===id))});
+    rows.innerHTML=
+      '<div class="rrow"><span class="rl">관측소</span><span class="rv">'+d.name+' '+d.id+'</span></div>'+
+      '<div class="rrow"><span class="rl">P파 도달</span><span class="rv">'+f2(d.tp)+' s</span></div>'+
+      '<div class="rrow"><span class="rl">S파 도달</span><span class="rv">'+f2(d.ts)+' s</span></div>'+
+      '<div class="rrow"><span class="rl">시간차 t<sub>S</sub> − t<sub>P</sub></span><span class="rv">'+f2(d.dt)+' s</span></div>'+
+      '<div class="rrow big"><span class="rl">되짚은 진앙 거리</span><span class="rv">'+f1(d.dt*K)+' km</span></div>';
+    var pr=partners(d), sol=trilaterate(d,pr.b,pr.c);
+    var off=Math.hypot(sol.x-EPI.x, sol.y-EPI.y);
+    document.getElementById('check').innerHTML=
+      '검산 — '+d.name+'·'+pr.b.name+'·'+pr.c.name+' 세 곳의 <b>인쇄된 거리</b>('+
+      sol.D.map(function(v){return f1(v)}).join(' · ')+' km)만으로 진앙을 거꾸로 풀면 '+
+      '<b>x '+sol.x.toFixed(2)+' · y '+sol.y.toFixed(2)+'</b> 가 나옵니다. '+
+      '맨 위에 선언한 진앙에서 <b>'+off.toFixed(2)+' km</b> 떨어진 점입니다. '+
+      '되짚기는 거리를 구하고 삼변측량은 좌표를 구하니, 방향이 반대인 두 계산이 만나면 '+
+      '식과 좌표가 함께 맞다는 뜻입니다.';
+  }
+
+  /* ── 자기검사 ── 표·덤프·눈금은 JS 가 소유하지 않는 텍스트다. 손으로 적힌 값이 조용히
+     틀리는 것이 이 저장소의 반복 결함이었으므로, 로드 시 파생값과 대조해 콘솔로 던진다. */
+  (function(){
+    var bad=[];
+    if(tickStatic!==ticksHTML.trim()) bad.push('시간 눈금 정적 마크업이 계산과 다름');
+    var cells=[].slice.call(document.querySelectorAll('.fold tbody tr'));
+    D6.forEach(function(d,i){
+      var tr=cells[i]; if(!tr){bad.push(d.id+' 표 행 없음');return}
+      var td=tr.querySelectorAll('td');
+      var want=[d.name+' '+d.id, f2(d.tp)+' s', f2(d.ts)+' s', f2(d.dt)+' s',
+                f1(d.D)+' km', f1(d.amp)];
+      want.forEach(function(w,j){
+        var had=(td[j]?td[j].textContent:'').trim();
+        if(had!==w) bad.push('표 '+d.id+' '+j+'열 「'+had+'」 ≠ 「'+w+'」');
+      });
+      var dump=document.getElementById('dump').textContent;
+      if(dump.indexOf(f1(d.D)+' km')<0) bad.push('덤프에 '+d.id+' 거리 '+f1(d.D)+' 없음');
+    });
+    var km=[].slice.call(document.querySelectorAll('.trace .km'));
+    D6.forEach(function(d,i){
+      if(km[i] && km[i].textContent.trim()!==f1(d.D)+' km')
+        bad.push('도판 '+d.id+' 거리 「'+km[i].textContent.trim()+'」 ≠ 「'+f1(d.D)+' km」');
+    });
+    if(bad.length) console.error('[흔들림] 정적↔계산 불일치 '+bad.length+'건:\n'+bad.join('\n'));
+    else console.log('[흔들림] 정적↔계산 대조 통과 — 표 36칸 · 도판 6칸 · 덤프 6행 · 눈금 7개');
+  })();
+
+  /* 덤프가 실제로 넘칠 때만 미는 방법을 알린다 */
+  (function(){
+    var box=document.querySelector('.dump'), hint=document.getElementById('push');
+    function upd(){ hint.classList.toggle('on', box.scrollWidth-box.clientWidth>4) }
+    upd(); addEventListener('resize',upd);
+    box.addEventListener('scroll',function(){
+      if(box.scrollLeft>4) hint.classList.remove('on');
+    });
+  })();
+  document.querySelector('.stations').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-id]'); if(!b)return;
+    paint(b.dataset.id);
+  });
+  paint(ST[0].id);
+})();
+</script>
+</body></html>
