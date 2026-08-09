@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- 시스템 출처: refs/ohou.md (2026-08-09 실측) · 브랜드·카피·수치는 전부 발명 -->
+<title>떡잎 — 텃밭 씨앗·모종</title>
+<meta name="description" content="이번 달에 심을 수 있는 것만 보여드립니다. 파종 시기를 고르면 품목이 바뀌고 수확 예정월이 다시 계산됩니다.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+:root{
+  --sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+
+  /* 색 — 원본 실측 */
+  --paper:#f7f9fa;
+  --card:#ffffff;
+  --band:#eaedef;
+  --ink:#2f3438;    /* on --paper = 11.91:1 (실측) */
+  --fg:#2f3438;     /* on --paper = 11.91:1 (실측) */
+  --body:#5c666e;   /* on --card  = 5.86:1 (실측) */
+  --mut:#616b73;    /* on --paper = 5.2:1 (실측) */
+  --hair:#828c94;   /* 원본 회색 = 3.2:1 → 텍스트 금지, 선 전용 */
+  --line:#dfe3e6;
+  /* 포인트색을 UI 전면에 쓴다 — 원본은 텍스트·배경·아이콘 모두에서 검출됐다 */
+  --k:#0a7d3f;      /* on --card = 5.23:1 (실측) */
+  --kbg:#e7f3ec;
+  --warn:#c0442e;   /* on --card = 5.11:1 (실측) */
+
+  /* 타입 — 원본은 작고 단계가 많다. 최대가 20px다 */
+  --t-11:11px;--t-12:12px;--t-13:13px;--t-14:14px;--t-16:16px;--t-17:17px;--t-20:20px;
+  --lh-11:11px;--lh-12a:16px;--lh-12b:20px;--lh-13a:15px;--lh-13b:17px;
+  --lh-14:18px;--lh-16a:20px;--lh-16b:24px;--lh-17:23px;--lh-20:28px;
+
+  /* 간격 — 원본은 8이 압도적이고 2·4·5·6 잔값이 많다. 4배수 스케일이 아니다 */
+  --s2:2px;--s4:4px;--s5:5px;--s6:6px;--s8:8px;--s10:10px;--s12:12px;
+  --s14:14px;--s20:20px;--s21:21px;--s40:40px;
+
+  --r3:3px;--r4:4px;--r16:16px;--r24:24px;--rfull:100%;
+  --w:1256px;
+  --dur:.1s;--dur2:.2s;--ease:ease;
+  --sh:rgba(63,71,77,0.15) 0 2px 5px 0;   /* 원본은 그림자를 쓰되 한 종류만 쓴다 */
+  --tr:-0.3px;
+}
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:var(--t-14);line-height:var(--lh-14);letter-spacing:var(--tr);
+  -webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word;overflow-x:hidden}
+h1,h2,h3,p,ul,ol,dl{margin:0}
+ul{padding:0;list-style:none}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;letter-spacing:inherit;background:none;border:0;cursor:pointer}
+.wrap{max-width:var(--w);margin:0 auto;padding-left:var(--s20);padding-right:var(--s20)}
+[id]{scroll-margin-top:76px}
+.rise{opacity:0;transform:translateY(6px)}
+.rise.vis{opacity:1;transform:none;transition:opacity var(--dur2) var(--ease),transform var(--dur2) var(--ease)}
+
+/* ── 헤더 ── */
+.bar{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.bar .in{max-width:var(--w);margin:0 auto;padding:var(--s12) var(--s20);
+  display:flex;align-items:center;gap:var(--s12)}
+.logo{font-size:var(--t-20);line-height:var(--lh-20);font-weight:700;color:var(--ink)}
+.logo i{font-style:normal;color:var(--k)}
+.bar .sp{flex:1}
+.bar .tag{font-size:var(--t-12);line-height:var(--lh-12a);font-weight:700;color:var(--k);
+  background:var(--kbg);border-radius:var(--r4);padding:var(--s5) var(--s8)}
+.bar .cart{font-size:var(--t-13);line-height:var(--lh-13b);font-weight:700;color:var(--card);
+  background:var(--k);border-radius:var(--r4);padding:var(--s6) var(--s12);
+  transition:opacity var(--dur) var(--ease)}
+.bar .cart:hover{opacity:.88}
+
+/* ── 표제 ── */
+.top{padding-top:var(--s21);padding-bottom:var(--s14)}
+.top h1{font-size:var(--t-20);line-height:var(--lh-20);font-weight:700;color:var(--ink)}
+.top p{font-size:var(--t-14);line-height:var(--lh-14);color:var(--ink);margin-top:var(--s5);max-width:52ch}
+.chips{display:flex;flex-wrap:wrap;gap:var(--s8);margin-top:var(--s12)}
+.chips span{font-size:var(--t-12);line-height:var(--lh-12a);color:var(--mut);
+  background:var(--band);border-radius:var(--r16);padding:var(--s5) var(--s10)}
+
+/* ── 파종 달력 ── 조작형 : 월을 고르면 품목이 바뀌고 수확월이 재계산된다 */
+.cal{padding-bottom:var(--s14)}
+.cal .hd{display:flex;align-items:baseline;gap:var(--s8);flex-wrap:wrap}
+.cal h2{font-size:var(--t-17);line-height:var(--lh-17);font-weight:700;color:var(--ink)}
+.cal .hint{font-size:var(--t-12);line-height:var(--lh-12a);color:var(--mut)}
+.months{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--s4);margin-top:var(--s10)}
+.months>*{min-width:0}
+.months button{font-size:var(--t-13);line-height:var(--lh-13a);font-weight:700;color:var(--mut);
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r4);
+  padding:var(--s8) var(--s2);transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.months button[aria-pressed="true"]{background:var(--k);color:var(--card);border-color:var(--k)}
+.months button[data-none="1"]{color:var(--hair)}
+.sumline{display:flex;flex-wrap:wrap;gap:var(--s8);align-items:baseline;margin-top:var(--s12);
+  background:var(--kbg);border-radius:var(--r4);padding:var(--s10) var(--s12)}
+.sumline b{font-size:var(--t-14);line-height:var(--lh-14);font-weight:700;color:var(--k)}
+.sumline span{font-size:var(--t-13);line-height:var(--lh-13b);color:var(--body)}
+
+/* ── 품목 카드 ── 원본의 촘촘한 그리드 밀도를 따른다 */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s8);margin-top:var(--s12)}
+.grid>*{min-width:0}
+.it{background:var(--card);border-radius:var(--r16);padding:var(--s12);
+  box-shadow:var(--sh);transition:transform var(--dur) var(--ease)}
+.it:hover{transform:translateY(-2px)}
+.it .sw{height:64px;border-radius:var(--r4);margin-bottom:var(--s10)}
+.it .nm{font-size:var(--t-16);line-height:var(--lh-16a);font-weight:700;color:var(--ink)}
+.it .sci{font-size:var(--t-11);line-height:var(--lh-11);color:var(--mut);margin-top:var(--s4)}
+.it .rows{margin-top:var(--s10);border-top:1px solid var(--line);padding-top:var(--s8)}
+.it .r{display:flex;justify-content:space-between;gap:var(--s8);margin-top:var(--s4)}
+.it .r dt{font-size:var(--t-12);line-height:var(--lh-12a);color:var(--mut)}
+.it .r dd{margin:0;font-size:var(--t-12);line-height:var(--lh-12a);font-weight:700;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.it .r dd.on{color:var(--k)}
+.it .r dd.warn{color:var(--warn)}
+.it .price{display:flex;align-items:baseline;gap:var(--s5);margin-top:var(--s10)}
+.it .price b{font-size:var(--t-17);line-height:var(--lh-17);font-weight:700;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.it .price span{font-size:var(--t-12);line-height:var(--lh-12a);color:var(--mut)}
+.empty{background:var(--card);border-radius:var(--r16);padding:var(--s40) var(--s20);
+  font-size:var(--t-14);line-height:var(--lh-14);color:var(--mut);text-align:center}
+
+/* ── 안내 ── */
+.guide{padding-top:var(--s21);padding-bottom:var(--s14)}
+.guide h2{font-size:var(--t-17);line-height:var(--lh-17);font-weight:700;color:var(--ink)}
+.ggrid{display:grid;grid-template-columns:1fr;gap:var(--s8);margin-top:var(--s10)}
+.ggrid>*{min-width:0}
+.gcard{background:var(--card);border-radius:var(--r16);padding:var(--s14)}
+.gcard dt{font-size:var(--t-13);line-height:var(--lh-13b);font-weight:700;color:var(--k)}
+.gcard dd{margin:var(--s5) 0 0;font-size:var(--t-13);line-height:var(--lh-13b);color:var(--ink)}
+
+/* ── 후기 ── */
+.say{padding-bottom:var(--s21)}
+.say h2{font-size:var(--t-17);line-height:var(--lh-17);font-weight:700;color:var(--ink)}
+.sgrid{display:grid;grid-template-columns:1fr;gap:var(--s8);margin-top:var(--s10)}
+.sgrid>*{min-width:0}
+.scard{background:var(--card);border-radius:var(--r16);padding:var(--s14)}
+.scard p{font-size:var(--t-13);line-height:var(--lh-13b);color:var(--ink)}
+.scard .who{display:flex;align-items:center;gap:var(--s8);margin-top:var(--s10)}
+.scard .av{width:24px;height:24px;border-radius:var(--rfull);background:var(--band);flex:0 0 24px}
+.scard .who b{font-size:var(--t-12);line-height:var(--lh-12a);font-weight:700;color:var(--ink)}
+.scard .who span{font-size:var(--t-11);line-height:var(--lh-11);color:var(--mut)}
+
+footer{background:var(--card);border-top:1px solid var(--line);
+  padding-top:var(--s20);padding-bottom:var(--s40);margin-top:var(--s14)}
+footer .f{font-size:var(--t-12);line-height:var(--lh-12b);color:var(--mut)}
+footer .f b{display:block;font-size:var(--t-13);line-height:var(--lh-13b);color:var(--ink);
+  font-weight:700;margin-bottom:var(--s8)}
+footer .links{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s12);margin-bottom:var(--s12)}
+footer .links a{font-size:var(--t-12);line-height:var(--lh-12b);color:var(--body);
+  transition:color var(--dur) var(--ease)}
+footer .links a:hover{color:var(--k)}
+
+@media(min-width:700px){ .grid{grid-template-columns:repeat(3,1fr)} .ggrid{grid-template-columns:repeat(3,1fr)} .sgrid{grid-template-columns:repeat(3,1fr)} }
+@media(min-width:1000px){ .grid{grid-template-columns:repeat(4,1fr)} .months{grid-template-columns:repeat(12,1fr)} }
+@media(prefers-reduced-motion:reduce){ .rise{opacity:1;transform:none;transition:none} .it,.months button,.bar .cart{transition:none} .it:hover{transform:none} }
+html.capture .rise{opacity:1;transform:none;transition:none}
+</style></head><body>
+
+<header class="bar">
+  <div class="in">
+    <span class="logo">떡<i>잎</i></span>
+    <span class="tag">중부지방 기준</span>
+    <span class="sp"></span>
+    <a class="cart" href="#cal">이번 달 심을 것</a>
+  </div>
+</header>
+
+<section class="top wrap">
+  <h1>이번 달에 심을 수 있는 것만 보여드립니다</h1>
+  <p>파종 적기를 놓치면 싹이 나도 결실을 못 봅니다. 월을 고르시면 그달에 뿌릴 수 있는 품목만 남고,
+    품목마다 수확 예정월이 다시 계산됩니다.</p>
+  <div class="chips">
+    <span>중부지방 노지 기준</span><span>평균 발아율 실측 게시</span><span>3만원 이상 무료배송</span>
+  </div>
+</section>
+
+<section class="cal wrap" id="cal">
+  <div class="hd">
+    <h2>파종 달력</h2>
+    <span class="hint">회색 달은 노지 파종이 어려운 달입니다</span>
+  </div>
+  <div class="months" id="months" role="group" aria-label="파종 월 고르기"></div>
+  <p class="sumline" id="sumline"></p>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section class="guide wrap">
+  <h2>사기 전에 보실 것</h2>
+  <div class="ggrid">
+    <dl class="gcard"><dt>발아율은 실측값입니다</dt>
+      <dd>포장 표기가 아니라 저희가 매 로트마다 100립씩 발아시켜 센 값을 올립니다.
+        표기보다 낮게 나오면 그 로트는 팔지 않습니다.</dd></dl>
+    <dl class="gcard"><dt>모종이 나은 품목이 있습니다</dt>
+      <dd>고추·토마토처럼 육묘 기간이 긴 것은 씨앗보다 모종을 권합니다.
+        초보자가 씨앗으로 시작하면 대개 6월을 놓칩니다.</dd></dl>
+    <dl class="gcard"><dt>남는 씨앗은 보관됩니다</dt>
+      <dd>개봉 후 밀봉해 냉장하면 대부분 2~3년 갑니다.
+        다만 파·양파류는 1년이 지나면 발아율이 절반 아래로 떨어집니다.</dd></dl>
+  </div>
+</section>
+
+<section class="say wrap">
+  <h2>사신 분들 말</h2>
+  <div class="sgrid">
+    <div class="scard">
+      <p>발아율을 로트별로 적어 두신 게 좋았어요. 지난봄에 산 상추가 표기 85에 실측 91이었는데
+        정말 그 정도 났습니다.</p>
+      <div class="who"><span class="av"></span><span><b>한지우</b><span> · 경기 남양주 · 3년째 텃밭</span></span></div>
+    </div>
+    <div class="scard">
+      <p>4월에 심으면 늦다고 알려주셔서 3월로 당겼습니다. 파는 쪽에서 말리는 걸 처음 봤어요.</p>
+      <div class="who"><span class="av"></span><span><b>오세중</b><span> · 충북 진천 · 주말농장</span></span></div>
+    </div>
+    <div class="scard">
+      <p>모종으로 바꾸라는 안내가 있어서 고추는 모종으로 샀는데 맞았습니다.
+        씨앗으로 했으면 못 땄을 거예요.</p>
+      <div class="who"><span class="av"></span><span><b>류가온</b><span> · 전남 담양 · 첫해</span></span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap f">
+    <div class="links">
+      <a href="#cal">파종 달력</a><a href="#cal">잎채소</a><a href="#cal">열매채소</a><a href="#cal">뿌리채소</a>
+      <a href="#cal">허브</a><a href="#cal">모종</a><a href="#cal">상토·비료</a><a href="#cal">농자재</a>
+      <a href="#cal">발아율 공지</a><a href="#cal">교환·환불</a><a href="#cal">배송 안내</a><a href="#cal">자주 묻는 질문</a>
+    </div>
+    <b>떡잎 종묘</b>
+    경기도 이천시 부발읍 경충대로 2109 · 사업자등록번호 135-81-40266<br>
+    종자업 등록 제2019-경기-0341호 · 통신판매업 2019-경기이천-0288<br>
+    파종 시기는 중부지방 노지 기준이며 지역·해에 따라 2~3주 차이가 납니다.
+  </div>
+</footer>
+
+<script>
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+scrollTo(0,0);
+addEventListener('load',function(){scrollTo(0,0)});
+
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+/* 품목 — sow: 파종 가능 월, grow: 파종부터 수확까지 걸리는 개월 */
+var ITEMS=[
+ {n:'적상추',sci:'Lactuca sativa',sow:[3,4,5,8,9],grow:2,germ:91,pack:'1,200립',price:3200,tone:'#dfeadd'},
+ {n:'시금치',sci:'Spinacia oleracea',sow:[3,4,9,10],grow:2,germ:84,pack:'800립',price:2800,tone:'#dce8e0'},
+ {n:'쪽파',sci:'Allium wakegi',sow:[3,4,8,9],grow:3,germ:78,pack:'종구 500g',price:6900,tone:'#e2e9d8'},
+ {n:'열무',sci:'Raphanus sativus',sow:[4,5,6,8,9],grow:1,germ:93,pack:'1,500립',price:2400,tone:'#e5ecdd'},
+ {n:'방울토마토 모종',sci:'Solanum lycopersicum',sow:[4,5],grow:3,germ:0,pack:'모종 4주',price:5600,tone:'#f0e0da'},
+ {n:'청양고추 모종',sci:'Capsicum annuum',sow:[4,5],grow:4,germ:0,pack:'모종 4주',price:6400,tone:'#efdcd6'},
+ {n:'당근',sci:'Daucus carota',sow:[3,4,7,8],grow:4,germ:71,pack:'900립',price:3400,tone:'#f1e5d6'},
+ {n:'무',sci:'Raphanus sativus',sow:[8,9],grow:3,germ:89,pack:'600립',price:3000,tone:'#e9ecef'},
+ {n:'배추',sci:'Brassica rapa',sow:[8,9],grow:3,germ:87,pack:'700립',price:3600,tone:'#e4ecdf'},
+ {n:'바질',sci:'Ocimum basilicum',sow:[4,5,6],grow:2,germ:82,pack:'400립',price:3800,tone:'#e0ead9'},
+ {n:'루꼴라',sci:'Eruca vesicaria',sow:[3,4,5,9],grow:1,germ:88,pack:'1,000립',price:3100,tone:'#dfe9dd'},
+ {n:'대파',sci:'Allium fistulosum',sow:[3,4,9],grow:6,germ:76,pack:'1,100립',price:3300,tone:'#e3e9db'}
+];
+var cur=4;
+var months=document.getElementById('months'), grid=document.getElementById('grid'),
+    sumline=document.getElementById('sumline');
+
+for(var m=1;m<=12;m++){
+  (function(mm){
+    var b=document.createElement('button');
+    b.type='button'; b.dataset.m=mm; b.textContent=mm+'월';
+    var none=ITEMS.filter(function(x){return x.sow.indexOf(mm)>-1}).length===0;
+    if(none)b.dataset.none='1';
+    b.addEventListener('click',function(){ cur=mm; draw(); });
+    months.appendChild(b);
+  })(m);
+}
+
+function won(n){ return n.toLocaleString('ko-KR')+'원' }
+function harvest(m,g){ var h=m+g; return (h>12? h-12 : h)+'월' }
+
+function draw(){
+  [].forEach.call(months.querySelectorAll('button'),function(b){
+    b.setAttribute('aria-pressed',String(Number(b.dataset.m)===cur));
+  });
+  var list=ITEMS.filter(function(x){return x.sow.indexOf(cur)>-1});
+  if(!list.length){
+    sumline.innerHTML='<b>'+cur+'월</b><span>노지에 뿌릴 수 있는 품목이 없습니다. 3~5월 또는 8~10월을 보세요.</span>';
+    grid.innerHTML='<p class="empty">이달에 파종할 수 있는 품목이 없습니다.</p>';
+    return;
+  }
+  var seeds=list.filter(function(x){return x.germ>0});
+  var avg=seeds.length? Math.round(seeds.reduce(function(a,b){return a+b.germ},0)/seeds.length) : 0;
+  sumline.innerHTML='<b>'+cur+'월 파종 '+list.length+'종</b>'+
+    '<span>씨앗 '+seeds.length+'종 평균 발아율 '+avg+'% · 모종 '+(list.length-seeds.length)+'종</span>';
+  grid.innerHTML=list.map(function(x){
+    var late=(x.grow>=4);
+    return '<article class="it">'+
+      '<div class="sw" style="background:'+x.tone+'"></div>'+
+      '<div class="nm">'+x.n+'</div><div class="sci">'+x.sci+'</div>'+
+      '<dl class="rows">'+
+        '<div class="r"><dt>수확 예정</dt><dd class="'+(late?'warn':'on')+'">'+harvest(cur,x.grow)+
+          ' <span style="font-weight:400">('+x.grow+'개월)</span></dd></div>'+
+        '<div class="r"><dt>발아율</dt><dd>'+(x.germ? x.germ+'%' : '모종')+'</dd></div>'+
+        '<div class="r"><dt>수량</dt><dd>'+x.pack+'</dd></div>'+
+      '</dl>'+
+      '<div class="price"><b>'+won(x.price)+'</b><span>1봉</span></div>'+
+    '</article>';
+  }).join('');
+}
+draw();
+
+var rises=[].slice.call(document.querySelectorAll('.rise'));
+if(reduce||!('IntersectionObserver' in window)){
+  rises.forEach(function(el){el.classList.add('vis')});
+}else{
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}});
+  },{rootMargin:'0px 0px -6% 0px'});
+  rises.forEach(function(el){io.observe(el)});
+  addEventListener('load',function(){
+    rises.forEach(function(el){ if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis') });
+  });
+}
+</script>
+</body></html>

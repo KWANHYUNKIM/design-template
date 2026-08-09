@@ -97,6 +97,33 @@ footer{margin:50px 0 40px;text-align:center;font-size:12px;color:var(--mut);font
 
 <!-- ── RUN 36 ─────────────────────────────────────────────── -->
 <article class="run">
+<div class="bar"><span class="id">REF 03</span><span class="name">떡잎 TTEOGIP · 텃밭 씨앗·모종 (레퍼런스 실측)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#0a7d3f;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">충실도 5/6</b>2026-08-09</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 대상 (실측)</p>
+    <div class="thumb" style="background:#f7f9fa;display:flex;align-items:center;justify-content:center"><span class="cap" style="color:#2f3438;font-weight:700;font-size:28px;letter-spacing:-0.3px">떡<span style="color:#0a7d3f">잎</span></span></div>
+    <p class="why"><b>세 번째 시스템. 셋이 다 다르다.</b> 가장 촘촘하다 — 간격 8px 주력에 2·4·5·6 잔값, 본문 14px, 최대 타입 20px. <b>4의 배수 스케일이 아니다</b>(5·9·21이 실제로 쓰인다). 포인트색을 텍스트·배경·아이콘 전부에 쓴다.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 측정에서 나온 것</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6"><b>자간 −0.3px가 1,127회</b>로 사실상 전 요소에 걸려 있다. 우아한형제들(−0.32px)과 거의 같은 값이라, <b>Pretendard를 쓰는 국내 서비스의 공통 관용구</b>로 보인다. <b>그림자는 7건인데 전부 같은 값</b>이다 — 쓰되 한 종류만 쓴다. <b>라운드는 값마다 나눠 쓴다</b>(작은 요소 4 · 카드 16 · 아바타 100%).</div>
+    <div class="kw"><span>종묘상</span><span>파종 달력</span><span>비4배수 스케일</span><span>단일 그림자 토큰</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 충실도 대조 → 5/6 통과</p>
+      <ul>
+        <li><b>단일 페이지 표본이다</b> — <code>/store</code>는 확장 프로그램이 JS 실행을 거부했고 <code>/advice</code>는 404였다. 두 번째 표본으로 확정하지 못했으므로 <b>한 페이지 안에서 반복이 큰 값만</b> 시스템으로 봤다(자간 1,127 · 간격 8px 102 · 라운드 4px 52 · 먹 102)</li>
+        <li><b>고친 것 — 간격 8이 3위였다.</b> 원본은 8이 압도적 1위인데 내가 gap을 6px로 잡아 밀려 있었다. 6→8로 올려 <code>gap:8px</code>를 39회 1위로 되돌렸다. <b>이건 내 습관이었다</b></li>
+        <li><b>안 고친 것 — 먹과 회색의 비율이 반대다.</b> 원본 먹 102 : 회색 26, 산출물 회색 65 : 먹 55. 원인이 취향이 아니라 <b>구조</b>다 — 원본은 제품명·가격 같은 먹 텍스트가 많은 피드고, 이 산출물은 카드가 라벨–값 쌍이라 회색 라벨이 구조적으로 많다. 본문 두 곳을 먹으로 올려 55까지 좁혔지만 <b>라벨까지 먹으로 만들면 위계가 뒤집힌다</b>. 거기서 멈췄다</li>
+        <li><b>★ 안 맞는 축이 "내 습관"이 아니라 "구조 차이"일 때가 있다</b> — 먼저 습관인지 묻고, 습관이면 고치고 구조 차이면 기록하고 둔다. 숫자를 맞추려 위계를 망가뜨리면 이 프로세스가 목적을 잃는다</li>
+        <li>대비 주석 숫자 4건이 틀렸던 것은 <code>contrast-annotation-true</code>가 잡았다(11.6→11.91 · 6.1→5.86 · 4.9→5.23 · 5.6→5.11). 실측값으로 고쳤다</li>
+        <li>390·1440 iframe 실측 오버플로 0 · <code>verify.mjs</code> 오류 0·경고 0</li>
+      </ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok" style="color:#0a7d3f">● 레퍼런스 실측 · 충실도 5/6</span><a class="btn" href="templates/ref-03-ohou-tteogip.html">랜딩 열기 →</a><span class="path">templates/ref-03-ohou-tteogip.html</span></div>
+  </div>
+</div>
+</article>
+
+<article class="run">
 <div class="bar"><span class="id">REF 02</span><span class="name">새벽반 SAEBYEOKBAN · 궤도 야간 정비 (레퍼런스 실측)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#37373a;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">충실도 6/6</b>2026-08-09</span></div>
 <div class="grid">
   <div class="left">
