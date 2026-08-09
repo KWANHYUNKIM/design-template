@@ -12,7 +12,8 @@
  *   node scripts/shoot.mjs run-30-smin                    # 390·1024·1440 세 폭 전체 캡처
  *   node scripts/shoot.mjs run-30-smin --w 390            # 한 폭만
  *   node scripts/shoot.mjs run-30-smin --capture          # ?capture=1 붙여서
- *   node scripts/shoot.mjs run-30-smin --probe            # 캡처 대신 가로 오버플로 범인 목록
+ *   node scripts/shoot.mjs run-30-smin --probe            # 오버플로·각주거리·베이스라인·열배정 검사
+ *   node scripts/shoot.mjs run-30-smin --nojs            # 스크립트를 끄고 렌더 — 잉크가 0이면 백지다
  *   node scripts/shoot.mjs run-30-smin --out /tmp/shots   # 저장 위치
  *
  * 전제: 로컬 서버가 떠 있어야 한다 —  python3 -m http.server 5501
@@ -23,7 +24,9 @@ import { join } from 'node:path';
 
 const CHROME = process.env.CHROME
   || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const PORT = Number(process.env.SHOOT_PORT || 9333);
+// 포트와 프로필을 프로세스별로 흩어 놓는다 — 고정하면 두 세션이 동시에 돌 때
+// 서로의 브라우저에 붙어 엉뚱한 폭으로 찍힌다 (RUN31에서 실제로 당했다)
+const PORT = Number(process.env.SHOOT_PORT || (9300 + (process.pid % 600)));
 const ORIGIN = process.env.SHOOT_ORIGIN || 'http://localhost:5501';
 
 const args = process.argv.slice(2);
@@ -121,11 +124,40 @@ const PROBE = `(() => {
     }
   }
 
+  // 넓은 트랙이 좁은 콘텐츠에 갔는가 (RUN31 결함 ②).
+  // 미디어쿼리 경계에서 열 배정이 뒤집히면 표가 4칸에 갇히고 옆 칸이 통째로 빈다.
+  // 같은 줄에 놓인 형제끼리 "쓰는 폭 ÷ 받은 폭"을 비교한다.
+  const track = [];
+  for (const g of document.querySelectorAll('*')) {
+    if (getComputedStyle(g).display !== 'grid') continue;
+    const rows = new Map();
+    for (const c of g.children) {
+      const r = c.getBoundingClientRect();
+      if (r.width < 40 || r.height === 0) continue;
+      const k = Math.round(r.top / 8);
+      (rows.get(k) || rows.set(k, []).get(k)).push({ el: c, w: r.width });
+    }
+    for (const sibs of rows.values()) {
+      if (sibs.length !== 2) continue;
+      for (const s2 of sibs) s2.used = Math.max(...[...s2.el.querySelectorAll('*')]
+        .map(x => x.getBoundingClientRect().width).concat([0]));
+      const [p, q] = sibs;
+      // 좁은 칸이 제 콘텐츠보다 작고, 넓은 칸은 콘텐츠보다 한참 크면 뒤바뀐 것이다
+      const slackP = p.w - p.used, slackQ = q.w - q.used;
+      if (slackP > 160 && slackQ < 8)
+        track.push('좁은 칸이 콘텐츠에 밀림: ' + (q.el.className || q.el.tagName) +
+                   ' 받은폭 ' + Math.round(q.w) + ' / 옆 칸 여유 ' + Math.round(slackP));
+      if (slackQ > 160 && slackP < 8)
+        track.push('좁은 칸이 콘텐츠에 밀림: ' + (p.el.className || p.el.tagName) +
+                   ' 받은폭 ' + Math.round(p.w) + ' / 옆 칸 여유 ' + Math.round(slackQ));
+    }
+  }
+
   return JSON.stringify({ vw, scrollW: document.documentElement.scrollWidth,
     overflow: document.documentElement.scrollWidth > vw,
     docH: document.body.scrollHeight,
     overflowCount: bad.length, overflowBad: bad.slice(0, 12),
-    farFootnotes: fn, gridSkew: skew.slice(0, 8) }, null, 1);
+    farFootnotes: fn, gridSkew: skew.slice(0, 8), trackMismatch: track.slice(0, 6) }, null, 1);
 })()`;
 
 try {
@@ -133,6 +165,8 @@ try {
   await conn.ready;
   await conn.send('Page.enable');
   await conn.send('Runtime.enable');
+
+  if (has('nojs')) await conn.send('Emulation.setScriptExecutionDisabled', { value: true });
 
   for (const w of widths) {
     await conn.send('Emulation.setDeviceMetricsOverride', {
@@ -148,6 +182,19 @@ try {
       const p = await conn.send('Runtime.evaluate', { expression: PROBE, returnByValue: true });
       console.log(`\n── ${w}px ──`);
       console.log(p.result.value);
+      // 스크립트를 끄고 한 번 더 — 리빌이 .rise{opacity:0} 인 채로 남으면 지면이 백지가 된다
+      await conn.send('Emulation.setScriptExecutionDisabled', { value: true });
+      await conn.send('Page.navigate', { url });
+      await sleep(2200);
+      const n = await conn.send('Runtime.evaluate', {
+        expression: `(()=>{let hid=0,tot=0;
+          for(const e of document.querySelectorAll('*')){const s=getComputedStyle(e);
+            if(s.opacity==='0'&&e.getBoundingClientRect().height>0)hid++;tot++}
+          return JSON.stringify({noJS:{숨은요소:hid,전체:tot,
+            판정:hid>3?'⚠ 스크립트를 끄면 내용이 사라진다':'OK'}})})()`,
+        returnByValue: true, awaitPromise: false });
+      console.log(' ' + n.result.value);
+      await conn.send('Emulation.setScriptExecutionDisabled', { value: false });
       continue;
     }
 

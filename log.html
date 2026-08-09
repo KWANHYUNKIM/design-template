@@ -92,8 +92,39 @@ footer{margin:50px 0 40px;text-align:center;font-size:12px;color:var(--mut);font
 </div>
 </section>
 
-<div class="sec-h"><h2>실행 기록</h2><span class="c">28 runs</span><span class="line"></span></div>
+<div class="sec-h"><h2>실행 기록</h2><span class="c">30 runs</span><span class="line"></span></div>
 
+
+<!-- ── RUN 31 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 31</span><span class="name">여섯점 YEOSEOT · 점자 인쇄 규격 (새 방향 · AD-1 한서린)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#14458c;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">28/40</b>2026-08-09</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:#f2f0ea;display:flex;align-items:center;justify-content:center"><span class="cap" style="color:#14140f;font-weight:700;font-size:26px;letter-spacing:-1px">KP-2026</span></div>
+    <p class="why"><b>아카이타입 = 자사 발행 공공 규격서.</b> "점자는 <b>읽는 것이 아니라 만지는 것</b>" — 점 지름 1.50mm부터 제책까지의 치수를 공개하고, 큰 CTA가 아니라 <b>용어 사전</b>으로 닫는다.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6"><b>AD-1 한서린(스위스 그리드)</b> 배정 — <b>12칼럼 괘선을 실제로 그어</b> 격자를 숨기지 않고, 좌측 정렬 고정, <span class="sw"><i style="background:#14458c"></i>네이비</span> 1색, 그림자·그라디언트·그레인 0, <code>tabular-nums</code> 전역. 점자 셀은 사진이 아니라 <b>CSS 도해</b>로 그리고 선언 비율(1:1.67)을 <code>calc()</code>로 묶었다.</div>
+    <div class="kw"><span>점자 인쇄 규격</span><span>읽기 순서 검사</span><span>촉독 판독률</span><span>용어 사전</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 독립 크리틱 → 28/40 (챔피언 37 미달 · 최근 밴드 바닥)</p>
+      <ul>
+        <li><b>컬러 5</b> — <code>:root</code> 대비 주석 <b>8개가 실측과 소수점 둘째 자리까지 일치</b>. 12px 텍스트 127곳 중 AA 미달 0곳(최저 5.48:1)</li>
+        <li><b>조작형이 진짜 계산이다</b> — 크리틱이 좌표를 독립 재계산해 시각 순서·어긋남 플래그·개수가 페이지 출력과 완전 일치함을 확인. 실제 <code>Tab</code> 키로 <code>focusin</code> 자동 켜짐까지 검증. <b>발명 수치 16종 전원 검산 통과</b></li>
+        <li><b>구성 대조 6/6</b> · 닫는 방식 「용어 사전」은 대장 미사용 행 · 증언 블록 없이 제3자를 3번째 기록표로 대체 · 직전 3RUN과 연속 일치 최대 1</li>
+        <li><b style="color:#c0392b">치명 — JS를 끄면 지면이 백지였다</b>. <code>.rise{opacity:0}</code> 27개 + <code>noscript</code> 없음, 잉크 픽셀 0. 읽는 장치가 다른 사람을 다루는 문서에서 나올 수 있는 최악의 자리다. <code>.js</code> 게이트로 고쳤고 <b>같은 결함이 RUN30에도 있어 함께 고쳤다</b></li>
+        <li><b>901~1100px에서 열 배정이 뒤집혔다</b> — 표가 258px에 갇히고 옆이 289px 비었다. 열만 맞바꾸면 읽기 순서가 어긋나므로 <b>한 칸으로 세워</b> 해결(막대 트랙 148→740px)</li>
+        <li><b>서술 층 검산을 또 놓쳤다</b> — 「바뀐 것은 하나」↔개정 이력(둘) · 「실제 치수 비율」이 1:1.667 선언에 1:2.308 구현 · 「비슷해 보입니다」가 82px 차이와 불일치 · 부록 B 이중 지시 · 數表→數標 · 표1 시점 무순 · 용어 무순. 전부 수정</li>
+        <li><b>조작 상태가 on/off 한 비트뿐</b>이라 계산이 진짜인 걸 화면이 증명하지 못했다 → <b>배치 전환 3종을 붙여 4→2→0으로 움직이게</b> 했다</li>
+        <li><b>검사기에 두 줄을 넣었다</b> — <code>--probe</code>에 무JS 렌더 검사와 열 배정 검사. 넣자마자 <b>RUN30에서 같은 결함을 즉시 잡아냈다</b></li>
+        <li class="todo"><b>남은 약점: 완성도 3(4연속) · 여백 3 · 임팩트 3 · 모션 3 · 설득력 3</b> — 3점이 다섯 칸. 다음은 여백(가로 판형 교대)과 임팩트(있는 도판을 제 크기로)</li>
+      </ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 진화 루프 · 독립 크리틱</span><a class="btn" href="templates/run-31-yeoseot.html">랜딩 열기 →</a><span class="path">templates/run-31-yeoseot.html</span></div>
+  </div>
+</div>
+</article>
 
 <!-- ── RUN 30 ─────────────────────────────────────────────── -->
 <article class="run">
@@ -126,6 +157,35 @@ footer{margin:50px 0 40px;text-align:center;font-size:12px;color:var(--mut);font
 </article>
 
 <!-- ── RUN 26 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 27</span><span class="name">외발 OEBAL · 한지 제지소 조사 기록 (새 방향 · AD-3 유서경)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#6b6154;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">자체 36/40</b>2026-08-09</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:#efe9dc;display:flex;align-items:center;justify-content:center"><span class="cap" style="color:#1a1712;font-weight:800;font-size:34px;font-family:'Nanum Myeongjo',serif">외<span style="color:#a8321e">발</span></span></div>
+    <p class="why"><b>아카이타입 = 제지소의 조사(造紙) 기록.</b> "닥 껍질이 종이가 되는 데 <b>여든여덟 번</b>의 손이 갑니다" — 판매 페이지가 아니라 한 해 동안 무엇을 얼마나 떴는지 적은 기록집이고, 큰 CTA가 아니라 <b>판권(colophon)</b>으로 닫는다.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6"><b>아트디렉터 AD-3 유서경(편집디자인)</b> 배정 — 본문 조판을 먼저 확정하고 나머지를 붙였다. 나눔명조 본문 <b>17px</b>, 행장 68ch, 드롭캡·풀쿼트·각주·캡션. <span class="sw"><i style="background:#a8321e"></i>인주색</span> 1색만 쓴다. 일곱 섹션의 상하 패딩을 <b>전부 다르게</b> 잡았다.</div>
+    <div class="kw"><span>한지</span><span>외발뜨기</span><span>지종 전환</span><span>판권으로 닫기</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 자체 채점 → 36/40 <b style="color:#c0392b">(독립 크리틱 미실시)</b></p>
+      <ul>
+        <li><b style="color:#c0392b">이 점수는 그대로 믿을 수 없다</b> — 만든 주체가 채점했다. 아래는 근거로 확인된 것만 적는다</li>
+        <li><b>여백 표적 달성</b> — 두 RUN 연속 3점이던 칸이다. 일곱 섹션을 <code>s6/s4 · s10/s7 · s7/s10 · s9/s5 · s5/s9 · s8/s6 · s10/s10</code> 으로 갈라 <b>같은 조합이 하나도 없다</b></li>
+        <li><b>조작형이 지면 전체를 다시 짜는다</b> — 지종 4종을 누르면 바탕·먹색만이 아니라 <code>line-height 31.45→27.88px</code> · <code>letter-spacing .085→-.068px</code> · 괘선 <code>1→2px</code> 이 함께 움직인다(실측). 근거는 실제 조판 논리다 — 얇고 잘 번지는 종이일수록 행간을 넓혀야 한다</li>
+        <li><b>수치가 완전히 닫힌다</b> — 지종별 초지 1,160+1,720+880+420=<b>4,180장</b>, 도련 반려 1,045÷4,180=<b>25.0%</b>("넉 장 중 한 장" 본문과 일치), 납품 4,180−1,045=<b>3,135장</b></li>
+        <li><b>AD-3 don't 4종 실측 0건</b> — 본문 17px·행간 1.64~1.98(최저값도 1.5 초과), 모든 섹션에 본문, 사진 5장 전부 캡션, 패딩 전부 다름</li>
+        <li><b>자가 대조 6문항에서 5번(제3자 트러스트) 불합격을 스스로 잡았다</b> — 장인 구술이 있어서 넘어갈 뻔했지만 구술은 <b>자사의 말</b>이다. 실명·소속·날짜·출처가 붙은 인용 3건을 따로 넣었다</li>
+        <li>390에서 표는 <code>tr</code>·<code>td</code>까지 <code>display:block</code> 으로 내려 <b>327px</b>까지 접힌다(RUN26 학습 적용). 3폭 실측 오버플로 0</li>
+        <li class="todo"><b>남은 약점: 임팩트 3</b> — 편집 지면이라 조용한 것이 의도지만 채점표는 "스크롤을 멈추게 하는 장면"을 묻는다. 명조 지면에서 임팩트를 벌려면 큰 사진 한 장이나 지면을 가르는 단 하나의 장치가 필요하다</li>
+      </ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok" style="color:#8a6d1f">● 진화 루프 · 자체 채점</span><a class="btn" href="templates/run-27-oebal.html">랜딩 열기 →</a><span class="path">templates/run-27-oebal.html</span></div>
+  </div>
+</div>
+</article>
+
 <article class="run">
 <div class="bar"><span class="id">RUN 29</span><span class="name">돋을 DOTEUL · 채널레터·사인 제작 (새 방향 · AD-2 도진)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#5f6165;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">자체 36/40</b>2026-08-09</span></div>
 <div class="grid">

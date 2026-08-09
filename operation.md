@@ -77,7 +77,7 @@ design-loop은 4개 파일로 쪼개져 있다. 본문은 짧게 두고, 규격�
 
 - `SKILL.md` — 루프 11단계 절차
 - `references/composition.md` — 구성 대장. 닫는 방식 · 증언 자리 · 골격 관용구
-- `references/spec.md` (97줄) — 산출물 규격 + **함정 15종**
+- `references/spec.md` (97줄) — 산출물 규격 + **함정 20종**
 - `references/scoring.md` (53줄) — 8기준 채점 세부 기준
 
 **taste**와 **animate**는 루프의 ④(컨셉 발명)와 ⑦(생성)에서 갈라져 나온 것이다.
@@ -311,7 +311,7 @@ python3 -m http.server 5500
 | 5 | 모션 & 인터랙션 | 2종 이상 혼합 + 조작하면 화면이 바뀌는 것 1개 + 폴백 완비 | 리빌 한 종류 · 값만 바뀌는 슬라이더 |
 | 6 | 콘텐츠 설득력 | 수치가 현실적이고 서로 검산되며, 제3자 트러스트 신호가 있다 | 자체 작성 카피만 · 비현실 스펙 |
 | 7 | 오리지널리티 | 아카이타입·모듈 순서가 기존과 다르고 AI 티가 없다 | 히어로→CTA 틀 답습 · 꼬리 모듈 재사용 |
-| 8 | 완성도 & 버그 | 3폭 검증 통과 · 폴백 완비 · 결함 0 | 함정 15종 중 하나라도 위반 |
+| 8 | 완성도 & 버그 | 3폭 검증 통과 · 폴백 완비 · 결함 0 | 함정 20종 중 하나라도 위반 |
 
 ### 추가 판정 3종
 
@@ -409,7 +409,7 @@ python3 -m http.server 5500
     design-loop/
       SKILL.md              루프 11단계
       references/composition.md  구성 대장 — 닫는 방식·증언 자리·골격 관용구  ← ⑥ 관문의 근거
-      references/spec.md    산출물 규격 + 함정 15종
+      references/spec.md    산출물 규격 + 함정 20종
       references/scoring.md 8기준 채점표
     design-release/
       SKILL.md              배포·홍보 절차

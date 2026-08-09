@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>여섯점 점자 인쇄 규격 KP-2026 · 개정 3차</title>
+<meta name="description" content="점 지름·점 높이·칸 간격·행 간격부터 용지 평량과 제책까지, 점자 인쇄물이 손끝에서 읽히기 위한 치수 규격. 채택 기관과 촉독 검증 결과, 읽기 순서 검사 도구, 용어 사전을 함께 싣는다.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+:root{
+  --sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+
+  /* 잉크 · 종이 · 포인트 1색. 그라디언트 없음, 그림자 없음 */
+  --paper:#f2f0ea;      /* 바탕 — 순백 금지 */
+  --paper2:#e6e3d9;     /* 눌린 바탕 */
+  --ink:#14140f;        /* 제목 — 종이 위 16.21:1 · 진종이 위 14.39:1 */
+  --body:#2e2d26;       /* 본문 — 종이 위 12.13:1 · 진종이 위 10.76:1 */
+  --mut:#5b594e;        /* 보조·캡션 — 종이 위 6.18:1 · 진종이 위 5.48:1 (AA 통과) */
+  --k:#14458c;          /* 포인트 1색 — 종이 위 8.15:1 · 진종이 위 7.24:1 */
+  --rule:#c6c3b6;       /* 괘선 — 텍스트 아님 */
+  --rule2:#a9a596;
+
+  /* 타입 스케일 — 모듈러 1.25배(base 16). 실제로 쓰는 것은 여섯 단계다 — 49·31·20·16·14·12 */
+  --t-xs:12px;--t-sm:14px;--t-base:16px;--t-md:20px;--t-lg:25px;--t-xl:31px;
+  --t-2xl:39px;--t-3xl:49px;--t-4xl:61px;--t-d1:76px;--t-d2:96px;
+
+  /* 간격 스케일 — 4배수 */
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;
+  --s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--body);
+  font-family:var(--sans);font-size:var(--t-base);line-height:1.75;
+  word-break:keep-all;overflow-wrap:break-word;
+  -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+img{max-width:100%;display:block}
+h1,h2,h3{margin:0;color:var(--ink);font-weight:600;line-height:1.25;letter-spacing:-.01em}
+p{margin:0}
+a{color:inherit}
+[id]{scroll-margin-top:var(--s6)}
+
+/* ── 지면. 12칼럼 격자를 숨기지 않는다 ── */
+.sheet{max-width:1240px;margin:0 auto;padding-left:var(--s7);padding-right:var(--s7);position:relative}
+.g12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--s5)}
+.g12>*{min-width:0}
+/* 칼럼 괘선 — 격자를 실제로 그린다 (그라디언트 아님, 요소로 긋는다).
+   반드시 콘텐츠 뒤로 보낼 것 — 앞에 두면 사진과 헤드라인 위를 선이 가로지른다 */
+.colrules{position:absolute;inset:0;pointer-events:none;display:grid;z-index:0;
+          grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--s5);
+          padding-left:var(--s7);padding-right:var(--s7);left:0;right:0}
+.colrules i{display:block;border-left:1px solid var(--rule)}
+.colrules i:last-child{border-right:1px solid var(--rule)}
+.g12{position:relative;z-index:1}
+
+.lbl{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;color:var(--mut);
+     text-transform:uppercase}
+.cap{font-size:var(--t-xs);line-height:1.55;color:var(--mut);margin-top:var(--s2)}
+.dek{font-size:var(--t-sm);color:var(--mut);max-width:44em;margin-top:var(--s3)}
+.body-txt{font-size:var(--t-base);line-height:1.8;max-width:36em}
+.body-txt p+p{margin-top:.95em}
+.body-txt b{color:var(--ink);font-weight:600}
+
+/* 리빌 — 기본은 보이는 상태다. JS가 붙었을 때만 숨겼다 띄운다.
+   .rise{opacity:0} 을 그냥 두면 스크립트가 꺼진 브라우저에서 지면이 통째로 백지가 된다.
+   읽는 장치가 다른 사람을 다루는 문서에서는 특히 그렇다. */
+.js .rise{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+.js .rise.vis{opacity:1;transform:none}
+.js .d1{transition-delay:.08s}.js .d2{transition-delay:.16s}
+
+/* 표 — 표답게 */
+table{width:100%;border-collapse:collapse;font-size:var(--t-sm)}
+caption{text-align:left;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);padding-bottom:var(--s3)}
+th,td{padding:8px 12px 8px 0;text-align:left;border-bottom:1px solid var(--rule);vertical-align:baseline}
+thead th{font-size:var(--t-xs);color:var(--mut);font-weight:500;letter-spacing:.05em;border-bottom:1px solid var(--ink)}
+tbody tr:last-child td{border-bottom:1px solid var(--ink)}
+td.n,th.n{text-align:right;padding-right:0;font-family:var(--mono)}
+tfoot td{padding-top:10px;font-family:var(--mono);font-size:var(--t-xs);color:var(--ink);border:0}
+
+/* ═══ 1 · 표제 ═══ */
+.head{padding-top:var(--s7);padding-bottom:var(--s8)}
+.head .g12{row-gap:var(--s7);align-items:start}
+.mast{grid-column:1/8;grid-row:1;border-top:3px solid var(--ink);padding-top:var(--s4)}
+.mast h1{font-size:var(--t-3xl);letter-spacing:-.025em;font-weight:700}
+.mast .sub{font-size:var(--t-sm);color:var(--mut);margin-top:var(--s2)}
+.docmeta{grid-column:9/13;grid-row:1;border-top:1px solid var(--ink);padding-top:var(--s4);
+         font-family:var(--mono);font-size:var(--t-xs);line-height:1.9;color:var(--mut)}
+.docmeta div{display:grid;grid-template-columns:5.5em minmax(0,1fr);gap:var(--s4);
+             border-bottom:1px solid var(--rule);padding-bottom:3px;margin-bottom:5px}
+.docmeta div>b{text-align:right}
+.docmeta b{color:var(--ink);font-weight:500}
+.headlead{grid-column:1/8;grid-row:2}
+.headfig{grid-column:9/13;grid-row:2}
+.headfig figure{margin:0}
+.headfig img{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--paper2);
+             border:1px solid var(--rule2)}
+
+.hist{margin-top:var(--s7);border-top:1px solid var(--ink);padding-top:var(--s4);max-width:36em}
+.hist .row{display:grid;grid-template-columns:3em 5.5em minmax(0,1fr);gap:var(--s4);
+           padding:7px 0;border-bottom:1px solid var(--rule);font-size:var(--t-sm)}
+.hist .row>*{min-width:0}
+.hist .v{font-family:var(--mono);color:var(--ink);font-weight:600}
+.hist .d{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut)}
+.hist .t{color:var(--body);font-size:var(--t-sm);line-height:1.6}
+
+/* ═══ 2 · 왜 ═══ */
+.why{padding-top:var(--s9);padding-bottom:var(--s9);border-top:1px solid var(--rule)}
+.why .g12{row-gap:var(--s5);align-items:start}
+.why h2{grid-column:1/8;grid-row:1;font-size:var(--t-xl)}
+.why .txt{grid-column:1/7;grid-row:2}
+.why .fig{grid-column:8/13;grid-row:2}
+.bars{border-top:1px solid var(--ink);padding-top:var(--s4)}
+.bars .row{display:grid;grid-template-columns:5.5em minmax(0,1fr) 4em;gap:var(--s3);
+           align-items:center;padding:7px 0;border-bottom:1px solid var(--rule)}
+.bars .row>*{min-width:0}
+.bars .h{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut)}
+.bars .t{height:12px;border:1px solid var(--ink);position:relative}
+.bars .t i{display:block;height:100%;background:var(--ink)}
+.bars .row.hi .t i{background:var(--k)}
+.bars .v{font-family:var(--mono);font-size:var(--t-sm);text-align:right;color:var(--ink)}
+.bars .row.hi .v{color:var(--k);font-weight:600}
+
+/* ═══ 3 · 채택 ═══ */
+.adopt{padding-top:var(--s8);padding-bottom:var(--s7);background:var(--paper2);
+       border-top:1px solid var(--rule2);border-bottom:1px solid var(--rule2)}
+.adopt h2{grid-column:1/9;font-size:var(--t-xl)}
+.adopt .dek{grid-column:1/9}
+.adopt .tw{grid-column:1/13;margin-top:var(--s5)}
+
+/* ═══ 4 · 점 규격 ═══ */
+.spec{padding-top:var(--s9);padding-bottom:var(--s8)}
+.spec .g12{row-gap:var(--s3);align-items:start}
+.spec h2{grid-column:1/8;grid-row:1;font-size:var(--t-xl)}
+.spec .dek{grid-column:1/8;grid-row:2}
+.spec .dia{grid-column:1/6;grid-row:3;margin-top:var(--s5)}
+.spec .tw{grid-column:7/13;grid-row:3;margin-top:var(--s5)}
+
+/* 점자 셀 도해 — CSS로 그린다 */
+/* 점 지름 1.50mm : 점 간격 2.50mm = 1 : 1.667. 점 지름 = 피치 × 0.6 으로 그려야 선언과 맞는다 */
+.cell{--pitch:46px;display:inline-grid;
+      grid-template-columns:repeat(2,var(--pitch));grid-template-rows:repeat(3,var(--pitch));
+      border:1px solid var(--ink);background:var(--paper)}
+.cell span{display:flex;align-items:center;justify-content:center;
+           border-right:1px dashed var(--rule);border-bottom:1px dashed var(--rule)}
+.cell span:nth-child(2n){border-right:0}
+.cell span:nth-child(n+5){border-bottom:0}
+.cell span i{width:calc(var(--pitch)*.6);height:calc(var(--pitch)*.6);
+              border-radius:50%;border:1px solid var(--ink);display:block}
+.cell span.on i{background:var(--ink)}
+.dims{margin-top:var(--s5);border-top:1px solid var(--ink);padding-top:var(--s3);
+      font-family:var(--mono);font-size:var(--t-xs);line-height:1.9;color:var(--mut)}
+.dims div{display:flex;justify-content:space-between;gap:var(--s4)}
+.dims b{color:var(--ink);font-weight:500}
+.legend{margin-top:var(--s4);font-size:var(--t-xs);color:var(--mut)}
+
+/* ═══ 5 · 읽기 순서 검사 ═══ */
+.order{padding-top:var(--s10);padding-bottom:var(--s10);border-top:1px solid var(--rule)}
+.order h2{grid-column:1/9;font-size:var(--t-xl)}
+.order .dek{grid-column:1/9}
+.order .bar{grid-column:1/13;margin-top:var(--s6);border-top:1px solid var(--ink);
+            padding-top:var(--s4);display:flex;flex-wrap:wrap;gap:var(--s4);align-items:center}
+.btn{font:inherit;font-size:var(--t-sm);padding:9px 16px;border:1px solid var(--ink);
+     border-radius:2px;background:var(--paper);color:var(--ink);cursor:pointer}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.btn:focus-visible{outline:2px solid var(--k);outline-offset:2px}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+kbd{font-family:var(--mono);font-size:var(--t-xs);border:1px solid var(--rule2);
+    border-radius:2px;padding:1px 5px;color:var(--ink)}
+.readout{font-size:var(--t-sm);color:var(--mut)}
+.readout b{color:var(--ink);font-family:var(--mono)}
+.readout b.bad{color:var(--k)}
+
+.specs{grid-column:1/13;margin-top:var(--s6);display:grid;align-items:start;
+       grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s5)}
+.specs>*{min-width:0}
+.pane{border:1px solid var(--ink);padding:var(--s4)}
+.pane>h3{font-size:var(--t-base);margin-bottom:var(--s2)}
+.pane>p.cap{margin-top:0;margin-bottom:var(--s4)}
+.page{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s3)}
+.page>*{min-width:0}
+.blk{border:1px solid var(--rule2);background:var(--paper2);padding:var(--s3);
+     font-size:var(--t-xs);color:var(--body);position:relative;min-height:66px}
+.blk:focus-visible{outline:2px solid var(--k);outline-offset:2px}
+.blk .nm{display:block;color:var(--mut);font-family:var(--mono);margin-bottom:2px}
+.blk.wide{grid-column:1/3}
+/* 견본 나 — 배치를 세 가지로 바꿔 볼 수 있다. order 를 전부 명시해야 결과가 예측 가능하다.
+   가:흐트러짐(어긋남 4) · 나:두 칸만 고침(2) · 다:기록 순서대로(0) */
+#pb[data-lay="a"] .blk:nth-child(1){order:1}
+#pb[data-lay="a"] .blk:nth-child(2){order:6}
+#pb[data-lay="a"] .blk:nth-child(3){order:3}
+#pb[data-lay="a"] .blk:nth-child(4){order:2}
+#pb[data-lay="a"] .blk:nth-child(5){order:4}
+#pb[data-lay="a"] .blk:nth-child(6){order:5}
+#pb[data-lay="b"] .blk:nth-child(1){order:1}
+#pb[data-lay="b"] .blk:nth-child(2){order:3}
+#pb[data-lay="b"] .blk:nth-child(3){order:2}
+#pb[data-lay="b"] .blk:nth-child(4){order:4}
+#pb[data-lay="b"] .blk:nth-child(5){order:5}
+#pb[data-lay="b"] .blk:nth-child(6){order:6}
+.seg{display:inline-flex;border:1px solid var(--ink)}
+.seg button{font:inherit;font-size:var(--t-xs);padding:6px 11px;border:0;
+            border-left:1px solid var(--ink);background:var(--paper);color:var(--body);cursor:pointer}
+.seg button:first-child{border-left:0}
+.seg button:hover{background:var(--paper2)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg button:focus-visible{outline:2px solid var(--k);outline-offset:-2px}
+#pb{display:flex;flex-wrap:wrap;gap:var(--s3)}
+#pb .blk{flex:1 1 calc(50% - var(--s3)/2)}
+#pb .blk.wide{flex:1 1 100%}
+/* 순서 배지 — 켰을 때만 */
+.badge{position:absolute;top:-1px;right:-1px;min-width:22px;height:22px;
+       display:none;align-items:center;justify-content:center;
+       font-family:var(--mono);font-size:var(--t-xs);
+       background:var(--ink);color:var(--paper);border:1px solid var(--ink)}
+.on .badge{display:flex}
+.on .blk.mis{border-color:var(--k);border-width:2px}
+.on .blk.mis .badge{background:var(--k);border-color:var(--k)}
+.selfcheck{grid-column:1/13;margin-top:var(--s6);border-top:1px solid var(--ink);
+           padding-top:var(--s4);font-size:var(--t-sm);color:var(--body);max-width:52em}
+.selfcheck b{color:var(--ink)}
+
+/* ═══ 6 · 용지·제책 ═══ */
+.paper{padding-top:var(--s8);padding-bottom:var(--s7);background:var(--paper2);
+       border-top:1px solid var(--rule2);border-bottom:1px solid var(--rule2)}
+.paper .g12{row-gap:var(--s3);align-items:start}
+.paper h2{grid-column:1/8;grid-row:1;font-size:var(--t-xl)}
+.paper .dek{grid-column:1/8;grid-row:2}
+.paper .tw{grid-column:1/8;grid-row:3;margin-top:var(--s5)}
+.paper .calc{grid-column:9/13;grid-row:3;margin-top:var(--s5);border-top:1px solid var(--ink);padding-top:var(--s4)}
+.paper .calc div{display:flex;justify-content:space-between;gap:var(--s4);
+                 font-family:var(--mono);font-size:var(--t-xs);padding:4px 0;
+                 border-bottom:1px solid var(--rule)}
+.paper .calc div:last-child{border-bottom:0;border-top:1px solid var(--ink);
+                            margin-top:var(--s2);padding-top:var(--s3);font-size:var(--t-sm)}
+.paper .calc b{color:var(--ink)}
+
+/* ═══ 7 · 용어 사전 (닫는 자리) ═══ */
+.gloss{padding-top:var(--s8);padding-bottom:var(--s6)}
+.gloss h2{grid-column:1/8;font-size:var(--t-xl)}
+.gloss .dek{grid-column:1/8}
+.gloss dl{grid-column:1/13;margin:var(--s6) 0 0;
+          display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+          column-gap:var(--s8);row-gap:0}
+.gloss dl>div{min-width:0;border-top:1px solid var(--rule);padding:var(--s3) 0;
+              display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:var(--s4)}
+.gloss dt{font-size:var(--t-base);color:var(--ink)}
+.gloss dt small{display:block;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut)}
+.gloss dd{margin:0;font-size:var(--t-sm);line-height:1.65;color:var(--body)}
+.tail{grid-column:1/13;margin-top:var(--s7);border-top:3px solid var(--ink);
+      padding-top:var(--s4);font-size:var(--t-md);line-height:1.7;color:var(--ink);max-width:44em}
+
+footer{border-top:1px solid var(--rule2);background:var(--paper2);
+       padding-top:var(--s5);padding-bottom:var(--s5)}
+.ft{max-width:1240px;margin:0 auto;padding-left:var(--s7);padding-right:var(--s7);
+    display:flex;flex-wrap:wrap;gap:var(--s2) var(--s6);font-size:var(--t-xs);color:var(--mut)}
+
+/* ── 1100px 이하: 12칼럼을 6칼럼으로 ── */
+@media (max-width:1100px){
+  /* 두 칸을 8+4 로 좁히면 표·막대 같은 넓은 콘텐츠가 4칸에 갇힌다(901px 에서 표 258px).
+     열만 바꿔 넓은 쪽을 주면 이번엔 DOM 순서와 시각 순서가 어긋난다 — 이 지면이 금지하는 바로 그것.
+     그래서 한 칸으로 세운다. */
+  .colrules{display:none}
+  .g12>*{grid-column:1/13!important;grid-row:auto!important}
+  .g12{row-gap:var(--s5)}
+}
+/* ── 900px 이하: 한 칸으로 ── */
+@media (max-width:900px){
+  .sheet{padding-left:var(--s4);padding-right:var(--s4)}
+  .ft{padding-left:var(--s4);padding-right:var(--s4)}
+  .g12{grid-template-columns:minmax(0,1fr)}
+  .g12>*{grid-column:auto!important;grid-row:auto!important}
+  .head{padding-top:var(--s5);padding-bottom:var(--s6)}
+  .why,.order{padding-top:var(--s8);padding-bottom:var(--s8)}
+  .spec,.adopt,.paper,.gloss{padding-top:var(--s7);padding-bottom:var(--s6)}
+  .mast h1{font-size:var(--t-2xl)}
+  .why h2,.spec h2,.order h2,.paper h2,.gloss h2{font-size:var(--t-md)}
+  .docmeta,.headfig,.headlead,.why .txt,.why .fig,.spec .dia,.spec .tw,
+  .paper .tw,.paper .calc,.adopt .tw,.order .bar,.specs,.selfcheck,.gloss dl,.tail{margin-top:var(--s5)}
+  .specs{grid-template-columns:minmax(0,1fr)}
+  .gloss dl{grid-template-columns:minmax(0,1fr)}
+  .headfig img{aspect-ratio:3/2}
+  /* 표를 카드로 접는다. td 는 grid — flex 로 만들면 크롬이 셀 텍스트를 잃는다 */
+  .fold table,.fold thead,.fold tbody,.fold tr,.fold tfoot{display:block;width:auto}
+  .fold caption{display:block}
+  .fold thead{position:absolute;left:-9999px}
+  .fold tr{border-bottom:1px solid var(--ink);padding:var(--s3) 0}
+  .fold tbody tr:last-child{border-bottom:1px solid var(--ink)}
+  .fold td{display:grid;grid-template-columns:6.5em minmax(0,1fr);gap:var(--s3);
+           border-bottom:0;padding:3px 0;text-align:left}
+  .fold td::before{content:attr(data-l);color:var(--mut);font-size:var(--t-xs)}
+  .fold td:first-child{color:var(--ink)}
+  .fold tfoot tr{border-bottom:0;padding-top:var(--s3)}
+  .fold tfoot td{display:block;padding:0}
+  .fold tfoot td::before{content:none}
+}
+@media (max-width:700px){
+  /* 좁아지면 견본 나도 한 줄로 쌓여 어긋남이 사라진다 — 값이 실제로 다시 계산된다는 증거다 */
+  #pb .blk{flex:1 1 100%}
+}
+@media (max-width:520px){
+  .bars .row{grid-template-columns:4.6em minmax(0,1fr) 3.4em;gap:var(--s2)}
+  .cell{--pitch:34px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .rise{opacity:1;transform:none;transition:none}
+}
+.capture .rise,.capture .js .rise{opacity:1!important;transform:none!important;transition:none!important}
+</style>
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+<!-- 여섯점 점자 인쇄 규격 KP-2026 -->
+
+<!-- ═══ 1 · 표제 ═══ -->
+<section class="head">
+  <div class="sheet">
+    <div class="colrules" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="g12">
+      <div class="mast rise">
+        <h1>점자 인쇄 규격<br>KP-2026</h1>
+        <p class="sub">손끝에서 읽히기 위한 치수 — 점 지름부터 제책까지</p>
+      </div>
+
+      <div class="docmeta rise d1">
+        <div><span>문서번호</span><b>KP-2026</b></div>
+        <div><span>개정</span><b>3차 · 2026.02.10</b></div>
+        <div><span>발행</span><b>여섯점 점역소</b></div>
+        <div><span>적용</span><b>양각 인쇄물 전부</b></div>
+        <div><span>채택</span><b>17개 관</b></div>
+      </div>
+
+      <div class="headlead rise d1">
+        <div class="body-txt">
+          <p>점자는 <b>읽는 것이 아니라 만지는 것</b>입니다. 활자라면 조금 작아도 눈을 가까이 대면 읽히지만, 점은 낮아지는 순간 손끝에서 사라집니다. 규격이 취향의 문제가 아닌 이유입니다.</p>
+          <p>이 문서는 여섯점 점역소가 자체 인쇄에 적용하는 치수를 공개한 것입니다. 국내 표준을 대체하지 않으며, <b>표준이 정하지 않은 구간</b>(점압 유지·용지 두께·제책 방식)에 대해 우리가 정한 값과 그 근거를 적습니다.</p>
+          <p>개정 3차에서 바뀐 것은 둘입니다. 점 높이 하한을 0.30mm에서 <b>0.35mm</b>로 올렸고, 좌철 여백을 18mm에서 22mm로 늘렸습니다. 앞의 근거는 아래 촉독 판독률이고, 뒤의 근거는 현장 의견입니다(표 1).</p>
+        </div>
+
+        <div class="hist">
+          <p class="lbl">개정 이력</p>
+          <div class="row"><span class="v">1차</span><span class="d">2024.03</span><span class="t">최초 제정. 점 지름·칸 간격·행 간격 세 값만 정했다.</span></div>
+          <div class="row"><span class="v">2차</span><span class="d">2025.04</span><span class="t">용지 평량 하한 150g/㎡ 추가. 130g/㎡ 인쇄분에서 점압 붕괴가 확인됐다.</span></div>
+          <div class="row"><span class="v">3차</span><span class="d">2026.02</span><span class="t">점 높이 하한 0.30 → 0.35mm. 좌철 여백 18 → 22mm.</span></div>
+        </div>
+      </div>
+
+      <div class="headfig rise d2">
+        <figure>
+          <img src="https://images.unsplash.com/photo-1660839061462-c9c8ceecb33d?w=1200&q=76&auto=format&fit=crop"
+               alt="회색 종이 한 면에 양각으로 찍힌 점자가 여러 행에 걸쳐 이어진다"
+               loading="eager" decoding="async"
+               onerror="this.style.display='none';this.parentNode.style.minHeight='280px'">
+          <figcaption class="cap">양각 인쇄면. 점이 만드는 그림자가 이만큼 보이면 점 높이는 0.5mm 안팎이다. 그림자가 옅어지면 손끝에서도 옅어진다.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2 · 왜 ═══ -->
+<section class="why">
+  <div class="sheet">
+    <div class="colrules" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="g12">
+      <h2 class="rise">0.05밀리미터가 판독률을 15%p 바꿉니다</h2>
+      <div class="txt rise d1">
+        <div class="body-txt">
+          <p>검증단 34명에게 같은 문장을 점 높이만 달리해 인쇄한 세 장을 주고, 한 사람당 30분씩 읽게 했습니다. 총 촉독 시간 1,020분입니다.</p>
+          <p>0.50mm에서 0.35mm로 내려갈 때는 판독률이 <b>6.8%p</b> 떨어졌는데, 0.35mm에서 0.30mm로 내려갈 때는 <b>14.6%p</b>가 무너졌습니다. 완만하게 나빠지지 않고 <b>특정 지점에서 꺾입니다.</b></p>
+          <p>그래서 하한을 0.35mm로 잡았습니다. 0.30mm도 "읽히기는" 하지만, 읽히는 것과 읽을 수 있는 것은 다릅니다.</p>
+        </div>
+      </div>
+      <div class="fig rise d2">
+        <div class="bars">
+          <p class="lbl" style="margin-bottom:var(--s3)">촉독 판독률 · 검증단 34명 · 1,020분</p>
+          <div class="row"><span class="h">0.50 mm</span><span class="t"><i style="width:98.2%"></i></span><span class="v">98.2%</span></div>
+          <div class="row hi"><span class="h">0.35 mm</span><span class="t"><i style="width:91.4%"></i></span><span class="v">91.4%</span></div>
+          <div class="row"><span class="h">0.30 mm</span><span class="t"><i style="width:76.8%"></i></span><span class="v">76.8%</span></div>
+          <p class="cap">파란 행이 이 규격의 하한이다. 98.2 − 91.4 = 6.8%p, 91.4 − 76.8 = 14.6%p — 뒤쪽 낙차가 두 배 이상이다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3 · 채택 기관 (제3자) ═══ -->
+<section class="adopt">
+  <div class="sheet">
+    <div class="g12">
+      <h2 class="rise">이 규격을 검토하거나 채택한 곳</h2>
+      <p class="dek rise">우리가 쓴 평가는 싣지 않습니다. 문서와 공고에 남은 것만 옮깁니다.</p>
+      <div class="tw fold rise d1">
+        <table>
+          <caption>표 1 · 외부 검토·채택 이력</caption>
+          <thead><tr><th>기관</th><th>무엇을</th><th>남은 기록</th><th class="n">시점</th></tr></thead>
+          <tbody>
+            <tr>
+              <td data-l="기관">국립장애인도서관 점자자료과</td>
+              <td data-l="무엇을">규격 초안 검토</td>
+              <td data-l="기록">지적 12건 중 11건 반영. 반영하지 않은 1건은 「행 간격 9.5mm 허용」으로, 우리 촉독 시험에서 행 혼동이 늘어 유지했다.</td>
+              <td class="n" data-l="시점">2025.11</td>
+            </tr>
+            <tr>
+              <td data-l="기관">촉독 검증단 34명</td>
+              <td data-l="무엇을">판독률 측정</td>
+              <td data-l="기록">시각장애인 이용자로 구성. 1인 30분 · 총 1,020분. 원자료는 부록 B에 표로 실었다.</td>
+              <td class="n" data-l="시점">2025.12</td>
+            </tr>
+            <tr>
+              <td data-l="기관">한국점자도서관협의회</td>
+              <td data-l="무엇을">회원관 채택 공고</td>
+              <td data-l="기록">회원 23개 관 중 17개 관이 KP-2026을 자관 제작 기준으로 채택한다고 공고했다.</td>
+              <td class="n" data-l="시점">2026.01</td>
+            </tr>
+            <tr>
+              <td data-l="기관">한국시각장애인연합회 경기지부</td>
+              <td data-l="무엇을">현장 적용 의견</td>
+              <td data-l="기록">「제책을 링으로 하면 마지막 칸이 걸린다」는 의견을 받아 좌철 여백을 18mm에서 22mm로 늘렸다.</td>
+              <td class="n" data-l="시점">2026.01</td>
+            </tr>
+          </tbody>
+          <tfoot><tr><td colspan="4">채택 17개 관 / 회원 23개 관 = 74% · 반영률 11/12 = 92%</td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 4 · 점 규격 ═══ -->
+<section class="spec">
+  <div class="sheet">
+    <div class="colrules" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="g12">
+      <h2 class="rise">한 칸은 여섯 점입니다</h2>
+      <p class="dek rise">아래 도해는 <b>점 지름과 점 간격의 비율(1 : 1.67)</b>을 그대로 그린 것입니다. 확대 배율이므로 실제 크기는 아닙니다. 점선은 인쇄되지 않는 기준선입니다.</p>
+
+      <div class="dia rise d1">
+        <div class="cell" role="img" aria-label="점자 한 칸의 여섯 점 배치. 1·2·4·5번 점이 볼록하게 찍힌 상태">
+          <span class="on"><i></i></span><span class="on"><i></i></span>
+          <span class="on"><i></i></span><span class="on"><i></i></span>
+          <span><i></i></span><span><i></i></span>
+        </div>
+        <p class="legend">왼쪽 위부터 1·2·3번, 오른쪽 위부터 4·5·6번. 채워진 점이 볼록하게 찍힌 것이다.</p>
+        <div class="dims">
+          <div><span>점 지름</span><b>1.50 mm</b></div>
+          <div><span>점 높이</span><b>0.50 mm</b></div>
+          <div><span>점 높이 하한</span><b>0.35 mm</b></div>
+          <div><span>같은 칸 점 간격</span><b>2.50 mm</b></div>
+          <div><span>칸 간격 (중심 사이)</span><b>6.00 mm</b></div>
+          <div><span>행 간격 (중심 사이)</span><b>10.00 mm</b></div>
+        </div>
+      </div>
+
+      <div class="tw fold rise d2">
+        <table>
+          <caption>표 2 · A4 한 면에 들어가는 양</caption>
+          <thead><tr><th>항목</th><th>값</th><th class="n">계산</th></tr></thead>
+          <tbody>
+            <tr><td data-l="항목">용지</td><td data-l="값">A4 세로 210 × 297 mm</td><td class="n" data-l="계산">—</td></tr>
+            <tr><td data-l="항목">좌우 여백</td><td data-l="값">각 15 mm</td><td class="n" data-l="계산">210 − 30 = 180</td></tr>
+            <tr><td data-l="항목">한 행 칸 수</td><td data-l="값">30 칸</td><td class="n" data-l="계산">180 ÷ 6.0 = 30</td></tr>
+            <tr><td data-l="항목">상하 여백</td><td data-l="값">각 18.5 mm</td><td class="n" data-l="계산">297 − 37 = 260</td></tr>
+            <tr><td data-l="항목">한 면 행 수</td><td data-l="값">26 행</td><td class="n" data-l="계산">260 ÷ 10.0 = 26</td></tr>
+            <tr><td data-l="항목">한 면 칸 수</td><td data-l="값">780 칸</td><td class="n" data-l="계산">30 × 26 = 780</td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="3">좌철 제책 시 좌여백을 22mm로 늘려 한 행이 28칸으로 줄어든다 (210 − 22 − 15 = 173 ÷ 6.0 = 28.8 → 28칸) · 한 면 728칸</td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 5 · 읽기 순서 검사 (조작형) ═══ -->
+<section class="order" id="order">
+  <div class="sheet">
+    <div class="colrules" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="g12">
+      <h2 class="rise">보이는 순서와 읽히는 순서는 다를 수 있습니다</h2>
+      <p class="dek rise">점자 지면이든 웹 페이지든 같은 문제가 있습니다. 눈은 배치를 보고 순서를 정하지만, 손끝과 스크린리더는 <b>기록된 순서</b>대로 갑니다. 둘이 어긋나면 읽는 사람만 손해입니다.</p>
+
+      <div class="bar rise d1">
+        <button class="btn" id="toggle" type="button" aria-pressed="false" aria-controls="pa pb">읽기 순서 켜기</button>
+        <span class="seg" role="group" aria-label="견본 나의 배치 바꾸기">
+          <button type="button" data-lay="a" aria-pressed="true">흐트러진 배치</button>
+          <button type="button" data-lay="b" aria-pressed="false">두 칸만 고침</button>
+          <button type="button" data-lay="c" aria-pressed="false">기록 순서대로</button>
+        </span>
+        <span class="readout" id="ro">두 견본은 같은 여섯 조각으로 짰습니다. 배치만 다릅니다.</span>
+      </div>
+
+      <div class="specs rise d1">
+        <div class="pane">
+          <h3>견본 가 — 배치와 기록이 같다</h3>
+          <p class="cap">보이는 대로 읽힌다. 어긋난 곳 <b id="ca">—</b>곳.</p>
+          <div class="page" id="pa">
+            <div class="blk wide" role="group" tabindex="0"><span class="nm">머리말</span>이 장에서 다루는 범위<span class="badge"></span></div>
+            <div class="blk" role="group" tabindex="0"><span class="nm">본문 1</span>점의 치수<span class="badge"></span></div>
+            <div class="blk" role="group" tabindex="0"><span class="nm">본문 2</span>칸과 행의 간격<span class="badge"></span></div>
+            <div class="blk" role="group" tabindex="0"><span class="nm">표</span>A4 환산<span class="badge"></span></div>
+            <div class="blk" role="group" tabindex="0"><span class="nm">주석</span>측정 조건<span class="badge"></span></div>
+            <div class="blk wide" role="group" tabindex="0"><span class="nm">맺음</span>다음 장으로<span class="badge"></span></div>
+          </div>
+        </div>
+
+        <div class="pane">
+          <h3>견본 나 — 배치만 고쳤다</h3>
+          <p class="cap">배치를 바꾸면서 기록 순서는 손대지 않았다. 어긋난 곳 <b id="cb" class="bad">—</b>곳.</p>
+          <div class="page" id="pb" data-lay="a">
+            <div class="blk wide" role="group" tabindex="0"><span class="nm">머리말</span>이 장에서 다루는 범위<span class="badge"></span></div>
+            <div class="blk" role="group" tabindex="0"><span class="nm">본문 1</span>점의 치수<span class="badge"></span></div>
+            <div class="blk" role="group" tabindex="0"><span class="nm">본문 2</span>칸과 행의 간격<span class="badge"></span></div>
+            <div class="blk" role="group" tabindex="0"><span class="nm">표</span>A4 환산<span class="badge"></span></div>
+            <div class="blk" role="group" tabindex="0"><span class="nm">주석</span>측정 조건<span class="badge"></span></div>
+            <div class="blk wide" role="group" tabindex="0"><span class="nm">맺음</span>다음 장으로<span class="badge"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="selfcheck rise d2">두 견본 안에서 <kbd>Tab</kbd> 키를 눌러 보십시오. 가는 왼쪽 위에서 오른쪽 아래로 순서대로 가지만, 나는 <b>화면을 건너뜁니다.</b> 배지 번호는 기록 순서이고, 파란 테두리는 그 자리에 와야 할 번호가 아니라는 뜻입니다.<br><span id="self" class="readout"></span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 6 · 용지·제책 ═══ -->
+<section class="paper">
+  <div class="sheet">
+    <div class="g12">
+      <h2 class="rise">종이가 얇으면 점이 눌립니다</h2>
+      <p class="dek rise">양각은 종이를 늘려 만듭니다. 늘어날 여유가 없으면 찍히는 순간 찢어지고, 너무 두꺼우면 점이 서지 않습니다.</p>
+
+      <div class="tw fold rise d1">
+        <table>
+          <caption>표 3 · 용지·제책 규격</caption>
+          <thead><tr><th>항목</th><th>규격</th><th>이유</th></tr></thead>
+          <tbody>
+            <tr><td data-l="항목">평량</td><td data-l="규격">150 g/㎡ 이상</td><td data-l="이유">130 이하에서는 300회 촉독만으로 점이 눌려 판독이 흐려졌다 (2차 개정 근거). 3차부터 그 하한을 0.35mm로 수치화했다</td></tr>
+            <tr><td data-l="항목">두께</td><td data-l="규격">0.20 mm ± 0.02</td><td data-l="이유">두꺼우면 점이 서지 않고, 얇으면 뒷면 점과 간섭한다</td></tr>
+            <tr><td data-l="항목">양면 인쇄</td><td data-l="규격">점간 어긋찍기</td><td data-l="이유">앞뒤 점이 겹치면 두 면 다 뭉갠다</td></tr>
+            <tr><td data-l="항목">제책</td><td data-l="규격">좌철 · 여백 22 mm</td><td data-l="이유">링 제책에서 마지막 칸이 걸린다는 현장 의견 (표 1)</td></tr>
+            <tr><td data-l="항목">한 권 면수</td><td data-l="규격">200 면 이하</td><td data-l="이유">그 이상은 펼침이 안 되고 무게가 손목에 온다</td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="3">점압 유지 기준 — 300회 촉독 후 점 높이 0.35mm 이상</td></tr></tfoot>
+        </table>
+      </div>
+
+      <div class="calc rise d2">
+        <p class="lbl" style="margin-bottom:var(--s3)">부피 환산 · 묵자 300쪽 기준</p>
+        <div><span>환산 계수</span><b>× 2.71</b></div>
+        <div><span>점자 면수</span><b>813 면</b></div>
+        <div><span>한 권 상한</span><b>200 면</b></div>
+        <div><span>권수</span><b>5 권 (마지막 권 13면)</b></div>
+        <p class="cap">300 × 2.71 = 813 · 813 ÷ 200 = 4.07 → 5권. 계수는 우리 점역 47종의 실측 평균이고 원자료는 부록 C에 있다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 7 · 용어 사전 (닫는 자리) ═══ -->
+<section class="gloss">
+  <div class="sheet">
+    <div class="colrules" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="g12">
+      <h2 class="rise">이 문서에 쓴 말</h2>
+      <p class="dek rise">규격서는 아는 사람끼리 쓰는 문서가 되기 쉽습니다. 여기 적힌 뜻으로만 읽어 주십시오. <b>가나다순</b>입니다.</p>
+
+      <dl class="rise d1">
+        <div><dt>묵자<small>墨字</small></dt><dd>잉크로 인쇄한 보통 글자. 점자와 구분하려고 쓰는 말이고, 낮잡는 뜻은 없다.</dd></div>
+        <div><dt>수표<small>數標</small></dt><dd>뒤따르는 칸이 숫자임을 알리는 표시. 이 표시가 빠지면 같은 점형이 글자로 읽힌다.</dd></div>
+        <div><dt>약자<small>略字</small></dt><dd>자주 나오는 글자를 한 칸으로 줄여 쓰는 규칙. 부피를 줄이지만 초보 독자에게는 어렵다.</dd></div>
+        <div><dt>점압<small>點壓</small></dt><dd>점이 눌려 낮아지는 정도. 반복해서 읽을수록 커지므로 상한이 아니라 <b>유지 하한</b>으로 관리한다.</dd></div>
+        <div><dt>점역<small>點譯</small></dt><dd>묵자로 된 글을 점자로 옮기는 일. 단순 치환이 아니라 약자·띄어쓰기 규칙을 다시 적용하는 편집 작업이다.</dd></div>
+        <div><dt>정간<small>井間</small></dt><dd>칸과 칸, 행과 행 사이의 빈 자리. 좁히면 면수가 줄지만 손끝이 칸을 구분하지 못한다.</dd></div>
+        <div><dt>촉독<small>觸讀</small></dt><dd>손끝으로 읽는 행위. 이 문서의 모든 판독률은 촉독 실측값이다.</dd></div>
+        <div><dt>칸<small>cell</small></dt><dd>여섯 점 한 묶음. 글자 하나에 해당하지만, 약자에서는 한 칸이 여러 글자를 맡기도 한다.</dd></div>
+      </dl>
+
+      <p class="tail rise d2">개정 4차는 2027년 2월에 냅니다. 그때까지 이 문서의 값은 바뀌지 않으며, 바꿀 일이 생기면 근거가 된 측정을 먼저 공개합니다.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft">
+    <span>여섯점 점역소 · 경기 수원시 팔달구 · 점역 의뢰와 규격 문의는 평일 10:00–17:00</span>
+    <span>KP-2026 개정 3차 · 2026년 2월 10일</span>
+    <span>차례 · <a href="#order">읽기 순서 검사</a></span>
+    <span>부록 A(도해 원본) · 부록 B(촉독 원자료) · 부록 C(부피 환산 실측)는 인쇄본에만 싣습니다</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  if('scrollRestoration' in history)history.scrollRestoration='manual';
+  (function(){var h=document.documentElement,p=h.style.scrollBehavior;h.style.scrollBehavior='auto';
+   scrollTo(0,0);addEventListener('load',function(){scrollTo(0,0);
+   setTimeout(function(){h.style.scrollBehavior=p},60)})})();
+
+  var CAPTURE=/[?&]capture=1/.test(location.search);
+  if(CAPTURE)document.documentElement.classList.add('capture');
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+  /* ── 리빌 (+ 로드 폴백) ── */
+  var rises=[].slice.call(document.querySelectorAll('.rise'));
+  if(reduce||!('IntersectionObserver' in window)){rises.forEach(function(e){e.classList.add('vis')})}
+  else{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})},
+      {rootMargin:'0px 0px -8% 0px',threshold:.05});
+    rises.forEach(function(e){io.observe(e)});
+    addEventListener('load',function(){rises.forEach(function(e){
+      if(e.getBoundingClientRect().top<innerHeight)e.classList.add('vis')})});
+  }
+
+  /* ── 읽기 순서 검사 ───────────────────────────────
+     기록 순서(DOM) 와 보이는 순서(좌표) 를 실제로 재서 비교한다. 값을 적어 두지 않는다. */
+  function visualOrder(blocks){
+    return blocks.map(function(el,i){
+      var r=el.getBoundingClientRect();
+      return {i:i, top:Math.round(r.top/8), left:Math.round(r.left)};
+    }).sort(function(a,b){ return a.top-b.top || a.left-b.left; }).map(function(o){return o.i});
+  }
+  function audit(pageId){
+    var blocks=[].slice.call(document.querySelectorAll('#'+pageId+' .blk'));
+    var vis=visualOrder(blocks);       // 보이는 순서대로 나열한 DOM 인덱스
+    var mis=0;
+    vis.forEach(function(domIdx,visPos){
+      var el=blocks[domIdx];
+      el.querySelector('.badge').textContent=String(domIdx+1);
+      var bad=(domIdx!==visPos);
+      el.classList.toggle('mis',bad);
+      el.setAttribute('aria-label',(domIdx+1)+'번째로 기록된 칸'+(bad?', 보이는 자리는 '+(visPos+1)+'번째 — 어긋남':''));
+      if(bad)mis++;
+    });
+    return mis;
+  }
+
+  var ro=document.getElementById('ro'), toggle=document.getElementById('toggle'),
+      ca=document.getElementById('ca'), cb=document.getElementById('cb'),
+      specs=document.querySelector('.specs');
+  var on=false;
+  function run(){
+    var a=audit('pa'), b=audit('pb');
+    ca.textContent=a; cb.textContent=b;
+    ro.innerHTML='견본 가 어긋난 곳 <b>'+a+'</b>곳 · 견본 나 어긋난 곳 <b class="bad">'+b+'</b>곳';
+    return {a:a,b:b};
+  }
+  if(CAPTURE)addEventListener('load',function(){setTimeout(function(){if(!on)toggle.click()},60)});
+  toggle.addEventListener('click',function(){
+    on=!on;
+    if(!on)turnedOffByHand=true;
+    specs.classList.toggle('on',on);
+    toggle.setAttribute('aria-pressed',String(on));
+    toggle.textContent=on?'읽기 순서 끄기':'읽기 순서 켜기';
+    if(on){run()}
+    else{ro.textContent='두 견본은 같은 여섯 조각으로 짰습니다. 배치만 다릅니다.'}
+  });
+  // 창을 줄이거나 배치를 바꾸면 다시 잰다
+  addEventListener('resize',function(){if(on)run()});
+  var pb=document.getElementById('pb');
+  document.querySelector('.seg').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-lay]');if(!b)return;
+    pb.dataset.lay=b.dataset.lay;
+    [].forEach.call(this.querySelectorAll('button'),function(x){
+      x.setAttribute('aria-pressed',String(x===b))});
+    if(!on){toggle.click()}else{run()}
+  });
+  // 견본 안에서 Tab 으로 들어오면 자동으로 켠다
+  // 손으로 끈 뒤에는 자동으로 켜지 않는다 — 사용자 의사를 뒤집으면 안 된다
+  var turnedOffByHand=false;
+  specs.addEventListener('focusin',function(){
+    if(!on && !turnedOffByHand){toggle.click()}
+  });
+
+  /* ── 이 문서 자신에 같은 검사를 돌린다 ──
+     초점 이동 대상만 세면 링크가 적은 문서에서는 두세 개뿐이라 검사가 공허해진다.
+     읽기 단위(제목·본문·표·도해·목록) 전체를 재는 것이 「읽기 순서」의 본뜻에 가깝다. */
+  addEventListener('load',function(){
+    var self=document.getElementById('self');
+    var f=[].slice.call(document.querySelectorAll('.g12 > *'))
+            .filter(function(el){return el.offsetParent!==null});
+    var vis=visualOrder(f), mis=0;
+    vis.forEach(function(d,v){ if(d!==v)mis++; });
+    self.innerHTML='이 문서 자신을 같은 방법으로 재면 읽기 단위 <b>'+f.length+
+      '</b>개 중 배치와 기록이 어긋난 곳 <b'+(mis?' class="bad"':'')+'>'+mis+'</b>곳입니다.'+
+      (mis? ' 고쳐야 할 자리가 남아 있다는 뜻입니다.' : ' 규격을 쓴 쪽이 먼저 지켜야 하기 때문입니다.');
+  });
+})();
+</script>
+</body></html>

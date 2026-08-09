@@ -86,6 +86,8 @@ for f in templates/run-*.html; do echo "=== $(basename $f)"; \
 
 **통과 조건 6개 — 하나라도 걸리면 되돌아가 다시 짠다** (근거·전체 목록은 구성 대장):
 
+0. **배정된 AD가 지난번에 무엇을 했는지 구성 대장 §3.5에서 먼저 본다** — 바탕색·포인트색·범주·시그니처를
+   그대로 반복하지 않는다. RUN25와 RUN31이 둘 다 AD-1인데 크림 지면 + 괘선 + 표 3개 + 공공 문서로 겹쳤다
 1. 닫는 방식이 **CTA 밴드 · 뉴스레터 · 문의/예약/주문 폼**이 아니다 (이 셋은 28장 중 21장이 써서 소진)
 2. 꼬리 3섹션의 역할 조합이 직전 3개 RUN 중 어느 것과도 일치하지 않는다
 3. 직전 3개 RUN과 연속 일치한 시퀀스 구간이 2개 이하다
@@ -177,7 +179,7 @@ node scripts/shoot.mjs run-NN-slug --capture           # 세 폭 전체 캡처 �
 ## 참조
 
 - `references/composition.md` — **구성 대장.** 5단계 관문의 근거. RUN 끝나면 갱신할 것
-- `references/spec.md` — 산출물 규격 · 반드시 지킬 함정 15종
+- `references/spec.md` — 산출물 규격 · 반드시 지킬 함정 20종
 - `references/scoring.md` — 8기준 채점 세부 기준
 - `art-directors.md` · `EVOLUTION.md` · `design-automation-workflow.md` (저장소 루트)
 - `taste` · `animate` — 이 저장소의 다른 스킬. 3·5·6·8단계에서 발동한다

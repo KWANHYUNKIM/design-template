@@ -71,10 +71,11 @@ sup{font-size:var(--t-xs);line-height:0}
 .notes li.lit{background:var(--lit);color:var(--body)}
 .notes ol{margin:0;padding-left:1.5em}
 
-/* 리빌 */
-.rise{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
-.rise.vis{opacity:1;transform:none}
-.d1{transition-delay:.09s}.d2{transition-delay:.18s}
+/* 리빌 — 기본은 보이는 상태. JS 가 붙었을 때만 숨겼다 띄운다.
+   .rise{opacity:0} 을 그냥 두면 스크립트가 꺼진 브라우저에서 지면이 백지가 된다 (RUN31 크리틱) */
+.js .rise{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
+.js .rise.vis{opacity:1;transform:none}
+.js .d1{transition-delay:.09s}.js .d2{transition-delay:.18s}
 
 /* ═══════════════ 1 · 표제면 — 촘촘 ═══════════════ */
 .plate{padding-top:var(--s7);padding-bottom:var(--s8);background:var(--paper)}
@@ -292,10 +293,11 @@ footer{border-top:1px solid var(--rule2);background:var(--paper2);
   .rise{opacity:1;transform:none;transition:none}
   .cloth,.dye,.notes li{transition:none}
 }
-.capture .rise{opacity:1!important;transform:none!important;transition:none!important}
+.capture .rise,.capture .js .rise{opacity:1!important;transform:none!important;transition:none!important}
 .capture .field figure{position:static}
 .capture .cloth{transition:none}
 </style>
+<script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 <!-- 스민 염색 원부 · 제7호 -->
