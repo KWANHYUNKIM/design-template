@@ -92,8 +92,57 @@ footer{margin:50px 0 40px;text-align:center;font-size:12px;color:var(--mut);font
 </div>
 </section>
 
-<div class="sec-h"><h2>실행 기록</h2><span class="c">23 runs</span><span class="line"></span></div>
+<div class="sec-h"><h2>실행 기록</h2><span class="c">25 runs</span><span class="line"></span></div>
 
+
+<!-- ── RUN 25 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 25</span><span class="name">밤길 BAMGIL · 심야 버스 운행 안내 (신규 방향 · AD-1 한서린)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#8c2d52;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">28/40</b>2026-08-08</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:#eceae4;display:flex;align-items:center;justify-content:center"><span class="cap" style="color:#16181a;font-weight:900;font-size:28px;letter-spacing:-1px">밤길<i style="font-style:normal;color:#8c2d52">·</i></span></div>
+    <p class="why"><b>아카이타입 = 시행 공고 / 운행 안내 문서.</b> "막차를 놓친 뒤에 보는 시각표는 늦습니다" — 히어로→기능→CTA 틀이 아니라 <b>관보(官報) 형식</b>을 웹으로 옮겼다. 큰 클로징 CTA 없이 발신·문의 콜로폰으로 닫는다.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6"><b>아트디렉터 AD-1 한서린(스위스 그리드파)</b> 배정. 지면 맨 위 <b>12칼럼 눈금</b>과 2px 잉크 괘선으로 격자를 드러냄 · 좌측정렬 고정 · 타입 5단계 · 종이+잉크+<span class="sw"><i style="background:#8c2d52"></i>플럼</span> 1색, 그라디언트 0 · <code>tabular-nums</code> · 표는 진짜 <code>&lt;table&gt;</code>.</div>
+    <div class="kw"><span>운행 안내 문서</span><span>12칼럼 눈금</span><span>노선도 노드 클릭</span><span>표는 표답게</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 독립 크리틱 → 28/40 (챔피언 37 미달)</p>
+      <ul>
+        <li><b>디렉터 제도 첫 성과</b> — don't 4종(라운드 12px 초과·box-shadow로 띄우기·풀블리드 사진 위 큰 흰 글씨·그레인) <b>무위반</b>. 크리틱이 결과물만 보고 AD-1을 지목함(수렴 실패 아님)</li>
+        <li><b>발명 수치의 상호 정합 최고 수준</b> — <code>first + headway×n = last</code>가 세 노선 모두 정확히 떨어져 11·9·6회, 25정류장 = 9+8+8, 노선도와 시각표가 같은 데이터원</li>
+        <li><b>인터랙션의 "종류"를 또 바꿨다</b> — 칩+슬라이더도 시간 스크럽도 아닌 <b>다이어그램 노드 클릭으로 표의 기준점을 재설정</b>. 정류장을 누르면 시각표가 그 자리 기준으로 재정렬되고 상단 4칸이 재계산됨</li>
+        <li>결함 10종 수정완료: 고정 viewBox가 노선도 글자를 <b>390px에서 3.7px / 820px에서 31.5px</b>로 왜곡 · 인라인 <code>grid-column:1/13</code>이 6칼럼 폴드를 무효화(스탯 4칸이 한 줄에 58px) · <code>&lt;figure&gt;</code> UA 마진 40px이 도판을 격자 밖으로 · <code>--mut</code>가 줄무늬 행 위 4.22:1 AA 미달 + 주석값 오류 · 클릭 타깃 10px·데드존 · Enter 후 포커스 소실 · capture가 lazy 이미지를 안 풂 · 푸터 "시각표" 링크가 노선도로 · "비고" 열 전 행 공백 · 낮 시간대 상태 부재</li>
+        <li>사진 3장 중 <b>2장 교체</b> — 캡션은 "저상 대형 시내버스"인데 눈 덮인 산악 관광버스, "간선 구간"인데 뉴욕 금융가였다(RUN21 재발). 컨택트시트로 눈으로 확인해 교체</li>
+        <li class="todo"><b>베이스 28에서 또 새 아카이타입을 세운 것이 패착</b> — RUN23이 이미 "리믹스 대상은 총점이 높은 것"이라 결론냈다. 남은 약점 컬러 3·임팩트 3은 AD-1 브리프와 정면으로 싸우므로, RUN 26은 <b>KELVIN(37) 골격 위에서 완성도·설득력만</b> 노릴 것</li>
+      </ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 진화 루프 · 채점됨</span><a class="btn" href="templates/run-25-bamgil.html">랜딩 열기 →</a><span class="path">templates/run-25-bamgil.html</span></div>
+  </div>
+</div>
+</article>
+
+<!-- ── RUN 24 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 24</span><span class="name">GLEAN 아카이브 no.04 · 전시 기록 (챔피언 리믹스)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#e8e8e8;color:#666;padding:3px 9px;border-radius:6px;font-size:11px">미채점</b>2026-08-08</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:linear-gradient(160deg,#3a2b22,#171110);display:flex;align-items:center;justify-content:center"><span class="cap" style="color:#d8d2c8;font-weight:900;font-size:24px;letter-spacing:2px">GLEAN</span></div>
+    <p class="why"><b>아카이타입 = 룩북 / 전시 아카이브.</b> 도록을 웹으로 옮긴 형식. 폐 스테인리스 숟가락 수백 개를 격자로 박은 벽 패널을 소재로 삼았다.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6"><b>리믹스</b>: RUN16 KELVIN의 가로 사진 스크럽을 <b>「전시실 걷기」 워크스루</b>로 표현 교체(전시실 4개가 깊이 크로스페이드). 포인트가 색이 아니라 <b>스틸 스페큘러</b>. ★인터랙션 = 조명을 드래그하면 숟가락 패널의 하이라이트가 실제로 따라 움직임.</div>
+    <div class="kw"><span>전시 아카이브</span><span>세리프 조판</span><span>조명 드래그</span><span>스페큘러</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 상태</p>
+      <ul><li class="todo"><b>독립 크리틱 미실시</b> — 브라우저 검증만 통과한 상태로 갤러리에 올라갔다. 점수 귀속 없음</li></ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 진화 루프 · 검증됨</span><a class="btn" href="templates/run-24-glean.html">랜딩 열기 →</a><span class="path">templates/run-24-glean.html</span></div>
+  </div>
+</div>
+</article>
 
 <!-- ── RUN 23 ─────────────────────────────────────────────── -->
 <article class="run">

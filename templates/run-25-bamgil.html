@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>밤길 — 심야 버스 운행 안내 · 2026년 8월 시행</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+/* ─────────────────────────────────────────────────────────────────────────
+   RUN 25 · 밤길 — 심야 버스 운행 안내
+   아트디렉터: AD-1 한서린 (스위스 그리드파)
+     do    : 12칼럼 격자를 눈에 보이게 · 좌측정렬 고정 · 타입 4~5단계 ·
+             잉크+종이+포인트 1색 · tabular-nums · 표는 표답게
+     don't : 라운드 12px 초과(알약 버튼 금지) · box-shadow로 띄우기 ·
+             풀블리드 사진 위 큰 흰 글씨 · 그레인/노이즈
+   인터랙션 종류: 슬라이더 드래그가 아니라 **노선도 정류장 노드 클릭** →
+     기준 정류장이 바뀌고 시각표가 재정렬되며 남은 시간이 재계산된다.
+   ───────────────────────────────────────────────────────────────────────── */
+:root{
+--sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+/* 로드하지 않는 폰트를 이름으로 적으면 내 맥에서만 보인다.
+   실제로 어디서나 잡히는 시스템 모노만 남긴다 */
+--mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+
+/* 종이 + 잉크 + 포인트 1색. 그라디언트 없음
+   대비비는 실제로 깔리는 배경 3종(paper·paper2 줄무늬·kw 포인트틴트) 위에서 전부 실측 */
+--paper:#eceae4;        /* 지면 — 순백 금지 */
+--paper2:#e8e5de;       /* 표 줄무늬 */
+--kwbg:#f3e3ea;         /* 포인트 배경 틴트(선택 행) */
+--ink:#16181a;          /* 본문   — paper 14.80 / paper2 14.15 / kw 14.40 */
+--body:#3f4448;         /* 보조   — paper  8.19 / paper2  7.83 / kw  7.97 */
+--mut:#575d62;          /* 캡션·메타 — paper 5.55 / paper2 5.31 / kw 5.40. 12px에도 AA */
+--rule:#c3bfb5;         /* 괘선 — 격자를 드러내는 주역 */
+--rule2:#a9a49a;        /* 굵은 괘선 */
+--k:#8c2d52;            /* 포인트 1색(플럼) — paper 6.68 / paper2 6.39 / kw 6.50 */
+
+/* 타입 스케일 — 한서린 규율상 4~5단계만 쓴다. 위계는 웨이트와 여백으로 만든다 */
+--t-xs:12px;--t-sm:14px;--t-base:16px;--t-xl:31px;--t-3xl:clamp(34px,7.4vw,49px);
+/* 간격 스케일 — 4배수 */
+--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:40px;--s8:56px;--s9:80px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);background:var(--paper);color:var(--ink);
+ -webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden;
+ word-break:keep-all;overflow-wrap:break-word}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer}
+.num{font-variant-numeric:tabular-nums}
+
+/* 12칼럼 격자 — 숨기지 않고 드러낸다 */
+.wrap{max-width:1180px;margin:0 auto;padding-left:var(--s5);padding-right:var(--s5)}
+.g12{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s5)}
+.g12>*{min-width:0}
+.rule{border-top:1px solid var(--rule)}
+.rule-hd{border-top:2px solid var(--ink)}
+.lbl{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+
+.rise{opacity:0;transform:translateY(14px);transition:.55s cubic-bezier(.2,.7,.2,1)}
+.rise.vis{opacity:1;transform:none}
+
+/* ── 마스트헤드 ── */
+.mast{border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:40;background:var(--paper)}
+.mast .in{max-width:1180px;margin:0 auto;padding:var(--s3) var(--s5);
+ display:flex;align-items:baseline;gap:var(--s5);flex-wrap:wrap}
+.mast .nm{font-size:var(--t-base);font-weight:900;letter-spacing:-.02em}
+.mast .nm i{font-style:normal;color:var(--k)}
+.mast .meta{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.04em}
+.mast .sp{flex:1}
+
+/* ── 칼럼 눈금 — 격자를 숨기지 않고 지면 맨 위에 한 번 드러낸다 ── */
+.ruler{padding-top:var(--s4)}
+.ruler i{display:block;height:11px;border-left:1px solid var(--rule)}
+.ruler i:last-child{box-shadow:inset -1px 0 0 var(--rule)}
+
+/* ── 표제부 ── */
+.head{padding-top:var(--s6);padding-bottom:var(--s7)}
+.head h1{grid-column:1/9;font-size:var(--t-3xl);font-weight:900;letter-spacing:-.04em;
+ line-height:1.1;margin:var(--s3) 0 0}
+.head h1 em{font-style:normal;color:var(--k)}
+.head .sub{grid-column:1/8;font-size:var(--t-base);color:var(--body);margin:var(--s5) 0 0}
+.head .doc{grid-column:10/13;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);
+ line-height:2;border-left:1px solid var(--rule);padding-left:var(--s4);margin-top:var(--s3)}
+.head .doc b{color:var(--ink);font-weight:700}
+
+/* ── 지금 상태 ── */
+.now{padding-top:var(--s6);padding-bottom:var(--s7)}
+.now .cell{grid-column:span 3;border-left:1px solid var(--rule);padding-left:var(--s4)}
+.now .cell:first-child{border-left:0;padding-left:0}
+.now .v{font-size:var(--t-xl);font-weight:900;letter-spacing:-.03em;line-height:1.1;
+ margin-top:var(--s2);white-space:nowrap}
+/* 단위·보조값은 아래 줄로 내린다 — 한 줄에 붙이면 좁은 칸에서 nowrap이 넘친다 */
+.now .v .u{display:block;font-size:var(--t-sm);font-weight:600;color:var(--body);margin-top:var(--s1)}
+.now .v.hot{color:var(--k)}
+/* 이 칸만 숫자가 아니라 이름이다 — 같은 31px로 두면 정류장명이 길 때 넘친다 */
+.now .v.nm{font-size:var(--t-base);white-space:normal;line-height:1.4}
+.now .svc{grid-column:1/-1;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);
+ margin:var(--s5) 0 0;border-top:1px solid var(--rule);padding-top:var(--s3)}
+.now .svc b{color:var(--k);font-weight:700}
+
+/* ── ★ 노선도 ── */
+.map{padding-top:var(--s7);padding-bottom:var(--s7)}
+.map h2{grid-column:1/8;font-size:var(--t-xl);font-weight:900;letter-spacing:-.03em;margin:var(--s3) 0 0}
+.map .hint{grid-column:9/13;font-size:var(--t-sm);color:var(--body);margin-top:var(--s4)}
+.mapbox{grid-column:1/-1;margin-top:var(--s5);border-top:2px solid var(--ink);
+ border-bottom:1px solid var(--rule);padding:var(--s6) 0}
+.lines{display:flex;gap:var(--s2);flex-wrap:wrap;margin-bottom:var(--s5)}
+.lines button{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.06em;
+ padding:7px 13px;border:1px solid var(--rule2);border-radius:2px;color:var(--body);transition:.15s}
+.lines button:hover{border-color:var(--ink);color:var(--ink)}
+.lines button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--paper);font-weight:700}
+.lines button:focus-visible{outline:2px solid var(--k);outline-offset:2px}
+svg.route{display:block;width:100%;height:auto}
+svg.route text{font-family:var(--mono);font-variant-numeric:tabular-nums}
+svg.route .stop{cursor:pointer}
+svg.route .stop circle{transition:.15s}
+svg.route .stop:hover circle{r:8}
+svg.route .stop:focus-visible{outline:2px solid var(--k);outline-offset:2px}
+.picked{margin-top:var(--s5);border-top:1px solid var(--rule);padding-top:var(--s4);
+ display:flex;gap:var(--s5);flex-wrap:wrap;align-items:baseline}
+.picked .t{font-size:var(--t-base);font-weight:800}
+.picked .d{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut)}
+
+/* ── 시각표 : 표는 표답게 ── */
+.sched{padding-top:var(--s7);padding-bottom:var(--s8)}
+.sched h2{grid-column:1/8;font-size:var(--t-xl);font-weight:900;letter-spacing:-.03em;margin:var(--s3) 0 0}
+.sched .tbl{grid-column:1/-1;margin-top:var(--s5)}
+table{width:100%;border-collapse:collapse;font-size:var(--t-sm)}
+caption{text-align:left;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);
+ padding-bottom:var(--s3);letter-spacing:.04em}
+th{text-align:left;font-family:var(--mono);font-size:var(--t-xs);font-weight:700;
+ letter-spacing:.08em;text-transform:uppercase;color:var(--mut);
+ border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:var(--s3) var(--s3) var(--s3) 0}
+td{border-bottom:1px solid var(--rule);padding:var(--s3) var(--s3) var(--s3) 0;vertical-align:baseline}
+tbody tr:nth-child(even){background:var(--paper2)}
+td.t{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.t b{color:var(--k);font-weight:700}
+td.last{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--mut);white-space:nowrap}
+td.rem{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--body);white-space:nowrap}
+td.rem b{color:var(--k);font-weight:700}
+tr.gone td{color:var(--mut)}
+tr.gone td.t b{color:var(--mut)}
+tr.gone td.rem b{color:var(--mut)}
+.tnote{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s4)}
+
+/* ── 요금 ── */
+.fare{padding-top:var(--s7);padding-bottom:var(--s8);border-top:1px solid var(--rule)}
+.fare h2{grid-column:1/8;font-size:var(--t-xl);font-weight:900;letter-spacing:-.03em;margin:var(--s3) 0 0}
+.fare .tbl{grid-column:1/9;margin-top:var(--s5)}
+.fare .side{grid-column:10/13;margin-top:var(--s8);border-left:1px solid var(--rule);padding-left:var(--s4)}
+.fare .side p{font-size:var(--t-sm);color:var(--body);margin:0 0 var(--s3)}
+.fare .side b{color:var(--ink)}
+
+/* ── 사진: 격자 칸 안에, 캡션과 함께 (풀블리드 + 큰 흰 글씨 금지) ── */
+.plates{padding-top:var(--s7);padding-bottom:var(--s8);border-top:1px solid var(--rule)}
+.plates h2{grid-column:1/8;font-size:var(--t-xl);font-weight:900;letter-spacing:-.03em;margin:var(--s3) 0 0}
+/* 첫 도판의 시작 칼럼을 고정해야 h2 뒤 빈칸으로 자동배치되지 않는다 (셋이 한 행에 4-4-4) */
+/* figure의 UA 기본 margin(1em 40px)을 지우지 않으면 도판이 칼럼에서 40px 밀려난다 */
+.plate{grid-column:span 4;margin:var(--s5) 0 0}
+.plate:first-of-type{grid-column:1/5}
+.plate .fr{border:1px solid var(--rule2);background:var(--paper2);aspect-ratio:4/3;overflow:hidden}
+.plate img{width:100%;height:100%;object-fit:cover;filter:grayscale(.28) contrast(1.04)}
+.plate figcaption{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);
+ margin-top:var(--s3);line-height:1.7;border-top:1px solid var(--rule);padding-top:var(--s2)}
+.plate figcaption b{color:var(--ink);font-weight:700;display:block}
+
+/* ── 근거 ── */
+.src{padding-top:var(--s7);padding-bottom:var(--s9);border-top:1px solid var(--rule)}
+.src h2{grid-column:1/8;font-size:var(--t-xl);font-weight:900;letter-spacing:-.03em;margin:var(--s3) 0 0}
+.src .lead{grid-column:1/8;font-size:var(--t-sm);color:var(--body);margin:var(--s4) 0 0}
+.src .tbl{grid-column:1/9;margin-top:var(--s6)}
+.src .side{grid-column:10/13;margin-top:var(--s7);border-left:1px solid var(--rule);padding-left:var(--s4)}
+.src .side p{font-size:var(--t-sm);color:var(--body);margin:0 0 var(--s3)}
+.src .side b{color:var(--ink)}
+.fine{color:var(--mut)}
+
+/* ── 안내 ── */
+.notes{padding-top:var(--s7);padding-bottom:var(--s8);border-top:1px solid var(--rule)}
+.notes h2{grid-column:1/8;font-size:var(--t-xl);font-weight:900;letter-spacing:-.03em;margin:var(--s3) 0 0}
+.notes ol{grid-column:1/-1;list-style:none;counter-reset:n;padding:0;margin:var(--s5) 0 0}
+.notes li{counter-increment:n;display:grid;grid-template-columns:minmax(max-content,auto) 1fr;
+ gap:var(--s4);border-top:1px solid var(--rule);padding:var(--s4) 0;font-size:var(--t-sm);color:var(--body)}
+.notes li>*{min-width:0}
+.notes li:before{content:counter(n,decimal-leading-zero);font-family:var(--mono);
+ font-size:var(--t-xs);color:var(--k);padding-top:3px}
+.notes li b{color:var(--ink)}
+
+/* ── 발신 ── */
+.foot{padding-top:var(--s7);padding-bottom:var(--s9);border-top:2px solid var(--ink)}
+.foot .c1{grid-column:1/6;font-size:var(--t-sm);color:var(--body)}
+.foot .c2{grid-column:7/10;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);line-height:2}
+.foot .c3{grid-column:10/13;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);line-height:2}
+.foot .c1 p.body{margin:0}
+.foot .btn{display:table;margin-top:var(--s5);background:var(--ink);color:var(--paper);
+ font-size:var(--t-sm);font-weight:700;padding:12px 22px;border-radius:2px;transition:.15s}
+.foot .btn:hover{background:var(--k)}
+.foot a:hover{color:var(--k)}
+
+/* ── 좁은 화면: 12칼럼을 접는다 ── */
+@media(max-width:900px){
+ .g12{grid-template-columns:repeat(6,1fr);gap:var(--s4)}
+ .head h1,.head .sub,.map h2,.map .hint,.sched h2,.fare h2,.plates h2,.notes h2,
+ .src h2,.src .lead{grid-column:1/7}
+ .src .tbl{grid-column:1/7}
+ .src .side{grid-column:1/7;border-left:0;border-top:1px solid var(--rule);
+  padding-left:0;padding-top:var(--s4);margin-top:var(--s5)}
+ .head .doc{grid-column:1/7;border-left:0;border-top:1px solid var(--rule);
+  padding-left:0;padding-top:var(--s3);margin-top:var(--s5)}
+ .now .cell{grid-column:span 3;border-left:0;padding-left:0;
+  border-top:1px solid var(--rule);padding-top:var(--s3);margin-top:var(--s3)}
+ .now .cell:first-child{border-top:1px solid var(--rule)}
+ .fare .tbl{grid-column:1/7}
+ .fare .side{grid-column:1/7;border-left:0;border-top:1px solid var(--rule);
+  padding-left:0;padding-top:var(--s4);margin-top:var(--s5)}
+ .plate,.plate:first-of-type{grid-column:1/7}
+ /* 격자가 6칼럼으로 접히므로 눈금도 6개만 — 12개면 두 줄로 깨져 노이즈가 된다.
+    12번째에 걸어둔 마감선도 6번째로 옮겨야 격자가 닫힌다 */
+ .ruler i:nth-child(n+7){display:none}
+ .ruler i:nth-child(6){box-shadow:inset -1px 0 0 var(--rule)}
+ .foot .c1,.foot .c2,.foot .c3{grid-column:1/7}
+ .foot .c2,.foot .c3{margin-top:var(--s4)}
+ /* 표는 가로 스크롤로 — 표답게 두되 잘리지 않게 */
+ .tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+ table{min-width:480px}
+}
+/* 아주 좁은 폭: 시각표의 결론인 「지금부터」가 가로 스크롤 밖으로 밀려나면 안 된다.
+   종점 도착은 접고 표를 화면 안에 넣는다 */
+@media(max-width:560px){
+ table{min-width:0}
+ #schedTbl col:nth-child(1){width:16%}
+ #schedTbl col:nth-child(2){width:32%}
+ #schedTbl col:nth-child(3),#schedTbl th:nth-child(3),#schedTbl td:nth-child(3){display:none}
+ #schedTbl col:nth-child(4){width:52%}
+ /* 요금표는 4열을 유지하되 환승 설명이 줄바꿈되도록 둔다 — 가로 스크롤 뒤에 숨으면 안 읽힌다 */
+ #fareTbl td:last-child,#fareTbl th:last-child{padding-left:0}
+}
+@media(prefers-reduced-motion:reduce){
+ .rise{opacity:1;transform:none;transition:none}
+ svg.route .stop circle{transition:none}
+}
+/* 캡처 모드 (?capture=1) — 디자인 툴 반출용 정적 스냅샷 */
+html.capture .rise{opacity:1;transform:none;transition:none}
+html.capture .mast{position:static}
+</style></head><body>
+
+<div class="mast">
+  <div class="in">
+    <span class="nm">밤길<i>·</i></span>
+    <span class="meta">심야버스 운행 안내</span>
+    <span class="sp"></span>
+    <span class="meta">시행 <b>2026.08.01</b> · 개정 2회 · 기준시각 <span class="num" id="nowclock">—</span></span>
+  </div>
+</div>
+
+<div class="wrap ruler" aria-hidden="true"><div class="g12">
+  <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+</div></div>
+
+<!-- 표제부 -->
+<section class="head wrap">
+  <div class="g12">
+    <div style="grid-column:1/-1"><p class="lbl rise">운행 안내 · 2026년 8월 시행분</p></div>
+    <h1 class="rise">막차를 놓친 뒤에<br>보는 시각표는 <em>늦습니다</em>.</h1>
+    <p class="sub rise">밤길은 노선과 시각만 적어 둔 표가 아닙니다. 지금 서 있는 정류장을 고르면 그 자리 기준으로 표가 다시 정렬되고, 이미 지나간 차는 흐려집니다. 남은 것만 보이도록.</p>
+    <div class="doc rise">
+      문서 <b>BG-2026-08</b><br>
+      운행 <b>3개 노선 · 25정류장</b><br>
+      출발 <b>23:40 — 03:50</b><br>
+      배차 <b>25 — 40분</b>
+    </div>
+  </div>
+</section>
+
+<!-- 지금 상태 -->
+<section class="now wrap">
+  <div class="g12">
+    <div style="grid-column:1/-1" class="rule-hd" aria-hidden="true"></div>
+    <div class="cell rise"><div class="lbl">기준 정류장</div><div class="v nm" id="nStop">—</div></div>
+    <div class="cell rise"><div class="lbl" id="lbNext">다음 차</div><div class="v num" id="nNext">—</div></div>
+    <div class="cell rise"><div class="lbl" id="lbLast">막차까지</div><div class="v num" id="nLast">—</div></div>
+    <div class="cell rise"><div class="lbl" id="lbLeft">오늘 남은 차</div><div class="v num" id="nLeft">—</div></div>
+    <p class="svc rise" id="svcNote">—</p>
+  </div>
+</section>
+
+<!-- ★ 노선도 -->
+<section class="map wrap" id="map">
+  <div class="g12">
+    <h2 class="rise">노선도</h2>
+    <p class="hint rise">정류장을 <b>누르면</b> 그 자리 기준으로 아래 시각표가 다시 정렬되고, 위 숫자가 다시 계산됩니다.</p>
+    <div class="mapbox rise">
+      <div class="lines" id="lines" role="group" aria-label="노선 선택"></div>
+      <svg class="route" id="route" viewBox="0 0 1140 180" role="img" aria-label="심야버스 노선도">
+        <g id="routeG"></g>
+      </svg>
+      <div class="picked">
+        <span class="t" id="pickTitle">—</span>
+        <span class="d" id="pickDesc">—</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 시각표 -->
+<section class="sched wrap" id="sched">
+  <div class="g12">
+    <h2 class="rise">시각표</h2>
+    <div class="tbl rise">
+      <div class="tblwrap">
+        <table id="schedTbl">
+          <caption id="schedCap">—</caption>
+          <colgroup><col style="width:12%"><col style="width:26%"><col style="width:26%"><col style="width:36%"></colgroup>
+          <thead><tr><th scope="col">회차</th><th scope="col">기준 정류장 도착</th><th scope="col">종점 도착</th><th scope="col">지금부터</th></tr></thead>
+          <tbody id="schedBody"></tbody>
+        </table>
+      </div>
+      <p class="tnote">도착 시각은 평일 기준 추정치입니다. 도로 사정에 따라 최대 10분 차이가 날 수 있습니다. 지나간 회차는 흐리게 표시합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 요금 -->
+<section class="fare wrap">
+  <div class="g12">
+    <h2 class="rise">요금과 환승</h2>
+    <div class="tbl rise">
+      <div class="tblwrap">
+        <table id="fareTbl">
+          <caption>2026.08.01 시행 · 카드 기준</caption>
+          <thead><tr><th scope="col">구분</th><th scope="col">카드</th><th scope="col">현금</th><th scope="col">환승</th></tr></thead>
+          <tbody>
+            <tr><td>일반</td><td class="t">1,500원</td><td class="t">1,600원</td><td>지하철 30분 이내 1회</td></tr>
+            <tr><td>청소년</td><td class="t">950원</td><td class="t">1,050원</td><td>동일</td></tr>
+            <tr><td>어린이</td><td class="t">550원</td><td class="t">650원</td><td>동일</td></tr>
+            <tr><td>심야 할증</td><td class="t">없음</td><td class="t">없음</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="side rise">
+      <p><b>할증이 없습니다.</b> 심야 운행이지만 주간과 같은 요금을 받습니다.</p>
+      <p>지하철 환승은 하차 후 <b>30분 이내 1회</b>입니다. 04시 이후에는 첫차와 겹치므로 환승 처리가 자동으로 이어집니다.</p>
+      <p>현금 승차 시 거스름돈을 드리지 않습니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 사진 -->
+<section class="plates wrap">
+  <div class="g12">
+    <h2 class="rise">운행 구간</h2>
+    <figure class="plate rise">
+      <div class="fr"><img src="https://images.unsplash.com/photo-1769368959365-7c28d4c1cc90?w=900&q=80&auto=format&fit=crop" alt="밤 도심 도로를 달리는 시내버스의 측면" loading="lazy" onerror="this.style.display='none';this.parentNode.style.background='#d6d2c8'"></div>
+      <figcaption><b>차량</b>저상 대형 1종 · 좌석 25석 · 전 노선 동일 차종. 심야에는 실내 조명을 한 단계 낮춰 운행합니다.</figcaption>
+    </figure>
+    <figure class="plate rise">
+      <div class="fr"><img src="https://images.unsplash.com/photo-1517154421773-0529f29ea451?w=900&q=80&auto=format&fit=crop" alt="간판 불이 켜진 밤거리" loading="lazy" onerror="this.style.display='none';this.parentNode.style.background='#d6d2c8'"></div>
+      <figcaption><b>N1 구간</b>번화가를 지나는 구간입니다. 23시 40분 첫차와 01시대 차량이 가장 붐빕니다.</figcaption>
+    </figure>
+    <figure class="plate rise">
+      <div class="fr"><img src="https://images.unsplash.com/photo-1600206085398-f6ede93b06f8?w=900&q=80&auto=format&fit=crop" alt="밤에 여러 대의 버스가 서 있는 정류장 승강장" loading="lazy" onerror="this.style.display='none';this.parentNode.style.background='#d6d2c8'"></div>
+      <figcaption><b>승강장</b>야간에 서는 정류장에는 노선번호판 아래에 스티커가 붙습니다. 이 표지가 없는 정류장은 통과합니다.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 근거 : 이 문서가 자기 목소리로만 말하지 않게 하는 자리 -->
+<section class="src wrap">
+  <div class="g12">
+    <h2 class="rise">이 안내의 근거</h2>
+    <p class="lead rise">아래 수치는 밤길 운수가 작성한 것이 아니라, 인가·정산·민원 기관이 각각 공표한 자료에서 옮긴 것입니다. 원자료는 정류장 게시판과 같은 회차분을 씁니다.</p>
+    <div class="tbl rise">
+      <div class="tblwrap">
+        <table id="srcTbl">
+          <caption>2026년 2분기 공표분 · 인용일 2026.08.01</caption>
+          <colgroup><col style="width:24%"><col style="width:40%"><col style="width:36%"></colgroup>
+          <thead><tr><th scope="col">항목</th><th scope="col">공표된 값</th><th scope="col">출처</th></tr></thead>
+          <tbody>
+            <tr><td>한정면허</td><td class="t">심야 시내버스 제2026-31호</td><td>시 교통국 심야교통과</td></tr>
+            <tr><td>정시율</td><td class="t">94.2% <span class="fine">(정시 = 예정 ±5분)</span></td><td>교통정보센터 월간 운행통계</td></tr>
+            <tr><td>1일 이용</td><td class="t">평균 4,180명</td><td>교통카드 정산원 집계</td></tr>
+            <tr><td>민원</td><td class="t">분기 37건 · 처리 37건</td><td>시 교통민원 공개자료</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="side rise">
+      <p><b>정시율은 도착 기준입니다.</b> 출발 지연은 세지 않습니다. 같은 기준으로 주간 간선버스는 89.7%입니다.</p>
+      <p>민원 37건 중 21건이 <b>“정류장을 지나쳤다”</b>였습니다. 그래서 야간 스티커 표지를 이번 개정에 넣었습니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 안내 -->
+<section class="notes wrap">
+  <div class="g12">
+    <h2 class="rise">타기 전에</h2>
+    <ol class="rise">
+      <li><div><b>정류장 표지에 야간 스티커가 붙어 있는 곳에서만</b> 섭니다. 주간 정류장 전부에 서지 않습니다.</div></li>
+      <li><div>하차 벨은 <b>한 정류장 앞에서</b> 눌러 주세요. 심야에는 정차하지 않고 지나는 구간이 있습니다.</div></li>
+      <li><div>차내에 <b>비상 통화 버튼</b>이 앞·뒤 두 곳에 있습니다. 기사와 관제실이 동시에 응답합니다.</div></li>
+      <li><div>03시 이후에는 <b>여성 안심 하차</b>가 적용됩니다. 정류장이 아닌 곳에서도 요청하면 세워 드립니다.</div></li>
+      <li><div>운행 중단은 기상 특보 발효 시에만 이뤄지며, <b>중단 30분 전</b>에 정류장 표지판과 앱에 동시에 표시됩니다.</div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- 발신 -->
+<section class="foot wrap">
+  <div class="g12">
+    <div class="c1">
+      <p class="lbl" style="margin:0 0 var(--s3)">문의</p>
+      <p class="body">막차 시각과 노선은 분기마다 조정됩니다. 변경 사항은 시행 2주 전에 정류장에 게시합니다.</p>
+      <a class="btn" href="#map">노선도 다시 보기</a>
+    </div>
+    <div class="c2">
+      운영 밤길 운수<br>
+      서울 성동구 성수이로 128<br>
+      대표번호 1666-0182 (24시간)
+    </div>
+    <div class="c3">
+      문서 BG-2026-08<br>
+      시행 2026.08.01<br>
+      <a href="#map">노선도</a> · <a href="#sched">시각표</a>
+    </div>
+  </div>
+</section>
+
+<script>
+/* 캡처 모드 */
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE){document.documentElement.classList.add('capture');
+  /* 리빌·sticky만 풀고 lazy를 두면 스크롤 없는 반출에서 사진이 빈 프레임으로 나간다 */
+  addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('img[loading=lazy]').forEach(function(i){i.loading='eager';i.src=i.src})});}
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+/* §D 스크롤복원 — smooth와 경합하지 않게 초기 리셋 동안만 auto */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){var h=document.documentElement,p=h.style.scrollBehavior;h.style.scrollBehavior='auto';
+ window.scrollTo(0,0);
+ addEventListener('load',function(){window.scrollTo(0,0);setTimeout(function(){h.style.scrollBehavior=p},60)});})();
+
+/* ── 노선 데이터 ────────────────────────────────────────────
+   출발 시각(분)과 정류장까지의 누적 소요(분). 표와 노선도가 같은 데이터를 쓴다. */
+var LINES=[
+ /* last = 실제 마지막 출발 시각. first + headway×n 으로 정확히 떨어지게 둔다 */
+ {id:'N1',name:'N1 · 강북 간선',first:23*60+40,last:27*60+50,headway:25,   /* 23:40 +25×10 = 03:50 */
+  stops:[['성수역',0],['왕십리',7],['동대문',15],['종로3가',22],['시청',28],['서대문',34],['신촌',42],['홍대입구',49],['합정',55]]},
+ {id:'N2',name:'N2 · 강남 순환',first:23*60+50,last:27*60+50,headway:30,   /* 23:50 +30×8  = 03:50 */
+  stops:[['강변역',0],['잠실',9],['삼성역',17],['선릉',23],['강남역',30],['교대',36],['사당',45],['신림',54]]},
+ {id:'N3',name:'N3 · 서남–도심',first:24*60+0,last:27*60+20,headway:40,    /* 00:00 +40×5  = 03:20 */
+  /* 신도림 → 대림 → 구로디지털 순서. 대림은 신도림과 구로디지털 사이에 있다 */
+  stops:[['영등포',0],['신도림',8],['대림',14],['구로디지털',20],['신대방',26],['보라매',33],['노량진',41],['용산',50]]}
+];
+/* 분 → 사람이 읽는 시간. 306분처럼 큰 분값을 그대로 내보내지 않는다 */
+function dur(m){var h=Math.floor(m/60),n=m%60;
+ return h?(h+'시간'+(n?' '+n+'분':'')):(n+'분')}
+var cur=0, pick=3;   /* 기본: N1 · 종로3가 */
+
+var fmt=function(m){m=((m%1440)+1440)%1440;var h=Math.floor(m/60),n=m%60;
+ return (h<10?'0':'')+h+':'+(n<10?'0':'')+n};
+
+/* 오늘 남은 회차 = first부터 last까지 headway 간격 */
+function departures(L){var out=[];for(var t=L.first;t<=L.last;t+=L.headway)out.push(t);return out}
+
+/* 현재 시각(심야 기준으로 환산 — 04시 이전이면 전날 24시 이후로 본다) */
+function nowMin(){var d=new Date(),m=d.getHours()*60+d.getMinutes();return m<5*60?m+1440:m}
+
+/* ── 노선도 그리기 ── */
+var routeG=document.getElementById('routeG'), routeSvg=document.getElementById('route');
+/* 좁은 폭에서 가로 노선도를 그대로 축소하면 viewBox 1140 → 327px, 13px 글자가 3.7px로
+   찌그러진다. 그래서 폭이 좁으면 노선도를 세로로 세운다. */
+/* 가로 배치는 정류장 한 칸이 최소 84px은 돼야 이름이 안 겹친다.
+   9정류장 × 84 + 좌우 여백 ≈ 800px 아래에서는 노선도를 세로로 세운다 */
+function isNarrow(){return innerWidth<800}
+
+var C={ink:'#16181a',paper:'#eceae4',body:'#3f4448',mut:'#575d62',k:'#8c2d52',kw:'#f3e3ea'};
+
+function drawRoute(){
+  var L=LINES[cur], n=L.stops.length, h='';
+  /* viewBox 폭을 컨테이너 실폭으로 잡아 스케일을 항상 1로 만든다.
+     고정 viewBox(360/1140)를 쓰면 폭에 따라 글자가 3.7px로 눌리거나 31px로 부푼다 */
+  var CW=Math.round(routeSvg.parentNode.clientWidth)||1140;
+  /* 세로 노선도는 넓은 칸에서 끝없이 늘어나면 안 읽힌다 — 지면 한 단 폭으로 묶는다 */
+  var VW=isNarrow()?Math.min(CW,520):CW;
+  routeSvg.style.maxWidth=isNarrow()?'520px':'none';
+  if(isNarrow()){
+    var gap=44, y0=26, x=26, H=y0+(n-1)*gap+26;
+    routeSvg.setAttribute('viewBox','0 0 '+VW+' '+H);
+    h='<line x1="'+x+'" y1="'+y0+'" x2="'+x+'" y2="'+(y0+(n-1)*gap)+'" stroke="'+C.ink+'" stroke-width="2"/>';
+    L.stops.forEach(function(s,i){
+      var y=y0+gap*i, on=(i===pick);
+      h+='<g class="stop" tabindex="0" role="button" data-i="'+i+'" aria-label="'+s[0]+' 정류장 선택">'
+        +'<rect x="0" y="'+(y-22)+'" width="'+VW+'" height="44" fill="'+(on?C.kw:'transparent')+'"/>'
+        +'<circle cx="'+x+'" cy="'+y+'" r="'+(on?8:5)+'" fill="'+(on?C.k:C.paper)+'" stroke="'+C.ink+'" stroke-width="2"/>'
+        +'<text x="52" y="'+(y+5)+'" font-size="15" fill="'+(on?C.k:C.body)+'" font-weight="'+(on?'700':'400')+'">'+s[0]+'</text>'
+        +'<text x="'+(VW-6)+'" y="'+(y+5)+'" text-anchor="end" font-size="13" fill="'+C.mut+'">+'+s[1]+'분</text>'
+        +'</g>';
+    });
+  }else{
+    var x0=30, x1=VW-30, yy=64, step=(x1-x0)/(n-1);
+    routeSvg.setAttribute('viewBox','0 0 '+VW+' 128');
+    h='<line x1="'+x0+'" y1="'+yy+'" x2="'+x1+'" y2="'+yy+'" stroke="'+C.ink+'" stroke-width="2"/>';
+    L.stops.forEach(function(s,i){
+      var xx=x0+step*i, on=(i===pick);
+      /* 원(지름 10~16)만으로는 클릭 타깃이 24px에 못 미친다 — 칸 전체를 히트 영역으로 깐다 */
+      h+='<g class="stop" tabindex="0" role="button" data-i="'+i+'" aria-label="'+s[0]+' 정류장 선택">'
+        +'<rect x="'+(xx-step/2)+'" y="0" width="'+step+'" height="128" fill="'+(on?C.kw:'transparent')+'"/>'
+        +'<circle cx="'+xx+'" cy="'+yy+'" r="'+(on?8:5)+'" fill="'+(on?C.k:C.paper)+'" stroke="'+C.ink+'" stroke-width="2"/>'
+        +'<text x="'+xx+'" y="'+(yy-20)+'" text-anchor="middle" font-size="14" '
+        +'fill="'+(on?C.k:C.body)+'" font-weight="'+(on?'700':'400')+'">'+s[0]+'</text>'
+        +'<text x="'+xx+'" y="'+(yy+30)+'" text-anchor="middle" font-size="12" fill="'+C.mut+'">+'+s[1]+'분</text>'
+        +'</g>';
+    });
+  }
+  routeG.innerHTML=h;
+  routeG.querySelectorAll('.stop').forEach(function(g){
+    var go=function(){pick=+g.dataset.i;drawRoute();paint();
+      /* innerHTML 교체로 포커스가 body로 떨어진다 — 새로 그린 같은 노드로 되돌린다 */
+      var back=routeG.querySelector('[data-i="'+pick+'"]'); if(back&&back.focus)back.focus({preventScroll:true})};
+    g.addEventListener('click',go);
+    g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}});
+  });
+}
+/* viewBox가 컨테이너 폭에 묶여 있으므로 폭이 바뀔 때마다 다시 그린다 (디바운스) */
+var rt;
+addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(drawRoute,120)});
+
+/* ── 노선 버튼 ── */
+var linesEl=document.getElementById('lines');
+LINES.forEach(function(L,i){
+  var b=document.createElement('button');
+  b.type='button'; b.textContent=L.name; b.setAttribute('aria-pressed', i===cur?'true':'false');
+  b.addEventListener('click',function(){
+    cur=i; pick=Math.min(pick,LINES[i].stops.length-1);
+    [].forEach.call(linesEl.children,function(c,j){c.setAttribute('aria-pressed', j===i?'true':'false')});
+    drawRoute(); paint();
+  });
+  linesEl.appendChild(b);
+});
+
+/* ── 시각표 + 상단 숫자 ── */
+function paint(){
+  var L=LINES[cur], st=L.stops[pick], offset=st[1], now=nowMin();
+  var deps=departures(L);
+  var arrivals=deps.map(function(d){return d+offset});
+  var endOffset=L.stops[L.stops.length-1][1];
+
+  document.getElementById('nStop').textContent=st[0];
+  var next=arrivals.filter(function(a){return a>=now})[0];
+  var left=arrivals.filter(function(a){return a>=now}).length;
+  var lastA=arrivals[arrivals.length-1];
+  /* 운행 시간(23:00~) 안인지. 밖이면 "몇 분 뒤"가 열 시간 넘는 숫자가 되어 무의미해진다 */
+  var live=(now>=23*60);
+
+  document.getElementById('lbNext').textContent = live?'다음 차':'오늘 밤 첫차';
+  document.getElementById('lbLast').textContent = live?'막차까지':'오늘 밤 막차';
+  document.getElementById('lbLeft').textContent = live?'오늘 남은 차':'오늘 밤 운행';
+
+  document.getElementById('nNext').innerHTML = next===undefined
+    ? '운행 종료<span class="u"></span>'
+    : fmt(next)+(live?'<span class="u">'+dur(next-now)+' 뒤</span>':'<span class="u">출발</span>');
+  var lastEl=document.getElementById('nLast');
+  if(lastA<now){ lastEl.innerHTML='지났습니다'; lastEl.classList.add('hot'); }
+  else { lastEl.innerHTML=fmt(lastA)+(live?'<span class="u">'+dur(lastA-now)+' 남음</span>':'<span class="u">도착</span>');
+         lastEl.classList.toggle('hot',live&&(lastA-now)<=40); }
+  document.getElementById('nLeft').innerHTML=left+'<span class="u">회</span>';
+
+  /* 운행 시간 밖에는 "지나간 차가 흐려진다"는 이 페이지의 주장이 화면에 안 나타난다.
+     그럴 땐 상태를 말로 명시한다 */
+  var firstA=arrivals[0];
+  document.getElementById('svcNote').innerHTML = live
+    ? '운행 중 · 기준시각 '+fmt(now)+' · 지나간 회차는 아래 표에서 흐리게 표시됩니다.'
+    : '지금은 운행 시간이 아닙니다. 아래 표는 <b>오늘 밤 '+fmt(firstA)+'</b>부터의 예정표입니다.';
+
+  document.getElementById('pickTitle').textContent=L.name+' · '+st[0];
+  document.getElementById('pickDesc').textContent = pick===0
+    ? '기점 · 종점까지 '+endOffset+'분'
+    : pick===L.stops.length-1
+      ? '종점 · 기점에서 '+offset+'분'
+      : '기점에서 +'+offset+'분 · 종점까지 '+(endOffset-offset)+'분';
+
+  document.getElementById('schedCap').textContent=L.name+' · 기준 정류장 「'+st[0]+'」 · 총 '+deps.length+'회 운행';
+  var rows='';
+  deps.forEach(function(d,i){
+    var a=d+offset, gone=a<now, isNext=(a===next);
+    rows+='<tr'+(gone?' class="gone"':'')+'>'
+      +'<td class="last">'+(i+1)+'회</td>'
+      +'<td class="t">'+(isNext?'<b>'+fmt(a)+'</b>':fmt(a))+'</td>'
+      +'<td class="last">'+fmt(d+endOffset)+'</td>'
+      /* 비고 칸을 비워 두면 표의 1/4이 죽는다 — 회차마다 지금 기준 남은 시간을 넣는다 */
+      +'<td class="rem">'+(gone?'지났습니다':(isNext?'<b>다음 차</b> · ':'')+dur(a-now)+' 뒤')+'</td></tr>';
+  });
+  document.getElementById('schedBody').innerHTML=rows;
+}
+
+/* 상단 시계 */
+(function(){var d=new Date();
+ document.getElementById('nowclock').textContent=
+   (d.getHours()<10?'0':'')+d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes();})();
+
+drawRoute(); paint();
+
+/* 리빌 — IO 실패 대비 load 폴백 */
+if(CAPTURE||reduce){
+  document.querySelectorAll('.rise').forEach(function(e){e.classList.add('vis')});
+}else{
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})},{threshold:.15});
+  document.querySelectorAll('.rise').forEach(function(e){io.observe(e)});
+  addEventListener('load',function(){requestAnimationFrame(function(){
+    document.querySelectorAll('.rise').forEach(function(e){
+      if(e.getBoundingClientRect().top<innerHeight)e.classList.add('vis')})})});
+}
+</script>
+</body></html>
