@@ -97,6 +97,34 @@ footer{margin:50px 0 40px;text-align:center;font-size:12px;color:var(--mut);font
 
 <!-- ── RUN 37 ─────────────────────────────────────────────── -->
 <article class="run">
+<div class="bar"><span class="id">REF 07</span><span class="name">온담 ONDAM · 생활가전 (구조 복제 · design-clone 첫 산출물)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#d81410;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">좌표 17/17</b>2026-08-09</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 새 스킬 (design-clone)</p>
+    <div class="thumb" style="background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid #e3e5e8"><span class="cap" style="color:#111;font-weight:700;font-size:30px;letter-spacing:-0.5px">온담</span></div>
+    <p class="why"><b>토큰만 옮기면 안 닮는다.</b> REF 06은 같은 대상의 시스템을 6축 전부 맞췄는데도 "왜 안 똑같냐"는 말이 나왔다. 뼈대가 달랐기 때문이다. <code>design-clone</code>은 그 층을 마저 옮긴다 — 섹션 y좌표·높이·컴포넌트 개수·그리드 열수·이미지 슬롯 비율까지.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 원본 뼈대 (실측)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6"><b>17섹션 · docH 9,033px · 컨테이너 1380px.</b> GNB 56+64 → 히어로 <b>500</b> → 퀵메뉴 82 → 프로모션 224 → 가로리스트 <b>665</b> → 타임딜 439 → 탭베스트 <b>1037</b> → 마케팅 462 → 얇은배너 110 → 탭배너 <b>939</b> → … <b>얇은 띠(56·64·82·110)를 큰 섹션 사이에 끼워 리듬을 만든다.</b> 이미지 슬롯은 정사각형이 압도적(150·255·256·327)이고 레이아웃은 flex 중심이다.</div>
+    <div class="kw"><span>17섹션 복제</span><span>히어로 캐러셀</span><span>탭 2종</span><span>좌표 대조</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 좌표 대조 → 17/17 통과 (±15%)</p>
+      <ul>
+        <li><b>오차 0%가 8개다</b> — GNB 상단·하단 · 히어로 500 · 퀵메뉴 82 · 프로모션 224 · 마케팅 462 · 얇은배너 110 · 사각배너 254</li>
+        <li><b>3회 반복해서 맞췄다</b> — 1차 11/17 → 2차 14/17 → 3차 17/17. 매번 안 맞는 섹션만 골라 원인을 갈랐다</li>
+        <li><b>★ 높이가 안 맞을 때 CSS를 먼저 만지면 안 된다</b> — 초과는 콘텐츠 분량, 미달은 자식 개수·슬롯 비율이 원인이다. 타임딜이 +23%였던 건 정사각 슬롯(1:1)을 쓴 탓이라 가로형(1.31)으로 내리자 맞았다</li>
+        <li><b>골격을 먼저 세운다</b> — 회색 빈 상자로 페이지를 완성하고 좌표가 맞은 뒤에 콘텐츠를 채운다. 반대로 하면 텍스트 길이에 밀려 뼈대가 어긋나고 원인을 못 찾는다</li>
+        <li><b>글자 수 대역이 CSS만큼 중요하다</b> — 원본 제품명이 6~10자인데 발명한 이름이 18자면 카드가 두 줄로 접혀 높이가 달라진다</li>
+        <li>브랜드·제품명·가격·카피는 전부 발명. 로고·실제 제품명·원본 이미지는 가져오지 않았고 선 검사 3종이 자동으로 막는다</li>
+        <li>390·1440 iframe 실측 오버플로 0 · <code>verify.mjs</code> 오류 0·경고 0</li>
+      </ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok" style="color:#d81410">● 구조 복제 · 좌표 17/17</span><a class="btn" href="templates/ref-07-lge-ondam.html">랜딩 열기 →</a><span class="path">templates/ref-07-lge-ondam.html</span></div>
+  </div>
+</div>
+</article>
+
+<article class="run">
 <div class="bar"><span class="id">RUN 37</span><span class="name">흔들림 HEUNDEULLIM · 한 지진, 여섯 관측소 (새 방향 · AD-1 한서린)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#a3126b;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">26/40</b>2026-08-09</span></div>
 <div class="grid">
   <div class="left">
