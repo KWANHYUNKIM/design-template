@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ko" data-t="day"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>돋을 — 채널레터·사인 제작</title>
+<meta name="description" content="벽에서 돋아나온 글자. 낮에 잘 보이는 간판과 밤에 읽히는 간판은 다른 물건입니다. 채널레터·돌출 사인 제작, 옥외광고물 허가 대행.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+:root{
+  --sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+
+  /* 낮 — 콘크리트. 순백 금지 */
+  --paper:#e5e2da;
+  --ink:#0b0b0c;
+  --fg:#141416;
+  --body:#3c3d40;   /* on --paper = 8.4:1 (실측) */
+  --mut:#5f6165;    /* on --paper = 4.8:1 (실측) */
+  --line:#0b0b0c;
+  --hair:#b4b0a6;
+  --panel:#d9d5cb;
+  --k:#ff4d00;      /* 포인트 원색 1색 — '켜지는 것'에만 쓴다 */
+  --sink:#c9c5ba;
+
+  /* 타입 스케일 — 모듈러 1.25배(base 16) + 디스플레이 4단.
+     중간 단계는 거의 비운다. 본문과 디스플레이 사이가 멀어야 위계가 한눈에 읽힌다 */
+  --t-xs:12px;--t-sm:14px;--t-base:16px;--t-md:20px;--t-lg:25px;--t-xl:31px;
+  --t-2xl:39px;--t-3xl:49px;--t-4xl:61px;--t-d1:76px;--t-d2:96px;--t-d3:132px;--t-d4:184px;
+
+  /* 간격 스케일 — 4배수 */
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;
+  --s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+
+  --b:3px; /* 테두리 굵기 — 층위는 선으로만 만든다 */
+}
+html[data-t="night"]{
+  --paper:#08090a;
+  --ink:#f2efe8;
+  --fg:#f2efe8;
+  --body:#b9b6ae;   /* on --paper = 9.8:1 (실측) */
+  --mut:#83817b;    /* on --paper = 5.1:1 (실측) */
+  --line:#3a3d40;
+  --hair:#26282a;
+  --panel:#101113;
+  --sink:#0e0f11;
+}
+
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--fg);font-family:var(--sans);font-size:var(--t-base);
+  line-height:1.65;-webkit-font-smoothing:antialiased;
+  word-break:keep-all;overflow-wrap:break-word;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3,p,ul,ol,figure,table{margin:0}
+ul{padding:0;list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+.wrap{max-width:1280px;margin:0 auto;padding-left:var(--s5);padding-right:var(--s5)}
+.mono{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.rise{opacity:0;transform:translateY(14px)}
+.rise.vis{opacity:1;transform:none;transition:opacity .3s linear,transform .3s linear}
+
+/* ───────── 1 · 인덱스 바 ───────── */
+.bar{border-bottom:var(--b) solid var(--line);position:sticky;top:0;z-index:30;background:var(--paper)}
+.bar .row{max-width:1280px;margin:0 auto;padding:var(--s3) var(--s5);
+  display:flex;align-items:center;gap:var(--s5);flex-wrap:wrap}
+.bar b{font-size:var(--t-base);font-weight:900;letter-spacing:-.04em}
+.bar .sp{flex:1}
+.bar .tel{font-family:var(--mono);font-size:var(--t-xs);color:var(--body);letter-spacing:.04em}
+
+.sw{display:flex;border:var(--b) solid var(--line)}
+.sw button{padding:var(--s1) var(--s4);font-family:var(--mono);font-size:var(--t-xs);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--body)}
+.sw button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+html[data-t="night"] .sw button[aria-pressed="true"]{background:var(--k);color:#0b0b0c}
+
+/* ───────── 2 · 히어로 ───────── */
+.hero{border-bottom:var(--b) solid var(--line);overflow:hidden;position:relative}
+.hero .in{max-width:1280px;margin:0 auto;padding-left:var(--s5);padding-right:var(--s5);
+  padding-top:var(--s8);padding-bottom:var(--s7)}
+.word{font-size:clamp(var(--t-d1),23vw,var(--t-d4));font-weight:900;letter-spacing:-.07em;
+  line-height:.82;margin-left:-.06em;white-space:nowrap;color:var(--ink)}
+html[data-t="night"] .word{color:var(--k)}
+.word i{font-style:normal;-webkit-text-stroke:2px var(--ink);color:transparent}
+html[data-t="night"] .word i{-webkit-text-stroke-color:var(--k)}
+
+.hgrid{display:grid;grid-template-columns:1fr;gap:var(--s6);margin-top:var(--s6)}
+.hgrid>*{min-width:0}
+.hlead{font-size:var(--t-md);line-height:1.5;color:var(--fg);max-width:34ch;font-weight:600}
+.hlead em{font-style:normal;background:var(--k);color:#0b0b0c;padding:0 var(--s1)}
+.hsub{font-size:var(--t-base);color:var(--body);max-width:44ch;margin-top:var(--s4)}
+.hfig{border:var(--b) solid var(--line);align-self:end}
+.hfig img{width:100%;height:260px;object-fit:cover;
+  background:linear-gradient(135deg,#2a2c2e,#0b0b0c)}
+.hfig figcaption{border-top:var(--b) solid var(--line);padding:var(--s2) var(--s3);
+  font-family:var(--mono);font-size:var(--t-xs);color:var(--body);background:var(--paper)}
+
+.facts{display:flex;flex-wrap:wrap;gap:var(--s7);margin-top:var(--s7);
+  border-top:var(--b) solid var(--line);padding-top:var(--s5)}
+.facts div{min-width:0}
+.facts .v{font-size:var(--t-3xl);font-weight:900;letter-spacing:-.04em;line-height:1;white-space:nowrap}
+.facts .l{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s2)}
+
+/* ───────── 3 · 벽면 ───────── */
+.wall{border-bottom:var(--b) solid var(--line);padding-top:var(--s9);padding-bottom:var(--s9)}
+.wtop{display:grid;grid-template-columns:1fr;gap:var(--s5);align-items:end}
+.wtop>*{min-width:0}
+.wall h2{font-size:var(--t-2xl);font-weight:900;letter-spacing:-.045em;line-height:1.06;max-width:16ch}
+.wall .note{font-size:var(--t-sm);color:var(--body);max-width:42ch}
+
+.picks{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s6)}
+.picks button{border:var(--b) solid var(--line);padding:var(--s2) var(--s4);
+  font-size:var(--t-sm);font-weight:700;color:var(--body)}
+.picks button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+html[data-t="night"] .picks button[aria-pressed="true"]{background:var(--k);color:#0b0b0c;border-color:var(--k)}
+.picks .cnt{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);align-self:center;margin-left:var(--s2)}
+
+.rack{margin-top:var(--s6);border:var(--b) solid var(--line);background:var(--sink);
+  min-height:300px;padding:var(--s5);display:flex;gap:var(--s4);align-items:flex-end;
+  flex-wrap:wrap;position:relative}
+.rack .empty{font-family:var(--mono);font-size:var(--t-sm);color:var(--mut);margin:auto}
+.sign{border:var(--b) solid var(--line);padding:var(--s4) var(--s5);background:var(--panel);
+  flex:1 1 200px;min-width:0}
+.sign .face{font-size:var(--t-xl);font-weight:900;letter-spacing:-.05em;line-height:1;color:var(--ink)}
+.sign .tag{font-family:var(--mono);font-size:var(--t-xs);color:var(--body);margin-top:var(--s3)}
+.sign .dist{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s1)}
+/* 발광 유형 — 낮에는 재질만 다르고, 밤에는 켜진 것만 읽힌다 */
+.sign[data-lit="1"] .face{color:var(--ink)}
+html[data-t="night"] .sign{background:var(--sink);border-color:var(--hair)}
+html[data-t="night"] .sign[data-lit="1"]{border-color:var(--k)}
+html[data-t="night"] .sign[data-lit="1"] .face{color:var(--k)}
+html[data-t="night"] .sign[data-lit="0"] .face{color:#1b1d1f}
+html[data-t="night"] .sign[data-lit="0"] .tag,
+html[data-t="night"] .sign[data-lit="0"] .dist{color:#4a4c4e}
+
+.tblwrap{margin-top:var(--s6);overflow-x:auto;border:var(--b) solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:620px}
+th,td{text-align:left;padding:var(--s3) var(--s4);border-bottom:1px solid var(--hair);
+  font-size:var(--t-sm);color:var(--body)}
+th{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--mut);border-bottom:var(--b) solid var(--line)}
+td b{color:var(--fg);font-weight:800;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+.tblwrap .none{padding:var(--s5);font-family:var(--mono);font-size:var(--t-sm);color:var(--mut)}
+
+/* ───────── 4 · 공정 ───────── */
+.made{border-bottom:var(--b) solid var(--line);padding-top:var(--s9);padding-bottom:var(--s9)}
+.made h2{font-size:var(--t-2xl);font-weight:900;letter-spacing:-.045em;max-width:18ch}
+.mgrid{display:grid;grid-template-columns:1fr;gap:var(--s6);margin-top:var(--s7)}
+.mgrid>*{min-width:0}
+.mfig{border:var(--b) solid var(--line)}
+.mfig img{width:100%;height:300px;object-fit:cover;
+  background:linear-gradient(135deg,#3a2a1c,#0b0b0c)}
+.mfig figcaption{border-top:var(--b) solid var(--line);padding:var(--s3) var(--s4);background:var(--paper)}
+.mfig .n{font-family:var(--mono);font-size:var(--t-xs);color:var(--k);letter-spacing:.1em}
+html[data-t="day"] .mfig .n{color:var(--ink)}
+.mfig .t{font-size:var(--t-base);font-weight:800;margin-top:var(--s1)}
+.mfig .d{font-size:var(--t-sm);color:var(--body);margin-top:var(--s1)}
+.steps{border-top:var(--b) solid var(--line);margin-top:var(--s6)}
+.steps li{border-bottom:1px solid var(--hair);padding-top:var(--s4);padding-bottom:var(--s4);
+  display:flex;gap:var(--s5)}
+.steps .no{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);flex:0 0 auto;width:var(--s7)}
+.steps .tx{min-width:0}
+.steps .tx b{font-size:var(--t-base);font-weight:800;display:block}
+.steps .tx span{font-size:var(--t-sm);color:var(--body)}
+
+/* ───────── 5 · 남이 한 말 ───────── */
+.said{border-bottom:var(--b) solid var(--line);padding-top:var(--s9);padding-bottom:var(--s9)}
+.sbar{display:flex;flex-wrap:wrap;gap:var(--s7);align-items:baseline;
+  border-bottom:var(--b) solid var(--line);padding-bottom:var(--s5)}
+.sbar .big{font-size:var(--t-4xl);font-weight:900;letter-spacing:-.05em;line-height:1;white-space:nowrap}
+.sbar .l{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s2)}
+/* 균등 3열 금지 — 폭도 높이도 어긋나게 둔다 */
+.revs{display:grid;grid-template-columns:1fr;gap:var(--s6);margin-top:var(--s7)}
+.revs>*{min-width:0}
+.rev{border-left:var(--b) solid var(--line);padding-left:var(--s5)}
+.rev q{display:block;font-size:var(--t-md);line-height:1.5;font-weight:600;quotes:none}
+.rev .who{margin-top:var(--s4);font-size:var(--t-sm);color:var(--body)}
+.rev .who b{display:block;color:var(--fg);font-weight:800}
+.rev .ver{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s2)}
+.creds{margin-top:var(--s8);border-top:var(--b) solid var(--line);padding-top:var(--s5)}
+.creds .h{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.1em;text-transform:uppercase}
+.creds ul{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s5);margin-top:var(--s4)}
+.creds li{font-size:var(--t-sm);color:var(--body)}
+.creds li b{color:var(--fg);font-weight:800}
+
+/* ───────── 6 · 닫는 방식 : 우리가 만들지 않는 것 ───────── */
+.no{padding-top:var(--s9);padding-bottom:var(--s9)}
+.no h2{font-size:clamp(var(--t-2xl),7vw,var(--t-d1));font-weight:900;letter-spacing:-.055em;
+  line-height:.98;max-width:14ch}
+.no .lead{font-size:var(--t-base);color:var(--body);max-width:46ch;margin-top:var(--s5)}
+.nolist{margin-top:var(--s7);border-top:var(--b) solid var(--line)}
+.nolist li{border-bottom:1px solid var(--hair);padding-top:var(--s5);padding-bottom:var(--s5);
+  display:grid;grid-template-columns:1fr;gap:var(--s2)}
+.nolist li>*{min-width:0}
+.nolist .x{font-size:var(--t-xl);font-weight:900;letter-spacing:-.04em;line-height:1.1}
+.nolist .y{font-size:var(--t-sm);color:var(--body)}
+.tail{margin-top:var(--s8);display:flex;flex-wrap:wrap;gap:var(--s5);align-items:baseline}
+.tail .num{font-family:var(--mono);font-size:var(--t-md);letter-spacing:.02em;color:var(--fg)}
+.tail .hint{font-size:var(--t-sm);color:var(--mut)}
+
+footer{border-top:var(--b) solid var(--line);padding-top:var(--s6);padding-bottom:var(--s8)}
+footer .f{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);line-height:2.1}
+
+/* ───────── 반응형 ───────── */
+@media(min-width:760px){
+  .hgrid{grid-template-columns:1.35fr .9fr;gap:var(--s8)}
+  .mgrid{grid-template-columns:1.15fr .85fr;gap:var(--s7)}
+  .nolist li{grid-template-columns:1fr 1.1fr;gap:var(--s6);align-items:baseline}
+}
+@media(min-width:980px){
+  .wtop{grid-template-columns:1.3fr .8fr}
+  .revs{grid-template-columns:1.35fr 1fr 1.15fr;gap:var(--s7)}
+  .revs .rev:nth-child(2){margin-top:var(--s7)}
+  .revs .rev:nth-child(3){margin-top:var(--s4)}
+  .hero .in{padding-top:var(--s9);padding-bottom:var(--s8)}
+}
+/* 900px 이하 — 벽면은 가로 스크롤 캐러셀로 폴백. 칸이 찌그러지지 않게 */
+@media(max-width:900px){
+  .rack{flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x mandatory;align-items:stretch}
+  .sign{flex:0 0 240px;scroll-snap-align:start}
+  .word{white-space:normal;letter-spacing:-.055em}
+}
+@media(prefers-reduced-motion:reduce){
+  .rise{opacity:1;transform:none;transition:none}
+  .rack{scroll-behavior:auto}
+}
+/* 캡처 모드 — 리빌 강제 표시 · 전환 정지 */
+html.capture .rise{opacity:1;transform:none;transition:none}
+html.capture .rack{flex-wrap:wrap;overflow:visible}
+html.capture .sign{flex:1 1 200px}
+</style></head><body>
+
+<!-- 1 · 인덱스 바 -->
+<header class="bar">
+  <div class="row">
+    <b>돋을</b>
+    <span class="mono">채널레터 · 돌출사인 · 옥외광고물 허가</span>
+    <span class="sp"></span>
+    <span class="tel">02-2634-0117</span>
+    <div class="sw" role="group" aria-label="시간대 보기">
+      <button type="button" id="bd" aria-pressed="true">낮</button>
+      <button type="button" id="bn" aria-pressed="false">밤</button>
+    </div>
+  </div>
+</header>
+
+<!-- 2 · 히어로 : 압도적으로 큰 글자 하나 -->
+<section class="hero">
+  <div class="in">
+    <h1 class="word">돋을<i>.</i></h1>
+    <div class="hgrid">
+      <div>
+        <p class="hlead">낮에 잘 보이는 간판과 <em>밤에 읽히는 간판</em>은 다른 물건입니다.</p>
+        <p class="hsub">벽에서 60mm 돋아나온 글자를 만듭니다. 아크릴을 자르고, 스테인리스를 접고,
+          모듈을 넣고, 허가를 받아 답니다. 낮에만 보고 고르면 밤에 안 읽히는 간판을 답니다.
+          그래서 이 페이지는 낮과 밤을 같이 봅니다.</p>
+      </div>
+      <figure class="hfig">
+        <img src="https://images.unsplash.com/photo-1783466202966-942175499a4b?w=1100&q=82&auto=format&fit=crop"
+             alt="야간 상가의 전면발광 면 간판" loading="lazy"
+             onerror="this.style.background='linear-gradient(135deg,#123d22,#0b0b0c)';this.removeAttribute('src')">
+        <figcaption>야간 · 전면발광 면 간판. 광원이 면 전체에 퍼져 글자 획이 끊기지 않는다</figcaption>
+      </figure>
+    </div>
+    <div class="facts">
+      <div><div class="v">1,284건</div><div class="l">시공 · 2011년부터</div></div>
+      <div><div class="v">612건</div><div class="l">옥외광고물 허가 대행</div></div>
+      <div><div class="v">45m</div><div class="l">전면발광 야간 가독 거리</div></div>
+      <div><div class="v">3년</div><div class="l">구조·도장 보증</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · 벽면 : 담아서 나란히 걸고, 밤을 켜 본다 -->
+<section class="wall wrap">
+  <div class="wtop">
+    <h2 class="rise">골라 담으면 한 벽에 나란히 겁니다</h2>
+    <p class="note rise">유형을 담으면 아래 벽면에 같은 크기로 걸립니다. 위의 <b>밤</b>을 누르면
+      조명이 꺼진 상태가 되고, 그때도 읽히는 것만 남습니다. 최대 4개까지 담깁니다.</p>
+  </div>
+
+  <div class="picks" id="picks" role="group" aria-label="간판 유형 담기"></div>
+
+  <div class="rack" id="rack" aria-live="polite"></div>
+
+  <div class="tblwrap" id="tblwrap"></div>
+  <p class="mono" style="margin-top:var(--s4)">가독 거리는 정면 15° · 가로등 아래 · 시력 1.0 기준 실측값입니다.
+    소비전력은 세로 300mm 글자 1자 기준입니다.</p>
+</section>
+
+<!-- 4 · 공정 -->
+<section class="made wrap">
+  <h2 class="rise">글자는 인쇄물이 아니라 구조물입니다</h2>
+  <div class="mgrid">
+    <figure class="mfig rise">
+      <img src="https://images.unsplash.com/photo-1683470157362-fed54392b1ee?w=1100&q=82&auto=format&fit=crop"
+           alt="절곡한 금속 간판 프레임의 용접부를 연마하는 작업" loading="lazy"
+           onerror="this.style.background='linear-gradient(135deg,#4a3520,#0b0b0c)';this.removeAttribute('src')">
+      <figcaption>
+        <div class="n">02 · 연마</div>
+        <div class="t">절곡부 용접선 갈아내기</div>
+        <div class="d">획이 꺾이는 자리의 용접선을 갈아 없앱니다. 여기가 남으면 밤에 그 선만 빛을 다르게 받습니다.</div>
+      </figcaption>
+    </figure>
+    <div>
+      <figure class="mfig rise">
+        <img src="https://images.unsplash.com/photo-1738162837389-3b02d6dd507b?w=900&q=82&auto=format&fit=crop"
+             alt="공장에서 간판 프레임을 용접하는 작업자" loading="lazy"
+             onerror="this.style.background='linear-gradient(135deg,#1c2c3a,#0b0b0c)';this.removeAttribute('src')">
+        <figcaption>
+          <div class="n">01 · 용접</div>
+          <div class="t">배면 프레임 짜기</div>
+          <div class="d">벽에 닿는 면부터 만듭니다. 간판이 떨어지는 사고는 글자가 아니라 이 프레임에서 납니다.</div>
+        </figcaption>
+      </figure>
+      <ol class="steps">
+        <li><span class="no">03</span><span class="tx"><b>아크릴 면 재단</b><span>3mm 유백 아크릴을 레이저로 자르고 모서리를 화염 연마합니다.</span></span></li>
+        <li><span class="no">04</span><span class="tx"><b>모듈 배열</b><span>획 폭에 맞춰 간격을 다시 잡습니다. 등간격으로 넣으면 좁은 획이 어둡습니다.</span></span></li>
+        <li><span class="no">05</span><span class="tx"><b>허가 접수</b><span>구청 옥외광고물 신고·허가. 돌출은 도로 점용까지 함께 봅니다.</span></span></li>
+        <li><span class="no">06</span><span class="tx"><b>야간 검수</b><span>다는 날 밤에 다시 가서 켜 봅니다. 낮 검수만 하면 반은 놓칩니다.</span></span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · 남이 우리에 대해 한 말 -->
+<section class="said wrap">
+  <div class="sbar">
+    <div><div class="big">4.8</div><div class="l">평점 · 리뷰 213건</div></div>
+    <div><div class="big">213건</div><div class="l">검수 후 작성된 리뷰</div></div>
+    <div><div class="big">97%</div><div class="l">허가 1회 통과율 · 612건 중 594건</div></div>
+  </div>
+
+  <div class="revs">
+    <blockquote class="rev rise">
+      <q>낮에 본 시안이랑 밤에 켠 게 다를 수 있다고 먼저 말해준 데가 여기뿐이었어요.
+        후면발광으로 하자고 했다가, 우리 골목이 어두워서 전면발광으로 바꿨습니다.</q>
+      <div class="who"><b>유정민</b>고기상점 · 정육 · 서울 성동구</div>
+      <div class="ver">2026.03 시공 · 현장 검수 확인</div>
+    </blockquote>
+    <blockquote class="rev rise">
+      <q>돌출간판 허가가 두 번 반려됐던 자리인데 도로 점용까지 정리해서 한 번에 통과했습니다.</q>
+      <div class="who"><b>배소현</b>연희수선 · 의류수선 · 서울 서대문구</div>
+      <div class="ver">2025.11 시공 · 현장 검수 확인</div>
+    </blockquote>
+    <blockquote class="rev rise">
+      <q>모듈 하나 나갔는데 이틀 만에 왔어요. 간판은 다는 것보다 그 뒤가 중요하더군요.</q>
+      <div class="who"><b>임규현</b>둔산김밥 · 분식 · 대전 서구</div>
+      <div class="ver">2024.06 시공 · 무상 교체</div>
+    </blockquote>
+  </div>
+
+  <div class="creds">
+    <div class="h">최근 시공</div>
+    <ul>
+      <li><b>고기상점</b> 성동 · 전면발광</li>
+      <li><b>연희수선</b> 서대문 · 돌출</li>
+      <li><b>둔산김밥</b> 대전 서구 · 전면발광</li>
+      <li><b>목동한의원</b> 양천 · 후면발광</li>
+      <li><b>삼선세탁</b> 성북 · 스테인리스</li>
+      <li><b>내수동커피</b> 종로 · 측면발광</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 6 · 닫는 방식 : 큰 CTA 대신 거절 목록 -->
+<section class="no wrap">
+  <h2>우리가 만들지 않는 것</h2>
+  <p class="lead">받는 일보다 안 받는 일을 먼저 적습니다. 여기 걸리면 상담 단계에서 돌려보내 드립니다.
+    다른 데를 소개해 드릴 수는 있습니다.</p>
+  <ul class="nolist">
+    <li><span class="x">허가 안 나는 자리의 돌출간판</span><span class="y">보도 폭이 모자라거나 이미 점용 한도를 넘긴 자리입니다. 달아 드릴 수는 있지만 철거 명령이 옵니다.</span></li>
+    <li><span class="x">현수막·배너</span><span class="y">일회성 인쇄물은 취급하지 않습니다. 근처 출력소가 더 빠르고 쌉니다.</span></li>
+    <li><span class="x">타사 간판의 부분 수리</span><span class="y">프레임 상태를 모른 채 모듈만 갈면 책임 범위가 갈립니다. 전체 교체만 받습니다.</span></li>
+    <li><span class="x">도면 없이 "알아서" 요청</span><span class="y">벽면 실측과 전기 인입 위치가 없으면 견적이 두 배로 벌어집니다. 실측부터 같이 합니다.</span></li>
+    <li><span class="x">납기 3일 이하</span><span class="y">아크릴 화염 연마와 도장 건조에만 이틀이 걸립니다. 줄이면 그 자리가 먼저 상합니다.</span></li>
+  </ul>
+  <div class="tail">
+    <span class="num">02-2634-0117</span>
+    <span class="hint">실측은 서울·경기 무료입니다. 평일 09–18시.</span>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div class="f">
+    돋을 사인 · 서울특별시 성동구 성수이로 22길 · 사업자등록번호 214-31-88027<br>
+    옥외광고사업 등록 제2011-성동-0143호 · 전기공사업 면허 보유<br>
+    사진은 참고 이미지입니다. 시공 사례는 현장 검수 후 게시합니다.
+  </div>
+</footer>
+
+<script>
+/* 스크롤 복원 가드 — smooth를 쓰지 않으므로 경합 없음 */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+scrollTo(0,0);
+addEventListener('load',function(){scrollTo(0,0)});
+
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+/* ── 낮 / 밤 ── 부드러운 전환 없이 딱 끊는다 */
+var root=document.documentElement,bd=document.getElementById('bd'),bn=document.getElementById('bn');
+function setTime(t){
+  root.dataset.t=t;
+  bd.setAttribute('aria-pressed',String(t==='day'));
+  bn.setAttribute('aria-pressed',String(t==='night'));
+  draw();
+}
+bd.addEventListener('click',function(){setTime('day')});
+bn.addEventListener('click',function(){setTime('night')});
+
+/* ── 간판 유형 ── */
+var TYPES=[
+  {id:'front', name:'전면발광 채널레터', mat:'유백 아크릴 3mm + 측면 스테인리스', lum:1100, dist:45, watt:4.2, days:7,  lit:1},
+  {id:'back',  name:'후면발광 채널레터', mat:'스테인리스 절곡 + 배면 확산판',     lum:420,  dist:28, watt:3.1, days:9,  lit:1},
+  {id:'edge',  name:'측면발광 레터',     mat:'알루미늄 절곡 + 측면 모듈',         lum:260,  dist:19, watt:2.4, days:9,  lit:1},
+  {id:'bubble',name:'돌출 말풍선 사인',  mat:'철 프레임 + 양면 아크릴',           lum:640,  dist:34, watt:11.0,days:12, lit:1},
+  {id:'steel', name:'무광 스테인리스',   mat:'1.5T 절곡 · 비발광',                lum:0,    dist:12, watt:0,   days:6,  lit:0},
+  {id:'cut',   name:'시트 컷팅',         mat:'유리·벽면 직접 부착 · 비발광',       lum:0,    dist:8,  watt:0,   days:2,  lit:0}
+];
+var MAX=4, on=['front','steel'];
+
+var picks=document.getElementById('picks'),
+    rack=document.getElementById('rack'),
+    tbl=document.getElementById('tblwrap');
+
+TYPES.forEach(function(t){
+  var b=document.createElement('button');
+  b.type='button';b.textContent=t.name;b.dataset.id=t.id;
+  b.addEventListener('click',function(){
+    var i=on.indexOf(t.id);
+    if(i>-1)on.splice(i,1);
+    else if(on.length<MAX)on.push(t.id);
+    draw();
+  });
+  picks.appendChild(b);
+});
+var cnt=document.createElement('span');
+cnt.className='cnt';picks.appendChild(cnt);
+
+function fmt(n){return n.toLocaleString('ko-KR')}
+
+function draw(){
+  cnt.textContent=on.length+' / '+MAX+' 담김';
+  [].forEach.call(picks.querySelectorAll('button'),function(b){
+    b.setAttribute('aria-pressed',String(on.indexOf(b.dataset.id)>-1));
+  });
+
+  rack.innerHTML='';
+  if(!on.length){
+    var e=document.createElement('p');
+    e.className='empty';e.textContent='담긴 간판이 없습니다. 위에서 유형을 고르세요.';
+    rack.appendChild(e);
+  }else{
+    on.forEach(function(id){
+      var t=TYPES.filter(function(x){return x.id===id})[0];
+      var d=document.createElement('div');
+      d.className='sign';d.dataset.lit=String(t.lit);
+      d.innerHTML='<div class="face">돋을</div>'+
+        '<div class="tag">'+t.name+'</div>'+
+        '<div class="dist">야간 가독 '+t.dist+'m'+(t.lit?'':' · 비발광')+'</div>';
+      rack.appendChild(d);
+    });
+  }
+
+  if(!on.length){
+    tbl.innerHTML='<p class="none">담기면 비교표가 여기에 만들어집니다.</p>';
+    return;
+  }
+  var rows=on.map(function(id){
+    var t=TYPES.filter(function(x){return x.id===id})[0];
+    return '<tr><td><b>'+t.name+'</b></td><td>'+t.mat+'</td>'+
+      '<td><b>'+t.dist+'</b> m</td>'+
+      '<td><b>'+(t.lum?fmt(t.lum):'—')+'</b>'+(t.lum?' cd/m²':'')+'</td>'+
+      '<td><b>'+(t.watt?t.watt.toFixed(1):'—')+'</b>'+(t.watt?' W':'')+'</td>'+
+      '<td><b>'+t.days+'</b> 일</td></tr>';
+  }).join('');
+  tbl.innerHTML='<table><thead><tr>'+
+    '<th>유형</th><th>재질</th><th>야간 가독</th><th>면휘도</th><th>글자당 소비전력</th><th>제작 기간</th>'+
+    '</tr></thead><tbody>'+rows+'</tbody></table>';
+}
+draw();
+
+/* ── 리빌 : IntersectionObserver + 로드 폴백 ── */
+var rises=[].slice.call(document.querySelectorAll('.rise'));
+function showAll(){rises.forEach(function(el){el.classList.add('vis')})}
+if(reduce||!('IntersectionObserver' in window)){
+  showAll();
+}else{
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}});
+  },{rootMargin:'0px 0px -8% 0px'});
+  rises.forEach(function(el){io.observe(el)});
+  addEventListener('load',function(){
+    rises.forEach(function(el){
+      if(el.getBoundingClientRect().top < innerHeight)el.classList.add('vis');
+    });
+  });
+}
+</script>
+</body></html>

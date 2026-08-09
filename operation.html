@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>운영 방식 — 디자인 진화 루프는 어떻게 작동하는가</title>
+<meta name="description" content="랜딩 템플릿을 한 장씩 만들어 채점하고 다음 장이 그 점수를 넘으려 하는 진화 루프의 운영 방식.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+:root{
+--sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+--mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+--ink:#101215;--ink2:#171a1e;--ink3:#0b0d10;--line:#262b31;--line2:#3a424a;
+--fg:#f2f4f6;--body:#a6afb7;--mut:#79838c;--k:#7dd3a0;
+--t-xs:12px;--t-sm:14px;--t-base:16px;--t-md:20px;--t-lg:25px;--t-xl:31px;--t-2xl:39px;--t-3xl:49px;
+--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--sans);background:var(--ink);color:var(--fg);line-height:1.7;
+ -webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word;overflow-x:hidden}
+a{color:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding:0 var(--s5)}
+
+header{border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;
+ background:rgba(16,18,21,.92);backdrop-filter:blur(12px)}
+header .in{max-width:1240px;margin:0 auto;padding:var(--s4) var(--s5);display:flex;align-items:center;gap:var(--s4)}
+header .lg{font-weight:900;font-size:var(--t-base);letter-spacing:-.02em;text-decoration:none}
+header .lg i{font-style:normal;color:var(--k)}
+header .sp{flex:1}
+header a.gh{font-family:var(--mono);font-size:var(--t-xs);color:var(--body);border:1px solid var(--line);
+ padding:7px 13px;border-radius:100px;transition:.2s;text-decoration:none;white-space:nowrap}
+header a.gh:hover{color:var(--fg);border-color:var(--line2)}
+header a.gh[aria-current]{color:var(--k);border-color:var(--line2)}
+
+.lay{display:grid;grid-template-columns:1fr;gap:var(--s7);padding-top:var(--s7);padding-bottom:var(--s10)}
+.lay>*{min-width:0}
+
+/* 목차 */
+nav.toc{position:relative;align-self:start}
+nav.toc .cap{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;
+ color:var(--mut);padding-bottom:var(--s3);border-bottom:1px solid var(--line)}
+nav.toc ol{list-style:none;margin:var(--s3) 0 0;padding:0}
+nav.toc li{margin:0}
+nav.toc a{display:block;padding:6px 0;font-size:var(--t-sm);color:var(--body);text-decoration:none;
+ border-left:2px solid transparent;padding-left:var(--s3);transition:.18s}
+nav.toc a:hover{color:var(--fg)}
+nav.toc a.on{color:var(--k);border-left-color:var(--k)}
+nav.toc .src{margin-top:var(--s5);padding-top:var(--s4);border-top:1px solid var(--line);
+ font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);line-height:1.9}
+nav.toc .src a{display:inline;padding:0;border:0;color:var(--body)}
+nav.toc .src a:hover{color:var(--k)}
+
+/* 문서 */
+.doc{max-width:74ch}
+.doc h1{font-size:clamp(var(--t-xl),5vw,var(--t-3xl));font-weight:900;letter-spacing:-.035em;
+ line-height:1.1;margin:0 0 var(--s5)}
+.doc h2{font-size:var(--t-lg);font-weight:900;letter-spacing:-.025em;margin:var(--s9) 0 var(--s4);
+ padding-top:var(--s5);border-top:1px solid var(--line);scroll-margin-top:var(--s9)}
+.doc h2:first-of-type{margin-top:var(--s7)}
+.doc h3{font-size:var(--t-md);font-weight:800;letter-spacing:-.015em;margin:var(--s7) 0 var(--s3);
+ scroll-margin-top:var(--s9)}
+.doc p{color:var(--body);margin:var(--s4) 0}
+.doc strong{color:var(--fg);font-weight:800}
+.doc ul{margin:var(--s4) 0;padding-left:0;list-style:none}
+.doc li{color:var(--body);margin:var(--s3) 0;padding-left:var(--s5);position:relative}
+.doc li::before{content:'';position:absolute;left:var(--s2);top:.72em;width:5px;height:5px;
+ border-radius:50%;background:var(--line2)}
+.doc ol{margin:var(--s4) 0;padding-left:0;list-style:none;counter-reset:n}
+.doc ol li{counter-increment:n;padding-left:var(--s6)}
+.doc ol li::before{content:counter(n) '.';position:static;float:left;margin-left:calc(-1 * var(--s6));
+ width:var(--s6);background:none;border-radius:0;font-family:var(--mono);font-size:var(--t-xs);
+ color:var(--k);line-height:1.9}
+.doc a{color:var(--k)}
+.doc hr{border:0;border-top:1px solid var(--line);margin:var(--s8) 0;display:none}
+
+.doc code{font-family:var(--mono);font-size:.87em;background:var(--ink3);border:1px solid var(--line);
+ padding:2px 6px;border-radius:5px;color:var(--fg);white-space:nowrap}
+.doc pre{background:var(--ink3);border:1px solid var(--line);border-radius:12px;
+ padding:var(--s5);overflow-x:auto;margin:var(--s5) 0}
+.doc pre code{background:none;border:0;padding:0;font-size:var(--t-xs);line-height:1.75;
+ white-space:pre;color:var(--body)}
+
+.doc blockquote{margin:var(--s5) 0;padding:var(--s4) var(--s5);background:var(--ink2);
+ border-left:2px solid var(--k);border-radius:0 10px 10px 0}
+.doc blockquote p{margin:0;font-size:var(--t-sm);color:var(--body)}
+.doc blockquote p+p{margin-top:var(--s3)}
+
+.tbl{overflow-x:auto;margin:var(--s5) 0;border:1px solid var(--line);border-radius:12px}
+.doc table{border-collapse:collapse;width:100%;font-size:var(--t-sm);min-width:520px}
+.doc th{text-align:left;font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.06em;
+ text-transform:uppercase;color:var(--mut);font-weight:400;padding:var(--s3) var(--s4);
+ background:var(--ink3);border-bottom:1px solid var(--line);white-space:nowrap}
+.doc td{padding:var(--s3) var(--s4);color:var(--body);border-bottom:1px solid var(--line);vertical-align:top}
+.doc tr:last-child td{border-bottom:0}
+.doc td code{white-space:nowrap}
+
+.load{font-family:var(--mono);font-size:var(--t-sm);color:var(--mut);padding:var(--s9) 0}
+.load b{color:var(--k);font-weight:400}
+
+footer{border-top:1px solid var(--line);padding-top:var(--s6);padding-bottom:var(--s8)}
+footer .in{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);line-height:2}
+footer a{color:inherit;text-decoration:none}
+footer a:hover{color:var(--k)}
+
+@media(min-width:1000px){
+  .lay{grid-template-columns:230px 1fr;gap:var(--s9);padding-top:var(--s9)}
+  nav.toc{position:sticky;top:var(--s9)}
+  .doc h1{margin-top:0}
+}
+@media(prefers-reduced-motion:reduce){ *{transition:none!important;scroll-behavior:auto!important} }
+</style></head><body>
+
+<header>
+  <div class="in">
+    <a class="lg" href="index.html">랜딩 템플릿<i>.</i></a>
+    <span class="sp"></span>
+    <a class="gh" href="operation.html" aria-current="page">운영 방식</a>
+    <a class="gh" href="log.html">제작 기록</a>
+    <a class="gh" href="https://github.com/KWANHYUNKIM/design-template" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</header>
+
+<div class="wrap lay">
+  <nav class="toc" aria-label="목차">
+    <div class="cap">목차</div>
+    <ol id="toc"></ol>
+    <div class="src">
+      원문 · <a href="operation.md">operation.md</a><br>
+      이 페이지는 그 마크다운을<br>그대로 읽어 렌더합니다.
+    </div>
+  </nav>
+
+  <main class="doc" id="doc">
+    <div class="load">operation.md 불러오는 중<b>…</b></div>
+  </main>
+</div>
+
+<footer class="wrap">
+  <div class="in">
+    <a href="index.html">← 갤러리로</a> · <a href="log.html">제작 기록</a> ·
+    <a href="https://github.com/KWANHYUNKIM/design-template" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</footer>
+
+<script>
+/* ── 최소 마크다운 렌더러 ─────────────────────────────────────
+   지원: 제목 · 문단 · 목록 · 표 · 펜스 코드 · 인용 · hr
+        인라인 코드 · 볼드 · 링크                              */
+var esc = function(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+};
+var inline = function(s){
+  return esc(s)
+    .replace(/`([^`]+)`/g, function(_,c){ return '<code>'+c+'</code>'; })
+    .replace(/\*\*([\s\S]+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>');
+};
+var slug = function(s, used){
+  var b = s.replace(/[^0-9A-Za-z가-힣\s-]/g,'').trim().replace(/\s+/g,'-') || 'sec';
+  var id = b, n = 2;
+  while (used[id]) { id = b + '-' + (n++); }
+  used[id] = 1;
+  return id;
+};
+var row = function(line, tag){
+  var cells = line.replace(/^\s*\|/,'').replace(/\|\s*$/,'').split('|');
+  return '<tr>' + cells.map(function(c){
+    return '<'+tag+'>' + inline(c.trim()) + '</'+tag+'>';
+  }).join('') + '</tr>';
+};
+
+function render(md){
+  var lines = md.replace(/\r\n/g,'\n').split('\n');
+  var out = [], heads = [], used = {}, i = 0;
+  var para = [];
+  var flush = function(){
+    if (para.length) { out.push('<p>' + inline(para.join(' ')) + '</p>'); para = []; }
+  };
+
+  while (i < lines.length) {
+    var ln = lines[i];
+
+    /* 펜스 코드 */
+    if (/^```/.test(ln)) {
+      flush(); i++;
+      var buf = [];
+      while (i < lines.length && !/^```/.test(lines[i])) { buf.push(lines[i]); i++; }
+      i++;
+      out.push('<pre><code>' + esc(buf.join('\n')) + '</code></pre>');
+      continue;
+    }
+
+    /* 표 */
+    if (/^\s*\|/.test(ln) && i+1 < lines.length && /^\s*\|[\s:|-]+\|\s*$/.test(lines[i+1])) {
+      flush();
+      var t = '<div class="tbl"><table><thead>' + row(ln,'th') + '</thead><tbody>';
+      i += 2;
+      while (i < lines.length && /^\s*\|/.test(lines[i])) { t += row(lines[i],'td'); i++; }
+      out.push(t + '</tbody></table></div>');
+      continue;
+    }
+
+    /* 인용 */
+    if (/^>\s?/.test(ln)) {
+      flush();
+      var q = [];
+      while (i < lines.length && /^>\s?/.test(lines[i])) { q.push(lines[i].replace(/^>\s?/,'')); i++; }
+      var ps = q.join('\n').split(/\n\s*\n/).map(function(p){
+        return '<p>' + inline(p.split('\n').join(' ')) + '</p>';
+      }).join('');
+      out.push('<blockquote>' + ps + '</blockquote>');
+      continue;
+    }
+
+    /* 번호 목록 */
+    if (/^\d+\.\s+/.test(ln)) {
+      flush();
+      var nums = [];
+      while (i < lines.length && /^\d+\.\s+/.test(lines[i])) {
+        var nit = lines[i].replace(/^\d+\.\s+/,''); i++;
+        while (i < lines.length && /^\s{2,}\S/.test(lines[i])) { nit += ' ' + lines[i].trim(); i++; }
+        nums.push('<li>' + inline(nit) + '</li>');
+      }
+      out.push('<ol>' + nums.join('') + '</ol>');
+      continue;
+    }
+
+    /* 목록 — 다음 줄이 들여쓰기면 이어붙임 */
+    if (/^[-*]\s+/.test(ln)) {
+      flush();
+      var items = [];
+      while (i < lines.length && /^[-*]\s+/.test(lines[i])) {
+        var it = lines[i].replace(/^[-*]\s+/,''); i++;
+        while (i < lines.length && /^\s{2,}\S/.test(lines[i])) { it += ' ' + lines[i].trim(); i++; }
+        items.push('<li>' + inline(it) + '</li>');
+      }
+      out.push('<ul>' + items.join('') + '</ul>');
+      continue;
+    }
+
+    /* 제목 */
+    var h = ln.match(/^(#{1,4})\s+(.*)$/);
+    if (h) {
+      flush();
+      var lv = h[1].length, txt = h[2].trim(), id = slug(txt, used);
+      out.push('<h'+lv+' id="'+id+'">' + inline(txt) + '</h'+lv+'>');
+      if (lv === 2) heads.push({ id: id, txt: txt });
+      i++; continue;
+    }
+
+    /* 구분선 */
+    if (/^---+\s*$/.test(ln)) { flush(); out.push('<hr>'); i++; continue; }
+
+    /* 빈 줄 / 문단 */
+    if (!ln.trim()) { flush(); i++; continue; }
+    para.push(ln.trim()); i++;
+  }
+  flush();
+  return { html: out.join('\n'), heads: heads };
+}
+
+function buildToc(heads){
+  var ol = document.getElementById('toc');
+  ol.innerHTML = heads.map(function(h){
+    return '<li><a href="#'+h.id+'">'+ h.txt.replace(/^\d+\.\s*/,'') +'</a></li>';
+  }).join('');
+
+  var links = [].slice.call(ol.querySelectorAll('a'));
+  var targets = heads.map(function(h){ return document.getElementById(h.id); });
+  var mark = function(){
+    var cur = 0;
+    for (var j = 0; j < targets.length; j++) {
+      if (targets[j] && targets[j].getBoundingClientRect().top <= 150) cur = j;
+    }
+    links.forEach(function(a, j){ a.classList.toggle('on', j === cur); });
+  };
+  mark();
+  addEventListener('scroll', mark, { passive: true });
+}
+
+fetch('operation.md', { cache: 'no-store' })
+  .then(function(r){ if(!r.ok) throw new Error(r.status); return r.text(); })
+  .then(function(md){
+    var r = render(md);
+    document.getElementById('doc').innerHTML = r.html;
+    buildToc(r.heads);
+    if (location.hash) {
+      var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (el) el.scrollIntoView();
+    }
+  })
+  .catch(function(){
+    document.getElementById('doc').innerHTML =
+      '<div class="load">operation.md 를 읽지 못했습니다.<br><br>' +
+      'file:// 로 직접 열면 브라우저가 로컬 파일 요청을 막습니다. ' +
+      '저장소 루트에서 <b>python3 -m http.server 5500</b> 을 띄우고 ' +
+      '<b>http://localhost:5500/operation.html</b> 로 열어 주세요.</div>';
+  });
+</script>
+</body></html>
