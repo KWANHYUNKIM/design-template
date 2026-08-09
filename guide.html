@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>운영 방식 — 디자인 진화 루프는 어떻게 작동하는가</title>
-<meta name="description" content="랜딩 템플릿을 한 장씩 만들어 채점하고 다음 장이 그 점수를 넘으려 하는 진화 루프의 운영 방식.">
+<title>사용 안내 — design-loop 과 design-clone 을 어떻게 쓰는가</title>
+<meta name="description" content="창작용 design-loop 과 복제용 design-clone. 어느 걸 언제 쓰는지, 무엇을 주면 되는지, 무엇이 나오는지.">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
 <style>
@@ -112,8 +112,8 @@ footer a:hover{color:var(--k)}
   <div class="in">
     <a class="lg" href="index.html">랜딩 템플릿<i>.</i></a>
     <span class="sp"></span>
-    <a class="gh" href="guide.html">사용 안내</a>
-    <a class="gh" href="operation.html" aria-current="page">운영 방식</a>
+    <a class="gh" href="guide.html" aria-current="page">사용 안내</a>
+    <a class="gh" href="operation.html">운영 방식</a>
     <a class="gh" href="log.html">제작 기록</a>
     <a class="gh" href="https://github.com/KWANHYUNKIM/design-template" target="_blank" rel="noopener">GitHub</a>
   </div>
@@ -124,13 +124,13 @@ footer a:hover{color:var(--k)}
     <div class="cap">목차</div>
     <ol id="toc"></ol>
     <div class="src">
-      원문 · <a href="operation.md">operation.md</a><br>
+      원문 · <a href="guide.md">guide.md</a><br>
       이 페이지는 그 마크다운을<br>그대로 읽어 렌더합니다.
     </div>
   </nav>
 
   <main class="doc" id="doc">
-    <div class="load">operation.md 불러오는 중<b>…</b></div>
+    <div class="load">guide.md 불러오는 중<b>…</b></div>
   </main>
 </div>
 
@@ -277,7 +277,7 @@ function buildToc(heads){
   addEventListener('scroll', mark, { passive: true });
 }
 
-fetch('operation.md', { cache: 'no-store' })
+fetch('guide.md', { cache: 'no-store' })
   .then(function(r){ if(!r.ok) throw new Error(r.status); return r.text(); })
   .then(function(md){
     var r = render(md);
@@ -293,7 +293,7 @@ fetch('operation.md', { cache: 'no-store' })
       '<div class="load">operation.md 를 읽지 못했습니다.<br><br>' +
       'file:// 로 직접 열면 브라우저가 로컬 파일 요청을 막습니다. ' +
       '저장소 루트에서 <b>python3 -m http.server 5500</b> 을 띄우고 ' +
-      '<b>http://localhost:5500/operation.html</b> 로 열어 주세요.</div>';
+      '<b>http://localhost:5500/guide.html</b> 로 열어 주세요.</div>';
   });
 </script>
 </body></html>
