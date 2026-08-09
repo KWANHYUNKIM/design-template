@@ -53,7 +53,7 @@ table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
 /* ═══ 1 · 게이트 (조작 도판) ═══ */
 .strip{padding-top:var(--s7);padding-bottom:var(--s8);border-bottom:4px solid var(--fg)}
 .mark{font-family:var(--mono);font-size:var(--t-sm);letter-spacing:.3em;color:var(--fg)}
-.strip h1{font-size:var(--t-2xl);margin-top:var(--s3);max-width:16ch}
+.strip h1{font-size:var(--t-4xl);margin-top:var(--s3);max-width:16ch}
 .strip h1 i{font-style:normal;background:var(--k);color:var(--onk);padding:0 var(--s2)}
 .bench{margin-top:var(--s7);display:grid;grid-template-columns:minmax(0,42%) minmax(0,1fr);
   gap:var(--s7);align-items:start}
@@ -128,7 +128,7 @@ table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
 
 /* ═══ 3 · 주장 ═══ */
 .claim{padding-top:var(--s8);padding-bottom:var(--s9);border-top:1px solid var(--edge)}
-.claim h2{font-size:var(--t-4xl);margin-top:var(--s3);max-width:14ch}
+.claim h2{font-size:var(--t-2xl);margin-top:var(--s3);max-width:20ch}
 .bars{margin-top:var(--s7);display:grid;gap:var(--s4)}
 .bar{display:grid;grid-template-columns:minmax(0,110px) minmax(0,1fr);gap:var(--s4);align-items:center}
 .bar>*{min-width:0}
@@ -186,7 +186,7 @@ table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
 
 /* D2 — 두 칸 구간에서 오른쪽 칸이 좁아 400px 숫자가 줄바꿈됐다(오버플로가 아니라 wrap 이라
    probe 여덟 항목 어디에도 안 걸린다). 필요폭 = 1.085F + 88 ≤ 0.58·min(1240,vw−80) − 40 */
-@media (min-width:901px) and (max-width:1049px){ :root{--t-d:min(34vw,400px)} }
+@media (min-width:901px) and (max-width:1120px){ :root{--t-d:min(34vw,400px)} }
 @media (max-width:900px){
   :root{--s5:16px;--s8:32px}
   .hold  {padding-left:var(--s4);padding-right:var(--s6)}
