@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- 시스템 출처: refs/youtube.md · 답사: refs/youtube-survey.md (2026-08-10 실측) · 브랜드·지점·수치는 전부 발명 -->
+<title>물때 — 오늘 물이 빠지는 갯벌</title>
+<meta name="description" content="전국 조간대 체험장의 간조 시각과 갯벌 노출 폭을 지점별로 모아 봅니다. 즐겨찾는 갯벌만 골라 오늘 나갈 곳을 정하세요.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+:root{
+  --sans:Pretendard,'Pretendard Variable',Roboto,-apple-system,system-ui,sans-serif;
+
+  /* 색 — 원본 실측. 무채색 3단계가 전부이고 포인트색은 UI에 쓰지 않는다 */
+  --paper:#ffffff;
+  --band:#f2f2f2;
+  --line:#e5e5e5;
+  --ink:#0f0f0f;   /* --paper 위 19.17:1 */
+  --mut:#606060;   /* --paper 위 6.29:1 */
+  --k:#065fd4;     /* --paper 위 5.84:1 — 원본도 링크 2건에만 썼다 */
+
+  /* 타입 — 상한이 20px 이다. 히어로 타입이 존재하지 않는다 */
+  --t-10:10px;--t-12:12px;--t-14:14px;--t-16:16px;--t-20:20px;
+  --lh-16:16px;--lh-18:18px;--lh-20:20px;--lh-22:22px;--lh-28:28px;
+  --lh-40:40px;  /* 칩 전용 — 행간이 아니라 32px 알약의 세로 중앙을 잡는 값 */
+
+  /* 간격 — 기준 4, 주력 12·8. gap 이 아니라 margin 으로 만든다 */
+  --s4:4px;--s8:8px;--s12:12px;--s16:16px;--s24:24px;--s32:32px;
+
+  --r4:4px;--r8:8px;--r12:12px;--r16:16px;--r20:20px;--rfull:50%;
+
+  /* 판형 — 최대폭이 없다. 전폭을 쓰고 좌측 240만 고정한다 */
+  --rail:240px;--mast:56px;--chipbar:56px;--gut:16px;
+}
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:var(--t-14);line-height:var(--lh-20);letter-spacing:normal;
+  -webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word}
+h1,h2,h3,h4,p,ul,ol,dl,dd,figure,blockquote{margin:0}
+ul{padding:0;list-style:none}
+a{color:inherit;text-decoration:none}
+input{font:inherit;color:inherit}
+button{font:inherit;color:inherit;letter-spacing:inherit;background:none;border:0;cursor:pointer}
+[id]{scroll-margin-top:112px}
+
+/* ── 상단바 56px ── 원본은 여기에 그림자도 테두리도 두지 않는다 ── */
+.top{position:sticky;top:0;z-index:30;height:var(--mast);background:var(--paper);
+  display:flex;align-items:center;padding:0 var(--s16)}
+.topl{display:flex;align-items:center;flex:0 0 auto}
+.ham{width:40px;height:40px;border-radius:var(--rfull);display:grid;
+  align-content:center;justify-items:center;gap:var(--s4)}
+.ham span{display:block;width:16px;height:2px;background:var(--ink);border-radius:var(--r4)}
+.ham:hover{background:var(--band)}
+.logo{margin-left:var(--s16);font-size:var(--t-20);line-height:var(--lh-28);
+  font-weight:700;color:var(--ink)}
+.logo em{font-style:normal;color:var(--mut)}
+.topc{flex:1 1 auto;display:flex;justify-content:center;padding:0 var(--s24);min-width:0}
+.search{display:flex;width:100%;max-width:540px}
+.search input{flex:1 1 auto;min-width:0;height:40px;padding:0 var(--s16);
+  border:1px solid var(--line);border-right:0;border-radius:var(--r20) 0 0 var(--r20);
+  font-size:var(--t-16);line-height:var(--lh-22);background:var(--paper)}
+.search input::placeholder{color:var(--mut)}
+.search button{width:64px;height:40px;border:1px solid var(--line);
+  border-radius:0 var(--r20) var(--r20) 0;background:var(--band);
+  font-size:var(--t-12);line-height:var(--lh-18);color:var(--mut)}
+.topr{flex:0 0 auto;display:flex;align-items:center}
+.ico{width:40px;height:40px;border-radius:var(--rfull);background:var(--band);
+  margin-left:var(--s8)}
+.me{width:32px;height:32px;border-radius:var(--rfull);margin-left:var(--s16);
+  background:linear-gradient(140deg,#7a8b94,#3f5560)}
+
+/* ── 셸 : 좌측 레일 240 + 우측 스크롤 ── */
+.shell{display:flex;align-items:flex-start}
+.rail{flex:0 0 var(--rail);width:var(--rail);position:sticky;top:var(--mast);
+  max-height:calc(100vh - var(--mast));overflow-y:auto;padding:var(--s12) 0}
+.rsec{padding:var(--s12) var(--s12) var(--s12)}
+.rsec + .rsec{border-top:1px solid var(--line)}
+.rsec h4{font-size:var(--t-14);line-height:var(--lh-20);font-weight:700;
+  color:var(--ink);padding:var(--s8) var(--s12)}
+.rsec a{display:flex;align-items:center;height:40px;padding:0 var(--s12);
+  border-radius:var(--r8);font-size:var(--t-14);line-height:var(--lh-20);
+  font-weight:500;color:var(--mut)}
+.rsec a:hover{background:var(--band)}
+.rsec a.on{background:var(--band);color:var(--ink);font-weight:700}
+.rdot{width:24px;height:24px;border-radius:var(--rfull);margin-right:var(--s16);
+  flex:0 0 24px;background:var(--band)}
+.rsec a b{font-weight:inherit;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rsec a i{font-style:normal;margin-left:auto;width:8px;height:8px;flex:0 0 8px;
+  border-radius:var(--rfull);background:var(--k)}
+.rfoot{padding:var(--s16) var(--s24)}
+.rfoot p{font-size:var(--t-12);line-height:var(--lh-18);color:var(--mut);
+  margin-bottom:var(--s12)}
+.rfoot p a{color:var(--mut);margin-right:var(--s8)}
+.rfoot p a:hover{color:var(--ink)}
+.rfoot small{display:block;font-size:var(--t-12);line-height:var(--lh-18);color:var(--mut)}
+
+.main{flex:1 1 auto;min-width:0}
+
+/* ── 칩 바 56px ── 한 줄 고정 · 가로 스크롤 ── */
+.chipbar{position:sticky;top:var(--mast);z-index:20;height:var(--chipbar);
+  background:var(--paper);display:flex;align-items:center;gap:var(--s12);
+  padding:0 var(--s24);overflow-x:auto;scrollbar-width:none}
+.chipbar::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;height:32px;padding:0 var(--s12);border-radius:var(--r8);
+  background:var(--band);color:var(--ink);
+  font-size:var(--t-14);line-height:var(--lh-40);font-weight:500;
+  transition:background .18s ease,color .18s ease}
+.chip:hover{background:#e0e0e0}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+/* ── 카드 그리드 3열 · 거터 16 ── */
+.feed{padding:var(--s24) var(--s16) var(--s32)}
+.grid{display:grid;grid-template-columns:1fr;column-gap:var(--gut);row-gap:var(--s32)}
+.grid>*{min-width:0}
+.card{display:block}
+.thumb{display:block;position:relative;aspect-ratio:16/9;border-radius:var(--r12);
+  overflow:hidden;background:var(--band)}
+.badge{position:absolute;right:var(--s8);bottom:var(--s8);
+  background:rgba(0,0,0,.8);color:#ffffff;border-radius:var(--r4);
+  padding:0 var(--s4);font-size:var(--t-12);line-height:var(--lh-18);font-weight:500;
+  font-variant-numeric:tabular-nums}
+.tag{position:absolute;left:var(--s8);top:var(--s8);
+  background:rgba(255,255,255,.92);color:var(--ink);border-radius:var(--r4);
+  padding:0 var(--s4);font-size:var(--t-10);line-height:var(--lh-16);font-weight:500}
+.meta{display:flex;margin-top:var(--s12)}
+.av{width:36px;height:36px;flex:0 0 36px;border-radius:var(--rfull);margin-right:var(--s12)}
+.txt{min-width:0}
+.txt h3{font-size:var(--t-16);line-height:var(--lh-22);font-weight:500;color:var(--ink);
+  display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.txt .src{font-size:var(--t-14);line-height:var(--lh-20);color:var(--mut);margin-top:var(--s4)}
+.txt .sub{font-size:var(--t-14);line-height:var(--lh-20);color:var(--mut);
+  font-variant-numeric:tabular-nums}
+
+/* ── 세로 셸프 9:16 ── 원본이 그리드 중간에 끼우는 전폭 블록 ── */
+.shelf{grid-column:1/-1;padding:var(--s8) 0 var(--s24);border-top:1px solid var(--line)}
+.shelf h2{font-size:var(--t-20);line-height:var(--lh-28);font-weight:700;color:var(--ink);
+  padding:var(--s16) 0 var(--s12)}
+.srow{display:flex;gap:var(--s8);overflow-x:auto;scrollbar-width:none;padding-bottom:var(--s4)}
+.srow::-webkit-scrollbar{display:none}
+.scard{flex:0 0 198px;width:198px}
+.spic{position:relative;aspect-ratio:9/16;border-radius:var(--r12);overflow:hidden;
+  background:var(--band)}
+.scard h3{font-size:var(--t-14);line-height:var(--lh-20);font-weight:500;color:var(--ink);
+  margin-top:var(--s8);display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;
+  -webkit-box-orient:vertical;overflow:hidden}
+.scard p{font-size:var(--t-12);line-height:var(--lh-18);color:var(--mut);
+  font-variant-numeric:tabular-nums}
+
+/* ── 빈 상태 ── */
+.none{grid-column:1/-1;padding:var(--s32) var(--s16);text-align:center}
+.none b{display:block;font-size:var(--t-16);line-height:var(--lh-22);font-weight:500;color:var(--ink)}
+.none span{display:block;font-size:var(--t-14);line-height:var(--lh-20);color:var(--mut);
+  margin-top:var(--s8)}
+
+/* 사진 슬롯 — 원본 이미지는 가져오지 않는다. 같은 비율의 슬롯만 옮긴다 */
+.p1{background:linear-gradient(160deg,#9fb3bd 0%,#6d8794 46%,#54707d 100%)}
+.p2{background:linear-gradient(155deg,#c8bda8 0%,#9a8f76 52%,#6e6752 100%)}
+.p3{background:linear-gradient(170deg,#a9bcc4 0%,#7d949e 40%,#4e6b76 100%)}
+.p4{background:linear-gradient(150deg,#d3c9b4 0%,#a79b80 48%,#7b7259 100%)}
+.p5{background:linear-gradient(165deg,#93a9b4 0%,#68828e 44%,#425f6b 100%)}
+.p6{background:linear-gradient(145deg,#bfb9a4 0%,#8e8a72 50%,#635f4c 100%)}
+.a1{background:linear-gradient(140deg,#7f9aa6,#4c6874)}
+.a2{background:linear-gradient(140deg,#a89a7d,#6f6550)}
+.a3{background:linear-gradient(140deg,#8fa5ad,#54707b)}
+.a4{background:linear-gradient(140deg,#b3a892,#7a7159)}
+
+@media(min-width:760px){ .grid{grid-template-columns:repeat(2,1fr)} }
+@media(min-width:1200px){ .grid{grid-template-columns:repeat(3,1fr)} }
+@media(max-width:1199px){ .rail{display:none} }
+@media(max-width:759px){
+  /* 좁은 폭에서는 검색을 접는다 — 남겨두면 입력칸이 72px로 찌그러져 placeholder가 잘린다 */
+  .topc{display:none}
+  .topr .ico{margin-left:var(--s4)}
+  .feed{padding-left:var(--s8);padding-right:var(--s8)}
+}
+@media(prefers-reduced-motion:reduce){ .chip{transition:none} }
+html.capture .chip{transition:none}
+</style></head><body>
+
+<header class="top">
+  <div class="topl">
+    <button class="ham" type="button" aria-label="레일 접기"><span></span><span></span><span></span></button>
+    <a class="logo" href="#feed">물때<em>·</em></a>
+  </div>
+  <div class="topc">
+    <div class="search">
+      <input type="search" aria-label="갯벌 지점 검색" placeholder="지점명 · 어촌계 · 지역">
+      <button type="button">검색</button>
+    </div>
+  </div>
+  <div class="topr">
+    <span class="ico"></span><span class="ico"></span><span class="me"></span>
+  </div>
+</header>
+
+<div class="shell">
+
+  <nav class="rail" aria-label="지점 탐색">
+    <div class="rsec">
+      <a class="on" href="#feed"><span class="rdot"></span><b>오늘의 물때</b></a>
+      <a href="#feed"><span class="rdot"></span><b>지도로 보기</b></a>
+    </div>
+
+    <div class="rsec">
+      <h4>즐겨찾는 갯벌</h4>
+      <a href="#feed"><span class="rdot a1"></span><b>동막어촌계</b><i></i></a>
+      <a href="#feed"><span class="rdot a2"></span><b>방아머리관리소</b></a>
+      <a href="#feed"><span class="rdot a3"></span><b>무창포어촌계</b><i></i></a>
+      <a href="#feed"><span class="rdot a1"></span><b>회동리관리소</b></a>
+      <a href="#feed"><span class="rdot a2"></span><b>몽산포관리소</b><i></i></a>
+      <a href="#feed"><span class="rdot a3"></span><b>화포어촌계</b></a>
+      <a href="#feed"><span class="rdot a1"></span><b>동호리관리소</b></a>
+      <a href="#feed"><span class="rdot a2"></span><b>마량포관리소</b></a>
+      <a href="#feed"><span class="rdot"></span><b>더보기</b></a>
+    </div>
+
+    <div class="rsec">
+      <h4>내 기록</h4>
+      <a href="#feed"><span class="rdot"></span><b>다녀온 갯벌</b></a>
+      <a href="#feed"><span class="rdot"></span><b>나중에 갈 곳</b></a>
+      <a href="#feed"><span class="rdot"></span><b>내가 올린 사진</b></a>
+      <a href="#feed"><span class="rdot"></span><b>채집 기록</b></a>
+      <a href="#feed"><span class="rdot"></span><b>알림 설정한 지점</b></a>
+      <a href="#feed"><span class="rdot"></span><b>오프라인 저장</b></a>
+      <a href="#feed"><span class="rdot"></span><b>동행 모집 글</b></a>
+    </div>
+
+    <div class="rsec">
+      <h4>물때 정보</h4>
+      <a href="#feed"><span class="rdot"></span><b>조석표 읽는 법</b></a>
+      <a href="#feed"><span class="rdot"></span><b>갯벌 안전 수칙</b></a>
+      <a href="#feed"><span class="rdot"></span><b>금어기·포획 금지</b></a>
+      <a href="#feed"><span class="rdot"></span><b>장비와 복장</b></a>
+    </div>
+
+    <div class="rsec">
+      <a href="#feed"><span class="rdot"></span><b>설정</b></a>
+    </div>
+
+    <div class="rfoot">
+      <p><a href="#feed">소개</a><a href="#feed">문의</a><a href="#feed">약관</a><a href="#feed">개인정보</a></p>
+      <p><a href="#feed">데이터 출처</a><a href="#feed">정정 요청</a><a href="#feed">제휴</a></p>
+      <small>조석 예보는 관측소 기준 추정값입니다. 현장 상황과 다를 수 있으니
+        입수 전 반드시 관리소 안내를 확인하세요.</small>
+      <small>© 2026 물때</small>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="chipbar" id="chips" role="group" aria-label="갯벌 골라 보기"></div>
+
+    <div class="feed" id="feed">
+      <div class="grid" id="grid"></div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+scrollTo(0,0);
+addEventListener('load',function(){scrollTo(0,0)});
+
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+
+var CHIPS=['전체','서해','남해','오늘 간조','조개','낙지','초보','주차 가능','화장실',
+           '갯벌체험장','무료','펄갯벌','암반','야간 개방'];
+
+/* w = 갯벌 노출 폭 km · t = 간조 시각 */
+/* 제목은 원본 대역(2줄로 접히는 24~34자)에 맞춘다. 짧으면 카드 높이가 15% 어긋난다 */
+var SITES=[
+ {n:'강화 동막 갯벌 — 오늘은 갯골이 세 곳까지 열리고 진입로도 넓습니다', s:'동막어촌계',   t:'14:20', w:'2.1', p:'p1', a:'a1', tag:'모래갯벌', k:['서해','오늘 간조','조개','초보','주차 가능','화장실','갯벌체험장']},
+ {n:'대부도 방아머리 조간대 — 진입로 포장 공사로 남쪽 우회가 필요합니다', s:'방아머리관리소', t:'13:55', w:'1.4', p:'p2', a:'a2', tag:'혼합갯벌', k:['서해','오늘 간조','조개','주차 가능','화장실','갯벌체험장']},
+ {n:'무창포 신비의 바닷길 — 자갈 구간이 젖어 있어 미끄럼에 특히 주의하세요', s:'무창포어촌계', t:'15:10', w:'1.6', p:'p3', a:'a3', tag:'자갈길',   k:['서해','오늘 간조','초보','주차 가능','화장실','무료']},
+ {n:'진도 회동 바닷길 — 노출 폭이 올해 들어 가장 넓습니다',  s:'회동리관리소',  t:'16:02', w:'2.8', p:'p4', a:'a1', tag:'모래갯벌', k:['남해','오늘 간조','초보','주차 가능','갯벌체험장']},
+ {n:'변산 격포 조간대 — 암반 구간만 열리고 모래밭은 잠깁니다', s:'격포관리소',   t:'14:44', w:'0.9', p:'p5', a:'a2', tag:'암반',     k:['서해','오늘 간조','초보','화장실','암반','무료']},
+ {n:'태안 몽산포 — 낙지 구멍이 남단 수로 쪽에 몰려 있어 이동이 짧습니다', s:'몽산포관리소', t:'13:30', w:'1.8', p:'p6', a:'a3', tag:'모래갯벌', k:['서해','오늘 간조','낙지','주차 가능','화장실','갯벌체험장']},
+ {n:'순천만 화포 — 펄이 무릎까지 빠지니 장화 없이는 들어가지 마세요', s:'화포어촌계',   t:'15:48', w:'3.2', p:'p1', a:'a1', tag:'펄갯벌',   k:['남해','오늘 간조','낙지','조개','펄갯벌']},
+ {n:'고창 동호 — 조개밭이 어제보다 200m 더 드러납니다',      s:'동호리관리소',  t:'14:05', w:'2.4', p:'p2', a:'a2', tag:'모래갯벌', k:['서해','오늘 간조','조개','주차 가능','갯벌체험장','무료']},
+ {n:'남해 문항 어촌 — 체험장 운영은 오후 두 시부터입니다',   s:'문항어촌계',    t:'16:30', w:'1.1', p:'p3', a:'a3', tag:'혼합갯벌', k:['남해','조개','초보','화장실','갯벌체험장']},
+ {n:'서천 마량포 — 수로가 깊어 초보자는 권하지 않습니다',    s:'마량포관리소',  t:'13:12', w:'1.9', p:'p4', a:'a1', tag:'펄갯벌',   k:['서해','오늘 간조','낙지','주차 가능','펄갯벌']},
+ {n:'여수 화양 조간대 — 암반 위 굴 채취는 금지 구간입니다',  s:'화양관리소',    t:'15:25', w:'1.3', p:'p5', a:'a2', tag:'암반',     k:['남해','오늘 간조','초보','암반','무료']},
+ {n:'부안 모항 — 물이 도는 속도가 빨라 두 시간만 봅니다',    s:'모항관리소',    t:'14:52', w:'1.5', p:'p6', a:'a3', tag:'혼합갯벌', k:['서해','오늘 간조','조개','화장실','무료']}
+];
+
+/* 세로 셸프 — 지금 물이 빠지는 중 */
+var NOW=[
+ {n:'동막 3번 갯골',   r:'42분 남음', p:'p1'},
+ {n:'몽산포 남단',     r:'1시간 8분', p:'p6'},
+ {n:'화포 갯벌 초입',  r:'25분 남음', p:'p3'},
+ {n:'동호 조개밭',     r:'1시간 31분',p:'p2'},
+ {n:'마량포 수로',     r:'55분 남음', p:'p4'},
+ {n:'격포 암반 구간',  r:'2시간 4분', p:'p5'}
+];
+
+var sel='전체';
+var chips=document.getElementById('chips'), grid=document.getElementById('grid');
+
+CHIPS.forEach(function(c){
+  var b=document.createElement('button');
+  b.type='button'; b.className='chip'; b.textContent=c;
+  b.addEventListener('click',function(){ sel=c; draw(); });
+  chips.appendChild(b);
+});
+
+function shelf(){
+  return '<section class="shelf"><h2>물 빠지는 중</h2><div class="srow">'+
+    NOW.map(function(x){
+      return '<div class="scard"><div class="spic '+x.p+'"></div>'+
+        '<h3>'+x.n+'</h3><p>'+x.r+'</p></div>';
+    }).join('')+'</div></section>';
+}
+
+function card(x){
+  return '<article class="card">'+
+    '<a class="thumb '+x.p+'" href="#feed" aria-label="'+x.n+' 상세">'+
+      '<span class="tag">'+x.tag+'</span>'+
+      '<span class="badge">간조 '+x.t+'</span>'+
+    '</a>'+
+    '<div class="meta"><span class="av '+x.a+'"></span><div class="txt">'+
+      '<h3>'+x.n+'</h3>'+
+      '<p class="src">'+x.s+'</p>'+
+      '<p class="sub">노출 폭 '+x.w+'km · 오늘 '+x.t+'</p>'+
+    '</div></div></article>';
+}
+
+function draw(){
+  [].forEach.call(chips.querySelectorAll('.chip'),function(b){
+    b.setAttribute('aria-pressed',String(b.textContent===sel));
+  });
+
+  var list=(sel==='전체')?SITES:SITES.filter(function(x){return x.k.indexOf(sel)>-1});
+
+  if(!list.length){
+    grid.innerHTML='<div class="none"><b>‘'+sel+'’ 조건에 맞는 지점이 오늘은 없습니다.</b>'+
+      '<span>야간 개방은 4월부터 10월까지만 운영합니다. 다른 조건으로 보시거나 '+
+      '지점에 알림을 걸어두면 열리는 날 알려드립니다.</span></div>';
+    return;
+  }
+
+  var html='';
+  list.forEach(function(x,i){
+    html+=card(x);
+    if(i===5) html+=shelf();          /* 원본은 그리드 중간에 전폭 셸프를 끼운다 */
+  });
+  if(list.length<=5) html+=shelf();
+  grid.innerHTML=html;
+}
+draw();
+</script>
+</body></html>
+</content>
