@@ -98,10 +98,10 @@ footer a:hover{color:var(--k)}
 
 <section class="hero wrap">
   <p class="eyb">무료 · 출처 표기 없이 사용 가능</p>
-  <h1>파일 하나 열면 끝나는<br><em>한국어 랜딩 템플릿</em> 27종.</h1>
+  <h1>파일 하나 열면 끝나는<br><em>한국어 랜딩 템플릿</em> 28종.</h1>
   <p>빌드 도구도, 설치도, 계정도 필요 없습니다. HTML 한 장 안에 스타일과 스크립트가 전부 들어 있어서 내려받아 더블클릭하면 바로 열립니다. 한글 줄바꿈·모바일 폴백·모션 접근성까지 맞춰져 있습니다.</p>
   <div class="facts">
-    <div><div class="v">27종</div><div class="l">템플릿</div></div>
+    <div><div class="v">28종</div><div class="l">템플릿</div></div>
     <div><div class="v">0개</div><div class="l">의존성 · 빌드 단계</div></div>
     <div><div class="v">1개</div><div class="l">파일이면 동작</div></div>
     <div><div class="v">390px</div><div class="l">부터 대응</div></div>
@@ -133,6 +133,21 @@ footer a:hover{color:var(--k)}
           <div class="act">
             <a class="b1" href="templates/run-29-doteul.html" target="_blank" rel="noopener">열기</a>
             <a class="b2" href="templates/run-29-doteul.html" download>내려받기 <i>28KB</i></a>
+          </div>
+        </div>
+      </article>
+      <article class="card">
+        <a class="prev" href="templates/run-30-smin.html" target="_blank" rel="noopener" aria-label="스민 미리보기">
+          <div class="frame"><iframe src="templates/run-30-smin.html" loading="lazy" tabindex="-1" scrolling="no" title="스민 미리보기"></iframe></div>
+          <span class="no">30</span>
+          <span class="dot" style="background:#2c4a6b"></span>
+        </a>
+        <div class="meta">
+          <h3>스민</h3>
+          <p>천연염색 공방 · 한 해 원부</p>
+          <div class="act">
+            <a class="b1" href="templates/run-30-smin.html" target="_blank" rel="noopener">열기</a>
+            <a class="b2" href="templates/run-30-smin.html" download>내려받기 <i>49KB</i></a>
           </div>
         </div>
       </article>
@@ -555,7 +570,7 @@ fetch('figma-links.json').then(function(r){return r.ok?r.json():null}).then(func
   });
 }).catch(function(){});
 
-/* 미리보기 iframe은 화면에 들어올 때만 로드한다 — 26개를 한꺼번에 띄우면 느려진다 */
+/* 미리보기 iframe은 화면에 들어올 때만 로드한다 — 28개를 한꺼번에 띄우면 느려진다 */
 var io=new IntersectionObserver(function(es){es.forEach(function(e){
   if(e.isIntersecting){var f=e.target.querySelector('iframe');
     if(f&&!f.dataset.on){f.dataset.on='1'}

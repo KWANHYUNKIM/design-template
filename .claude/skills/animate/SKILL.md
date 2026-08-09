@@ -13,17 +13,24 @@ description: 이 저장소의 템플릿에 모션과 인터랙션을 넣는다. 
 
 ## 1. 먼저 기법 대장을 대조한다
 
-25개 템플릿이 실제로 쓴 것. 만들기 전에 **내가 쓰려는 게 여기 몇 번 나왔는지** 센다.
+**28개 템플릿**이 실제로 쓴 것 (실측 · RUN30 시점). 만들기 전에 **내가 쓰려는 게 여기 몇 번 나왔는지** 센다.
 
 | 기법 | 쓴 RUN 수 | 판단 |
 |---|---|---|
-| IntersectionObserver 리빌 | **25 / 25** | 기본기다. 이걸로는 점수가 안 난다 |
-| `requestAnimationFrame` 스크럽/카운트업 | 22 | 포화 |
-| `transition` 호버 | 24 | 기본기 |
+| IntersectionObserver 리빌 | **28 / 28** | 기본기다. 이걸로는 점수가 안 난다 |
+| `transition` 호버 | 25 | 기본기 |
+| `requestAnimationFrame` 스크럽/카운트업 | 23 | 포화 |
 | `@keyframes` 무한 루프 | 15 | 흔함 |
-| `scroll-snap` 캐러셀 | 6 (15·16·18·19·20·24) | 여지 있음 |
+| `scroll-snap` 캐러셀 | 7 | 여지 있음 |
+| Pointer Events 조작 | 6 (16·18·19·24·26·30) | 늘고 있다 — 종류로 승부할 것 |
 | `conic-gradient` 회전 크롬 | 3 (09·14·21) | NOIR의 시그니처. 재사용은 리믹스로만 |
 | `cursor:none` 커스텀 커서 | 2 (13·14) | 오래 안 썼다 |
+
+숫자를 직접 다시 세는 법:
+```bash
+cd templates && for p in IntersectionObserver requestAnimationFrame ':hover' '@keyframes' scroll-snap conic-gradient pointerdown; do
+  printf "%-24s %s\n" "$p" "$(grep -l "$p" run-*.html | wc -l)"; done
+```
 
 ### ⚠️ 슬라이더는 이미 7번 썼다
 
@@ -62,11 +69,15 @@ grep -ohE "addEventListener\('[a-z]+'" run-2*.html | sort | uniq -c | sort -rn
 | 20 BEVEL | 옵션 구성 | 가격·중량·납기·비교표 동시 |
 | 22 ANCRE | 4축 구성 | 시계 그림 + 예상 일차 |
 | 23 들물 | **시간 스크럽** | 단면도에 물이 차오르고 귀환 한계 재계산 |
-| 24 GLEAN | `pointermove` / `pointerdown` | — |
+| 24 GLEAN | `pointermove` / `pointerdown` | 조명 위치에 따라 도판이 바뀜 |
+| 25 밤길 | 다이어그램 **노드 클릭** | 표의 기준점이 재설정됨 |
+| 26 울림통 | **크로스오버 드래그** | 대역·부하 재계산 + **다음 섹션의 담당 유닛까지 바뀜**(모듈 간 결합) |
+| 29 돋을 | 낮/밤 전환 | 같은 간판이 두 조건에서 다르게 읽힘 |
+| 30 스민 | **드래그로 순서 재배열** | 겹침 순서가 바뀌면 3색 띠가 재배치되고 최종 색·색좌표·견뢰도가 갈림 |
 
 ### 아직 안 쓴 종류 (후보)
 
-- 드래그로 **순서를 바꾸는** 것 (정렬·우선순위·조합)
+- ~~드래그로 **순서를 바꾸는** 것~~ → RUN30이 씀
 - 지도/평면도 위 **지점 선택** → 그 지점의 단면·수치
 - 텍스트를 **직접 고쳐 쓰면** 레이아웃이 재조판되는 것
 - **비교 대상을 추가/제거**하면 표와 그래프가 함께 재구성
@@ -125,6 +136,8 @@ var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
 | `cursor:none` | JS 실패/로드 전에 커서가 사라짐 | `.js` 클래스 게이트로 폴백 유지 |
 | 카운트업 단위 | 통째 텍스트면 좁은 칸에서 줄바꿈, `nowrap`이면 가로 오버플로 | `<span>` 분리 + `nowrap` + 트랙을 `minmax(max-content,1fr)` |
 | 정적 원반 | 임팩트 낮음 | conic-gradient + 느린 spin(16s) + 이동 하이라이트 스윕 |
+| 조작 결과가 미묘 | "바뀌긴 하는데 눈에 안 보임" — RUN30 초안은 여섯 결과가 전부 L\*18~24라 구분이 안 됐다 | 결과를 **두 겹으로** 보여라: 조작 상태 자체를 그림으로(3색 띠) + 최종 결과. 값만 바뀌는 건 인터랙션이 아니다 |
+| 재정렬 UI가 드래그 전용 | 터치·키보드·스크린리더에서 죽는다 | 드래그 + **↑↓ 버튼 + 방향키**를 항상 함께. 재렌더 후 `focus()` 복귀까지 |
 
 ## 6. 검증
 
@@ -142,5 +155,5 @@ python3 -m http.server 5500
 
 ## 참조
 
-`.claude/skills/design-loop/references/spec.md`(함정 11종·캡처 모드) · `EVOLUTION.md`(정교화 티어)
+`.claude/skills/design-loop/references/spec.md`(함정 15종·캡처 모드) · `EVOLUTION.md`(정교화 티어)
 · 미감의 방향은 `taste` 스킬이 먼저 정한다

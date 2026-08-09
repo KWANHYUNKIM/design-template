@@ -123,6 +123,52 @@ const CHECKS = [
       return /data-suf/.test(s) && !/<span class="u">/.test(s)
         ? '카운트업 단위를 span으로 분리하지 않음' : null;
     }},
+  /* ── RUN26 지시로 추가된 3종 ─────────────────────────────
+     RUN26 결함 9종 중 6종이 기존 12검사를 통과하고도 남았다. 그 셋을 여기서 잡는다. */
+
+  { id: 'contrast-annotation', level: 'error',
+    why: '눈으로 "회색이면 됐다" 판단은 반드시 미끄러진다 — RUN21 3.3:1 · RUN25 4.22:1 · RUN26 3.16:1 (세 번 재발)',
+    test: s => {
+      const root = (s.match(/:root\s*\{([\s\S]*?)\}/) || [])[1] || '';
+      // :root 에 정의된 색 토큰 중, 본문/보조 텍스트로 쓰이는 것
+      const textish = /^--(mut|body|fg|ink|dim|sub|cap|meta|note|muted|text)/;
+      const missing = [];
+      for (const m of root.matchAll(/(--[a-z0-9-]+)\s*:\s*(#[0-9a-fA-F]{3,8}|rgb[^;]*)\s*;([^\n]*)/g)) {
+        if (!textish.test(m[1])) continue;
+        if (!/[0-9](\.[0-9]+)?\s*:\s*1/.test(m[3])) missing.push(m[1]);
+      }
+      return missing.length
+        ? `${missing.join(', ')} — 정의 줄에 대비비 실측 주석(예: /* 종이 위 7.1:1 */)이 없음` : null;
+    }},
+
+  { id: 'anchor-scroll-margin', level: 'error',
+    why: 'sticky 바가 있으면 앵커가 바 아래로 착지해 제목이 가려진다 — RUN26',
+    test: s => {
+      // `\btop` 은 border-top·margin-top 의 top 에도 걸린다. 앞에 -나 단어문자가 없어야 한다.
+      const sticky = /position\s*:\s*sticky/.test(s) && /(?<![-\w])top\s*:\s*0/.test(s);
+      if (!sticky) return null;
+      const anchors = [...s.matchAll(/href\s*=\s*"#([A-Za-z][\w-]*)"/g)].map(m => m[1]);
+      if (!anchors.length) return null;
+      if (/scroll-margin-top\s*:\s*(?!0[a-z%]*\s*[;}])/.test(s)) return null;
+      return `sticky top:0 + 내부 앵커 ${new Set(anchors).size}개인데 scroll-margin-top 선언이 없음`;
+    }},
+
+  { id: 'narrow-table', level: 'warn',
+    why: '390px에서 열이 뭉개져 글자가 세로로 선다 — RUN25 비고 열 · RUN26 원장표 89px',
+    test: s => {
+      const rows = [...s.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/g)];
+      const maxCols = rows.reduce((n, r) => Math.max(n, (r[1].match(/<t[hd]\b/g) || []).length), 0);
+      if (maxCols < 4) return null;
+      // 390px에서 "그 표를" 다르게 처리하는 장치가 있어야 통과.
+      // 페이지 어딘가의 overflow-x:auto 는 인정하지 않는다 — 표와 무관한 곳일 수 있다.
+      const mqBlocks = [...s.matchAll(/@media[^{]*max-width\s*:\s*([3-8]\d\d|900)px[^{]*\{([\s\S]*?)\n\s*\}/g)];
+      const mqTouchesTable = mqBlocks.some(b => /(^|[\s,>{])(table|thead|tbody|tr|td|th)[\s,{:.]/.test(b[2]));
+      // 표를 감싼 스크롤 컨테이너: 셀렉터 이름에 tab/표/ledger/grid 류가 들어간 규칙의 overflow-x
+      const scrollWrap = /\.[a-z0-9_-]*(tab|tbl|ledger|sheet|scroll)[a-z0-9_-]*\s*\{[^}]*overflow-x\s*:\s*auto/i.test(s);
+      const hasNarrowRule = mqTouchesTable || scrollWrap;
+      return hasNarrowRule ? null
+        : `표 최대 ${maxCols}열인데 390px 대응(열 재배치 또는 overflow-x:auto)이 없음 — 390÷${maxCols}≈${Math.round(342 / maxCols)}px/열`;
+    }},
 ];
 
 function checkFile(path) {

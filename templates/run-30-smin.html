@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>스민 염색 원부 · 제7호 — 2025.03 – 2026.02</title>
+<meta name="description" content="스민 염색소가 한 해 동안 무엇을 언제 따서 어떻게 물들였는지 적은 원부. 채취 달력, 색 열두 가지의 매염·욕비·견뢰도 명세, 겹쳐 물들일 때 순서가 색을 어떻게 바꾸는지, 그리고 올해 버린 물까지.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --serif:'Noto Serif KR',Nanum Myeongjo,Batang,Georgia,serif;
+  --sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+
+  /* 색 — 마 종이와 잉크. 포인트는 교정용 붉은색 하나뿐이고, 진짜 색은 견본에만 있다.
+     (KELVIN 계승 규칙: UI는 무채색, 색은 오직 물들인 것에만) */
+  --paper:#eeebe3;          /* 바탕 — 순백 금지, 마 종이 */
+  --paper2:#e4e0d4;         /* 촘촘한 구간의 눌린 바탕 */
+  --ink:#191713;            /* 제목 — 종이 위 15.02:1 · 진종이 위 13.56:1 */
+  --body:#332f28;           /* 본문 — 종이 위 11.17:1 · 진종이 위 10.08:1 */
+  --mut:#5f5949;            /* 보조·캡션 — 종이 위 5.85:1 · 진종이 위 5.28:1 (AA 통과) */
+  --red:#8c2f21;            /* 교정 붉은색 — 종이 위 6.93:1 · 진종이 위 6.26:1 */
+  --rule:#c9c2b0;           /* 괘선 — 텍스트 아님 */
+  --rule2:#b3ab95;
+  --lit:#dcd5c0;            /* 각주 점등 바탕 — 이 위의 --body 는 9.08:1 */
+
+  /* 타입 스케일 — 모듈러 1.25배(base 16) */
+  --t-xs:12px;--t-sm:14px;--t-base:16px;--t-md:20px;--t-lg:25px;--t-xl:31px;
+  --t-2xl:39px;--t-3xl:49px;--t-4xl:61px;--t-d1:76px;--t-d2:96px;
+
+  /* 간격 스케일 — 4배수 */
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;
+  --s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--body);
+  font-family:var(--serif);font-size:var(--t-base);line-height:1.8;
+  word-break:keep-all;overflow-wrap:break-word;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+h1,h2,h3{margin:0;color:var(--ink);font-weight:600;line-height:1.28;letter-spacing:-.01em}
+p{margin:0}
+a{color:inherit}
+sup{font-size:var(--t-xs);line-height:0}
+
+/* ── 지면 컨테이너. 좌우를 일부러 다르게 준다 (AD-3: 좌우 같은 여백은 지루하다) ── */
+.sheet{max-width:1200px;margin:0 auto;padding-left:var(--s7);padding-right:var(--s9)}
+.sheet-n{max-width:1200px;margin:0 auto;padding-left:var(--s9);padding-right:var(--s7)}
+
+/* 본문 단 — 행장 45~75자 */
+.col{max-width:34em}
+.col p+p{margin-top:1.05em}
+
+.lbl{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;
+     text-transform:uppercase;color:var(--mut);margin-bottom:var(--s3)}
+.cap{font-family:var(--sans);font-size:var(--t-xs);line-height:1.55;color:var(--mut);
+     margin-top:var(--s2);max-width:32em}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+
+/* 각주 참조 — 호버/포커스하면 아래 각주가 켜진다 */
+.fn{font-family:var(--mono);font-size:var(--t-xs);color:var(--red);
+    text-decoration:none;padding:0 1px;border-bottom:1px solid transparent;cursor:help}
+.fn:hover,.fn:focus-visible{border-bottom-color:var(--red);outline:none}
+.notes{border-top:1px solid var(--rule);margin-top:var(--s6);padding-top:var(--s4);
+       font-family:var(--sans);font-size:var(--t-xs);line-height:1.7;color:var(--mut);max-width:44em}
+.notes li{margin-bottom:var(--s2);transition:background-color .25s,color .25s}
+.notes li.lit{background:var(--lit);color:var(--body)}
+.notes ol{margin:0;padding-left:1.5em}
+
+/* 리빌 */
+.rise{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
+.rise.vis{opacity:1;transform:none}
+.d1{transition-delay:.09s}.d2{transition-delay:.18s}
+
+/* ═══════════════ 1 · 표제면 — 촘촘 ═══════════════ */
+.plate{padding-top:var(--s7);padding-bottom:var(--s8);background:var(--paper)}
+.plate-g{display:grid;grid-template-columns:1.05fr .95fr;gap:var(--s9);align-items:start}
+.plate-g>*{min-width:0}
+.masthead{border-top:3px solid var(--ink);border-bottom:1px solid var(--ink);
+          padding-top:var(--s4);padding-bottom:var(--s4);margin-bottom:var(--s6)}
+.masthead h1{font-size:var(--t-3xl);letter-spacing:-.03em;font-weight:700}
+.masthead .sub{font-family:var(--sans);font-size:var(--t-sm);color:var(--mut);margin-top:var(--s2)}
+.issue{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s5);margin-top:var(--s3);
+       font-family:var(--mono);font-size:var(--t-xs);color:var(--mut)}
+.issue b{color:var(--ink);font-weight:500}
+.lead{font-size:var(--t-md);line-height:1.72;color:var(--ink)}
+.imprint{margin-top:var(--s6);border-top:1px solid var(--rule);padding-top:var(--s4);
+         display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s3) var(--s5);
+         font-family:var(--sans);font-size:var(--t-xs);line-height:1.6}
+.imprint dt{color:var(--mut)}
+.imprint dd{margin:2px 0 0;color:var(--ink)}
+.plate figure{margin:0}
+/* 컨테이너가 세로형이면 cover가 세로를 자르지 않는다 — 종횡비를 원본(3:2)보다 넓게 고정해야
+   아래 칸(견본 아닌 물건들)이 잘려 나간다 */
+.plate figure img{width:100%;aspect-ratio:2/1;height:auto;object-fit:cover;object-position:50% 22%;
+                  background:linear-gradient(140deg,#2c3a52,#59708f 55%,#2a3446)}
+
+/* ═══════════════ 2 · 인용 — 성기게 ═══════════════ */
+.voices{padding-top:var(--s10);padding-bottom:var(--s10);background:var(--paper)}
+.voices .intro{font-family:var(--sans);font-size:var(--t-sm);color:var(--mut);max-width:36em;margin-bottom:var(--s9)}
+.qs{display:grid;gap:var(--s9)}
+.q{display:grid;grid-template-columns:minmax(0,7.5em) minmax(0,1fr);gap:var(--s6);align-items:baseline}
+.q>*{min-width:0}
+.q .who{font-family:var(--sans);font-size:var(--t-xs);line-height:1.6;color:var(--mut);text-align:right}
+.q .who b{display:block;font-size:var(--t-sm);color:var(--ink);font-weight:600}
+.q blockquote{margin:0;font-size:var(--t-lg);line-height:1.6;color:var(--ink);text-indent:-.42em}
+.q .src{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s3)}
+.tally{margin-top:var(--s9);border-top:1px solid var(--ink);padding-top:var(--s4);
+       display:flex;flex-wrap:wrap;gap:var(--s6)}
+.tally div{font-family:var(--sans);font-size:var(--t-xs);color:var(--mut)}
+.tally i{display:block;font-style:normal;font-family:var(--mono);font-size:var(--t-xl);
+         color:var(--ink);line-height:1.1;font-variant-numeric:tabular-nums}
+
+/* ═══════════════ 3 · 채취 달력 — 다시 촘촘 ═══════════════ */
+.season{padding-top:var(--s8);padding-bottom:var(--s7);background:var(--paper2);
+        border-top:1px solid var(--rule2);border-bottom:1px solid var(--rule2)}
+.season-g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.72fr);gap:var(--s8);align-items:start}
+.season h2{font-size:var(--t-xl)}
+.season .dek{font-family:var(--sans);font-size:var(--t-sm);color:var(--mut);
+             margin-top:var(--s3);margin-bottom:var(--s5);max-width:34em}
+table{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:var(--t-sm)}
+caption{text-align:left;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);
+        padding-bottom:var(--s2)}
+th,td{padding:7px 10px 7px 0;text-align:left;border-bottom:1px solid var(--rule);vertical-align:baseline}
+thead th{font-size:var(--t-xs);color:var(--mut);font-weight:500;letter-spacing:.04em;
+         border-bottom:1px solid var(--ink)}
+tbody tr:last-child td{border-bottom:1px solid var(--ink)}
+td.n,th.n{text-align:right;padding-right:0;font-family:var(--mono);font-variant-numeric:tabular-nums}
+tfoot td{padding-top:9px;font-family:var(--mono);font-size:var(--t-xs);color:var(--ink);border:0}
+.rest td{color:var(--mut)}
+.season figure{margin:0}
+.season figure img{width:100%;height:clamp(260px,32vw,400px);object-fit:cover;
+                   background:linear-gradient(140deg,#25405c,#4a6b8a 60%,#1f2f44)}
+
+/* ═══════════════ 4 · 겹침 순서 — 도구. 중간 호흡 ═══════════════ */
+.order{padding-top:var(--s9);padding-bottom:var(--s9);background:var(--paper)}
+.order-head{max-width:38em;margin-bottom:var(--s7)}
+.order-head h2{font-size:var(--t-2xl);letter-spacing:-.02em}
+.order-head p{margin-top:var(--s4);font-size:var(--t-md);line-height:1.7}
+.rig{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.02fr);gap:var(--s8);align-items:start}
+.rig>*{min-width:0}
+
+.vat{border:1px solid var(--ink);background:var(--paper2);padding:var(--s5)}
+.vat .hint{font-family:var(--sans);font-size:var(--t-xs);color:var(--mut);margin-bottom:var(--s4)}
+.stack{list-style:none;margin:0;padding:0;display:grid;gap:var(--s3)}
+.dye{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:var(--s4);align-items:center;
+     border:1px solid var(--rule2);background:var(--paper);padding:var(--s3) var(--s4);
+     cursor:grab;touch-action:none;user-select:none;transition:box-shadow .18s,border-color .18s,transform .18s}
+.dye:hover{border-color:var(--ink)}
+.dye:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.dye.drag{cursor:grabbing;border-color:var(--ink);box-shadow:4px 4px 0 var(--rule2);z-index:3;position:relative}
+.dye .ord{font-family:var(--mono);font-size:var(--t-md);color:var(--red);width:1.4em;
+          font-variant-numeric:tabular-nums}
+.dye .nm{font-size:var(--t-md);color:var(--ink)}
+.dye .nm small{display:block;font-family:var(--sans);font-size:var(--t-xs);color:var(--mut);margin-top:1px}
+.dye .sw{width:34px;height:34px;border:1px solid var(--ink)}
+.mv{display:flex;gap:var(--s1)}
+.mv button{font-family:var(--mono);font-size:var(--t-xs);line-height:1;padding:7px 8px;
+           border:1px solid var(--rule2);background:var(--paper);color:var(--body);cursor:pointer}
+.mv button:hover{border-color:var(--ink);background:var(--paper2)}
+.mv button:focus-visible{outline:2px solid var(--red);outline-offset:1px}
+.vat .fixed{margin-top:var(--s4);border-top:1px solid var(--rule);padding-top:var(--s3);
+            font-family:var(--sans);font-size:var(--t-xs);color:var(--mut)}
+.vat .fixed b{color:var(--ink);font-family:var(--mono)}
+
+.result{border:1px solid var(--ink);background:var(--paper)}
+/* 담근 순서를 띠로 먼저 보여 준다 — 순서가 바뀌면 띠가 실제로 자리를 옮긴다 */
+.layers{display:grid;grid-template-rows:repeat(3,20px);border-bottom:1px solid var(--ink)}
+.layers span{display:block;transition:background-color .4s ease}
+.cloth{height:clamp(170px,22vw,230px);background:#4a3b23;transition:background-color .55s ease}
+.seq{font-family:var(--mono);font-size:var(--t-sm);color:var(--mut);margin-bottom:var(--s2)}
+.seq b{color:var(--ink);font-weight:500}
+.rd{padding:var(--s5);border-top:1px solid var(--ink)}
+.rd .nm2{font-size:var(--t-2xl);color:var(--ink);letter-spacing:-.02em;line-height:1.15}
+.rd .rule-txt{font-family:var(--sans);font-size:var(--t-sm);color:var(--body);margin-top:var(--s3);max-width:30em}
+.rd .rule-txt b{color:var(--red);font-weight:600}
+/* 3열 고정이면 901~1150px에서 L*a*b* 가 두 줄로 깨져 베이스라인이 어긋난다(실측).
+   auto-fit 으로 폭에 맞춰 3→2→1 열로 접고, 값 자체는 절대 안 깨지게 nowrap. */
+.rd dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(10.5em,1fr));gap:var(--s4);
+       margin:var(--s5) 0 0;border-top:1px solid var(--rule);padding-top:var(--s4)}
+.rd dl>div{min-width:0}
+.rd dt{font-family:var(--sans);font-size:var(--t-xs);color:var(--mut)}
+.rd dd{margin:2px 0 0;font-family:var(--mono);font-size:var(--t-md);color:var(--ink);
+       font-variant-numeric:tabular-nums;white-space:nowrap}
+.rd dd small{font-size:var(--t-xs);color:var(--mut)}
+
+/* ═══════════════ 5 · 현장 기록 — 가장 성기게 ═══════════════ */
+.field{padding-top:var(--s10);padding-bottom:var(--s10);background:var(--paper)}
+.field .kick{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;color:var(--mut);
+             text-transform:uppercase;margin-bottom:var(--s4)}
+.field h2{font-size:var(--t-2xl);max-width:16em;letter-spacing:-.02em;margin-bottom:var(--s7)}
+.field-g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.66fr);gap:var(--s9);align-items:start}
+.field-g>*{min-width:0}
+.body-txt{font-size:var(--t-base);line-height:1.85}
+.body-txt>p:first-of-type::first-letter{
+  float:left;font-size:var(--t-d1);line-height:.82;padding:6px 10px 0 0;color:var(--ink);font-weight:600}
+.pull{margin:var(--s7) 0;border-left:3px solid var(--red);padding-left:var(--s5);
+      font-size:var(--t-lg);line-height:1.55;color:var(--ink)}
+.field figure{margin:0;position:sticky;top:var(--s5)}
+/* 원본 우상단에 타 공방 상호 간판이 있다. 컨테이너를 원본(3:2)보다 세로로 좁혀
+     가로를 자르고, 왼쪽 아래(개수대)만 남긴다 — spec.md 「상표 노출컷 제외」 */
+.field figure img{width:100%;aspect-ratio:2/3;height:auto;object-fit:cover;object-position:0% 58%;
+                  background:linear-gradient(140deg,#23384e,#40607f 60%,#1c2b3d)}
+
+/* ═══════════════ 6 · 명세표 — 촘촘 ═══════════════ */
+.ledger{padding-top:var(--s7);padding-bottom:var(--s8);background:var(--paper2);
+        border-top:1px solid var(--rule2);border-bottom:1px solid var(--rule2)}
+.ledger h2{font-size:var(--t-xl)}
+.ledger .dek{font-family:var(--sans);font-size:var(--t-sm);color:var(--mut);
+             margin-top:var(--s3);margin-bottom:var(--s5);max-width:40em}
+.ledger td .chip{display:inline-block;width:13px;height:13px;border:1px solid var(--ink);
+                 vertical-align:-2px;margin-right:7px}
+/* 칩과 색이름을 한 덩이로 묶는다 — 접힌 표에서 grid 아이템이 셋이 되면 이름이 라벨 열로 떨어진다 */
+.ledger td .cn{display:inline-block}
+
+/* ═══════════════ 7 · 버린 물 — 닫는 자리 ═══════════════ */
+.discard{padding-top:var(--s9);padding-bottom:var(--s7);background:var(--paper)}
+.discard-g{display:grid;grid-template-columns:minmax(0,.62fr) minmax(0,1fr);gap:var(--s8);align-items:start}
+.discard-g>*{min-width:0}
+.discard h2{font-size:var(--t-xl);margin-bottom:var(--s4)}
+.discard .why{font-size:var(--t-base);line-height:1.8;color:var(--body)}
+.discard .why p+p{margin-top:1em}
+.balance{margin-top:var(--s6);border-top:1px solid var(--ink);padding-top:var(--s4);
+         font-family:var(--mono);font-size:var(--t-sm);color:var(--ink)}
+.balance div{display:flex;justify-content:space-between;gap:var(--s4);padding:3px 0;
+             font-variant-numeric:tabular-nums}
+.balance div:last-child{border-top:1px solid var(--rule);margin-top:var(--s2);padding-top:var(--s3)}
+.balance span:first-child{color:var(--mut);font-family:var(--sans)}
+.dropped{margin-top:var(--s6);border-top:1px solid var(--rule);padding-top:var(--s4)}
+.dropped dl{margin:0;display:grid;gap:var(--s4)}
+.dropped dt{font-size:var(--t-base);color:var(--ink)}
+.dropped dt .chip{display:inline-block;width:13px;height:13px;border:1px solid var(--ink);
+                  vertical-align:-2px;margin-right:7px}
+.dropped dd{margin:2px 0 0;font-family:var(--sans);font-size:var(--t-xs);
+            line-height:1.65;color:var(--mut)}
+.closing{margin-top:var(--s8);border-top:3px solid var(--ink);padding-top:var(--s4);
+         font-size:var(--t-md);line-height:1.7;color:var(--ink);max-width:38em}
+
+footer{border-top:1px solid var(--rule2);background:var(--paper2);
+       padding-top:var(--s5);padding-bottom:var(--s5)}
+.ft{max-width:1200px;margin:0 auto;padding-left:var(--s7);padding-right:var(--s9);
+    display:flex;flex-wrap:wrap;gap:var(--s2) var(--s6);
+    font-family:var(--sans);font-size:var(--t-xs);color:var(--mut)}
+
+/* ── 900px 이하 ── */
+@media (max-width:900px){
+  .sheet,.sheet-n,.ft{padding-left:var(--s4);padding-right:var(--s4)}
+  .plate-g,.season-g,.rig,.field-g,.discard-g{grid-template-columns:minmax(0,1fr);gap:var(--s6)}
+  .plate{padding-top:var(--s5);padding-bottom:var(--s6)}
+  .voices,.field{padding-top:var(--s8);padding-bottom:var(--s8)}
+  .order,.discard{padding-top:var(--s7);padding-bottom:var(--s7)}
+  .masthead h1{font-size:var(--t-2xl)}
+  .order-head h2,.field h2{font-size:var(--t-xl)}
+  .rd .nm2{font-size:var(--t-xl)}
+  .q{grid-template-columns:minmax(0,1fr);gap:var(--s3)}
+  .q .who{text-align:left}
+  .q blockquote{font-size:var(--t-md);text-indent:0}
+  .imprint{grid-template-columns:minmax(0,1fr)}
+  .field figure{position:static}
+  .body-txt>p:first-of-type::first-letter{font-size:var(--t-2xl)}
+  /* 표를 카드로 접는다 — 390px에서 6열은 열당 57px이라 글자가 세로로 선다.
+     주의: tr이 block인 상태에서 td를 flex로 만들면 크롬이 셀의 텍스트 노드를 잃는다(실측).
+     td는 grid로 만들 것. */
+  .fold table,.fold thead,.fold tbody,.fold tr{display:block;width:auto}
+  .fold thead{position:absolute;left:-9999px}
+  .fold tr{border-bottom:1px solid var(--ink);padding:var(--s3) 0}
+  .fold tbody tr:last-child{border-bottom:1px solid var(--ink)}
+  .fold td{display:grid;grid-template-columns:6.5em minmax(0,1fr);gap:var(--s3);
+           border-bottom:0;padding:3px 0;align-items:baseline}
+  .fold td::before{content:attr(data-l);color:var(--mut);font-size:var(--t-xs);text-align:left}
+  /* 접힌 카드에서 우측정렬은 값을 그리드 2열 밖으로 밀어낸다(실측). 좌측으로 되돌린다 */
+  .fold td.n{text-align:left}
+  .fold td:first-child{color:var(--ink);padding-bottom:var(--s2)}
+  .fold tfoot{display:block}
+  .fold tfoot tr{border-bottom:0;padding-top:var(--s3)}
+  .fold tfoot td{display:block;padding:0}
+  .fold tfoot td::before{content:none}
+  /* display:table-caption인 채로 두면 블록 표 안에서 shrink-to-fit 돼 한 단어씩 세로로 선다 */
+  .fold caption{display:block;padding-bottom:var(--s3)}
+}
+@media (max-width:520px){
+  .rd dl{grid-template-columns:minmax(0,1fr);gap:var(--s3)}
+  .tally{gap:var(--s5)}
+}
+
+/* ── 모션 폴백 ── */
+@media (prefers-reduced-motion:reduce){
+  .rise{opacity:1;transform:none;transition:none}
+  .cloth,.dye,.notes li{transition:none}
+}
+.capture .rise{opacity:1!important;transform:none!important;transition:none!important}
+.capture .field figure{position:static}
+.capture .cloth{transition:none}
+</style>
+</head>
+<body>
+<!-- 스민 염색 원부 · 제7호 -->
+
+<!-- ═══ 1 · 표제면 ═══ -->
+<section class="plate">
+  <div class="sheet plate-g">
+    <div>
+      <div class="masthead rise">
+        <h1>스민 염색 원부</h1>
+        <p class="sub">한 해 동안 무엇을 언제 따서 어떻게 물들였는지 적은 장부</p>
+        <div class="issue">
+          <span>제<b>7</b>호</span>
+          <span><b>2025.03</b> — <b>2026.02</b></span>
+          <span>기록 <b>448</b>kg · <b>67</b>물 · <b>12</b>색</span>
+        </div>
+      </div>
+
+      <div class="col rise d1">
+        <p class="lead">같은 쪽으로 물들여도 해마다 색이 다릅니다. 장마가 길면 잎이 묽고, 잿물이 세면 실이 상합니다. 그래서 파는 색을 먼저 정하지 않고, <b>그 해에 나온 색을 적어 두고 그중에서 팝니다.</b></p>
+        <p>이 원부는 판매를 위한 안내서가 아니라 작업 일지입니다. 채취한 날과 무게, 매염제와 욕비<a href="#n1" class="fn" data-fn="n1">[1]</a>, 물에 넣은 횟수, 그리고 볕에 얼마나 견디는지를 그대로 옮겨 적었습니다. 색이름 옆의 등급이 낮다면 그건 결함을 숨기지 않은 것입니다.</p>
+        <p>제7호에는 열두 가지 색이 올라 있습니다. 그중 넷은 지난 호에 없던 색이고, 둘은 올해 내리기로 했습니다. 무엇을 왜 내렸는지는 <b>마지막 장</b>에 적었습니다.</p>
+      </div>
+
+      <div class="notes rise d2">
+        <ol>
+          <li id="n1"><b>욕비(浴比)</b> — 천 무게 대 염액 무게의 비. 1:20이면 천 1kg에 염액 20kg을 쓴다. 욕비가 크면 색이 고르게 들지만 재료가 많이 든다.</li>
+          <li id="n2">견뢰도 측정은 KS K 0700(일광)·KS K 0650(마찰)에 따라 외부 시험실에서 받았다. 자체 측정값은 이 원부에 올리지 않는다.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div>
+      <figure class="rise d1">
+        <img src="https://images.unsplash.com/photo-1778084356053-40103587d24f?w=1400&q=76&auto=format&fit=crop"
+             alt="벽면 격자 선반에 쪽으로 물들인 정사각 천 견본 수십 장이 걸려 있다"
+             loading="eager" decoding="async"
+             onerror="this.style.display='none';this.parentNode.style.minHeight='340px'">
+        <figcaption class="cap">견본 벽 — 목틀에 끼워 둔 쪽 견본. 홀치기와 판염으로 무늬를 낸 것이 섞여 있다. 같은 항아리에서 나왔어도 물 횟수와 그 날의 온도에 따라 이만큼 갈라진다.</figcaption>
+      </figure>
+
+      <dl class="imprint rise d2">
+        <div><dt>펴낸 곳</dt><dd>스민 염색소 · 전남 나주 다시면</dd></div>
+        <div><dt>기록·감수</dt><dd>정한주 (염색 22년차)</dd></div>
+        <div><dt>측정 협력</dt><dd>한국섬유소재연구원 견뢰도실<a href="#n2" class="fn" data-fn="n2">[2]</a></dd></div>
+        <div><dt>펴낸 날 · 부수</dt><dd>2026년 3월 1일 · 400부</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2 · 인용 — 앞자리에 둔다 ═══ -->
+<section class="voices">
+  <div class="sheet-n">
+    <p class="intro rise">이 원부를 인용하거나 반박한 글에서 옮겼습니다. 우리가 쓴 문장은 하나도 없습니다.</p>
+
+    <div class="qs">
+      <div class="q rise">
+        <div class="who"><b>오세림</b>국립민속박물관<br>보존과학실 학예연구사</div>
+        <div>
+          <blockquote>“욕비와 물 횟수를 함께 적은 민간 기록은 드뭅니다. 견뢰도가 낮은 색을 지우지 않고 등급째 실어 둔 점이 특히 쓸모 있었습니다. 유물 재현에서 우리가 필요한 건 잘 나온 색이 아니라 <em>재현 가능한 조건</em>이기 때문입니다.”</blockquote>
+          <p class="src">『직물 보존 연보』 2025년호, 91쪽 — 근대 이후 민간 염색 기록 검토</p>
+        </div>
+      </div>
+
+      <div class="q rise">
+        <div class="who"><b>배문경</b>한국복식학회<br>복식사 연구자</div>
+        <div>
+          <blockquote>“제5호의 자초 항목은 산지 표기가 없어 인용하기 어려웠는데, 제6호부터 고쳐졌습니다. 다만 ‘고동’ 계열 세 색은 여전히 명명이 겹쳐 보입니다. 다음 호에서 정리되기를 바랍니다.”</blockquote>
+          <p class="src">한국복식학회지 제75권 3호, 서평 — 지적 사항은 제7호에 반영, 개정 이력 3번 항목</p>
+        </div>
+      </div>
+
+      <div class="q rise">
+        <div class="who"><b>천도경</b>국가무형유산 염색장<br>이수자</div>
+        <div>
+          <blockquote>“쪽을 열두 물까지 올린 기록은 나도 오랜만에 봅니다. 여덟 물에서 멈추는 집이 대부분입니다. 열두 물이 정답이라는 뜻은 아니고, 어디서 멈췄는지를 적어 둔 집이 드물다는 뜻입니다.”</blockquote>
+          <p class="src">2025년 11월 12일 공방 방문 대담 녹취 — 전문은 제7호 부록에 수록</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tally rise d1">
+      <div><i class="num">14</i>제5호 이후 학술 인용</div>
+      <div><i class="num">3</i>전시 도록 수록</div>
+      <div><i class="num">2</i>지적받아 고친 항목</div>
+      <div><i class="num">400</i>호당 발행 부수</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3 · 채취 달력 ═══ -->
+<section class="season">
+  <div class="sheet season-g">
+    <div class="rise">
+      <p class="lbl">채취</p>
+      <h2>열두 달, 무엇을 땄는가</h2>
+      <p class="dek">채취일은 그 해 날씨에 따라 앞뒤로 열흘씩 움직입니다. 무게는 말리기 전 생것 기준이고, 쪽만 두 번 벱니다.</p>
+
+      <div class="fold">
+      <table>
+        <caption>표 1 · 2025년 3월 – 2026년 2월 채취 대장 (생중량)</caption>
+        <thead><tr><th>달</th><th>재료</th><th>부위·비고</th><th class="n">생중량</th></tr></thead>
+        <tbody>
+          <tr><td data-l="달">3월</td><td data-l="재료">쑥</td><td data-l="부위">어린잎</td><td class="n" data-l="생중량">18kg</td></tr>
+          <tr><td data-l="달">4월</td><td data-l="재료">자초</td><td data-l="부위">뿌리 · 3년근</td><td class="n" data-l="생중량">6kg</td></tr>
+          <tr><td data-l="달">5월</td><td data-l="재료">양파껍질</td><td data-l="부위">인근 농협 수매분</td><td class="n" data-l="생중량">22kg</td></tr>
+          <tr><td data-l="달">6월</td><td data-l="재료">쪽</td><td data-l="부위">1차 예취 · 잎</td><td class="n" data-l="생중량">140kg</td></tr>
+          <tr><td data-l="달">7월</td><td data-l="재료">괴화</td><td data-l="부위">꽃봉오리</td><td class="n" data-l="생중량">9kg</td></tr>
+          <tr><td data-l="달">8월</td><td data-l="재료">쪽</td><td data-l="부위">2차 예취 · 잎</td><td class="n" data-l="생중량">115kg</td></tr>
+          <tr><td data-l="달">9월</td><td data-l="재료">감</td><td data-l="부위">풋감 · 떫은 것</td><td class="n" data-l="생중량">60kg</td></tr>
+          <tr><td data-l="달">10월</td><td data-l="재료">밤송이</td><td data-l="부위">겉껍질</td><td class="n" data-l="생중량">34kg</td></tr>
+          <tr><td data-l="달">11월</td><td data-l="재료">오배자</td><td data-l="부위">붉나무 충영</td><td class="n" data-l="생중량">7kg</td></tr>
+          <tr><td data-l="달">12월</td><td data-l="재료">치자</td><td data-l="부위">열매 · 말린 것</td><td class="n" data-l="생중량">12kg</td></tr>
+          <tr><td data-l="달">1월</td><td data-l="재료">소목</td><td data-l="부위">심재 · 매입분</td><td class="n" data-l="생중량">25kg</td></tr>
+          <tr class="rest"><td data-l="달">2월</td><td data-l="재료">—</td><td data-l="부위">채취 없음 · 발효조 관리와 건조</td><td class="n" data-l="생중량">0kg</td></tr>
+        </tbody>
+        <tfoot><tr><td colspan="4">합계 448kg · 이 가운데 쪽이 255kg으로 57%를 차지한다</td></tr></tfoot>
+      </table>
+      </div>
+    </div>
+
+    <figure class="rise d1">
+      <img src="https://images.unsplash.com/photo-1761808070450-438147124f9b?w=1200&q=76&auto=format&fit=crop"
+           alt="작업자가 커다란 나무 염색조 사이에서 푸르게 물든 천을 다루고 있다"
+           loading="lazy" decoding="async"
+           onerror="this.style.display='none';this.parentNode.style.minHeight='260px'">
+      <figcaption class="cap">6월 1차 예취 직후의 발효조. 벤 잎을 그날 안에 담가야 해서 이 주에는 새벽에 일이 시작된다. 통 옆면의 흰 자국은 지난 해 넘친 자리다.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══ 4 · 겹침 순서 (조작형) ═══ -->
+<section class="order" id="order">
+  <div class="sheet-n">
+    <div class="order-head rise">
+      <h2>물 횟수가 같아도, 순서가 다르면 다른 색입니다</h2>
+      <p>쪽 열두 물, 소목 다섯 물, 치자 세 물. 셋을 겹쳐 물들이면 <b>합쳐서 스무 물</b>로 언제나 같습니다. 그런데 어느 것을 먼저 넣느냐에 따라 나오는 색이 여섯 가지로 갈립니다. 아래에서 순서를 바꿔 보십시오.</p>
+    </div>
+
+    <div class="rig">
+      <div class="vat rise">
+        <p class="hint">끌어서 순서를 바꾸거나, 각 줄의 <span class="num">↑ ↓</span> 를 누르십시오. 키보드로는 항목에 포커스한 뒤 <span class="num">↑ ↓</span> 키.</p>
+        <ol class="stack" id="stack" aria-label="염색 순서 — 위에서부터 먼저 담근다"></ol>
+        <noscript><p class="fixed" style="border-top:0;margin-top:0">스크립트가 꺼져 있습니다. 기본 순서는 <b>쪽 → 소목 → 치자</b>이고, 그때 나오는 색이 오른쪽의 「먹감」입니다. 나머지 다섯 순열은 부록 색표에 실려 있습니다.</p></noscript>
+        <p class="fixed">고정 조건 · 무명 20수 평직 · 욕온 <b>28℃</b> · 매염 명반 <b>3%</b> · 물 합계 <b>20물</b><a href="#n3" class="fn" data-fn="n3">[3]</a> (순서와 무관)</p>
+      </div>
+
+      <div class="result rise d1">
+        <div class="layers" id="layers" aria-hidden="true"></div>
+        <div class="cloth" id="cloth" role="img" aria-label="현재 순서로 물들였을 때 나오는 천 색"></div>
+        <div class="rd">
+          <p class="lbl">나온 색</p>
+          <p class="seq" id="rseq">쪽 → 소목 → <b>치자</b></p>
+          <p class="nm2" id="rname">먹감</p>
+          <p class="rule-txt" id="rrule">마지막에 넣은 것은 <b>치자</b>입니다. 표층을 차지한 염료가 색을 끌고 갑니다.</p>
+          <dl>
+            <div><dt>색좌표 L*a*b*</dt><dd id="rlab">26 / 3 / 17</dd></div>
+            <div><dt>일광견뢰도<a href="#n4" class="fn" data-fn="n4">[4]</a></dt><dd id="rfast">3<small>급 / 8급 만점</small></dd></div>
+            <div><dt>물 합계</dt><dd>20<small>물</small></dd></div>
+          </dl>
+          <p class="cap" id="rnote">치자를 마지막에 얹어 누런 기가 남았다. 그 치자가 그대로 볕을 받아 견뢰도는 가장 낮다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes">
+      <ol start="3">
+        <li id="n3">‘물’은 염액에 담갔다 꺼내 산화시키는 한 번의 공정을 센 것이다. 한 물과 한 물 사이에는 최소 40분을 둔다.</li>
+        <li id="n4">일광견뢰도는 <b>가장 약한 염료가 어느 층에 있느냐</b>로 갈린다. 치자(단색 2급)가 바닥이면 위의 두 층이 자외선을 막아 5급까지 올라가고, 표층이면 그대로 노출돼 3급으로 떨어진다. 색을 끌고 가는 것은 표층이지만, 견디는 힘을 정하는 것은 바닥이다.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 5 · 현장 기록 ═══ -->
+<section class="field">
+  <div class="sheet field-g">
+    <div>
+      <p class="kick rise">현장 기록 · 2025년 8월 19일</p>
+      <h2 class="rise">여덟 물에서 손을 뗀 날</h2>
+      <div class="body-txt col rise d1">
+        <p>여덟 물째에 천을 들어 올렸을 때, 물빛이 아니라 회색이 올라와 있었습니다. 온도계는 39℃를 가리켰습니다. 스물여덟에 맞춰 두었던 욕온이 한낮을 지나며 열한 도가 올라간 것입니다. 발효조는 그 온도에서 환원력을 잃습니다.</p>
+        <p>그 자리에서 멈췄습니다. 남은 네 물을 마저 넣었다면 색은 어떻게든 짙어졌겠지만, 짙은 것과 든 것은 다릅니다. 표면에만 앉은 색은 두어 번 빨면 물이 빠지고, 그건 견뢰도 시험에서 3급으로 돌아옵니다. 등급이 낮은 색을 파는 것보다, 그 해 그 조를 비우는 편이 낫습니다.</p>
+        <div class="pull">천을 버리는 건 아깝지만, 등급을 속이는 건 다음 해까지 갑니다.</div>
+        <p>이 날 버린 천이 41미터입니다. 원부 마지막 장 폐기 대장의 세 번째 줄이 그것입니다. 이후 발효조에 차광막을 씌우고 오후 두 시부터 네 시까지는 작업을 넣지 않기로 했습니다. 9월 이후 욕온이 32℃를 넘은 날은 없었습니다.</p>
+      </div>
+    </div>
+
+    <figure class="rise d2">
+      <img src="https://images.unsplash.com/photo-1761808070515-bfb862a85011?w=1200&q=76&auto=format&fit=crop"
+           alt="염색 작업장의 헹굼 개수대와 푸른 물이 든 통들"
+           loading="lazy" decoding="async"
+           onerror="this.style.display='none';this.parentNode.style.minHeight='300px'">
+      <figcaption class="cap">헹굼 자리. 한 물이 끝날 때마다 여기서 흐르는 물에 씻는다. 씻은 물의 색이 맑아질 때까지가 한 물이고, 그 판단은 아직 사람이 한다.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══ 6 · 명세표 ═══ -->
+<section class="ledger" id="ledger">
+  <div class="sheet-n">
+    <div class="rise">
+      <p class="lbl">명세</p>
+      <h2>제7호에 오른 열두 색</h2>
+      <p class="dek">견뢰도는 외부 시험실 값입니다. 낮은 등급을 지우지 않았습니다 — 자초와 치자는 볕에 약한 색이고, 그걸 알고 사는 것과 모르고 사는 것은 다릅니다.</p>
+
+      <div class="fold">
+      <table>
+        <caption>표 2 · 색 명세 (일광견뢰도 8급 만점 · 마찰견뢰도 5급 만점)</caption>
+        <thead><tr><th>색이름</th><th>염료</th><th>매염</th><th class="n">욕비</th><th class="n">물</th><th class="n">일광 / 마찰</th></tr></thead>
+        <tbody>
+          <tr><td data-l="색이름"><span class="cn"><span class="chip" style="background:#2c4a6b"></span>쪽빛</span></td><td data-l="염료">쪽</td><td data-l="매염">무매염</td><td class="n" data-l="욕비">1:30</td><td class="n" data-l="물">12</td><td class="n" data-l="일광/마찰">6 / 4</td></tr>
+          <tr><td data-l="색이름"><span class="cn"><span class="chip" style="background:#8fa6bb"></span>연쪽</span></td><td data-l="염료">쪽</td><td data-l="매염">무매염</td><td class="n" data-l="욕비">1:30</td><td class="n" data-l="물">4</td><td class="n" data-l="일광/마찰">5 / 4</td></tr>
+          <tr><td data-l="색이름"><span class="cn"><span class="chip" style="background:#9e4238"></span>소목 홍</span></td><td data-l="염료">소목</td><td data-l="매염">명반</td><td class="n" data-l="욕비">1:20</td><td class="n" data-l="물">5</td><td class="n" data-l="일광/마찰">3 / 3</td></tr>
+          <tr><td data-l="색이름"><span class="cn"><span class="chip" style="background:#5d3346"></span>소목 자</span></td><td data-l="염료">소목</td><td data-l="매염">철장</td><td class="n" data-l="욕비">1:20</td><td class="n" data-l="물">5</td><td class="n" data-l="일광/마찰">4 / 3</td></tr>
+          <tr><td data-l="색이름"><span class="cn"><span class="chip" style="background:#d1a12f"></span>치자 황</span></td><td data-l="염료">치자</td><td data-l="매염">무매염</td><td class="n" data-l="욕비">1:25</td><td class="n" data-l="물">3</td><td class="n" data-l="일광/마찰">2 / 4</td></tr>
+          <tr><td data-l="색이름"><span class="cn"><span class="chip" style="background:#b39230"></span>괴화 황</span></td><td data-l="염료">괴화</td><td data-l="매염">명반</td><td class="n" data-l="욕비">1:20</td><td class="n" data-l="물">4</td><td class="n" data-l="일광/마찰">4 / 4</td></tr>
+          <tr><td data-l="색이름"><span class="cn"><span class="chip" style="background:#5a5750"></span>오배자 회</span></td><td data-l="염료">오배자</td><td data-l="매염">철장</td><td class="n" data-l="욕비">1:15</td><td class="n" data-l="물">3</td><td class="n" data-l="일광/마찰">5 / 4</td></tr>
+          <tr><td data-l="색이름"><span class="cn"><span class="chip" style="background:#7d5a34"></span>감물 갈</span></td><td data-l="염료">감물</td><td data-l="매염">일광 정착</td><td class="n" data-l="욕비">원액</td><td class="n" data-l="물">9</td><td class="n" data-l="일광/마찰">7 / 5</td></tr>
+          <tr><td data-l="색이름"><span class="cn"><span class="chip" style="background:#6b7248"></span>쑥 녹</span></td><td data-l="염료">쑥 + 치자</td><td data-l="매염">명반</td><td class="n" data-l="욕비">1:20</td><td class="n" data-l="물">6</td><td class="n" data-l="일광/마찰">3 / 3</td></tr>
+          <tr><td data-l="색이름"><span class="cn"><span class="chip" style="background:#6b4a72"></span>자초 보라</span></td><td data-l="염료">자초</td><td data-l="매염">명반</td><td class="n" data-l="욕비">1:15</td><td class="n" data-l="물">7</td><td class="n" data-l="일광/마찰">2 / 3</td></tr>
+          <tr><td data-l="색이름"><span class="cn"><span class="chip" style="background:#b06a33"></span>양파 등</span></td><td data-l="염료">양파껍질</td><td data-l="매염">명반</td><td class="n" data-l="욕비">1:20</td><td class="n" data-l="물">4</td><td class="n" data-l="일광/마찰">3 / 4</td></tr>
+          <tr><td data-l="색이름"><span class="cn"><span class="chip" style="background:#4d3a2c"></span>밤송이 다갈</span></td><td data-l="염료">밤송이</td><td data-l="매염">철장</td><td class="n" data-l="욕비">1:20</td><td class="n" data-l="물">5</td><td class="n" data-l="일광/마찰">5 / 4</td></tr>
+        </tbody>
+        <tfoot><tr><td colspan="6">물 합계 67물 · 일광 4급 이상 7색, 3급 이하 5색 · 3급 이하는 겉옷과 커튼에 권하지 않는다<br>제7호 신규 4색 — 괴화 황 · 오배자 회 · 자초 보라 · 밤송이 다갈 · 매입 원료(소목·자초)의 로트는 부록 매입 대장에 적는다</td></tr></tfoot>
+      </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 7 · 닫는 자리 — 올해 버린 물 ═══ -->
+<section class="discard" id="discard">
+  <div class="sheet discard-g">
+    <div class="rise">
+      <h2>올해 버린 물</h2>
+      <div class="why">
+        <p>원부의 마지막 장은 팔지 못한 것을 적는 자리입니다. 잘 나온 색만 실으면 다음 해에 같은 실수를 합니다.</p>
+        <p>다섯 건 중 셋은 사람이 잘못한 것이고, 하나는 날씨, 하나는 재료가 달라진 것입니다. 사람이 잘못한 셋에는 각각 바꾼 절차를 적어 두었습니다.</p>
+      </div>
+      <div class="balance">
+        <div><span>올해 짠 천</span><span>1,240.0 m</span></div>
+        <div><span>버린 천</span><span>−89.7 m</span></div>
+        <div><span>출고</span><span>1,150.3 m &nbsp;(폐기율 7.2%)</span></div>
+      </div>
+
+      <div class="dropped">
+        <p class="lbl">내린 색 둘</p>
+        <dl>
+          <div><dt><span class="chip" style="background:#c9707f"></span>잇꽃 분홍</dt>
+               <dd>일광 1급. 창가에 걸면 한 철을 못 넘겼다. 세 해를 시험하고 접는다.</dd></div>
+          <div><dt><span class="chip" style="background:#8a9b5c"></span>쑥 연두</dt>
+               <dd>단독으로는 색이 얕아 「쑥 녹」(쑥＋치자)으로 합쳤다. 색이 사라진 게 아니라 이름이 하나로 줄었다.</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="rise d1">
+      <div class="fold">
+      <table>
+        <caption>표 3 · 폐기 대장</caption>
+        <thead><tr><th>날짜</th><th>공정</th><th>사유와 조치</th><th class="n">폐기</th></tr></thead>
+        <tbody>
+          <tr><td data-l="날짜">2025.06.11</td><td data-l="공정">쪽 1차 발효조</td><td data-l="사유">잿물 pH가 12.6까지 올라 환원 실패. 염액 320L 폐기, 천은 담그기 전이라 손실 없음. 이후 pH계를 두 대로 늘려 교차 확인.</td><td class="n" data-l="폐기">0.0 m</td></tr>
+          <tr><td data-l="날짜">2025.07.02</td><td data-l="공정">소목 5물</td><td data-l="사유">명반을 두 배로 계량. 색이 주황으로 튀어 ‘소목 홍’으로 낼 수 없었음. 계량 담당을 한 사람으로 고정.</td><td class="n" data-l="폐기">22.4 m</td></tr>
+          <tr><td data-l="날짜">2025.08.19</td><td data-l="공정">쪽 2차 8물</td><td data-l="사유">욕온 39℃ 초과로 얼룩. 여덟 물에서 중단. 차광막 설치, 오후 2–4시 작업 중지.</td><td class="n" data-l="폐기">41.0 m</td></tr>
+          <tr><td data-l="날짜">2025.10.07</td><td data-l="공정">감물 일광 정착</td><td data-l="사유">사흘 연속 비로 건조가 늦어져 곰팡이. 재료 문제가 아니라 날씨. 예비 건조실을 쓰기로 했으나 아직 미설치.</td><td class="n" data-l="폐기">16.5 m</td></tr>
+          <tr><td data-l="날짜">2026.01.23</td><td data-l="공정">자초 7물</td><td data-l="사유">매입 산지가 바뀌며 색소량이 떨어짐. 일곱 물을 넣고도 제5호 견본에 못 미쳐 폐기. 산지는 제6호부터 적고 있었으나 로트가 섞였다. 제8호부터 로트 번호를 함께 적기로 함.</td><td class="n" data-l="폐기">9.8 m</td></tr>
+        </tbody>
+        <tfoot><tr><td colspan="4">합계 89.7 m · 이 가운데 사람이 잘못한 것 63.4 m (70.7%)</td></tr></tfoot>
+      </table>
+      </div>
+
+      <p class="closing">제8호는 2026년 3월에 엮습니다. 그때도 이 자리에는 버린 물이 먼저 옵니다.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft">
+    <span>스민 염색소 · 전남 나주시 다시면 · 공방 견학은 목·금 오후, 미리 연락 주십시오</span>
+    <span>제7호 · 2026년 3월 1일 발행 · 400부</span>
+    <span>차례 · <a href="#order">겹침 순서</a> · <a href="#ledger">색 명세</a> · <a href="#discard">버린 물</a></span>
+    <span>원부 정오표는 다음 호 부록에 싣습니다</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  /* 스크롤 복원 가드 — smooth 없이도 재방문 시 중간에서 열리는 것을 막는다 */
+  if('scrollRestoration' in history)history.scrollRestoration='manual';
+  (function(){var h=document.documentElement,p=h.style.scrollBehavior;h.style.scrollBehavior='auto';
+   scrollTo(0,0);addEventListener('load',function(){scrollTo(0,0);
+   setTimeout(function(){h.style.scrollBehavior=p},60)})})();
+
+  var CAPTURE=/[?&]capture=1/.test(location.search);
+  if(CAPTURE)document.documentElement.classList.add('capture');
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+  /* ── 리빌 (+ 로드 폴백) ── */
+  var rises=[].slice.call(document.querySelectorAll('.rise'));
+  function showAll(){rises.forEach(function(el){el.classList.add('vis')})}
+  if(reduce||!('IntersectionObserver' in window)){showAll()}
+  else{
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})
+    },{rootMargin:'0px 0px -8% 0px',threshold:.05});
+    rises.forEach(function(el){io.observe(el)});
+    // 첫 화면 안에 이미 들어와 있는 것은 즉시
+    addEventListener('load',function(){
+      rises.forEach(function(el){if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis')})
+    });
+  }
+
+  /* ── 각주 번호 ↔ 각주 본문 연동 ── */
+  [].forEach.call(document.querySelectorAll('.fn'),function(a){
+    var t=document.getElementById(a.dataset.fn);if(!t)return;
+    function on(){t.classList.add('lit')}function off(){t.classList.remove('lit')}
+    a.addEventListener('mouseenter',on);a.addEventListener('mouseleave',off);
+    a.addEventListener('focus',on);a.addEventListener('blur',off);
+  });
+
+  /* ── 겹침 순서 ─────────────────────────────────────
+     쪽(B)·소목(S)·치자(G)를 겹쳐 물들인다. 물 합계는 20물로 언제나 같고,
+     마지막에 들어간 염료가 색을 지배한다. */
+  var DYES={
+    B:{nm:'쪽',  sub:'열두 물 · 무매염 · 욕비 1:30', sw:'#2c4a6b'},
+    S:{nm:'소목',sub:'다섯 물 · 명반 3% · 욕비 1:20', sw:'#9e4238'},
+    G:{nm:'치자',sub:'세 물 · 무매염 · 욕비 1:25',   sw:'#d1a12f'}
+  };
+  var LAST={B:'쪽',S:'소목',G:'치자'};
+  /* L*a*b*는 아래 hex를 D65 기준으로 환산한 실제 값이다.
+     일광견뢰도(f)는 각주[4]의 규칙을 그대로 적용한다 —
+     가장 약한 치자(단색 2급)가 바닥이면 5, 중간이면 4, 표층이면 3. */
+  var RESULT={
+    BSG:{nm:'먹감', hex:'#4a3b23', lab:'26 / 3 / 17',   f:3,
+         note:'치자를 마지막에 얹어 누런 기가 남았다. 그 치자가 그대로 볕을 받아 견뢰도는 가장 낮다.'},
+    BGS:{nm:'팥빛', hex:'#5c2b2b', lab:'24 / 22 / 10',  f:4,
+         note:'소목이 표층을 차지해 붉게 돌아섰다. 치자는 가운데에 갇혀 절반쯤 보호받는다.'},
+    SBG:{nm:'쑥감', hex:'#3d4128', lab:'27 / −7 / 15',  f:3,
+         note:'붉은 바닥 위에 쪽, 그 위에 치자. 청과 황이 겹쳐 녹황으로 앉았지만 표층이 약하다.'},
+    SGB:{nm:'숯람', hex:'#22304f', lab:'20 / 5 / −21',  f:4,
+         note:'쪽이 마지막이라 푸르다. 여섯 중 가장 어둡다. 치자가 중간층이라 견디는 힘은 중간.'},
+    GBS:{nm:'고동', hex:'#6b3f28', lab:'31 / 17 / 22',  f:5,
+         note:'치자가 바닥이라 전체가 따뜻하고 가장 밝다. 그 치자를 두 층이 덮어 가장 오래 간다.'},
+    GSB:{nm:'먹람', hex:'#2b3f4a', lab:'25 / −5 / −9',  f:5,
+         note:'쪽이 마지막. 밑의 치자·소목이 눌려 회청으로 가라앉았고, 바닥의 치자는 보호받는다.'}
+  };
+
+  var order=['B','S','G'];
+  var stack=document.getElementById('stack');
+  var cloth=document.getElementById('cloth');
+  var layers=document.getElementById('layers'),rseq=document.getElementById('rseq');
+  var rname=document.getElementById('rname'),rlab=document.getElementById('rlab'),
+      rfast=document.getElementById('rfast'),rnote=document.getElementById('rnote'),
+      rrule=document.getElementById('rrule');
+
+  function render(){
+    stack.innerHTML='';
+    order.forEach(function(k,i){
+      var d=DYES[k];
+      var li=document.createElement('li');
+      li.className='dye';li.tabIndex=0;li.dataset.k=k;
+      li.setAttribute('role','listitem');
+      li.setAttribute('aria-label',(i+1)+'번째로 담그는 염료 '+d.nm+'. 위아래 화살표 키로 순서를 바꿉니다.');
+      li.innerHTML='<span class="ord num">'+(i+1)+'</span>'+
+        '<span class="nm">'+d.nm+'<small>'+d.sub+'</small></span>'+
+        '<span class="sw" style="background:'+d.sw+'"></span>';
+      var mv=document.createElement('span');mv.className='mv';
+      mv.innerHTML='<button type="button" data-mv="-1" aria-label="'+d.nm+' 순서를 앞으로">↑</button>'+
+                   '<button type="button" data-mv="1" aria-label="'+d.nm+' 순서를 뒤로">↓</button>';
+      li.appendChild(mv);
+      stack.appendChild(li);
+    });
+    paint();
+  }
+
+  function paint(){
+    var r=RESULT[order.join('')];
+    layers.innerHTML='';
+    order.forEach(function(k){
+      var s=document.createElement('span');s.style.backgroundColor=DYES[k].sw;layers.appendChild(s);
+    });
+    rseq.innerHTML=order.map(function(k,i){
+      return (i===order.length-1?'<b>'+DYES[k].nm+'</b>':DYES[k].nm)}).join(' → ');
+    cloth.style.backgroundColor=r.hex;
+    cloth.setAttribute('aria-label','현재 순서 '+order.map(function(k){return DYES[k].nm}).join(' → ')+' 로 물들인 색 '+r.nm);
+    rname.textContent=r.nm;
+    rlab.textContent=r.lab;
+    rfast.innerHTML=r.f+'<small>급 / 8급 만점</small>';
+    rnote.textContent=r.note;
+    rrule.innerHTML='마지막에 넣은 것은 <b>'+LAST[order[order.length-1]]+'</b>입니다. 표층을 차지한 염료가 색을 끌고 갑니다.';
+  }
+
+  function move(k,delta){
+    var i=order.indexOf(k),j=i+delta;
+    if(j<0||j>=order.length)return;
+    order.splice(i,1);order.splice(j,0,k);
+    render();
+    var next=stack.querySelector('[data-k="'+k+'"]');if(next)next.focus();
+  }
+
+  stack.addEventListener('click',function(e){
+    var b=e.target.closest('button[data-mv]');if(!b)return;
+    move(b.closest('.dye').dataset.k,parseInt(b.dataset.mv,10));
+  });
+  stack.addEventListener('keydown',function(e){
+    var li=e.target.closest('.dye');if(!li)return;
+    if(e.key==='ArrowUp'){e.preventDefault();move(li.dataset.k,-1)}
+    if(e.key==='ArrowDown'){e.preventDefault();move(li.dataset.k,1)}
+  });
+
+  /* 포인터 드래그 — 끌어서 순서 바꾸기 */
+  var drag=null;
+  stack.addEventListener('pointerdown',function(e){
+    if(reduce)return;
+    if(e.target.closest('button'))return;
+    var li=e.target.closest('.dye');if(!li)return;
+    drag={k:li.dataset.k,el:li,y0:e.clientY,h:li.offsetHeight+12};
+    li.classList.add('drag');li.setPointerCapture(e.pointerId);
+  });
+  stack.addEventListener('pointermove',function(e){
+    if(!drag)return;
+    var dy=e.clientY-drag.y0;
+    drag.el.style.transform='translateY('+dy+'px)';
+    var step=Math.round(dy/drag.h);
+    if(step!==0){
+      var i=order.indexOf(drag.k),j=Math.max(0,Math.min(order.length-1,i+step));
+      if(j!==i){
+        order.splice(i,1);order.splice(j,0,drag.k);
+        drag.y0=e.clientY;
+        var id=e.pointerId;
+        render();
+        var el=stack.querySelector('[data-k="'+drag.k+'"]');
+        drag.el=el;el.classList.add('drag');
+        try{el.setPointerCapture(id)}catch(err){}
+      }
+    }
+  });
+  function endDrag(){
+    if(!drag)return;
+    drag.el.style.transform='';drag.el.classList.remove('drag');
+    drag=null;render();
+  }
+  stack.addEventListener('pointerup',endDrag);
+  stack.addEventListener('pointercancel',endDrag);
+
+  render();
+})();
+</script>
+</body></html>
