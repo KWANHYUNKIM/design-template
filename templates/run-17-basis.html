@@ -382,8 +382,13 @@ footer a:hover{color:var(--ink)}
   .fncols{grid-template-columns:1fr}
   .sum{grid-template-columns:1fr}
   .sc{border-right:0;border-bottom:1px solid var(--line)}
+  /* 함정 24 — .cd 에만 명시 배치를 주면 뒤의 .am(수수료)이 3행 1열 34px 칸으로 밀려
+     행 번호 아래에 처박힌다. 넷 다 못박는다: 1행에 번호·이름·금액, 2행에 설명 */
   .fr{grid-template-columns:34px 1fr auto;gap:var(--s3)}
-  .fr .cd{grid-column:2/-1;font-size:var(--t-xs)}
+  .fr .no{grid-row:1;grid-column:1}
+  .fr .nm{grid-row:1;grid-column:2}
+  .fr .am{grid-row:1;grid-column:3}
+  .fr .cd{grid-row:2;grid-column:2/-1;font-size:var(--t-xs)}
   .fr.hd .cd{display:none}
   .fng{grid-template-columns:1fr}
   .hg{grid-template-columns:1fr}

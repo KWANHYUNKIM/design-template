@@ -19,7 +19,7 @@
  * 전제: 로컬 서버가 떠 있어야 한다 —  python3 -m http.server 5501
  */
 import { spawn } from 'node:child_process';
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, rmSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const CHROME = process.env.CHROME
@@ -42,10 +42,19 @@ mkdirSync(outDir, { recursive: true });
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+const PROFILE = `/tmp/shoot-profile-${PORT}`;
+
+// 시작할 때 남의(=지난 실행의) 프로필을 쓸어낸다. 살아 있는 크롬이 물고 있으면 실패하는데,
+// 그건 그 실행이 알아서 지우므로 무시한다.
+for (const d of readdirSync('/tmp')) {
+  if (!d.startsWith('shoot-profile-') || d === `shoot-profile-${PORT}`) continue;
+  try { rmSync(`/tmp/${d}`, { recursive: true, force: true }); } catch { /* 사용 중 */ }
+}
+
 const chrome = spawn(CHROME, [
   '--headless=new', '--disable-gpu', '--hide-scrollbars', '--no-first-run',
   `--remote-debugging-port=${PORT}`,
-  `--user-data-dir=/tmp/shoot-profile-${PORT}`,
+  `--user-data-dir=${PROFILE}`,
   'about:blank',
 ], { stdio: 'ignore' });
 
@@ -175,22 +184,47 @@ const PROBE = `(() => {
     if (cs.display !== 'grid') continue;
     const cols = cs.gridTemplateColumns.split(' ').filter(Boolean).length;
     if (cols < 2) continue;
-    const kids = [...g.children].filter(c => c.getBoundingClientRect().height > 0);
-    if (kids.length < 3 || kids.length > 8) continue;
-    // 좁은 폭에서 grid 자식이 줄바꿈되는 것 자체는 정상이다 — 그걸로 경고하면 소음만 난다.
-    // 잡아야 할 것은 하나뿐: **명시 배치를 가진 자식 뒤에 자동배치 자식이 와서 밀려난 경우.**
-    if (kids.length > cols) {
-      const explicit = kids.slice(0, -1).some(c => getComputedStyle(c).gridColumnStart !== 'auto');
-      const last = kids[kids.length - 1].getBoundingClientRect();
-      const first = kids[0].getBoundingClientRect();
-      const gr = g.getBoundingClientRect();
-      const track = gr.width / cols;
-      // 밀려난 것의 특징: 다음 줄로 내려가면서 **첫 열로, 트랙 하나 폭으로** 떨어진다.
-      // 의도된 여러 줄 배치는 마지막 칸이 넓거나 첫 열이 아니다.
-      if (explicit && last.top > first.bottom - 2
-          && last.width < track * 1.1 && Math.abs(last.left - first.left) < 4)
-        flow.push((g.className || g.tagName) + ' 마지막 칸이 1열·트랙폭으로 밀려남 ('
-                  + Math.round(last.width) + 'px, 명시 배치 뒤 자동배치)');
+    if (cs.gridAutoFlow.includes('dense')) continue;   // dense 는 구멍을 메우므로 행 수 예측이 안 된다
+    const kids = [...g.children].filter(c => {
+      const k = getComputedStyle(c);
+      return k.position !== 'absolute' && k.display !== 'none' && c.getBoundingClientRect().height > 0;
+    });
+    if (kids.length < 3 || kids.length > 12) continue;
+    // 행을 저자가 직접 지정했으면 예상 행 수 계산이 성립하지 않는다 — 의도된 배치다
+    if (kids.some(c => getComputedStyle(c).gridRowStart !== 'auto')) continue;
+
+    // 함정 24 의 피해 모양은 하나로 좁혀진다:
+    //   **자동배치 자식이, 열을 못박은 형제 뒤에서, 혼자 한 행을 차지한다.**
+    // sparse 커서가 명시 배치를 지나가면서 뒤의 자동 자식을 다음 행 1열로 떨어뜨린 결과다.
+    // (「span 합으로 예상 행 수를 계산」하는 모델은 못 쓴다 — .step/.nrow 처럼 자식을 한 열에
+    //  고정해 세로로 쌓는 정상 배치를 전부 오탐한다. run-21·24·25 로 확인했다.)
+
+    // 행 묶기: align-items:baseline 이면 같은 행도 어센트 차이만큼 top 이 갈린다 (run-17, 5px)
+    const rowOf = new Map();
+    const sorted = [...kids].sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
+    let r = 0, prev = null;
+    for (const c of sorted) {
+      const t = c.getBoundingClientRect().top;
+      if (prev !== null && t - prev > 12) r++;
+      rowOf.set(c, r); prev = t;
+    }
+    const rowCount = new Map();
+    for (const c of kids) rowCount.set(rowOf.get(c), (rowCount.get(rowOf.get(c)) || 0) + 1);
+
+    // 열을 못박은 자식 = grid-column-start 가 확정 선번호. 'span N' 은 폭만 정할 뿐 자리는 자동이다.
+    const pinned = kids.map(c => /^-?\\d+$/.test(getComputedStyle(c).gridColumnStart));
+    let seenPinned = false;
+    for (let i = 0; i < kids.length; i++) {
+      if (pinned[i]) { seenPinned = true; continue; }
+      if (!seenPinned) continue;
+      if (getComputedStyle(kids[i]).gridColumnStart !== 'auto') continue;
+      if (rowCount.get(rowOf.get(kids[i])) !== 1) continue;
+      const bb = kids[i].getBoundingClientRect();
+      flow.push((g.className || g.tagName) + ' > .' + (kids[i].className || kids[i].tagName)
+                + ' 자동배치가 명시 배치 뒤에서 혼자 한 행으로 밀림 (열 ' + cols
+                + ', w=' + Math.round(bb.width) + ', 「'
+                + kids[i].textContent.trim().replace(/\\s+/g, ' ').slice(0, 12) + '」)');
+      break;
     }
     if (flow.length > 5) break;
   }
@@ -310,4 +344,8 @@ try {
   conn.close();
 } finally {
   chrome.kill();
+  // 프로필을 반드시 지운다. 안 지우면 실행마다 PORT 만큼 다른 디렉터리가 남고,
+  // 하나가 ~10MB라 175번 돌린 뒤 1.7GB가 되어 디스크를 통째로 채웠다 (RUN35 크리틱 중 실제 발생).
+  await sleep(250);
+  try { rmSync(PROFILE, { recursive: true, force: true }); } catch { /* 다음 실행의 시작 청소가 가져간다 */ }
 }

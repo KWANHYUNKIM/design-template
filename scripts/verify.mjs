@@ -18,6 +18,21 @@ const args = process.argv.slice(2);
 const asJson = args.includes('--json');
 const only = args.find(a => !a.startsWith('--'));
 
+/* WCAG 상대휘도 · 대비비 — 주석에 적힌 수치가 실제와 맞는지 대조하는 데 쓴다 */
+const hex2rgb = h => {
+  h = h.replace('#', '');
+  if (h.length === 3) h = h.split('').map(c => c + c).join('');
+  return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
+};
+const lum = h => {
+  const c = hex2rgb(h).map(v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+};
+const ratio = (a, b) => {
+  const x = lum(a), y = lum(b);
+  return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+};
+
 /* 각 검사는 {id, level, test(src) -> null | 실패메시지} */
 const CHECKS = [
   { id: 'hardcoded-font-size', level: 'error',
@@ -139,6 +154,54 @@ const CHECKS = [
       }
       return missing.length
         ? `${missing.join(', ')} — 정의 줄에 대비비 실측 주석(예: /* 종이 위 7.1:1 */)이 없음` : null;
+    }},
+
+  { id: 'contrast-annotation-true', level: 'error',
+    why: '주석이 "있는지"만 보면 틀린 숫자를 통과시킨다 — RUN35 는 9.11·12.6 이라 적었으나 실제는 9.84·13.97 이었고, ' +
+         ':root 밖(.elsewhere .fine 등)에 선언한 색이라 기존 검사의 사정권 밖이었다',
+    test: s => {
+      const style = (s.match(/<style>([\s\S]*?)<\/style>/) || [])[1] || '';
+      // 이 문서가 쓰는 색 팔레트 — 배경 후보로 삼는다
+      const palette = new Set();
+      for (const m of style.matchAll(/#[0-9a-fA-F]{6}\b/g)) palette.add(m[0].toLowerCase());
+      if (palette.size < 2) return null;
+
+      // :root 토큰 이름 → 색. 주석이 "on --ink" 처럼 배경을 지목하면 그것만 대고 잰다.
+      // 한 토큰이 낮/밤 테마로 두 번 정의될 수 있다 — 마지막 값만 잡으면 어두운 배경끼리 재게 된다
+      // (run-29 에서 --paper 가 밤 테마 값으로 잡혀 15.2:1 주석을 1.01:1 이라 잘못 반박했다)
+      const tok = new Map();
+      for (const m of style.matchAll(/(--[a-z0-9-]+)\s*:\s*(#[0-9a-fA-F]{6})\s*;/g)) {
+        if (!tok.has(m[1])) tok.set(m[1], []);
+        tok.get(m[1]).push(m[2].toLowerCase());
+      }
+
+      const bad = [];
+      // `color:#hex` 또는 `--tok:#hex` 뒤 같은 줄에 `N:1` 주석이 붙은 것
+      for (const m of style.matchAll(/(?:color\s*:\s*|--[a-z0-9-]+\s*:\s*)(#[0-9a-fA-F]{6})\s*;?[^\n]*?\/\*([^*]*?([0-9]+(?:\.[0-9]+)?)\s*:\s*1[^*]*)\*\//g)) {
+        const fg = m[1].toLowerCase(), note = m[2], claim = Number(m[3]);
+        if (!(claim > 1)) continue;
+
+        // 「4.5:1을 넘겨야 한다」는 측정 주장이 아니라 요구 조건이다 — 충족 여부로 본다.
+        // (run-19 를 이걸로 오탐했다: 요구 4.5, 실제 배경 위 5.10 으로 충족인데 불일치라 잡았다)
+        const isReq = /넘|이상|최소|초과|넘겨|이하로 두지/.test(note);
+
+        // 주석이 배경 토큰을 지목했으면 그것만, 아니면 팔레트 전체를 후보로
+        const named = [...note.matchAll(/--[a-z0-9-]+/g)].flatMap(x => tok.get(x[0]) || []);
+        const cands = named.length ? named : [...palette].filter(c => c !== fg);
+        if (!cands.length) continue;
+
+        const rs = cands.map(bg => ratio(fg, bg));
+        if (isReq) {
+          if (rs.some(r => r >= claim - 0.005)) continue;
+          bad.push(`${fg} 요구 ${claim}:1 미충족 — 최대 ${Math.max(...rs).toFixed(2)}:1`);
+          continue;
+        }
+        if (rs.some(r => Math.abs(r - claim) <= 0.15)) continue;
+        const best = rs.reduce((a, b) => Math.abs(b - claim) < Math.abs(a - claim) ? b : a);
+        bad.push(`${fg} 주석 ${claim}:1 ≠ 실측 ${best.toFixed(2)}:1`
+                 + (named.length ? ' (주석이 지목한 배경 기준)' : ' (팔레트 최근접)'));
+      }
+      return bad.length ? bad.slice(0, 4).join(' · ') : null;
     }},
 
   { id: 'anchor-scroll-margin', level: 'error',
