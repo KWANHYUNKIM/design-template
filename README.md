@@ -1,4 +1,4 @@
-# 랜딩 템플릿 25종 — 파일 하나 열면 끝
+# 랜딩 템플릿 26종 — 파일 하나 열면 끝
 
 빌드 도구도, 설치도, 계정도 필요 없는 **한국어 랜딩 페이지 템플릿** 모음입니다.
 HTML 한 장 안에 스타일과 스크립트가 전부 들어 있어서, 내려받아 더블클릭하면 바로 열립니다.
@@ -65,7 +65,7 @@ python3 -m http.server 5500
 index.html          갤러리 (미리보기 + 내려받기)
 log.html            제작 기록 — RUN마다 무엇을 어떻게 바꿨는지, 채점 결과
 operation.md        운영 방식 — 이 루프가 어떻게 굴러가는지 (operation.html 로 렌더)
-templates/          템플릿 25종
+templates/          템플릿 26종
 EVOLUTION.md        디자인 진화 로그 — 챔피언·검증된 학습·점수 이력
 design-automation-workflow.md   생성 파이프라인 규격
 .claude/skills/     루프를 굴리는 스킬 4종 (design-loop · design-release · taste · animate)
@@ -75,7 +75,7 @@ design-automation-workflow.md   생성 파이프라인 규격
 
 ## 이게 어떻게 만들어졌나
 
-한 번에 25개를 찍어낸 게 아니라, **RUN 하나씩 만들고 채점해서 다음 RUN이 그 점수를 넘으려 하는 루프**로 쌓았습니다.
+한 번에 26개를 찍어낸 게 아니라, **RUN 하나씩 만들고 채점해서 다음 RUN이 그 점수를 넘으려 하는 루프**로 쌓았습니다.
 
 - 매 RUN은 `EVOLUTION.md` 의 챔피언·학습을 먼저 읽고 시작합니다
 - 만든 뒤 8개 기준(타이포·컬러·여백·임팩트·모션·설득력·오리지널리티·완성도)으로 채점합니다

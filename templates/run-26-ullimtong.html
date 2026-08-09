@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>울림통 TONG-3 — 3웨이 대형 사운드시스템 · 무향실 계측 리포트</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+/* ─────────────────────────────────────────────────────────────────────────
+   RUN 26 · 울림통 TONG-3 — 챔피언(RUN16 KELVIN 37) 리믹스
+   아트디렉터: AD-2 도진 (브루탈리스트)
+     do    : 압도적으로 큰 요소 하나(화면 밖으로 흘러나가도 좋다) ·
+             타입 스케일 극단(본문 17 ↔ 디스플레이 300) · 중간 단계 비움 ·
+             굵은 테두리 3~4px · 각진 모서리 · 고대비 · 원색 ·
+             비대칭/겹침 · 인터랙션은 짧고 단호하게
+     don't : 부드러운 그림자·유리질·블러 · 3열 균등 카드 그리드 ·
+             파스텔·중간톤(중간회색 포함) · "세련되게 정리"하려는 충동
+   KELVIN에서 계승한 것 (다운그레이드 금지)
+     · UI는 무채색, 색은 대상에만 — 포인트 1색만 쓴다
+     · 스크롤 스크럽(색온도 → 주파수 스윕)
+     · 조작 결과가 "눈에 보이는" 인터랙션(드래그 그레이더 → 크로스오버 드래그)
+     · 제3자 트러스트(실명·직함·현장·계측 리포트)
+   KELVIN에서 폐기한 것 (오리지널리티)
+     · 히어로 → 스크럽 → 그레이더 → 트러스트 → 스펙 → 팩 → 큰 CTA 순서
+     · 다크 풀스크린 CTA로 닫기 → 「반입 조건」 실무표로 닫는다
+     · 그레인 · blur 내비 · 알약 버튼
+   ───────────────────────────────────────────────────────────────────────── */
+:root{
+--sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+/* 로드하지 않는 이름은 적지 않는다 — 시스템 모노만 */
+--mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+
+/* 대비비는 실제로 깔리는 배경 3종(ink · ink2 · paper) 위에서 전부 실측 */
+--ink:#0a0a0a;      /* 지면 */
+--ink2:#141414;     /* 블록 바닥 */
+--paper:#f2f0ea;    /* 반전 밴드 */
+--fg:#f7f7f5;       /* 본문   — ink 18.46 / ink2 17.17 */
+--body:#c9c9c4;     /* 보조   — ink 11.91 / ink2 11.08 */
+--mut:#9a9a94;      /* 캡션   — ink  7.00 / ink2  6.51. 12px에도 AA */
+--pink:#0a0a0a;     /* 종이 위 본문 — paper 17.37 */
+--pbody:#3a3a36;    /* 종이 위 보조 — paper 10.02 */
+--pmut:#5a5a54;     /* 종이 위 캡션 — paper  6.09 */
+--k:#ff3b00;        /* 포인트 1색 — ink 5.54 / ink2 5.16 (AA).
+                       종이 위는 3.14뿐이라 24px 이상 또는 배경으로만 쓴다.
+                       주황 배경 위 글자는 흰색(3.57)이 아니라 잉크(5.54)로 */
+--line:#2e2e2e;     /* 얇은 괘선 */
+--hard:#f7f7f5;     /* 굵은 테두리 — 층위는 그림자가 아니라 선으로 만든다 */
+
+/* 타입 스케일 — 극단으로 벌리고 중간을 비운다. 31/39/49px 단계는 쓰지 않는다 */
+--t-xs:12px;--t-sm:14px;--t-base:17px;--t-lg:24px;
+--t-d1:clamp(38px,6.4vw,72px);
+--t-d2:min(21vw,280px);     /* 스윕 숫자도 지면 폭을 쓴다 — 이 페이지는 큰 숫자로 말한다 */
+--t-d3:min(52vw,620px);     /* 3자리 숫자가 항상 지면 폭을 넘도록 */
+/* 간격 — 4배수 */
+--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+}
+*{box-sizing:border-box}
+/* 히어로 숫자가 뷰포트 밖으로 흘러나가므로 가로 스크롤을 막아야 한다.
+   overflow-x:hidden 은 스크롤 컨테이너를 만들어 position:sticky 를 깨뜨린다 — clip 을 쓴다.
+   그래서 .hero 에는 overflow 를 걸지 않는다: 걸면 숫자가 지면 경계에서 잘려 흘러나감이 안 보인다 */
+html{scroll-behavior:smooth;overflow-x:clip}
+body{margin:0;font-family:var(--sans);background:var(--ink);color:var(--fg);
+ -webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:clip;
+ word-break:keep-all;overflow-wrap:break-word}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer}
+/* UA 기본 margin 초기화 — figure의 1em 40px 은 격자 칸을 밀어내고,
+   p의 1em 은 150px 글자에서 150px 여백이 된다. 간격은 전부 명시로만 만든다 */
+figure,p,blockquote,dl,dd,ol{margin:0}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1280px;margin:0 auto;padding-left:var(--s5);padding-right:var(--s5)}
+.lbl{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.lbl b{color:var(--k);font-weight:700}
+
+/* 리빌은 짧고 단호하게 — 부드럽게 떠오르지 않는다 */
+.rise{opacity:0;transform:translateY(10px);transition:.22s linear}
+.rise.vis{opacity:1;transform:none}
+
+/* ── 상단 바 : 블러 없음, 각진 모서리, 굵은 밑선 ── */
+.top{position:sticky;top:0;z-index:60;background:var(--ink);border-bottom:3px solid var(--hard)}
+/* sticky 바(63px)가 앵커 착지점을 덮는다 — 섹션 머리가 바 뒤로 숨지 않게 */
+#xo,#sweep,#load{scroll-margin-top:80px}
+.top .in{max-width:1280px;margin:0 auto;padding:var(--s3) var(--s5);display:flex;align-items:center;gap:var(--s4)}
+.top .lg{font-size:var(--t-lg);font-weight:900;letter-spacing:-.04em}
+.top .lg i{font-style:normal;color:var(--k)}
+.top .sp{flex:1}
+.top .meta{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.06em}
+.top .go{font-family:var(--mono);font-size:var(--t-xs);font-weight:700;letter-spacing:.08em;
+ background:var(--k);color:var(--ink);padding:9px 14px;border:0;transition:.1s linear;white-space:nowrap}
+.top .go:hover{background:var(--fg)}
+
+/* ── 계측 리포트 밴드 : 페이지가 광고가 아니라 리포트로 시작한다 ── */
+.rpt{background:var(--paper);color:var(--pink);border-bottom:3px solid var(--hard)}
+.rpt .in{max-width:1280px;margin:0 auto;padding:var(--s4) var(--s5);
+ display:flex;flex-wrap:wrap;gap:var(--s3) var(--s6);align-items:baseline}
+.rpt .t{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--pmut)}
+.rpt .v{font-family:var(--mono);font-size:var(--t-sm);font-weight:700;color:var(--pink);
+ font-variant-numeric:tabular-nums}
+.rpt .sp{flex:1}
+
+/* ── 히어로 : 압도적으로 큰 것 하나. 화면 밖으로 흘러나간다 ── */
+.hero{padding-top:var(--s8);padding-bottom:var(--s9);position:relative}
+.hero .kicker{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.18em;
+ text-transform:uppercase;color:var(--k);font-weight:700}
+/* 지면 폭을 꽉 채우고 오른쪽으로 흘러나간다. 이 페이지에서 압도적인 것은 이것 하나뿐 */
+.hero .big{font-size:var(--t-d3);font-weight:900;letter-spacing:-.06em;line-height:.76;
+ margin:var(--s4) -12vw 0 0;white-space:nowrap;font-variant-numeric:tabular-nums}
+.hero .big u{text-decoration:none;color:var(--k)}
+.hero .uu{display:block;font-size:var(--t-d1);letter-spacing:-.03em;line-height:1;
+ margin-top:var(--s3);color:var(--body);font-weight:900}
+.hero .claim{font-size:var(--t-lg);font-weight:800;letter-spacing:-.02em;max-width:20ch;
+ margin:var(--s6) 0 0;line-height:1.25}
+.hero .claim em{font-style:normal;background:var(--k);color:var(--ink);padding:0 6px}
+/* 스펙 박스가 숫자 위로 올라타 일부를 가린다 — 의도적 어긋남 */
+.hero .spec{border:3px solid var(--hard);background:var(--ink);padding:var(--s5);
+ position:relative;z-index:2;max-width:560px;margin:calc(var(--s9) * -1) 0 0 auto}
+.hero .spec dl{margin:0;display:grid;grid-template-columns:minmax(max-content,auto) 1fr;
+ gap:var(--s2) var(--s5)}
+.hero .spec dt{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em;
+ text-transform:uppercase;color:var(--mut);align-self:baseline}
+.hero .spec dd{margin:0;font-family:var(--mono);font-size:var(--t-sm);font-weight:700;
+ color:var(--fg);font-variant-numeric:tabular-nums}
+.hero .shot{border:3px solid var(--hard);margin-top:var(--s6);background:var(--ink2)}
+/* contrast 를 올리면 원본의 하이라이트가 순백으로 뭉개져 종이 밴드와 색으로 경합한다 */
+.hero .shot img{width:100%;height:100%;object-fit:cover;object-position:26% 50%;
+ aspect-ratio:16/9;filter:grayscale(1) contrast(.92) brightness(.86)}
+.hero .cap{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);
+ margin-top:var(--s2);line-height:1.6}
+
+/* ── ★ 크로스오버 : 조작하면 대역이 실제로 다시 나뉜다 ── */
+.xo{border-top:3px solid var(--hard);padding-top:var(--s8);padding-bottom:var(--s9)}
+.xo h2{font-size:var(--t-d1);font-weight:900;letter-spacing:-.04em;line-height:1;margin:var(--s3) 0 0}
+.xo .sub{font-size:var(--t-base);color:var(--body);max-width:56ch;margin:var(--s4) 0 0}
+.xoBox{border:3px solid var(--hard);margin-top:var(--s6);background:var(--ink2)}
+.xoBox .head{display:flex;flex-wrap:wrap;gap:var(--s4);align-items:baseline;
+ padding:var(--s4) var(--s5);border-bottom:3px solid var(--hard)}
+.xoBox .head .who{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;
+ text-transform:uppercase;color:var(--mut)}
+.xoBox .head .sp{flex:1}
+.xoBox .head .rst{font-family:var(--mono);font-size:var(--t-xs);font-weight:700;letter-spacing:.08em;
+ border:2px solid var(--hard);padding:6px 12px;transition:.1s linear}
+.xoBox .head .rst:hover{background:var(--fg);color:var(--ink)}
+.xoBox .plot{padding:var(--s5)}
+svg.xoSvg{display:block;width:100%;height:auto;touch-action:none}
+/* SVG 안 글자 크기도 토큰으로만 — JS에 px 숫자를 남기지 않는다 */
+svg.xoSvg text{font-family:var(--mono);font-variant-numeric:tabular-nums}
+svg.xoSvg .bandLbl{font-size:var(--t-sm);font-weight:700}
+svg.xoSvg .tickLbl{font-size:var(--t-xs)}
+svg.xoSvg .hnd{cursor:ew-resize}
+svg.xoSvg .hnd:focus-visible{outline:2px solid var(--k);outline-offset:2px}
+/* 유닛 리드아웃 — 균등 3열 카드가 아니라 폭이 다른 띠 */
+.units{border-top:3px solid var(--hard)}
+/* 첫 칸을 max-content 로 두면 행마다 폭이 달라져 세 개의 막대가 서로 어긋난다 */
+.unit{display:grid;grid-template-columns:168px 1fr minmax(max-content,auto);
+ gap:var(--s3) var(--s5);align-items:baseline;padding:var(--s4) var(--s5);
+ border-bottom:1px solid var(--line)}
+.unit>*{min-width:0}
+.unit:last-child{border-bottom:0}
+.unit .nm{font-size:var(--t-base);font-weight:900;letter-spacing:-.01em;white-space:nowrap}
+.unit .nm s{text-decoration:none;display:block;font-family:var(--mono);font-size:var(--t-xs);
+ font-weight:400;color:var(--mut);letter-spacing:.06em;margin-top:2px}
+.unit .bar{height:14px;border:2px solid var(--hard);position:relative}
+.unit .bar i{position:absolute;top:0;bottom:0;left:0;background:var(--k);display:block}
+.unit .rd{font-family:var(--mono);font-size:var(--t-sm);font-weight:700;
+ font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+.unit .rd s{text-decoration:none;display:block;font-size:var(--t-xs);font-weight:400;color:var(--mut);margin-top:2px}
+.warn{border-top:3px solid var(--hard);padding:var(--s4) var(--s5);
+ font-family:var(--mono);font-size:var(--t-sm);line-height:1.6;font-weight:700}
+.warn.ok{color:var(--body);font-weight:400}
+.warn.bad{background:var(--k);color:var(--ink)}
+
+/* ── 주파수 스윕 : 스크롤이 20Hz → 19kHz 를 끌고 간다 ── */
+.sweep{position:relative;height:340vh;border-top:3px solid var(--hard)}
+.sweep .stick{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;
+ justify-content:center;overflow:hidden}
+.sweep .in{max-width:1280px;margin:0 auto;padding:0 var(--s5);width:100%}
+.sweep .hz{font-size:var(--t-d2);font-weight:900;letter-spacing:-.05em;line-height:.9;
+ font-variant-numeric:tabular-nums;white-space:nowrap;margin:var(--s4) 0 0}
+.sweep .hz u{text-decoration:none;font-size:.32em;letter-spacing:-.01em;color:var(--mut);margin-left:.15em}
+.sweep .who{font-size:var(--t-d1);font-weight:900;letter-spacing:-.04em;line-height:1;
+ margin:var(--s4) 0 0;color:var(--k)}
+.sweep .txt{font-size:var(--t-base);color:var(--body);max-width:46ch;margin:var(--s4) 0 0}
+.sweep .track{margin-top:var(--s7);border:3px solid var(--hard);height:26px;position:relative}
+.sweep .track i{position:absolute;top:0;bottom:0;left:0;background:var(--k)}
+/* 막대는 로그로 차는데 눈금을 균등 배치하면 두 자가 어긋난다 — 절대 위치로 로그에 맞춘다 */
+.sweep .ticks{position:relative;height:18px;margin-top:var(--s2);
+ font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);font-variant-numeric:tabular-nums}
+.sweep .ticks span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+.sweep .ticks span:first-child{transform:none}
+.sweep .ticks span:last-child{transform:translateX(-100%)}
+
+/* ── 설치 원장 : 카드가 아니라 장부 ── */
+.rigs{border-top:3px solid var(--hard);padding-top:var(--s8);padding-bottom:var(--s9)}
+.rigs h2{font-size:var(--t-d1);font-weight:900;letter-spacing:-.04em;line-height:1;margin:var(--s3) 0 0}
+.rigs table{width:100%;border-collapse:collapse;margin-top:var(--s6);font-size:var(--t-sm)}
+.rigs caption{text-align:left;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);
+ letter-spacing:.08em;padding-bottom:var(--s3)}
+.rigs th{text-align:left;font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;
+ text-transform:uppercase;color:var(--mut);font-weight:700;
+ border-top:3px solid var(--hard);border-bottom:1px solid var(--line);padding:var(--s3) var(--s4) var(--s3) 0}
+.rigs td{border-bottom:1px solid var(--line);padding:var(--s4) var(--s4) var(--s4) 0;vertical-align:baseline}
+.rigs td.n{font-weight:900;font-size:var(--t-base);white-space:nowrap}
+.rigs td.m{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--body)}
+.rigs td.d{color:var(--body)}
+.rigs .shot{margin-top:var(--s7);border:3px solid var(--hard);background:var(--ink2)}
+.rigs .shot img{width:100%;aspect-ratio:21/9;object-fit:cover;filter:grayscale(.9) contrast(1.2)}
+.rigs .cap{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s2);line-height:1.6}
+
+/* ── 트러스트 : 크기가 다른 세 개. 균등 카드 금지 ── */
+.say{border-top:3px solid var(--hard);padding-top:var(--s8);padding-bottom:var(--s9)}
+.say h2{font-size:var(--t-d1);font-weight:900;letter-spacing:-.04em;line-height:1;margin:var(--s3) 0 0}
+.q{border:3px solid var(--hard);padding:var(--s5);margin-top:var(--s6)}
+.q.lead{background:var(--paper);color:var(--pink)}
+.q blockquote{margin:0;font-size:var(--t-base);line-height:1.6;font-weight:700;letter-spacing:-.01em}
+.q.lead blockquote{font-size:var(--t-lg);line-height:1.35}
+.q .by{margin-top:var(--s4);font-family:var(--mono);font-size:var(--t-xs);
+ letter-spacing:.06em;color:var(--mut);line-height:1.8}
+.q.lead .by{color:var(--pbody)}
+.q .by b{color:var(--fg);font-weight:700}
+.q.lead .by b{color:var(--pink)}
+.q .by .vf{border:2px solid currentColor;padding:2px 7px;margin-left:var(--s2);white-space:nowrap}
+.qrow{display:grid;grid-template-columns:1fr;gap:var(--s5)}
+.qrow>*{min-width:0}
+.tally{border:3px solid var(--hard);margin-top:var(--s6);display:grid;grid-template-columns:1fr}
+.tally>*{min-width:0;padding:var(--s5);border-bottom:1px solid var(--line)}
+.tally>*:last-child{border-bottom:0}
+.tally .v{font-size:var(--t-d1);font-weight:900;letter-spacing:-.04em;line-height:1;
+ font-variant-numeric:tabular-nums;white-space:nowrap}
+.tally .l{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.08em;margin-top:var(--s2)}
+
+/* ── 닫기 : 큰 CTA 대신 반입 조건 실무표 ── */
+.load{border-top:3px solid var(--hard);background:var(--paper);color:var(--pink);
+ padding-top:var(--s8);padding-bottom:var(--s9)}
+.load h2{font-size:var(--t-d1);font-weight:900;letter-spacing:-.04em;line-height:1;margin:var(--s3) 0 0}
+.load .lbl{color:var(--pmut)}
+.load .lead{font-size:var(--t-base);color:var(--pbody);max-width:56ch;margin:var(--s4) 0 0}
+.load ol{list-style:none;counter-reset:c;padding:0;margin:var(--s6) 0 0;
+ border-top:3px solid var(--pink)}
+.load li{counter-increment:c;display:grid;
+ grid-template-columns:minmax(max-content,auto) 1fr minmax(max-content,auto);
+ gap:var(--s3) var(--s5);align-items:baseline;
+ padding:var(--s4) 0;border-bottom:1px solid #cfccc3}
+.load li>*{min-width:0}
+/* 종이 위 주황은 3.16:1 뿐이다 — :root 주석대로 24px 이상(AA large 3.0)에서만 쓴다.
+   12px 로 두면 AA 미달이었다 */
+.load li:before{content:counter(c,decimal-leading-zero);font-family:var(--mono);
+ font-size:var(--t-lg);font-weight:700;color:var(--k);line-height:1.1}
+.load li .q2{font-size:var(--t-base);font-weight:700;letter-spacing:-.01em}
+.load li .a2{font-family:var(--mono);font-size:var(--t-sm);color:var(--pbody);
+ font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+.load .end{margin-top:var(--s7);border-top:3px solid var(--pink);padding-top:var(--s5);
+ display:flex;flex-wrap:wrap;gap:var(--s4);align-items:baseline}
+.load .end p{margin:0;font-size:var(--t-sm);color:var(--pbody);max-width:44ch}
+.load .end .sp{flex:1}
+.load .end a{font-family:var(--mono);font-size:var(--t-sm);font-weight:700;letter-spacing:.06em;
+ background:var(--k);color:var(--ink);padding:12px 18px;border:0;transition:.1s linear}
+.load .end a:hover{background:var(--pink);color:var(--paper)}
+
+footer{border-top:3px solid var(--hard);padding-top:var(--s6);padding-bottom:var(--s9)}
+footer .in{display:grid;grid-template-columns:1fr;gap:var(--s5);
+ font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);line-height:2}
+footer .in>*{min-width:0}
+footer b{color:var(--body);font-weight:700}
+
+/* ── 넓은 화면 ── */
+@media(min-width:820px){
+ .qrow{grid-template-columns:1fr 1fr}
+ /* 균등 3분할은 이 디렉터의 금기에 가장 가까운 형태다 — 칸 폭을 어긋나게 둔다 */
+ .tally{grid-template-columns:1.5fr 1.1fr .9fr}
+ .tally>*{border-bottom:0;border-right:1px solid var(--line)}
+ .tally>*:last-child{border-right:0}
+ footer .in{grid-template-columns:2fr 1fr 1fr}
+}
+@media(max-width:819px){
+ .hero .big{margin-right:-16vw}
+ .hero .spec{margin-top:var(--s5);max-width:none}
+ /* 좁은 폭에서는 상단 바에 로고와 행선지만 남긴다 — 메타까지 넣으면 3줄로 접힌다 */
+ .top .meta{display:none}
+ /* 168px 고정 칸 + 막대 + 리드아웃은 좁은 폭에서 막대를 0으로 짓눌러 버린다 — 세로로 쌓는다 */
+ .unit{grid-template-columns:1fr;gap:var(--s3)}
+ .unit .rd{text-align:left}
+ .sweep{height:300vh}
+ /* display:block 아래서도 width:100% 가 살아 있어 표가 컨테이너에 맞춰 줄어든다 —
+    overflow-x:auto 가 무의미해지고 비고 열이 89px로 뭉갠다. 래퍼에 스크롤을 주고
+    표에는 최소폭을 박는다 */
+ .rigs .tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+ .rigs table{min-width:720px}
+}
+@media(prefers-reduced-motion:reduce){
+ .rise{opacity:1;transform:none;transition:none}
+ html{scroll-behavior:auto}
+ /* 리빌만 끄고 340vh 핀을 남기면, 모션을 줄인 사용자가 문장 셋을 읽으려 2,600px 을 굴려야 한다 */
+ .sweep{height:auto}
+ .sweep .stick{position:static;height:auto;padding:var(--s9) 0}
+}
+/* 캡처 모드 (?capture=1) — 디자인 툴 반출용 정적 스냅샷 */
+html.capture .rise{opacity:1;transform:none;transition:none}
+html.capture .top{position:static}
+html.capture .sweep{height:auto}
+html.capture .sweep .stick{position:static;height:auto;padding:var(--s9) 0}
+</style></head><body>
+
+<div class="top">
+  <div class="in">
+    <span class="lg">울림통<i>.</i></span>
+    <span class="meta">TONG-3 · 3웨이 스택</span>
+    <span class="sp"></span>
+    <span class="meta">계측 KA-2026-0417</span>
+    <a class="go" href="#load">반입 조건 →</a>
+  </div>
+</div>
+
+<!-- 계측 리포트 밴드 -->
+<div class="rpt">
+  <div class="in">
+    <span class="t">측정</span><span class="v">한국음향계측원 무향실</span>
+    <span class="t">리포트</span><span class="v">KA-2026-0417</span>
+    <span class="t">측정일</span><span class="v">2026.06.11</span>
+    <span class="sp"></span>
+    <span class="t">거리</span><span class="v">1m · 축상</span>
+  </div>
+</div>
+
+<!-- 히어로 -->
+<section class="hero wrap">
+  <p class="kicker rise">최대 연속 음압 · 무향실 실측</p>
+  <p class="big num rise">1<u>32</u><span class="uu">dB SPL</span></p>
+  <div class="spec rise">
+    <dl>
+      <dt>구성</dt><dd>18″ 우퍼 ×1 · 8″ 미드 ×2 · 1.4″ 컴프레션 ×1</dd>
+      <dt>대역</dt><dd>32Hz — 19kHz (±3dB)</dd>
+      <dt>피크 전력</dt><dd>2,400W</dd>
+      <dt>중량</dt><dd>저역 96kg + 중고역 41kg = 137kg</dd>
+    </dl>
+  </div>
+  <p class="claim rise">큰 소리가 아니라 <em>버티는 소리</em>를 만듭니다.</p>
+  <figure class="shot rise">
+    <img src="https://images.unsplash.com/photo-1771611755359-bcd64deecce3?w=1400&q=80&auto=format&fit=crop" alt="스피커 우퍼 콘의 클로즈업" loading="lazy" onerror="this.style.display='none';this.parentNode.style.background='#1c1c1c';this.parentNode.style.aspectRatio='16/9'">
+  </figure>
+  <p class="cap rise">우퍼 콘 — 표면에 방수 도포를 두 번 올린다. 습한 지하 공연장에 나간 개체는 3년마다 회수해 같은 무향실에서 다시 재고, 편차를 리포트에 붙인다.</p>
+</section>
+
+<!-- ★ 크로스오버 -->
+<section class="xo wrap" id="xo">
+  <p class="lbl rise">조작 <b>가능</b> · 실시간 재계산</p>
+  <h2 class="rise">대역을 어디서<br>끊을 것인가.</h2>
+  <p class="sub rise">3웨이는 한 대의 스피커가 아니라 <b>세 대의 분업</b>입니다. 나누는 지점을 옮기면 각 유닛이 맡는 대역과 부하가 통째로 바뀝니다. 아래 두 개의 분할점을 끌어 보세요.</p>
+
+  <div class="xoBox rise">
+    <div class="head">
+      <span class="who">TONG-3 · 액티브 크로스오버 · 24dB/oct</span>
+      <span class="sp"></span>
+      <button class="rst" type="button" id="xoReset">공장값으로</button>
+    </div>
+    <div class="plot">
+      <svg class="xoSvg" id="xoSvg" role="img" aria-label="크로스오버 분할 다이어그램">
+        <g id="xoG"></g>
+      </svg>
+    </div>
+    <div class="units" id="xoUnits"></div>
+    <p class="warn" id="xoWarn">—</p>
+  </div>
+</section>
+
+<!-- 주파수 스윕 -->
+<section class="sweep" id="sweep">
+  <div class="stick">
+    <div class="in">
+      <p class="lbl rise">스윕 · 32Hz → 19kHz</p>
+      <p class="hz num" id="swHz">32<u>Hz</u></p>
+      <p class="who" id="swWho">우퍼</p>
+      <p class="txt" id="swSay">—</p>
+      <div class="track"><i id="swBar"></i></div>
+      <div class="ticks" id="swTicks" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 설치 원장 -->
+<section class="rigs wrap">
+  <p class="lbl rise">설치 원장</p>
+  <h2 class="rise">어디서 울고 있는가.</h2>
+  <div class="tblwrap">
+  <table>
+    <caption>2024.03 — 2026.06 · 상시 설치 34곳 중 대표 5곳 발췌 (렌탈 반출 제외)</caption>
+    <colgroup><col style="width:14%"><col style="width:15%"><col style="width:11%"><col style="width:12%"><col style="width:48%"></colgroup>
+    <thead><tr><th scope="col">현장</th><th scope="col">구성</th><th scope="col">천장고</th><th scope="col">가동</th><th scope="col">비고</th></tr></thead>
+    <tbody>
+      <tr><td class="n">벙커</td><td class="m">2스택 · 4서브</td><td class="m">3.2m</td><td class="m">4,180h</td><td class="d">서울 을지로 · 지하 2층. 반입구가 좁아 캐비닛을 분해해 넣었다.</td></tr>
+      <tr><td class="n">소금창고</td><td class="m">2스택 · 2서브</td><td class="m">6.8m</td><td class="m">2,940h</td><td class="d">부산 영도 · 창고 개조. 천장이 높아 저역이 돌아 나온다.</td></tr>
+      <tr><td class="n">연산</td><td class="m">1스택 · 2서브</td><td class="m">2.9m</td><td class="m">2,110h</td><td class="d">대구 · 소극장. 크로스오버를 260Hz로 올려 중역을 미드에 넘겼다.</td></tr>
+      <tr><td class="n">돌담</td><td class="m">2스택 · 2서브</td><td class="m">4.1m</td><td class="m">1,260h</td><td class="d">제주 · 해풍 노출. 콘 도포를 2회 재시공.</td></tr>
+      <tr><td class="n">지층</td><td class="m">1스택 · 2서브</td><td class="m">2.7m</td><td class="m">710h</td><td class="d">서울 홍대 · 2026.02 설치. 최신 개체.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <figure class="shot">
+    <img src="https://images.unsplash.com/photo-1563680401337-b77b5e0be9f7?w=1600&q=80&auto=format&fit=crop" alt="트러스에 매달린 스피커 캐비닛과 비행 리깅 프레임" loading="lazy" onerror="this.style.display='none';this.parentNode.style.background='#1c1c1c';this.parentNode.style.aspectRatio='21/9'">
+  </figure>
+  <p class="cap">비행 설치 — 스택으로 세우지 못하는 현장에서는 트러스에 매답니다. 사진은 리깅 프레임을 문 캐비닛의 예. 매다는 순간 무게가 아니라 <b>인장</b>이 문제가 되므로 반입 조건표의 5번을 먼저 확인해야 합니다.</p>
+</section>
+
+<!-- 트러스트 -->
+<section class="say wrap">
+  <p class="lbl rise">현장의 말</p>
+  <h2 class="rise">우리가 한 말이 아니라,<br>쓴 사람이 한 말.</h2>
+
+  <div class="q lead rise">
+    <blockquote>“130dB을 낸다는 스피커는 많습니다. 두 시간째에도 같은 소리인 스피커가 적을 뿐입니다. 벙커에서 4천 시간을 돌렸는데 콘을 한 번 갈았습니다.”</blockquote>
+    <p class="by"><b>정우석</b> · 라이브 사운드 엔지니어 23년차 · 벙커 상주<span class="vf">설치 크레딧 확인</span></p>
+  </div>
+
+  <div class="qrow">
+    <div class="q rise">
+      <blockquote>“무향실 수치보다 중요한 건 실내에서의 붕괴 지점입니다. TONG-3은 천장 2.9m 소극장에서도 저역이 뭉치지 않았습니다. 크로스오버를 현장에서 만질 수 있다는 게 이유였습니다.”</blockquote>
+      <p class="by"><b>한가람</b> · 마스터링 엔지니어 · 연산 음향 설계<span class="vf">계측 입회</span></p>
+    </div>
+    <div class="q rise">
+      <blockquote>“해풍이 닿는 자리라 6개월이면 콘이 상합니다. 울림통은 재시공을 조건에 써 놓고 팔았습니다. 그게 신뢰였습니다.”</blockquote>
+      <p class="by"><b>서지운</b> · 공연장 음향감독 · 돌담<span class="vf">A/S 이력 공개</span></p>
+    </div>
+  </div>
+
+  <div class="tally rise">
+    <div><div class="v num">34</div><div class="l">상시 설치 현장</div></div>
+    <div><div class="v num">11,200</div><div class="l">위 5곳 누적 가동 시간</div></div>
+    <div><div class="v num">±3</div><div class="l">dB · 32Hz—19kHz 편차</div></div>
+  </div>
+</section>
+
+<!-- 닫기 : 반입 조건 -->
+<section class="load" id="load">
+  <div class="wrap">
+    <p class="lbl">닫는 말 대신</p>
+    <h2>사기 전에 답해야 하는<br>다섯 가지.</h2>
+    <p class="lead">이 페이지는 “문의하기”로 끝나지 않습니다. 아래 다섯 항목 중 하나라도 걸리면 TONG-3은 그 현장에 들어가지 못합니다. 먼저 재 보시고, 걸리는 항목만 들고 연락 주세요.</p>
+    <ol>
+      <li><span class="q2">반입구 최소 폭이 900mm 이상입니까?</span><span class="a2">저역 캐비닛 폭 860mm</span></li>
+      <li><span class="q2">바닥이 137kg을 한 점에 받을 수 있습니까?</span><span class="a2">접지면 0.42㎡ · 326kg/㎡</span></li>
+      <li><span class="q2">단상 220V 30A 전용 회선이 있습니까?</span><span class="a2">피크 2,400W · 여유 2.7배</span></li>
+      <li><span class="q2">천장고가 2.6m를 넘습니까?</span><span class="a2">스택 높이 2.31m</span></li>
+      <li><span class="q2">매단다면 트러스 정격이 400kg 이상입니까?</span><span class="a2">2점 비행 시 안전율 2.9</span></li>
+    </ol>
+    <div class="end">
+      <p>다섯 항목을 모두 통과하면 현장 실측 없이 견적이 나갑니다. 하나라도 걸리면 실측을 먼저 갑니다. 걸리는 항목 번호만 말씀해 주시면 됩니다.</p>
+      <span class="sp"></span>
+      <a href="tel:031-987-0416">031-987-0416</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="in">
+      <div>울림통 <b>ULLIMTONG</b><br>대형 사운드시스템 제작 · 경기 김포시 양촌읍<br>제작 문의 031-987-0416 (평일 09—18시)</div>
+      <div>계측 <b>KA-2026-0417</b><br>한국음향계측원 무향실<br>2026.06.11</div>
+      <div><a href="#xo">크로스오버</a><br><a href="#sweep">스윕</a><br><a href="#load">반입 조건</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* 캡처 모드 */
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE){document.documentElement.classList.add('capture');
+  /* 리빌·sticky만 풀고 lazy를 두면 스크롤 없는 반출에서 사진이 빈 프레임으로 나간다 */
+  addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('img[loading=lazy]').forEach(function(i){i.loading='eager';i.src=i.src})});}
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+/* §D 스크롤복원 — smooth와 경합하지 않게 초기 리셋 동안만 auto */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){var h=document.documentElement,p=h.style.scrollBehavior;h.style.scrollBehavior='auto';
+ window.scrollTo(0,0);
+ addEventListener('load',function(){window.scrollTo(0,0);setTimeout(function(){h.style.scrollBehavior=p},60)});})();
+
+var C={fg:'#f7f7f5',mut:'#9a9a94',k:'#ff3b00',ink:'#0a0a0a',line:'#2e2e2e'};
+var FLO=32, FHI=19000;                                 /* 스펙 대역과 같은 값을 쓴다 */
+var DEF={x1:220,x2:2400}, X={x1:DEF.x1,x2:DEF.x2};
+var lg=Math.log, pos=function(f){return (lg(f)-lg(FLO))/(lg(FHI)-lg(FLO))};
+var freq=function(p){return Math.exp(lg(FLO)+p*(lg(FHI)-lg(FLO)))};
+var hz=function(f){return f>=1000?(Math.round(f/100)/10)+'kHz':Math.round(f)+'Hz'};
+var oct=function(lo,hi){return Math.round(lg(hi/lo)/lg(2)*10)/10};
+
+var UNITS=[
+ {nm:'18″ 우퍼',   sub:'LOW · ×1'},
+ {nm:'8″ 미드',    sub:'MID · ×2'},
+ {nm:'1.4″ 컴프레션', sub:'HIGH · ×1'}
+];
+
+var svg=document.getElementById('xoSvg'), G=document.getElementById('xoG');
+var unitsEl=document.getElementById('xoUnits'), warnEl=document.getElementById('xoWarn');
+var VH=210, PADL=8, PADR=8, AXIS=170;
+var drag=null;
+
+/* 부모의 clientWidth 는 padding 을 포함한다 — svg 자신의 렌더 폭을 재야 스케일이 1이 된다 */
+function vw(){return Math.round(svg.getBoundingClientRect().width)||900}
+function px(f){var w=vw();return PADL+pos(f)*(w-PADL-PADR)}
+function fx(x){var w=vw();return freq(Math.min(1,Math.max(0,(x-PADL)/(w-PADL-PADR))))}
+
+function drawXO(){
+  var w=vw(); svg.setAttribute('viewBox','0 0 '+w+' '+VH);
+  var a=px(X.x1), b=px(X.x2), h='';
+  /* 대역 블록 — 그라디언트 없이 단단한 사각형 셋 */
+  var bands=[[PADL,a,'저역'],[a,b,'중역'],[b,w-PADR,'고역']];
+  bands.forEach(function(t,i){
+    var fill=i===1?C.k:'none';
+    h+='<rect x="'+t[0]+'" y="26" width="'+Math.max(0,t[1]-t[0])+'" height="'+(AXIS-26)+'" '
+      +'fill="'+fill+'" stroke="'+C.fg+'" stroke-width="3"/>';
+    var cx=(t[0]+t[1])/2;
+    if(t[1]-t[0]>54)
+      h+='<text class="bandLbl" x="'+cx+'" y="'+(AXIS-16)+'" text-anchor="middle" '
+        +'fill="'+(i===1?C.ink:C.fg)+'">'+t[2]+'</text>';
+  });
+  /* 눈금 — 양끝 라벨은 middle 로 두면 viewBox 밖으로 반쪽이 잘린다.
+     좁은 폭에서는 눈금을 솎지 않으면 32Hz/100Hz/250Hz 가 서로 겹쳐 붙는다 */
+  var TK=vw()<420?[32,250,4000,19000]:[32,100,250,1000,4000,19000];
+  TK.forEach(function(f,i){
+    var x=px(f), anc=i===0?'start':(i===TK.length-1?'end':'middle');
+    h+='<line x1="'+x+'" y1="'+AXIS+'" x2="'+x+'" y2="'+(AXIS+8)+'" stroke="'+C.mut+'" stroke-width="2"/>'
+      +'<text class="tickLbl" x="'+x+'" y="'+(AXIS+26)+'" text-anchor="'+anc+'" '
+      +'fill="'+C.mut+'">'+hz(f)+'</text>';
+  });
+  /* 분할 핸들 — 히트 영역은 도형이 아니라 투명 rect 로 깐다(최소 44px) */
+  [['x1',a],['x2',b]].forEach(function(t){
+    var key=t[0], x=t[1];
+    h+='<g class="hnd" tabindex="0" role="slider" data-k="'+key+'" '
+      +'aria-label="'+(key==='x1'?'저역과 중역':'중역과 고역')+' 분할점" '
+      /* aria 범위는 UI 전체 대역이 아니라 setX 가 실제로 허용하는 범위여야 한다 */
+      +'aria-valuemin="'+Math.round(key==='x1'?50:X.x1*2)+'" '
+      +'aria-valuemax="'+Math.round(key==='x1'?X.x2/2:12000)+'" '
+      +'aria-valuenow="'+Math.round(X[key])+'" aria-valuetext="'+hz(X[key])+'">'
+      +'<rect x="'+(x-22)+'" y="0" width="44" height="'+VH+'" fill="transparent"/>'
+      +'<line x1="'+x+'" y1="10" x2="'+x+'" y2="'+AXIS+'" stroke="'+C.k+'" stroke-width="4"/>'
+      +'<rect x="'+(x-16)+'" y="0" width="32" height="26" fill="'+C.k+'"/>'
+      +'<text class="bandLbl" x="'+x+'" y="19" text-anchor="middle" fill="'+C.ink+'">↔</text>'
+      +'</g>';
+  });
+  G.innerHTML=h;
+  G.querySelectorAll('.hnd').forEach(function(g){
+    g.addEventListener('pointerdown',function(e){drag=g.dataset.k;g.setPointerCapture&&g.setPointerCapture(e.pointerId);e.preventDefault()});
+    g.addEventListener('keydown',function(e){
+      var step=e.shiftKey?0.06:0.015, k=g.dataset.k, d=0;
+      if(e.key==='ArrowRight'||e.key==='ArrowUp')d=step;
+      else if(e.key==='ArrowLeft'||e.key==='ArrowDown')d=-step;
+      else return;
+      e.preventDefault(); setX(k, freq(Math.min(1,Math.max(0,pos(X[k])+d))));
+      var back=G.querySelector('[data-k="'+k+'"]'); if(back)back.focus({preventScroll:true});
+    });
+  });
+}
+
+/* 분할점은 서로를 넘지 못한다 — 최소 1옥타브 간격 */
+function setX(k,f){
+  if(k==='x1') X.x1=Math.min(Math.max(f,50), X.x2/2);
+  else         X.x2=Math.max(Math.min(f,12000), X.x1*2);
+  drawXO(); paintUnits();
+}
+
+function paintUnits(){
+  var seg=[[FLO,X.x1],[X.x1,X.x2],[X.x2,FHI]];
+  var total=lg(FHI/FLO)/lg(2);
+  unitsEl.innerHTML=seg.map(function(s,i){
+    var o=oct(s[0],s[1]), share=Math.round(lg(s[1]/s[0])/lg(2)/total*100);
+    return '<div class="unit">'
+      +'<div class="nm">'+UNITS[i].nm+'<s>'+UNITS[i].sub+'</s></div>'
+      +'<div class="bar"><i style="width:'+share+'%"></i></div>'
+      +'<div class="rd">'+hz(s[0])+' — '+hz(s[1])+'<s>'+o.toFixed(1)+'옥타브 · 부하 '+share+'%</s></div>'
+      +'</div>';
+  }).join('');
+
+  /* 경고 — 값이 아니라 결과를 말한다 */
+  var msg='', bad=false;
+  if(X.x1>420){ msg='저역 분할 '+hz(X.x1)+' — 18인치 우퍼가 중역까지 냅니다. 목소리 대역의 지향성이 좁아져 객석 가장자리에서 소리가 죽습니다.'; bad=true; }
+  else if(X.x1<110){ msg='저역 분할 '+hz(X.x1)+' — 8인치 미드가 저역까지 받습니다. 큰 음량에서 미드 콘이 먼저 한계에 닿습니다.'; bad=true; }
+  else if(X.x2<1500){ msg='고역 분할 '+hz(X.x2)+' — 1.4인치 컴프레션 드라이버가 1.5kHz 아래를 냅니다. 두 시간짜리 공연에서 열로 죽습니다.'; bad=true; }
+  else if(X.x2>4200){ msg='고역 분할 '+hz(X.x2)+' — 8인치 미드가 4kHz 위를 냅니다. 축을 조금만 벗어나도 고역이 사라집니다.'; bad=true; }
+  else msg='분할 '+hz(X.x1)+' / '+hz(X.x2)+' — 세 유닛 모두 정격 안입니다. 공장값은 '+hz(DEF.x1)+' / '+hz(DEF.x2)+'입니다.';
+  warnEl.textContent=msg;
+  warnEl.className='warn '+(bad?'bad':'ok');
+}
+
+addEventListener('pointermove',function(e){
+  if(!drag)return;
+  var r=svg.getBoundingClientRect();
+  setX(drag, fx((e.clientX-r.left)*(vw()/r.width)));
+});
+addEventListener('pointerup',function(){drag=null});
+document.getElementById('xoReset').addEventListener('click',function(){
+  X.x1=DEF.x1; X.x2=DEF.x2; drawXO(); paintUnits();
+});
+
+/* ── 주파수 스윕 ── */
+var sweepEl=document.getElementById('sweep'), swHz=document.getElementById('swHz'),
+    swWho=document.getElementById('swWho'), swSay=document.getElementById('swSay'),
+    swBar=document.getElementById('swBar');
+var SAY=[
+ ['우퍼','발밑에서 올라오는 대역입니다. 여기서 캐비닛이 흔들리면 위쪽 유닛의 소리까지 같이 흐려집니다.'],
+ ['미드','목소리와 스네어가 사는 자리입니다. 이 대역을 누가 맡느냐가 3웨이 설계의 전부입니다.'],
+ ['컴프레션','심벌과 자음이 여기 있습니다. 낮게 끊으면 선명해지지만, 드라이버가 열로 먼저 죽습니다.']
+];
+/* 눈금 라벨을 막대와 같은 로그 위치에 찍는다 — 크로스오버 SVG 와 같은 pos() 를 쓴다 */
+(function(){
+  document.getElementById('swTicks').innerHTML=[32,250,1000,4000,19000].map(function(f){
+    return '<span style="left:'+(pos(f)*100).toFixed(2)+'%">'+hz(f)+'</span>';
+  }).join('');
+})();
+
+function paintSweep(){
+  var r=sweepEl.getBoundingClientRect(), h=sweepEl.offsetHeight-innerHeight;
+  var p=CAPTURE?0.5:Math.min(1,Math.max(0,-r.top/(h||1)));
+  var f=freq(p);
+  swHz.innerHTML=(f>=1000?(Math.round(f/100)/10):Math.round(f))+'<u>'+(f>=1000?'kHz':'Hz')+'</u>';
+  var i=f<X.x1?0:(f<X.x2?1:2);
+  swWho.textContent=SAY[i][0];
+  swSay.textContent=SAY[i][1];
+  swBar.style.width=(p*100).toFixed(1)+'%';
+}
+
+/* ── 리빌 : IO 실패 대비 load 폴백 ── */
+if(CAPTURE||reduce){
+  document.querySelectorAll('.rise').forEach(function(e){e.classList.add('vis')});
+}else{
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})},{threshold:.12});
+  document.querySelectorAll('.rise').forEach(function(e){io.observe(e)});
+  addEventListener('load',function(){requestAnimationFrame(function(){
+    document.querySelectorAll('.rise').forEach(function(e){
+      if(e.getBoundingClientRect().top<innerHeight)e.classList.add('vis')})})});
+}
+
+/* viewBox 가 컨테이너 실폭에 묶여 있으므로 폭이 바뀌면 다시 그린다 */
+var rt;
+addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){drawXO();paintUnits()},120)});
+addEventListener('scroll',paintSweep,{passive:true});
+
+drawXO(); paintUnits(); paintSweep();
+</script>
+</body></html>
