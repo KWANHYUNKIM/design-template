@@ -277,6 +277,76 @@ const PROBE = `(() => {
   if (secs.length >= 5 && rhythm.세로조합 < Math.ceil(secs.length * .6))
     rhythmWarn.push('세로 호흡 ' + rhythm.세로조합 + '조합 / 섹션 ' + secs.length + '개 — 반복이 많다');
 
+  // 섹션 안의 **빈 사각형** — 판형·호흡이 만점이어도 「옆 칸이 통째로 빈」 구멍은 못 잡는다.
+  // RUN35 는 rhythm 6/6 을 받고도 1440 에서 탑 옆 900px 이 비어 있었다.
+  // 섹션 단위 밀도로는 안 된다(그 폭에서는 페이지 전체가 낮아 중앙값도 같이 내려간다).
+  // 콘텐츠 상자를 20×N 격자로 잘라 잉크가 닿은 칸을 표시하고, **가장 큰 빈 직사각형**을 찾는다.
+  const holes = [];
+  for (const sec of document.querySelectorAll('section')) {
+    // 좌우 페이지 여백은 정상이므로 안쪽 콘텐츠 상자에서만 잰다
+    const box = [...sec.children].find(e => getComputedStyle(e).maxWidth !== 'none') || sec;
+    const br = box.getBoundingClientRect();
+    if (br.width < 400 || br.height < 300) continue;
+    // 핀 스크럽 섹션의 스크롤 활주로는 비어 있는 것이 정상이다 — sticky 자식 + 뷰포트 2.5배 이상
+    // (run-16 kelvin 이 4104px 짜리 「구멍」으로 잡혔다)
+    if (br.height > vh * 2.5 && [...sec.querySelectorAll('*')]
+        .some(e => getComputedStyle(e).position === 'sticky')) continue;
+    const COLS = 20, CELL = br.width / COLS, ROWS = Math.max(3, Math.round(br.height / CELL));
+    const RH = br.height / ROWS;
+    const grid = Array.from({ length: ROWS }, () => new Uint8Array(COLS));
+    const mark = r => {
+      if (r.width <= 0 || r.height <= 0) return;
+      const c0 = Math.max(0, Math.floor((r.left - br.left) / CELL));
+      const c1 = Math.min(COLS - 1, Math.floor((r.right - br.left - 0.01) / CELL));
+      const r0 = Math.max(0, Math.floor((r.top - br.top) / RH));
+      const r1 = Math.min(ROWS - 1, Math.floor((r.bottom - br.top - 0.01) / RH));
+      for (let y = r0; y <= r1; y++) for (let x = c0; x <= c1; x++) grid[y][x] = 1;
+    };
+    const walk = document.createTreeWalker(box, NodeFilter.SHOW_TEXT);
+    const rg = document.createRange();
+    for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+      if (!n.textContent.trim()) continue;
+      const p = n.parentElement;
+      if (!p || getComputedStyle(p).visibility === 'hidden') continue;
+      rg.selectNodeContents(n);
+      for (const r of rg.getClientRects()) mark(r);
+    }
+    // 글자만이 아니라 「칠해진 것」도 잉크다 — 배경·테두리가 있는 요소, 그림
+    for (const el of box.querySelectorAll('*')) {
+      const c = getComputedStyle(el);
+      const painted = /^(img|svg|canvas|video|hr)$/i.test(el.tagName)
+        || (c.backgroundColor !== 'rgba(0, 0, 0, 0)' && c.backgroundColor !== 'transparent')
+        || c.backgroundImage !== 'none'
+        || parseFloat(c.borderTopWidth) + parseFloat(c.borderBottomWidth)
+           + parseFloat(c.borderLeftWidth) + parseFloat(c.borderRightWidth) > 0;
+      if (painted) mark(el.getBoundingClientRect());
+    }
+    // 최대 빈 직사각형 (히스토그램 스택)
+    let best = 0, bw = 0, bh = 0;
+    const up = new Int32Array(COLS);
+    for (let y = 0; y < ROWS; y++) {
+      for (let x = 0; x < COLS; x++) up[x] = grid[y][x] ? 0 : up[x] + 1;
+      const st = [];
+      for (let x = 0; x <= COLS; x++) {
+        const h = x === COLS ? 0 : up[x];
+        let start = x;
+        while (st.length && st[st.length - 1][1] >= h) {
+          const [s, sh] = st.pop();
+          const a = sh * (x - s);
+          if (a > best) { best = a; bw = x - s; bh = sh; }
+          start = s;
+        }
+        st.push([start, h]);
+      }
+    }
+    const fracA = best / (ROWS * COLS);
+    if (fracA >= 0.22 && bw >= COLS * 0.35 && bh * RH >= 220)
+      holes.push('.' + (sec.className || sec.tagName).split(' ')[0]
+        + ' 안에 빈 직사각형 ' + Math.round(bw * CELL) + '×' + Math.round(bh * RH)
+        + 'px (콘텐츠 상자의 ' + Math.round(fracA * 100) + '%) — 여백이 아니라 구멍이다');
+  }
+  for (const h of holes.slice(0, 4)) rhythmWarn.push(h);
+
   return JSON.stringify({ vw, scrollW: document.documentElement.scrollWidth,
     overflow: document.documentElement.scrollWidth > vw,
     docH: document.body.scrollHeight,

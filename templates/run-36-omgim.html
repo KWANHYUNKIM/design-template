@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>옮김 제12호 — 같은 문단, 세 사람</title>
+<meta name="description" content="1931년 산문 한 문단을 1968·1994·2026년에 옮긴 세 판본을 나란히 놓고, 무엇이 달라졌는지 계량한 번역 저널.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<!-- 함정 4 — 세리프를 이름만 적으면 그 폰트가 깔린 기기에서만 보인다. 실제로 로드한다.
+     이 지면은 본문 조판이 주인공이라 세리프가 안 오면 설계가 통째로 무효다. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap">
+<style>
+:root{
+  --sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+  --serif:'Nanum Myeongjo','Apple SD Gothic Neo',Batang,serif;
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+
+  /* 청회 지면 + 교정 보라. 저장소에 보라 포인트가 없었다. */
+  --paper:#e6e9ec;      /* 지면 */
+  --paper2:#dcdfe4;     /* 한 단 짙은 지면 — 원문 판·색인 */
+  --ink:#14171c;        /* 제목 — 지면 위 14.74:1 · 짙은 지면 위 13.45:1 */
+  --fg:#22262d;         /* 본문 — 지면 위 12.46:1 · 짙은 지면 위 11.36:1 */
+  --body:#3f4650;       /* 부속 본문 — 지면 위 7.82:1 · 짙은 지면 위 7.13:1 */
+  --mut:#565e69;        /* 캡션·라벨 — 지면 위 5.38:1 · 짙은 지면 위 4.91:1 (양쪽 AA) */
+  --k:#5b3d9e;          /* 교정 보라 — 지면 위 6.61:1 · 짙은 지면 위 6.03:1 */
+  --rule:#b9bec6;
+  --hair:#c9ced5;
+
+  /* 타입 스케일 — AD-3 는 본문 조판이 먼저다. 디스플레이는 두 단만 쓴다. */
+  --t-xs:12px;--t-sm:14px;--t-base:17px;--t-md:20px;--t-lg:25px;--t-xl:31px;
+  --t-2xl:39px;--t-3xl:49px;--t-4xl:61px;--t-d1:76px;--t-d2:96px;
+
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;
+  --s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+}
+*{box-sizing:border-box}
+/* UA 마진을 가진 요소들 — 리셋하지 않으면 figure 가 40px 씩 판형 밖으로 밀린다 (RUN25 §103 · RUN36 D1) */
+figure,blockquote,dl,dd,ol,ul{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--fg);font-family:var(--sans);
+  font-size:var(--t-base);line-height:1.75;word-break:keep-all;overflow-wrap:break-word;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;font-family:var(--serif);color:var(--ink);letter-spacing:-.015em;line-height:1.25;font-weight:700}
+p{margin:0}
+a{color:inherit}
+b,strong{font-weight:700}
+table{border-collapse:collapse;width:100%}
+caption{text-align:left;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);padding-bottom:var(--s3)}
+th,td{padding:var(--s3) var(--s4) var(--s3) 0;text-align:left;border-bottom:1px solid var(--hair);vertical-align:baseline}
+thead th{font-family:var(--mono);font-size:var(--t-xs);color:var(--ink);font-weight:700;
+  letter-spacing:.06em;border-bottom:2px solid var(--ink)}
+tbody tr:last-child td{border-bottom:2px solid var(--ink)}
+td.n,th.n{text-align:right;padding-right:0;font-family:var(--mono);white-space:nowrap}
+button{font:inherit;color:inherit}
+
+/* ═══ 판형 — 좌우를 섹션마다 바꾼다. 이것이 RUN30 이 여백 5 를 받은 장치다.
+   데스크톱에서만 갈라 놓으면 무효다(함정 21) — 390 에서도 값을 유지한다. ═══ */
+.bay  {max-width:1180px;margin:0 auto;padding-left:var(--s6);padding-right:var(--s10)}
+.bay-r{max-width:1180px;margin:0 auto;padding-left:var(--s10);padding-right:var(--s6)}
+.bay-c{max-width:900px;margin:0 auto;padding-left:var(--s7);padding-right:var(--s7)}
+
+.eyb{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--mut);margin:0 0 var(--s3)}
+
+/* 리빌은 .js 게이트 뒤에 — 스크립트가 꺼져도 지면이 남아야 한다 (함정 16) */
+.js .rise{opacity:0;transform:translateY(10px)}
+.js .rise.vis{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease}
+.js .rise.r1.vis{transition-delay:.06s}
+.js .rise.r2.vis{transition-delay:.12s}
+
+/* ═══ 1 · 표제 ═══ */
+.head{padding-top:var(--s9);padding-bottom:var(--s8);border-bottom:2px solid var(--ink)}
+.head .no{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.16em;color:var(--k)}
+.head .hgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,250px);
+  gap:var(--s8);align-items:end;margin-top:var(--s4)}
+.head .hgrid>*{min-width:0}
+.head h1{font-size:var(--t-4xl)}
+.head .sub{font-family:var(--serif);font-size:var(--t-lg);color:var(--body);margin-top:var(--s5);
+  max-width:26em;line-height:1.6}
+/* 차례 — 표제부 오른쪽이 비는 자리를 실제로 쓰이는 것으로 채운다 */
+.toc{border-top:2px solid var(--ink);padding-top:var(--s3)}
+.toc .tl{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;color:var(--mut)}
+.toc ol{margin:var(--s3) 0 0;padding:0;list-style:none;counter-reset:toc}
+.toc li{counter-increment:toc;border-bottom:1px solid var(--hair)}
+/* 마지막 괘선을 남기면 아래 .meta 괘선과 폭이 같아져 사이 40px 가 빈 표 행처럼 읽힌다 (D8) */
+.toc li:last-child{border-bottom:0}
+.toc a{display:grid;grid-template-columns:2.2em minmax(0,1fr);gap:var(--s2);
+  text-decoration:none;padding:var(--s2) 0;font-size:var(--t-sm);color:var(--fg)}
+.toc a>span{min-width:0}
+.toc a::before{content:counter(toc,decimal-leading-zero);font-family:var(--mono);
+  font-size:var(--t-xs);color:var(--k)}
+.toc a:hover{color:var(--k)}
+/* 44em 로 묶어 두면 1024 에서 표제부 오른쪽에 358×342 빈 사각형이 남는다 (--probe 가 잡았다).
+   네 칸을 지면 폭에 펼쳐 그 자리를 글자로 채운다 */
+.head .meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s4) var(--s6);
+  margin-top:var(--s7);border-top:1px solid var(--hair);padding-top:var(--s5)}
+.head .meta>div{min-width:0}
+.head .meta dt{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut)}
+.head .meta dd{margin:var(--s1) 0 0;font-size:var(--t-sm);color:var(--fg)}
+
+/* ═══ 2 · 원문 ═══ */
+.source{padding-top:var(--s8);padding-bottom:var(--s8);background:var(--paper2)}
+.source h2{font-size:var(--t-xl)}
+.srcbox{margin-top:var(--s6);border-left:3px solid var(--k);padding-left:var(--s5);max-width:40em}
+.srcbox .jp{font-family:var(--serif);font-size:var(--t-lg);line-height:1.9;color:var(--ink)}
+.srcbox .rom{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s4);line-height:1.8}
+.srcbox .cred{font-size:var(--t-sm);color:var(--body);margin-top:var(--s5)}
+.gloss{margin-top:var(--s7);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s5) var(--s6)}
+.gloss>div{min-width:0;border-top:1px solid var(--rule);padding-top:var(--s3)}
+.gloss .w{font-family:var(--serif);font-size:var(--t-md);color:var(--ink)}
+.gloss .d{font-size:var(--t-sm);color:var(--body);margin-top:var(--s2);line-height:1.65}
+
+/* ═══ 3 · 세 옮김 (조작형) ═══ */
+.three{padding-top:var(--s9);padding-bottom:var(--s9)}
+.three h2{font-size:var(--t-xl);max-width:16em}
+.picks{display:flex;flex-wrap:wrap;gap:0;margin-top:var(--s6);border:2px solid var(--ink);width:max-content;max-width:100%}
+.picks button{background:transparent;border:0;border-right:2px solid var(--ink);
+  padding:var(--s3) var(--s5);font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.06em;
+  cursor:pointer;color:var(--fg);white-space:nowrap}
+.picks button:last-child{border-right:0}
+.picks button[aria-pressed="true"]{background:var(--k);color:#fff}   /* 보라 위 흰 글자 8.06:1 */
+.picks button:hover[aria-pressed="false"]{background:var(--paper2)}
+
+.stage{margin-top:var(--s7);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);
+  gap:var(--s8);align-items:start}
+.stage>*{min-width:0}
+/* 옮긴 본문 — 이 지면의 주인공.
+   행장: 「45~75자」는 라틴 기준이다. 한글은 글자가 넓어 그대로 적용하면 지나치게 길어진다.
+   실측으로 데스크톱 42자 · 390 25자에 맞췄다. 행간 1.9 */
+.rendered{font-family:var(--serif);font-size:var(--t-md);line-height:1.9;color:var(--ink);
+  max-width:38em;letter-spacing:-.005em}
+.rendered p+p{margin-top:var(--s5);text-indent:1em}
+/* 한자 노출은 계량의 근거이므로 화면에 표시한다 — 세는 것과 보이는 것이 같아야 한다 */
+.rendered .sino{color:var(--k);border-bottom:1px solid var(--k)}
+.byline{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s5);
+  border-top:1px solid var(--rule);padding-top:var(--s3)}
+
+/* 곁줄 — 계량은 전부 화면의 실제 글자에서 계산한다 */
+.aside{border-top:2px solid var(--ink);padding-top:var(--s4);position:sticky;top:var(--s5)}
+.aside h3{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;color:var(--mut);font-weight:500}
+.mrows{margin-top:var(--s4)}
+.mrow{display:grid;grid-template-columns:minmax(0,1fr) max-content;gap:var(--s3);
+  align-items:baseline;padding:var(--s2) 0;border-bottom:1px solid var(--hair)}
+.mrow>*{min-width:0}
+.mrow .lbl{font-size:var(--t-sm);color:var(--body)}
+.mrow .val{font-family:var(--mono);font-size:var(--t-md);color:var(--ink);font-weight:700;white-space:nowrap}
+.note{font-size:var(--t-sm);line-height:1.7;color:var(--body);margin-top:var(--s5)}
+.note b{color:var(--ink)}
+
+/* ═══ 4 · 왜 달라졌나 ═══ */
+.why{padding-top:var(--s8);padding-bottom:var(--s9);background:var(--paper2)}
+.why h2{font-size:var(--t-xl);max-width:14em}
+.why .cols{margin-top:var(--s6);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s7)}
+.why .cols>*{min-width:0}
+.why .cols p{font-size:var(--t-base);line-height:1.8;color:var(--fg);max-width:34em}
+.why .cols p+p{margin-top:var(--s4)}
+.pull{font-family:var(--serif);font-size:var(--t-lg);line-height:1.6;color:var(--ink);
+  border-top:2px solid var(--k);border-bottom:2px solid var(--k);padding:var(--s5) 0;margin-top:var(--s6)}
+.figwrap{margin-top:var(--s7)}
+.figwrap img{width:100%;height:auto;display:block;aspect-ratio:16/7;object-fit:cover;
+  background:linear-gradient(120deg,#cfd4da,#b8bec6);filter:saturate(.55) contrast(1.05)}
+.figwrap figcaption{font-size:var(--t-sm);color:var(--mut);margin-top:var(--s3);max-width:44em;line-height:1.6}
+
+/* ═══ 5 · 대조표 ═══ */
+.tab{padding-top:var(--s8);padding-bottom:var(--s8)}
+.tab h2{font-size:var(--t-lg)}
+.tab .wrap2{margin-top:var(--s5)}
+.tab .src{font-family:var(--serif);color:var(--ink)}
+.tab td{font-size:var(--t-sm);line-height:1.6}
+.tab .foot{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s4)}
+
+/* ═══ 6 · 찾아보기 (닫는 자리) ═══ */
+.index{padding-top:var(--s9);padding-bottom:var(--s10);background:var(--paper2);
+  border-top:2px solid var(--ink)}
+.index h2{font-size:var(--t-lg)}
+.index .intro{font-size:var(--t-sm);color:var(--body);margin-top:var(--s3);max-width:38em}
+.ix{margin-top:var(--s6);columns:2;column-gap:var(--s8);column-rule:1px solid var(--rule)}
+.ix .e{break-inside:avoid;display:grid;grid-template-columns:minmax(0,1fr) max-content;
+  gap:var(--s3);align-items:baseline;padding:var(--s2) 0;border-bottom:1px solid var(--hair)}
+.ix .e>*{min-width:0}
+.ix .t{font-size:var(--t-sm);color:var(--fg)}
+.ix .t i{font-style:normal;color:var(--mut)}
+.ix .p{font-family:var(--mono);font-size:var(--t-xs);color:var(--k);white-space:nowrap}
+.index .fine{font-size:var(--t-sm);color:var(--mut);margin-top:var(--s7);max-width:40em;line-height:1.7}
+
+/* ═══ 900 이하 — 한 칸으로 세운다. 판형 교대는 값만 줄여 유지한다 (함정 21) ═══ */
+@media (max-width:900px){
+  .bay  {padding-left:var(--s4);padding-right:var(--s6)}
+  .bay-r{padding-left:var(--s6);padding-right:var(--s4)}
+  .bay-c{padding-left:var(--s5);padding-right:var(--s5)}
+  .head   {padding-top:var(--s8);padding-bottom:var(--s6)}
+  .source {padding-top:var(--s7);padding-bottom:var(--s6)}
+  .three  {padding-top:var(--s8);padding-bottom:var(--s7)}
+  .why    {padding-top:var(--s6);padding-bottom:var(--s8)}
+  .tab    {padding-top:var(--s6);padding-bottom:var(--s5)}
+  .index  {padding-top:var(--s8);padding-bottom:var(--s9)}
+  .head h1{font-size:var(--t-2xl)}
+  .source h2,.three h2,.why h2{font-size:var(--t-lg)}
+  .head .hgrid,.head .meta,.gloss,.why .cols{grid-template-columns:minmax(0,1fr)}
+  .stage{grid-template-columns:minmax(0,1fr);gap:var(--s6)}
+  .aside{position:static}
+  .rendered{font-size:var(--t-base);line-height:1.85}
+  /* 본문이 17px 로 내려가는데 계량 숫자가 20px 이면 주인공이 리드아웃보다 작아진다 (D9) */
+  .mrow .val{font-size:var(--t-base)}
+  .ix{columns:1;column-rule:0}
+  .picks{width:100%}
+  .picks button{flex:1 1 auto;text-align:center;padding:var(--s3) var(--s2)}
+  /* 표를 카드로 접는다 — td 는 grid, 셀 안 요소는 하나로 묶는다 (함정 12) */
+  .fold table,.fold thead,.fold tbody,.fold tr{display:block;width:auto}
+  .fold caption{display:block}
+  .fold thead{position:absolute;left:-9999px}
+  .fold tr{border-bottom:2px solid var(--ink);padding:var(--s3) 0}
+  .fold td{display:grid;grid-template-columns:5.5em minmax(0,1fr);gap:var(--s3);
+           border-bottom:0;padding:var(--s1) 0;text-align:left}
+  .fold td::before{content:attr(data-l);color:var(--mut);font-family:var(--mono);font-size:var(--t-xs)}
+  .fold td.n{text-align:left}
+  /* `tbody tr:last-child td` 는 (0,1,3) 이라 `.fold td` (0,1,1) 를 이긴다 — 같은 셀렉터로 되받는다 (함정 27) */
+  .fold tbody tr:last-child td{border-bottom:0}
+}
+/* 판본을 바꿀 때 지면이 실제로 「다시 조판되는」 것이 보이도록 짧게 새로 앉힌다.
+   이게 없으면 아래 두 폴백은 존재하지 않는 트랜지션을 끄는 죽은 규칙이 된다 */
+@keyframes swapIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.js .rendered.swap,.js .byline.swap{animation:swapIn .22s ease both}
+@media (prefers-reduced-motion:reduce){
+  .js .rise{opacity:1;transform:none;transition:none}
+  .js .rendered.swap,.js .byline.swap{animation:none}
+}
+/* `.capture` 와 `.js` 는 둘 다 <html> 에 붙으므로 `.capture .js .rise` 는 영원히 안 맞는다 */
+.capture .rise{opacity:1!important;transform:none!important}
+.capture .aside{position:static}
+.capture .rendered.swap,.capture .byline.swap{animation:none}
+</style></head><body>
+
+<!-- ═══ 1 · 표제 ═══ -->
+<section class="head">
+  <div class="bay">
+    <p class="no">옮김 · 제12호 · 2026 여름</p>
+    <div class="hgrid">
+      <div>
+        <h1>같은 문단을 세 사람이 옮겼다</h1>
+        <p class="sub">1931년에 쓰인 산문 한 문단이 1968년·1994년·2026년에 한국어로 옮겨졌다. 세 판본을 나란히 놓고, 무엇이 달라졌고 무엇이 그대로인지 센다.</p>
+      </div>
+      <nav class="toc" aria-label="이 호의 차례">
+        <p class="tl">차례</p>
+        <ol>
+          <li><a href="#s-src"><span>옮기기 전의 문장</span></a></li>
+          <li><a href="#s-three"><span>세 판본</span></a></li>
+          <li><a href="#s-why"><span>달라진 이유</span></a></li>
+          <li><a href="#s-tab"><span>낱말 대조</span></a></li>
+          <li><a href="#s-index"><span>찾아보기</span></a></li>
+        </ol>
+      </nav>
+    </div>
+    <div class="meta rise">
+      <div><dt>원문</dt><dd>이시가와 마사에, 『물가의 기록』(1931) 중 「도랑」 세 번째 문단</dd></div>
+      <div><dt>옮긴이</dt><dd>정운재(1968) · 배소현(1994) · 한이나(2026)</dd></div>
+      <div><dt>대조 방식</dt><dd>화면에 보이는 글자를 그대로 세어 계량한다. 미리 적어 둔 수치는 없다</dd></div>
+      <div><dt>수록</dt><dd>본문 · 낱말 대조표 · 찾아보기</dd></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2 · 원문 ═══ -->
+<section class="source" id="s-src">
+  <div class="bay-r">
+    <p class="eyb">먼저 원문</p>
+    <h2>옮기기 전의 문장</h2>
+    <div class="srcbox rise">
+      <p class="jp">溝は町のいちばん低いところを流れてゐた。誰も見ないので、水は自分の速さで進んでゐた。</p>
+      <p class="rom">mizo wa machi no ichiban hikui tokoro o nagarete ita.<br>daremo minai node, mizu wa jibun no hayasa de susunde ita.</p>
+      <p class="cred">두 문장, 원문 <span id="srcN">39</span>자(구두점 제외). 시제는 과거진행이고 주어는 「도랑」과 「물」로 한 번씩 바뀐다. 「自分の速さ」는 직역하면 「자기의 속도」다.</p>
+    </div>
+    <div class="gloss rise r1">
+      <div><p class="w">溝 (mizo)</p><p class="d">지붕 없이 드러난 배수로. 「개천」보다 좁고 「하수구」보다 열려 있다. 대응하는 한국어 한 낱말이 없다. 세 판본이 모두 「도랑」으로 갔는데(표 1, 최대 차 0자), 합의라기보다 달리 쓸 말이 없었기 때문이다.</p></div>
+      <div><p class="w">いちばん低いところ</p><p class="d">「가장 낮은 곳」. 최상급이 한 낱말로 붙은 9자인데, 세 판본은 5~6자로 줄었다(표 1). 늘어날 것 같은 자리에서 오히려 짧아진다.</p></div>
+      <div><p class="w">誰も見ないので</p><p class="d">「아무도 보지 않으므로」. 이유절이지만 원문의 어조는 설명이 아니라 방치에 가깝다.</p></div>
+      <div><p class="w">自分の速さ</p><p class="d">사물에 「自分」을 쓰는 것은 1931년 산문에서도 낯선 용법이었다. 여기서 문장의 성격이 갈린다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3 · 세 옮김 (조작형) ═══ -->
+<section class="three" id="s-three">
+  <div class="bay">
+    <p class="eyb">세 판본</p>
+    <h2>옮긴이를 바꾸면 지면이 다시 조판된다</h2>
+    <noscript><p class="note">스크립트가 꺼져 있어 아래 세 버튼은 동작하지 않습니다. 지금 보이는 것은 1968년 정운재 판본이고, 곁줄의 계량도 그 판본의 값입니다.</p></noscript>
+    <div class="picks" role="group" aria-label="옮긴이 선택">
+      <button type="button" data-t="0" aria-pressed="true">1968 정운재</button>
+      <button type="button" data-t="1" aria-pressed="false">1994 배소현</button>
+      <button type="button" data-t="2" aria-pressed="false">2026 한이나</button>
+    </div>
+
+    <div class="stage">
+      <div>
+        <!-- 기본 상태를 정적 마크업으로 먼저 그려 둔다 — JS 가 꺼져도 남는다 (함정 25) -->
+        <div class="rendered" id="rendered" aria-live="polite">
+          <p>도랑은 <span class="sino">町</span>에서 가장 낮은 데를 흐르고 있었다. 아무도 보지 아니하므로, 물은 <span class="sino">自己</span>의 <span class="sino">速度</span>로 나아가고 있었다.</p>
+        </div>
+        <p class="byline" id="byline">정운재 옮김 · 1968 · 『물가의 기록』 초역본, 삼우출판사</p>
+        <!-- 주석은 옮긴 본문 아래에 둔다. 곁줄에 두면 곁줄이 404px 로 행 높이를 정하고
+             왼쪽 주 칼럼(134px) 아래가 270px 비어 데스크톱에 구멍이 난다 (probe trackMismatch) -->
+        <p class="note" id="note"><b>한자를 그대로 두었다.</b> 1968년 판본은 「町」·「自己」·「速度」를 한글로 풀지 않는다. 당시 산문 번역에서 한자 노출은 격식이었고, 독자가 읽어 낼 것을 전제했다.</p>
+      </div>
+
+      <div class="aside" aria-live="polite">
+        <h3>화면의 글자를 그대로 셈</h3>
+        <div class="mrows" id="mrows">
+          <!-- 무JS 기본 상태(1968)도 눈대중이 아니라 파생값이다:
+               43자 · 43/39=110% · 2문장 · 43/2=22자 · 한자 글리프 5자 (함정 25·23) -->
+          <div class="mrow"><span class="lbl">옮긴 글자 수</span><span class="val" id="mChars">43</span></div>
+          <div class="mrow"><span class="lbl">원문 <span id="srcN2">39</span>자 대비</span><span class="val" id="mRatio">110%</span></div>
+          <div class="mrow"><span class="lbl">문장</span><span class="val" id="mSent">2</span></div>
+          <div class="mrow"><span class="lbl">평균 문장 길이</span><span class="val" id="mAvg">22자</span></div>
+          <div class="mrow"><span class="lbl">한자 노출</span><span class="val" id="mSino">5자</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 4 · 왜 달라졌나 ═══ -->
+<section class="why" id="s-why">
+  <div class="bay-r">
+    <p class="eyb">달라진 이유</p>
+    <h2>옮긴이가 아니라 시대가 고른 것들</h2>
+    <div class="cols rise">
+      <div>
+        <p>세 판본의 차이는 취향이 아니다. 1968년 판본이 한자를 노출한 것은 그때 산문 번역의 기본값이었고, 1994년 판본이 그것을 전부 한글로 푼 것도 마찬가지로 그 시기의 기본값이었다. 옮긴이가 이긴 자리가 아니라 규범이 바뀐 자리다.</p>
+        <p>바뀌지 않은 것도 있다. 세 판본 모두 원문의 두 문장을 두 문장으로 유지했다. 문장을 쪼개거나 붙이는 것은 세 시기 어디에서도 허용 범위 밖이었던 것으로 보인다.</p>
+      </div>
+      <div>
+        <p>가장 크게 갈린 자리는 「自分の速さ」다. 1968년은 「自己의 速度」로 한자어를 그대로 옮겼고, 1994년은 「제 속도」로 줄였으며, 2026년은 「자기가 정한 속도」로 늘렸다. 같은 다섯 글자에서 판본마다 글자 수가 달라진다.</p>
+        <p>늘어난 쪽이 더 정확한가는 이 지면이 답할 수 있는 물음이 아니다. 다만 원문이 사물에 「自分」을 붙인 낯섦을 2026년 판본만 문장 안에서 되살리려 한다는 것은 세어 보면 드러난다.</p>
+      </div>
+    </div>
+    <p class="pull rise r1">번역을 비교할 때 우리가 실제로 비교하는 것은 대개 옮긴이가 아니라, 그 사람이 옮기던 해다.</p>
+    <figure class="figwrap rise r2">
+      <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1600&q=80&auto=format&fit=crop"
+           alt="곡선으로 휜 도서관 서가에 책이 빽빽하게 꽂혀 있다"
+           loading="lazy" decoding="async"
+           onerror="this.style.visibility='hidden'">
+      <figcaption>1968년 초역본을 열람한 도서관 서가. 초역본은 이곳 소장본을 봤고, 1994년·2026년 판본은 편집부 소장본을 썼다. 쪽수 표기는 각 판본의 원 쪽수를 따랐다.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══ 5 · 대조표 ═══ -->
+<section class="tab" id="s-tab">
+  <div class="bay-c">
+    <p class="eyb">낱말 대조</p>
+    <h2>같은 자리, 세 선택</h2>
+    <div class="wrap2 fold rise">
+      <table>
+        <caption>표 1 — 원문 낱말별 세 판본의 선택. 「최대 차」는 세 칸의 공백 뺀 글자 수를 재서 최댓값 − 최솟값으로 채운다.</caption>
+        <thead><tr>
+          <th scope="col">원문</th><th scope="col">1968 정운재</th><th scope="col">1994 배소현</th><th scope="col">2026 한이나</th><th scope="col" class="n">최대 차</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td data-l="원문"><span class="src">溝</span></td>
+            <td data-l="1968">도랑</td><td data-l="1994">도랑</td><td data-l="2026">도랑</td>
+            <td data-l="최대 차" class="n">0자</td>
+          </tr>
+          <tr>
+            <td data-l="원문"><span class="src">町</span></td>
+            <td data-l="1968">町</td><td data-l="1994">동네</td><td data-l="2026">동네</td>
+            <td data-l="최대 차" class="n">1자</td>
+          </tr>
+          <tr>
+            <td data-l="원문"><span class="src">いちばん低いところ</span></td>
+            <td data-l="1968">가장 낮은 데</td><td data-l="1994">가장 낮은 곳</td><td data-l="2026">가장 낮은 자리</td>
+            <td data-l="최대 차" class="n">1자</td>
+          </tr>
+          <tr>
+            <td data-l="원문"><span class="src">誰も見ないので</span></td>
+            <td data-l="1968">아무도 보지 아니하므로</td><td data-l="1994">아무도 보지 않으니</td><td data-l="2026">보는 사람이 없어서</td>
+            <td data-l="최대 차" class="n">2자</td>
+          </tr>
+          <tr>
+            <td data-l="원문"><span class="src">自分の速さ</span></td>
+            <td data-l="1968">自己의 速度</td><td data-l="1994">제 속도</td><td data-l="2026">자기가 정한 속도</td>
+            <td data-l="최대 차" class="n">4자</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="foot">최대 차 = 세 선택 중 가장 긴 것과 가장 짧은 것의 글자 수 차이. 합 <span id="diffSum">8</span>자.</p>
+  </div>
+</section>
+
+<!-- ═══ 6 · 찾아보기 (닫는 자리) ═══ -->
+<section class="index" id="s-index">
+  <div class="bay">
+    <p class="eyb">닫는 말 대신</p>
+    <h2>찾아보기</h2>
+    <p class="intro">이 호에서 다룬 것들의 자리입니다. 쪽수는 인쇄본 기준이고, 이 화면에서는 위에서 아래 순서와 같습니다.</p>
+    <div class="ix rise r1">
+      <div class="e"><span class="t">가장 낮은 곳 <i>— 9자가 5~6자로</i></span><span class="p">4, 11</span></div>
+      <div class="e"><span class="t">규범 <i>— 시기별 기본값</i></span><span class="p">8, 9</span></div>
+      <div class="e"><span class="t">늦여름 <i>— 1994년 개역본 발행</i></span><span class="p">6</span></div>
+      <div class="e"><span class="t">도서관 서가 <i>— 1968년 초역본 열람</i></span><span class="p">9</span></div>
+      <div class="e"><span class="t">문장 수 유지 <i>— 세 판본 공통</i></span><span class="p">8</span></div>
+      <div class="e"><span class="t">배소현 <i>— 1994년 판본</i></span><span class="p">6, 11</span></div>
+      <div class="e"><span class="t">삼우출판사 <i>— 1968년 초역본 발행</i></span><span class="p">6</span></div>
+      <div class="e"><span class="t">이시가와 마사에 <i>— 『물가의 기록』(1931)</i></span><span class="p">3, 4</span></div>
+      <div class="e"><span class="t">정운재 <i>— 1968년 판본</i></span><span class="p">6, 11</span></div>
+      <div class="e"><span class="t">한이나 <i>— 2026년 판본</i></span><span class="p">6, 11</span></div>
+      <div class="e"><span class="t">한자 노출 <i>— 1968년 판본의 격식</i></span><span class="p">6, 8</span></div>
+      <div class="e"><span class="t">自分 <i>— 사물에 쓰인 용법</i></span><span class="p">4, 8, 11</span></div>
+      <div class="e"><span class="t">溝 <i>— 대응 낱말 없음</i></span><span class="p">4, 11</span></div>
+    </div>
+    <p class="fine">다음 호(제13호)는 같은 방식으로 시(詩) 한 편을 다룹니다. 산문과 달리 행이 단위가 되므로 세는 방법을 바꿔야 하는데, 그 방법부터 지면에 적을 생각입니다.</p>
+  </div>
+</section>
+
+<script>
+(function(){
+  if('scrollRestoration' in history)history.scrollRestoration='manual';
+  var h=document.documentElement,p=h.style.scrollBehavior;h.style.scrollBehavior='auto';
+  scrollTo(0,0);addEventListener('load',function(){scrollTo(0,0);
+   setTimeout(function(){h.style.scrollBehavior=p},60)});
+})();
+document.documentElement.classList.add('js');
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+(function(){
+  var els=[].slice.call(document.querySelectorAll('.rise'));
+  if(reduce||!('IntersectionObserver' in window)){
+    els.forEach(function(e){e.classList.add('vis')});return;
+  }
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})},
+    {rootMargin:'0px 0px -8% 0px'});
+  els.forEach(function(e){io.observe(e)});
+  addEventListener('load',function(){els.forEach(function(e){
+    if(e.getBoundingClientRect().top<innerHeight)e.classList.add('vis')})});
+})();
+
+(function(){
+  // ── 선언 ──────────────────────────────────────────────
+  // 적는 것은 **세 판본의 본문뿐**이다. 원문 글자 수조차 손으로 적지 않는다 —
+  // 지면 §2 에 실린 원문을 그대로 세서 쓴다. 손으로 적으면 지면과 어긋나도 모른다 (함정 23).
+  var PUNCT = /[。、，．.,·「」『』]/;
+  var count = function(s){ return [...s.replace(/\s+/g,'')].filter(function(c){ return !PUNCT.test(c) }).length; };
+  var SRC = count(document.querySelector('.srcbox .jp').textContent);
+  var V = [
+    { y:'1968', who:'정운재',
+      cred:'정운재 옮김 · 1968 · 『물가의 기록』 초역본, 삼우출판사',
+      html:'<p>도랑은 <span class="sino">町</span>에서 가장 낮은 데를 흐르고 있었다. 아무도 보지 아니하므로, 물은 <span class="sino">自己</span>의 <span class="sino">速度</span>로 나아가고 있었다.</p>',
+      note:'<b>한자를 그대로 두었다.</b> 1968년 판본은 「町」·「自己」·「速度」를 한글로 풀지 않는다. 당시 산문 번역에서 한자 노출은 격식이었고, 독자가 읽어 낼 것을 전제했다.' },
+    { y:'1994', who:'배소현',
+      cred:'배소현 옮김 · 1994 · 『물가의 기록』 개역본, 늦여름',
+      html:'<p>도랑은 동네에서 가장 낮은 곳을 흐르고 있었다. 아무도 보지 않으니, 물은 제 속도로 흘러가고 있었다.</p>',
+      note:'<b>한자를 전부 풀었고 가장 짧다.</b> 「自己의 速度」를 「제 속도」로 줄이면서 원문이 사물에 「自分」을 붙인 낯섦은 사라졌다. 대신 문장이 걸리는 데 없이 읽힌다.' },
+    { y:'2026', who:'한이나',
+      cred:'한이나 옮김 · 2026 · 『물가의 기록』 신역본, 옮김',
+      html:'<p>도랑은 동네에서 가장 낮은 자리를 흐르고 있었다. 보는 사람이 없어서, 물은 자기가 정한 속도로 나아가고 있었다.</p>',
+      note:'<b>가장 길다.</b> 「자기가 정한 속도」는 원문에 없는 「정한」을 넣어 낯섦을 문장 안에서 되살린다. 늘어난 글자 수는 그 선택의 값이다.' }
+  ];
+
+  var rendered=document.getElementById('rendered'), byline=document.getElementById('byline'),
+      note=document.getElementById('note'),
+      mChars=document.getElementById('mChars'), mRatio=document.getElementById('mRatio'),
+      mSent=document.getElementById('mSent'), mAvg=document.getElementById('mAvg'),
+      mSino=document.getElementById('mSino');
+
+  // ── 파생 ──────────────────────────────────────────────
+  // 계량은 상수가 아니라 **지금 화면에 있는 글자**에서 뽑는다 (함정 23).
+  function measure(){
+    var chars = count(rendered.textContent);
+    var sentences = rendered.textContent.split(/[.]/).filter(function(s){ return s.trim().length }).length;
+    // span 개수가 아니라 **글자 수**를 센다 — 다른 네 행이 전부 글자 수인데
+    // 여기만 덩어리 수를 세면 「町·自己·速度 = 5자」가 화면에 「3개」로 뜬다 (함정 9)
+    var sino = 0;
+    [].forEach.call(rendered.querySelectorAll('.sino'), function(el){ sino += count(el.textContent); });
+    return { chars:chars, sentences:sentences, sino:sino,
+             avg: sentences ? Math.round(chars/sentences) : 0,
+             ratio: Math.round(chars/SRC*100) };
+  }
+  function paint(i){
+    var v=V[i];
+    rendered.innerHTML=v.html;
+    byline.textContent=v.cred;
+    note.innerHTML=v.note;
+    if(!reduce){
+      rendered.classList.remove('swap'); byline.classList.remove('swap');
+      void rendered.offsetWidth;                       // 리플로를 강제해야 애니메이션이 다시 돈다
+      rendered.classList.add('swap'); byline.classList.add('swap');
+    }
+    var m=measure();
+    mChars.textContent=m.chars;
+    mRatio.textContent=m.ratio+'%';
+    mSent.textContent=m.sentences;
+    mAvg.textContent=m.avg+'자';
+    mSino.textContent=m.sino+'자';
+  }
+  // 원문 글자 수를 쓰는 두 자리도 같은 값에서 채운다 — 지면 안에서 숫자가 갈리면 안 된다
+  ['srcN','srcN2'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.textContent=SRC;
+  });
+
+  // 표 1 의 「최대 차」도 손으로 적지 않는다 — 같은 행 세 칸을 재서 채운다.
+  // (손으로 적었을 때 「誰も見ないので」 행이 2 인데 3 으로 적혀 있었다)
+  var sum=0;
+  [].forEach.call(document.querySelectorAll('.tab tbody tr'),function(tr){
+    var td=tr.querySelectorAll('td');
+    if(td.length<5)return;
+    var ns=[1,2,3].map(function(i){ return td[i].textContent.replace(/\s+/g,'').length; });
+    var d=Math.max.apply(null,ns)-Math.min.apply(null,ns);
+    td[4].textContent=d+'자'; sum+=d;
+  });
+  var ds=document.getElementById('diffSum'); if(ds) ds.textContent=sum;
+  document.querySelector('.picks').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-t]'); if(!b)return;
+    [].forEach.call(this.querySelectorAll('button'),function(x){
+      x.setAttribute('aria-pressed',String(x===b))});
+    paint(Number(b.dataset.t));
+  });
+  paint(0);
+})();
+</script>
+</body></html>

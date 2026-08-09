@@ -216,6 +216,55 @@ const CHECKS = [
       return `sticky top:0 + 내부 앵커 ${new Set(anchors).size}개인데 scroll-margin-top 선언이 없음`;
     }},
 
+  { id: 'ua-margin-reset', level: 'error',
+    why: 'figure/blockquote/dl 은 UA 마진 40px 을 갖는다. 리셋을 안 하면 그 요소만 판형 밖으로 밀린다 — ' +
+         'RUN25 에서 지적됐고 RUN36 에서 그대로 재발했다(유일한 사진이 전 폭에서 40px 어긋남)',
+    test: s => {
+      const style = (s.match(/<style>([\s\S]*?)<\/style>/) || [])[1] || '';
+      const body = s.slice(s.indexOf('<body'));
+      // 가로 40px 을 갖는 것만 본다 — 판형에서 어긋나 보이는 것은 이 셋뿐이다.
+      // dl/ol/ul 의 UA 값은 세로 마진·안쪽 여백이라 좌우 정렬을 깨지 않는다.
+      const UA = { figure: 40, blockquote: 40, dd: 40 };
+      const bad = [];
+      for (const [tag, px] of Object.entries(UA)) {
+        if (!new RegExp(`<${tag}\\b`).test(body)) continue;
+        // 그 태그를 포함하는 요소 셀렉터 규칙 중 margin 을 선언한 것이 있으면 통과
+        const re = new RegExp(`(^|[},])\\s*([^{}]*\\b${tag}\\b[^{}]*)\\{([^}]*)\\}`, 'g');
+        let reset = false;
+        for (const m of style.matchAll(re)) {
+          if (!/(^|;)\s*margin\s*:/.test(m[3])) continue;
+          // 셀렉터 목록 중 하나라도 **그 태그로 끝나면** 리셋으로 인정한다.
+          // (`.card figure{margin:0}` 은 정당한 리셋이고, `.figwrap{margin-top:..}` 은 아니다)
+          if (m[2].split(',').some(sel =>
+              new RegExp(`(^|[\\s>+~])${tag}([.#:\\[][^\\s>+~]*)?\\s*$`).test(sel.trim())))
+            { reset = true; break; }
+        }
+        if (!reset) bad.push(`<${tag}> (UA 마진 ${px}px)`);
+      }
+      return bad.length ? `${bad.join(' · ')} — 요소 셀렉터로 margin 리셋이 없음` : null;
+    }},
+
+  { id: 'dead-fallback', level: 'warn',
+    why: '없는 트랜지션/애니메이션을 none 으로 끄는 폴백은 「폴백을 챙겼다」는 착각만 준다 — RUN36 D12',
+    test: s => {
+      const style = (s.match(/<style>([\s\S]*?)<\/style>/) || [])[1] || '';
+      const bad = [];
+      for (const prop of ['transition', 'animation']) {
+        // `X{transition:none}` 의 대상 X 가 어디에서도 그 속성을 선언받지 않으면 죽은 규칙이다
+        const off = new RegExp(`([^{}]+)\\{[^}]*(?:^|;|\\s)${prop}\\s*:\\s*none`, 'g');
+        for (const m of style.matchAll(off)) {
+          for (let sel of m[1].split(',')) {
+            sel = sel.trim().replace(/^\.(capture|js)\s+/, '').replace(/!important/g, '');
+            const key = (sel.match(/\.[a-z0-9-]+(?![^{]*\()/gi) || []).pop();
+            if (!key) continue;
+            const live = new RegExp(`\\${key}[^{}]*\\{[^}]*(?:^|;|\\s)${prop}\\s*:\\s*(?!none)`, 'i');
+            if (!live.test(style)) bad.push(`${sel} { ${prop}:none } — ${key} 에 ${prop} 선언이 없음`);
+          }
+        }
+      }
+      return bad.length ? [...new Set(bad)].slice(0, 3).join(' · ') : null;
+    }},
+
   { id: 'narrow-table', level: 'warn',
     why: '390px에서 열이 뭉개져 글자가 세로로 선다 — RUN25 비고 열 · RUN26 원장표 89px',
     test: s => {
@@ -232,12 +281,47 @@ const CHECKS = [
       return hasNarrowRule ? null
         : `표 최대 ${maxCols}열인데 390px 대응(열 재배치 또는 overflow-x:auto)이 없음 — 390÷${maxCols}≈${Math.round(342 / maxCols)}px/열`;
     }},
+
+  /* ── ref- 계열 전용 · 선 검사 ──
+     레퍼런스 시스템을 실측해 만든 산출물이 공개 갤러리로 나가므로,
+     참고와 사칭을 가르는 선을 사람이 아니라 기계가 지킨다.
+     명세: .claude/skills/design-ref/references/line.md */
+
+  { id: 'ref-brand-leak', level: 'error',
+    only: f => /^ref-/.test(f),
+    why: '그 회사인 척하는 순간 참고가 아니라 사칭이 된다',
+    test: s => {
+      const BRANDS = ['당근','daangn','karrot','토스','tossbank','토스뱅크','배달의민족','배민',
+                      'baemin','woowa','쿠팡','coupang','네이버','naver','카카오','kakao','라인프렌즈'];
+      const body = s.slice(s.indexOf('<body'))
+        .replace(/<!--[\s\S]*?-->/g, '')          // 주석은 출처 표기라 허용
+        .replace(/<script[\s\S]*?<\/script>/g, '');
+      const hit = BRANDS.filter(b => new RegExp(b, 'i').test(body));
+      return hit.length ? `보이는 텍스트에 대상 브랜드명: ${[...new Set(hit)].join(', ')}` : null;
+    }},
+
+  { id: 'ref-asset-host', level: 'error',
+    only: f => /^ref-/.test(f),
+    why: '그 회사의 사진·아이콘·로고 원본은 가져오지 않는다',
+    test: s => {
+      const HOSTS = ['daangn.com','karrotmarket','toss.im','tossface','baemin.com','woowahan',
+                     'coupangcdn','pstatic.net','kakaocdn.net','static.toss'];
+      const hit = HOSTS.filter(h => s.includes(h));
+      return hit.length ? `대상 회사 에셋 호스트 참조: ${hit.join(', ')}` : null;
+    }},
+
+  { id: 'ref-source-note', level: 'error',
+    only: f => /^ref-/.test(f),
+    why: '출처를 밝히는 것이 참고와 도용을 가른다',
+    test: s => /<!--[\s\S]{0,200}?refs\/[a-z0-9-]+\.md/.test(s)
+      ? null : '<!-- 시스템 출처: refs/<회사>.md --> 주석이 없음' },
 ];
 
-function checkFile(path) {
+function checkFile(path, name = '') {
   const src = readFileSync(path, 'utf8');
   const fails = [];
   for (const c of CHECKS) {
+    if (c.only && !c.only(name)) continue;   // 특정 계열 파일에만 도는 검사
     let msg = null;
     try { msg = c.test(src); } catch (e) { msg = `검사 오류: ${e.message}`; }
     if (msg) fails.push({ id: c.id, level: c.level, msg, why: c.why });
@@ -246,11 +330,11 @@ function checkFile(path) {
 }
 
 const files = readdirSync(DIR)
-  .filter(f => f.endsWith('.html') && f.startsWith('run-'))
+  .filter(f => f.endsWith('.html') && /^(run|ref)-/.test(f))
   .filter(f => !only || f.includes(only))
   .sort();
 
-const report = files.map(f => ({ file: f, fails: checkFile(join(DIR, f)) }));
+const report = files.map(f => ({ file: f, fails: checkFile(join(DIR, f), f) }));
 
 if (asJson) {
   console.log(JSON.stringify(report, null, 2));

@@ -8,7 +8,8 @@
 --serif:'Georgia','Nanum Myeongjo',serif;
 --paper:#f4f0e6;--ink:#1c1812;--body:#3f3a30;--mut:#8a8272;--line:#ddd6c6;--acc:#a8432e;
 }
-*{box-sizing:border-box}html{scroll-behavior:smooth}
+*{box-sizing:border-box}
+figure,blockquote,dd{margin:0}   /* UA 가로 마진 40px — 안 지우면 그 요소만 판형 밖으로 밀린다 */html{scroll-behavior:smooth}
 body{margin:0;font-family:var(--font);background:var(--paper);color:var(--body);line-height:1.7;-webkit-font-smoothing:antialiased}
 a{color:inherit}img{max-width:100%;display:block}
 .grain{position:fixed;inset:0;pointer-events:none;opacity:.35;mix-blend-mode:multiply;z-index:1;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}

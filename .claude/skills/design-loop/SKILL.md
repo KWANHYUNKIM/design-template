@@ -133,6 +133,20 @@ node scripts/shoot.mjs run-NN-slug --capture           # 세 폭 전체 캡처 �
 > RUN30에서 이걸로 없는 결함을 쫓다 시간을 버렸다. `shoot.mjs` 는 CDP의
 > `Emulation.setDeviceMetricsOverride` 로 **진짜 뷰포트**를 만든다.
 
+> 🚫 **`--probe` 가 낸 경고가 하나라도 남아 있으면 크리틱에 넘기지 마라.**
+> `overflowCount` 만 보고 넘기지 말 것 — **여덟 항목을 전부 읽어라**:
+> `overflowBad` · `farFootnotes` · `gridSkew` · **`trackMismatch`** · `foldedCells` ·
+> `svgIssues` · `gridFlow` · `rhythmWarn`.
+> RUN36 은 `trackMismatch` 가 **901 이상 7개 폭 전부**에서 같은 자리를 지목했는데
+> 그 출력을 읽지 않고 출고했고, 크리틱이 그 자리를 데스크톱 구멍으로 잡았다.
+> 앞선 세 RUN은 「검사기를 통과했는데 결함이 있었다」였지만 이건 **검사기가 말했는데 안 들은** 것이다.
+> 성격이 다르고, 변명의 여지가 없다. 한 줄로 전부 확인한다:
+> ```bash
+> for w in 390 600 900 1024 1200 1440 1920; do
+>   node scripts/shoot.mjs run-NN-slug --w $w --probe --out /private/tmp/pr | tail -40
+> done
+> ```
+
 - **390 / 1024 / 1440 세 폭**을 직접 본다
 - 인터랙션을 실제로 조작해 화면이 바뀌는지 본다
 - `?capture=1` 모드가 펼쳐지는지 본다
