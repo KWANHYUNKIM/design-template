@@ -292,11 +292,21 @@ const CHECKS = [
     why: '그 회사인 척하는 순간 참고가 아니라 사칭이 된다',
     test: s => {
       const BRANDS = ['당근','daangn','karrot','토스','tossbank','토스뱅크','배달의민족','배민',
-                      'baemin','woowa','쿠팡','coupang','네이버','naver','카카오','kakao','라인프렌즈'];
+                      'baemin','woowa','쿠팡','coupang','네이버','naver','카카오','kakao','라인프렌즈',
+                      '삼성','samsung','갤럭시','galaxy','비스포크','bespoke','엘지','lg전자',
+                      '현대자동차','hyundai','기아자동차'];
       const body = s.slice(s.indexOf('<body'))
         .replace(/<!--[\s\S]*?-->/g, '')          // 주석은 출처 표기라 허용
         .replace(/<script[\s\S]*?<\/script>/g, '');
-      const hit = BRANDS.filter(b => new RegExp(b, 'i').test(body));
+      // 부분일치는 오탐을 낸다 — "토스트 알림"의 토스, "네이버스러운"의 네이버가 걸렸다(병렬 세션 보고).
+      // 한글은 뒤에 한글이 안 오도록, 영문은 단어 경계로 막는다.
+      const hit = BRANDS.filter(b => {
+        const hangul = /[가-힣]/.test(b);
+        const re = hangul
+          ? new RegExp(`(?<![가-힣])${b}(?![가-힣])`)      // 앞뒤가 한글이면 다른 단어다
+          : new RegExp(`\\b${b.replace('.', '\\.')}\\b`, 'i');
+        return re.test(body);
+      });
       return hit.length ? `보이는 텍스트에 대상 브랜드명: ${[...new Set(hit)].join(', ')}` : null;
     }},
 
@@ -305,7 +315,9 @@ const CHECKS = [
     why: '그 회사의 사진·아이콘·로고 원본은 가져오지 않는다',
     test: s => {
       const HOSTS = ['daangn.com','karrotmarket','toss.im','tossface','baemin.com','woowahan',
-                     'coupangcdn','pstatic.net','kakaocdn.net','static.toss'];
+                     'coupangcdn','pstatic.net','kakaocdn.net','static.toss',
+                     'samsung.com','samsungcdn','images.samsung','lge.co.kr','lgcdn',
+                     'hyundai.com','hmgjournal'];
       // 문자열이 아니라 "실제 URL"만 잡는다.
       // 파일명(ref-02-woowahan-…)과 출처 주석(refs/woowahan.md)까지 걸리면 오탐이다 — REF02에서 실제로 걸렸다.
       const hit = HOSTS.filter(h => new RegExp(`https?://[^"'\\s)]*${h.replace('.', '\\.')}`).test(s));

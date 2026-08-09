@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- 시스템 출처: refs/lge.md (2026-08-09 실측) · 브랜드·카피·수치는 전부 발명 -->
+<title>모루 — 절삭공구·소모품</title>
+<meta name="description" content="재질과 공구경을 고르면 회전수와 이송이 계산되고, 그 조건에 맞는 공구만 남습니다. 밀링·선반 절삭공구 유통.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+:root{
+  --sans:Pretendard,'Pretendard Variable',-apple-system,system-ui,sans-serif;
+
+  /* 색 — 원본 실측. 먹이 압도적이고 포인트색은 텍스트에만 쓴다 */
+  --paper:#ffffff;
+  --band:#f3f4f6;
+  --band2:#f3f5f7;
+  --ink:#111111;    /* on --paper = 18.88:1 (실측) */
+  --fg:#111111;     /* on --paper = 18.88:1 (실측) */
+  --body:#4b5058;   /* on --paper = 8.12:1 (실측) */
+  --mut:#5f646d;    /* on --band  = 5.41:1 (실측) */
+  --hair:#727780;   /* 원본 회색 = 4.50:1 (실측) — AA 경계값이라 본문에 쓰지 않는다 */
+  --line:#e3e5e8;
+  --dark:#111111;
+  /* 포인트 빨강 — 원본은 배경으로 쓴 곳이 0건이고 텍스트에만 얹는다 */
+  --k:#d81410;      /* on --paper = 5.21:1 (실측) */
+
+  /* 타입 — 원본은 19px 같은 비관습 크기를 쓰고 굵기를 네 종 구분한다 */
+  --t-12:12px;--t-13:13px;--t-14:14px;--t-16:16px;--t-19:19px;--t-22:22px;--t-36:36px;
+  --lh-12:16px;--lh-13:18px;--lh-14:20px;--lh-16a:22px;--lh-16b:24px;
+  --lh-19:26px;--lh-22:30px;--lh-36:50px;
+
+  /* 간격 — 16이 주력이고 32가 그다음. 9·5·7 같은 홀수 잔값이 실제로 쓰인다 */
+  --s4:4px;--s5:5px;--s6:6px;--s7:7px;--s8:8px;--s9:9px;--s12:12px;
+  --s16:16px;--s24:24px;--s28:28px;--s32:32px;--s36:36px;--s80:80px;
+
+  --r4:4px;--r8:8px;--r16:16px;--r20:20px;--r100:100px;--rfull:50%;
+  --w:1760px;--wmid:1380px;
+  /* 원본은 얇은 테두리 대신 1px 그림자를 겹쳐 쓴다 */
+  --sh:rgba(33,39,49,0.05) 0 2px 8px 0, rgba(33,39,49,0.28) 0 0 1px 0;
+  /* 자간을 크기별로 세 단계로 나눈다 — 이 시스템의 지문 */
+  --tr-s:-0.2px;--tr-m:-0.4px;--tr-l:-0.5px;
+}
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:var(--t-14);line-height:var(--lh-14);letter-spacing:var(--tr-s);
+  -webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word;overflow-x:hidden}
+h1,h2,h3,p,ul,ol,dl,table{margin:0}
+ul{padding:0;list-style:none}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;letter-spacing:inherit;background:none;border:0;cursor:pointer}
+.wrap{max-width:var(--wmid);margin:0 auto;padding-left:var(--s16);padding-right:var(--s16)}
+.wide{max-width:var(--w);margin:0 auto;padding-left:var(--s16);padding-right:var(--s16)}
+[id]{scroll-margin-top:136px}
+.rise{opacity:0}
+.rise.vis{opacity:1;transition:opacity .2s ease}
+
+/* ── 헤더 120px : 얇은 띠 + 본 헤더 ── */
+.tip{background:var(--dark);color:var(--paper)}
+.tip .in{max-width:var(--w);margin:0 auto;padding:var(--s9) var(--s16);
+  display:flex;gap:var(--s16);align-items:center;flex-wrap:wrap}
+.tip b{font-size:var(--t-13);line-height:var(--lh-13);font-weight:600}
+.tip span{font-size:var(--t-13);line-height:var(--lh-13);color:#b9bcc2}
+.bar{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.bar .in{max-width:var(--w);margin:0 auto;padding:var(--s16);display:flex;align-items:center;gap:var(--s24)}
+.logo{font-size:var(--t-22);line-height:var(--lh-22);font-weight:700;letter-spacing:var(--tr-l);color:var(--ink)}
+.bar nav{display:flex;gap:var(--s24)}
+.bar nav a{font-size:var(--t-16);line-height:var(--lh-16a);font-weight:500;color:var(--body)}
+.bar .sp{flex:1}
+.bar .quote{font-size:var(--t-14);line-height:var(--lh-14);font-weight:600;color:var(--paper);
+  background:var(--dark);border-radius:var(--r100);padding:var(--s9) var(--s24)}
+
+/* ── 얇은 띠 섹션 ── 원본은 56~110px 띠를 큰 섹션 사이에 끼운다 */
+.strip{background:var(--band);border-bottom:1px solid var(--line)}
+.strip .in{max-width:var(--wmid);margin:0 auto;padding:var(--s12) var(--s16);
+  display:flex;gap:var(--s24);flex-wrap:wrap}
+.strip i{font-style:normal;font-size:var(--t-13);line-height:var(--lh-13);color:var(--mut)}
+.strip i b{color:var(--ink);font-weight:600}
+
+/* ── 표제 ── */
+.head{padding-top:var(--s36);padding-bottom:var(--s28)}
+.head h1{font-size:var(--t-36);line-height:var(--lh-36);font-weight:700;
+  letter-spacing:var(--tr-l);color:var(--ink);max-width:20ch}
+.head h1 em{font-style:normal;color:var(--k)}
+.head p{font-size:var(--t-16);line-height:var(--lh-16b);color:var(--body);
+  letter-spacing:var(--tr-m);margin-top:var(--s16);max-width:52ch}
+
+/* ── 절삭 조건 ── 조작형 : 재질 × 공구경 → 회전수·이송 재계산 + 적합 공구 필터 */
+.calc{padding-bottom:var(--s32)}
+.calc h2{font-size:var(--t-19);line-height:var(--lh-19);font-weight:600;
+  letter-spacing:var(--tr-m);color:var(--ink)}
+.calc .sub{font-size:var(--t-14);line-height:var(--lh-14);color:var(--body);margin-top:var(--s6);max-width:56ch}
+.pickrow{margin-top:var(--s16)}
+.pickrow .lb{font-size:var(--t-13);line-height:var(--lh-13);font-weight:600;color:var(--mut)}
+.opts{display:flex;flex-wrap:wrap;gap:var(--s8);margin-top:var(--s8)}
+.opts button{font-size:var(--t-14);line-height:var(--lh-14);font-weight:500;color:var(--body);
+  border:1px solid var(--line);border-radius:var(--r100);padding:var(--s9) var(--s16)}
+.opts button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink);font-weight:600}
+
+.readout{display:grid;grid-template-columns:1fr;gap:var(--s16);margin-top:var(--s24);
+  background:var(--band2);border-radius:var(--r16);padding:var(--s16)}
+.readout>*{min-width:0}
+.readout dt{font-size:var(--t-13);line-height:var(--lh-13);color:var(--mut)}
+.readout dt .sm{font-size:var(--t-12);line-height:var(--lh-12)}
+.readout dd{margin:var(--s5) 0 0;font-size:var(--t-22);line-height:var(--lh-22);font-weight:700;
+  letter-spacing:var(--tr-l);color:var(--ink);font-variant-numeric:tabular-nums}
+.readout dd u{text-decoration:none;font-size:var(--t-14);font-weight:500;color:var(--body);
+  letter-spacing:var(--tr-s)}
+.readout .warn dd{color:var(--k)}
+.note{font-size:var(--t-13);line-height:var(--lh-13);color:var(--mut);margin-top:var(--s12)}
+
+.tools{display:grid;grid-template-columns:1fr;gap:var(--s16);margin-top:var(--s24)}
+.tools>*{min-width:0}
+.tool{border-radius:var(--r16);padding:var(--s16);box-shadow:var(--sh)}
+.tool .tag{display:inline-block;font-size:var(--t-12);line-height:var(--lh-12);font-weight:600;
+  color:var(--mut);background:var(--band);border-radius:var(--r4);padding:var(--s4) var(--s8)}
+.tool h3{font-size:var(--t-19);line-height:var(--lh-19);font-weight:600;
+  letter-spacing:var(--tr-m);color:var(--ink);margin-top:var(--s12)}
+.tool .spec{margin-top:var(--s16);border-top:1px solid var(--line);padding-top:var(--s12)}
+.tool .r{display:flex;justify-content:space-between;gap:var(--s8);margin-top:var(--s7)}
+.tool .r dt{font-size:var(--t-13);line-height:var(--lh-13);color:var(--mut)}
+.tool .r dd{margin:0;font-size:var(--t-13);line-height:var(--lh-13);font-weight:600;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.tool .price{display:flex;align-items:baseline;gap:var(--s6);margin-top:var(--s16)}
+.tool .price b{font-size:var(--t-22);line-height:var(--lh-22);font-weight:700;
+  letter-spacing:var(--tr-l);color:var(--ink);font-variant-numeric:tabular-nums}
+.tool .price em{font-style:normal;font-size:var(--t-14);line-height:var(--lh-14);
+  font-weight:600;color:var(--k)}
+.tool .price span{font-size:var(--t-13);line-height:var(--lh-13);color:var(--mut)}
+.none{border-radius:var(--r16);box-shadow:var(--sh);padding:var(--s36) var(--s24);
+  font-size:var(--t-16);line-height:var(--lh-16b);color:var(--body);text-align:center}
+
+/* ── 취급 조건 ── */
+.terms{background:var(--band);padding-top:var(--s32);padding-bottom:var(--s32)}
+.terms h2{font-size:var(--t-19);line-height:var(--lh-19);font-weight:600;
+  letter-spacing:var(--tr-m);color:var(--ink)}
+.tg{display:grid;grid-template-columns:1fr;gap:var(--s16);margin-top:var(--s16)}
+.tg>*{min-width:0}
+.tc{background:var(--paper);border-radius:var(--r16);padding:var(--s16)}
+.tc dt{font-size:var(--t-16);line-height:var(--lh-16a);font-weight:700;
+  letter-spacing:var(--tr-m);color:var(--ink)}
+.tc dd{margin:var(--s8) 0 0;font-size:var(--t-14);line-height:var(--lh-14);color:var(--body)}
+.tc dd b{color:var(--k);font-weight:600}
+
+/* ── 거래처 ── */
+.say{padding-top:var(--s32);padding-bottom:var(--s32)}
+.say h2{font-size:var(--t-19);line-height:var(--lh-19);font-weight:600;
+  letter-spacing:var(--tr-m);color:var(--ink)}
+.sg{display:grid;grid-template-columns:1fr;gap:var(--s16);margin-top:var(--s16)}
+.sg>*{min-width:0}
+.sc{border-radius:var(--r16);padding:var(--s16);box-shadow:var(--sh)}
+.sc p{font-size:var(--t-16);line-height:var(--lh-16b);letter-spacing:var(--tr-m);color:var(--ink)}
+.sc .who{display:flex;align-items:center;gap:var(--s8);margin-top:var(--s16)}
+.sc .av{width:36px;height:36px;border-radius:var(--rfull);background:var(--band);flex:0 0 36px}
+.sc .who b{display:block;font-size:var(--t-14);line-height:var(--lh-14);font-weight:600;color:var(--ink)}
+.sc .who span{display:block;font-size:var(--t-13);line-height:var(--lh-13);color:var(--mut)}
+
+footer{background:var(--dark);color:#b9bcc2;padding-top:var(--s32);padding-bottom:var(--s80)}
+footer .links{display:flex;flex-wrap:wrap;gap:var(--s6) var(--s24);margin-bottom:var(--s24)}
+footer .links a{font-size:var(--t-14);line-height:var(--lh-14);color:#d6d8dc}
+footer .f{font-size:var(--t-13);line-height:var(--lh-13)}
+footer .f b{display:block;font-size:var(--t-16);line-height:var(--lh-16a);color:var(--paper);
+  font-weight:700;letter-spacing:var(--tr-m);margin-bottom:var(--s12)}
+
+@media(min-width:760px){
+  .readout{grid-template-columns:repeat(4,1fr)}
+  .tools{grid-template-columns:repeat(2,1fr)}
+  .tg{grid-template-columns:repeat(3,1fr)}
+  .sg{grid-template-columns:repeat(3,1fr)}
+}
+@media(min-width:1200px){ .tools{grid-template-columns:repeat(4,1fr)} }
+@media(max-width:759px){ .bar nav{display:none} }
+@media(prefers-reduced-motion:reduce){ .rise{opacity:1;transition:none} }
+html.capture .rise{opacity:1;transition:none}
+</style></head><body>
+
+<div class="tip">
+  <div class="in">
+    <b>오늘 15시 이전 주문분 당일 출고</b>
+    <span>공구강·초경 재고 실시간 반영 · 세금계산서 자동 발행</span>
+  </div>
+</div>
+
+<header class="bar">
+  <div class="in">
+    <span class="logo">모루</span>
+    <nav>
+      <a href="#calc">절삭 조건</a><a href="#terms">취급 조건</a><a href="#say">거래처</a>
+    </nav>
+    <span class="sp"></span>
+    <a class="quote" href="#calc">견적 요청</a>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="in">
+    <i>거래처 <b>1,340곳</b></i>
+    <i>취급 품목 <b>8,200종</b></i>
+    <i>당일 출고율 <b>96.2%</b></i>
+    <i>반품률 <b>0.7%</b></i>
+  </div>
+</div>
+
+<section class="head wrap">
+  <h1>조건을 모르면 공구가 <em>먼저 죽습니다</em>.</h1>
+  <p>같은 엔드밀이라도 재질과 지름에 따라 회전수와 이송이 달라집니다.
+    아래에서 두 가지만 고르시면 조건을 계산하고, 그 조건에 맞는 공구만 남깁니다.</p>
+</section>
+
+<section class="calc wrap" id="calc">
+  <h2>절삭 조건 계산</h2>
+  <p class="sub">초경 엔드밀 기준입니다. 절삭속도는 공구 제조사 권장 중앙값을 씁니다.</p>
+
+  <div class="pickrow">
+    <div class="lb">가공 재질</div>
+    <div class="opts" id="mats" role="group" aria-label="가공 재질 고르기"></div>
+  </div>
+  <div class="pickrow">
+    <div class="lb">공구 지름</div>
+    <div class="opts" id="dias" role="group" aria-label="공구 지름 고르기"></div>
+  </div>
+
+  <dl class="readout" id="readout"></dl>
+  <p class="note" id="note"></p>
+
+  <div class="tools" id="tools"></div>
+</section>
+
+<section class="terms" id="terms">
+  <div class="wrap">
+    <h2>취급 조건</h2>
+    <div class="tg">
+      <dl class="tc"><dt>당일 출고</dt>
+        <dd>평일 15시 이전 주문분은 당일 나갑니다. 재고가 없으면 <b>주문 즉시 알려드립니다</b> —
+          입고 예정일을 모른 채 기다리게 두지 않습니다.</dd></dl>
+      <dl class="tc"><dt>개봉 후 반품</dt>
+        <dd>절삭공구는 한 번 물리면 되팔 수 없습니다. 다만 <b>스펙 안내가 틀렸던 경우</b>는
+          개봉 여부와 무관하게 전량 회수합니다.</dd></dl>
+      <dl class="tc"><dt>조건표 동봉</dt>
+        <dd>주문하신 재질 기준의 회전수·이송표를 인쇄해 함께 보냅니다.
+          현장에서 휴대폰을 꺼내지 않아도 되도록 하려는 것입니다.</dd></dl>
+    </div>
+  </div>
+</section>
+
+<section class="say wrap" id="say">
+  <h2>거래처에서 온 말</h2>
+  <div class="sg">
+    <div class="sc">
+      <p>스테인리스 조건을 잘못 잡아 엔드밀을 계속 태웠는데, 여기 표대로 하니 수명이 세 배 넘게 갔습니다.
+        공구를 파는 데서 조건을 알려주는 경우가 드뭅니다.</p>
+      <div class="who"><span class="av"></span><span><b>정만호</b><span>대성정밀 · 시흥 · 밀링 4대</span></span></div>
+    </div>
+    <div class="sc">
+      <p>재고 없다는 걸 주문 직후에 알려줘서 다른 데서 급하게 구했습니다.
+        이틀 뒤에 알려주는 곳들 때문에 라인을 세운 적이 많았거든요.</p>
+      <div class="who"><span class="av"></span><span><b>배소윤</b><span>한백테크 · 인천 남동 · 선반 6대</span></span></div>
+    </div>
+    <div class="sc">
+      <p>조건표를 종이로 넣어주는 게 의외로 큽니다. 기계 앞에서 손에 기름 묻히고
+        휴대폰 볼 일이 없어졌어요.</p>
+      <div class="who"><span class="av"></span><span><b>류경한</b><span>세운공업사 · 김포 · 머시닝센터 2대</span></span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="links">
+      <a href="#calc">엔드밀</a><a href="#calc">드릴</a><a href="#calc">인서트</a><a href="#calc">홀더</a>
+      <a href="#calc">탭</a><a href="#calc">리머</a><a href="#calc">절삭유</a><a href="#calc">측정공구</a>
+      <a href="#terms">배송 안내</a><a href="#terms">반품 규정</a><a href="#terms">세금계산서</a><a href="#say">거래처 등록</a>
+    </div>
+    <div class="f">
+      <b>모루 툴링</b>
+      경기도 시흥시 정왕동 시화공단 3다길 44 · 사업자등록번호 128-81-55302<br>
+      통신판매업 2018-경기시흥-0912 · 대표전화 031-431-7720 · 평일 08–18시<br>
+      절삭 조건은 초경 엔드밀·건식 기준 참고값이며 기계 강성과 고정 상태에 따라 조정이 필요합니다.
+    </div>
+  </div>
+</footer>
+
+<script>
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+scrollTo(0,0);
+addEventListener('load',function(){scrollTo(0,0)});
+
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+/* vc = 절삭속도 m/min, fz = 날당 이송 mm, hard = 난삭 여부 */
+var MATS=[
+ {id:'s45c', n:'탄소강 S45C',  vc:120, fz:0.045, hard:0},
+ {id:'sus',  n:'스테인리스 304', vc:70,  fz:0.030, hard:1},
+ {id:'al',   n:'알루미늄 6061', vc:400, fz:0.080, hard:0},
+ {id:'cast', n:'주철 GC250',   vc:150, fz:0.055, hard:0},
+ {id:'ti',   n:'티타늄 Ti-6Al-4V', vc:45, fz:0.025, hard:1},
+ {id:'brass',n:'황동 C3604',   vc:250, fz:0.070, hard:0}
+];
+var DIAS=[3,6,8,10,12,16,20];
+
+var TOOLS=[
+ {n:'2날 초경 엔드밀',   flute:2, dia:[3,6,8,10],        fit:['al','brass'],            coat:'무코팅',   price:14800, life:'표준'},
+ {n:'4날 초경 엔드밀',   flute:4, dia:[6,8,10,12,16,20], fit:['s45c','cast','brass'],   coat:'TiAlN',   price:23600, life:'표준'},
+ {n:'4날 난삭재용 엔드밀', flute:4, dia:[6,8,10,12,16],  fit:['sus','ti'],              coat:'AlCrN',   price:41200, life:'장수명'},
+ {n:'6날 사상용 엔드밀',  flute:6, dia:[10,12,16,20],    fit:['s45c','sus','cast'],     coat:'TiAlN',   price:38900, life:'사상 전용'},
+ {n:'볼 엔드밀 R',      flute:2, dia:[3,6,8,10,12],     fit:['s45c','al','cast'],      coat:'TiSiN',   price:27400, life:'곡면'},
+ {n:'라핑 엔드밀',      flute:4, dia:[10,12,16,20],     fit:['s45c','cast'],           coat:'TiAlN',   price:33500, life:'황삭'}
+];
+
+var mat='s45c', dia=10;
+var mats=document.getElementById('mats'), dias=document.getElementById('dias'),
+    readout=document.getElementById('readout'), note=document.getElementById('note'),
+    tools=document.getElementById('tools');
+
+MATS.forEach(function(m){
+  var b=document.createElement('button');
+  b.type='button'; b.dataset.id=m.id; b.textContent=m.n;
+  b.addEventListener('click',function(){ mat=m.id; draw(); });
+  mats.appendChild(b);
+});
+DIAS.forEach(function(d){
+  var b=document.createElement('button');
+  b.type='button'; b.dataset.d=d; b.textContent='Ø'+d;
+  b.addEventListener('click',function(){ dia=d; draw(); });
+  dias.appendChild(b);
+});
+
+function num(n){ return n.toLocaleString('ko-KR') }
+
+function draw(){
+  var m=MATS.filter(function(x){return x.id===mat})[0];
+  [].forEach.call(mats.querySelectorAll('button'),function(b){
+    b.setAttribute('aria-pressed',String(b.dataset.id===mat));
+  });
+  [].forEach.call(dias.querySelectorAll('button'),function(b){
+    b.setAttribute('aria-pressed',String(Number(b.dataset.d)===dia));
+  });
+
+  /* n = vc × 1000 / (π × D) · vf = n × fz × 날수 (4날 기준) */
+  var rpm=Math.round(m.vc*1000/(Math.PI*dia));
+  var flutes=4;
+  var vf=Math.round(rpm*m.fz*flutes);
+  var ap=(dia*(m.hard?0.5:1.0)).toFixed(1);
+  var over=rpm>12000;
+
+  readout.innerHTML=
+    '<div'+(over?' class="warn"':'')+'><dt>주축 회전수</dt><dd>'+num(rpm)+' <u>rpm</u></dd></div>'+
+    '<div><dt>이송 속도 <span class="sm">(4날)</span></dt><dd>'+num(vf)+' <u>mm/min</u></dd></div>'+
+    '<div><dt>절삭속도</dt><dd>'+m.vc+' <u>m/min</u></dd></div>'+
+    '<div><dt>권장 절입 깊이</dt><dd>'+ap+' <u>mm</u></dd></div>';
+
+  note.textContent = over
+    ? '계산된 회전수가 12,000rpm을 넘습니다. 일반 머시닝센터 주축 한계를 넘을 수 있으니 지름을 키우거나 절삭속도를 낮추세요.'
+    : (m.hard
+        ? '난삭재입니다. 절입 깊이를 지름의 절반으로 잡았고, 절삭유를 충분히 거세요.'
+        : '표준 조건입니다. 기계 강성이 낮으면 이송을 10~20% 내려 잡으세요.');
+
+  var list=TOOLS.filter(function(t){ return t.fit.indexOf(mat)>-1 && t.dia.indexOf(dia)>-1 });
+  if(!list.length){
+    tools.innerHTML='<p class="none">이 재질과 지름 조합에 맞는 재고 공구가 없습니다. 지름을 바꾸거나 견적을 요청해 주세요.</p>';
+    return;
+  }
+  tools.innerHTML=list.map(function(t){
+    var vfT=Math.round(rpm*m.fz*t.flute);
+    return '<article class="tool"><span class="tag">'+t.life+'</span>'+
+      '<h3>'+t.n+' Ø'+dia+'</h3>'+
+      '<dl class="spec">'+
+        '<div class="r"><dt>날수</dt><dd>'+t.flute+'날</dd></div>'+
+        '<div class="r"><dt>코팅</dt><dd>'+t.coat+'</dd></div>'+
+        '<div class="r"><dt>이 공구 이송</dt><dd>'+num(vfT)+' mm/min</dd></div>'+
+      '</dl>'+
+      '<div class="price"><b>'+num(t.price)+'원</b><em>당일출고</em><span>1개 · 부가세 별도</span></div>'+
+    '</article>';
+  }).join('');
+}
+draw();
+
+var rises=[].slice.call(document.querySelectorAll('.rise'));
+if(reduce||!('IntersectionObserver' in window)){
+  rises.forEach(function(el){el.classList.add('vis')});
+}else{
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}});
+  },{rootMargin:'0px 0px -6% 0px'});
+  rises.forEach(function(el){io.observe(el)});
+  addEventListener('load',function(){
+    rises.forEach(function(el){ if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis') });
+  });
+}
+</script>
+</body></html>

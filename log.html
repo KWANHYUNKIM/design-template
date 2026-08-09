@@ -97,6 +97,32 @@ footer{margin:50px 0 40px;text-align:center;font-size:12px;color:var(--mut);font
 
 <!-- ── RUN 36 ─────────────────────────────────────────────── -->
 <article class="run">
+<div class="bar"><span class="id">REF 06</span><span class="name">모루 MORU · 절삭공구 유통 (레퍼런스 실측 · 사용자 요청)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#d81410;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">충실도 6/6</b>2026-08-09</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 대상 (실측)</p>
+    <div class="thumb" style="background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid #e3e5e8"><span class="cap" style="color:#111;font-weight:700;font-size:30px;letter-spacing:-0.5px">모루</span></div>
+    <p class="why"><b>사용자가 링크로 지정한 대기업 사이트를 실측했다.</b> 3,141노드 · 956 텍스트노드로 지금까지 중 가장 큰 표본이다. 업종은 종합 가전 커머스 → <b>산업용 절삭공구 B2B</b>로 옮겼다.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 측정에서 나온 것</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6"><b>자간을 크기별로 세 단계로 나눈다</b>(−0.2 / −0.4 / −0.5). 앞서 잰 세 회사는 자간이 사실상 한 값이었는데 이 회사만 나눠 쓴다. <b>포인트 빨강을 텍스트에만 쓴다</b> — 배경으로 쓴 곳이 <b>0건</b>이다. <b>얇은 테두리 대신 1px 그림자를 겹쳐</b> 쓰고(2겹 토큰), <b>19px 같은 비관습 크기</b>를 86회 쓴다. <b>모션은 거의 안 건다</b>(전체에서 트랜지션 2건).</div>
+    <div class="kw"><span>절삭 조건 계산</span><span>자간 3단계</span><span>2겹 그림자</span><span>빨강 텍스트 전용</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 충실도 대조 → 6/6 통과</p>
+      <ul>
+        <li><b>조작형이 두 축이다</b> — 재질 6종 × 공구경 7종을 고르면 회전수(rpm)·이송·절입 깊이가 공식으로 재계산되고, <b>그 조건에 맞는 공구만</b> 남는다. 12,000rpm을 넘으면 경고 문구가 바뀐다</li>
+        <li><b>1차 대조에서 간격 최빈이 9px로 원본(16px)과 뒤집혀 있었다.</b> 병렬 세션 조언대로 <b>태그별로 쪼개 보니</b> 카드 padding을 전부 24로 잡은 탓이었다. 24→16으로 내려 16px을 40회 1위로 되돌렸다. <b>내 습관이었다</b></li>
+        <li><b>라운드는 4종만 썼다</b>(원본 8종). 이건 습관이 아니라 <b>표본 크기 차이</b>다 — 원본은 3,141노드에 컴포넌트가 훨씬 많다. 억지로 늘리면 규칙 없는 라운드가 된다. 구조 차이로 기록하고 두었다</li>
+        <li><b>검사기가 세 건을 잡았다</b> — 인라인 <code>font-size:12px</code> 1건, 대비 주석 4건이 실측과 불일치(8.51→8.12 · 6.24→5.41 · 4.72→4.50 · 5.53→5.21). 전부 고쳤다</li>
+        <li>390·1440 iframe 실측 오버플로 0 · <code>verify.mjs</code> 오류 0·경고 0</li>
+      </ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok" style="color:#d81410">● 레퍼런스 실측 · 충실도 6/6</span><a class="btn" href="templates/ref-06-lge-moru.html">랜딩 열기 →</a><span class="path">templates/ref-06-lge-moru.html</span></div>
+  </div>
+</div>
+</article>
+
+<article class="run">
 <div class="bar"><span class="id">REF 03</span><span class="name">떡잎 TTEOGIP · 텃밭 씨앗·모종 (레퍼런스 실측)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#0a7d3f;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">충실도 5/6</b>2026-08-09</span></div>
 <div class="grid">
   <div class="left">

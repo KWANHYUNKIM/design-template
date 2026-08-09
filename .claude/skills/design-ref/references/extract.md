@@ -24,6 +24,12 @@ const isAcc = v => { const m=v.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/); if(!m) r
 JSON.stringify({
   nodes: vis.length, docH: document.body.scrollHeight,
   type:   cnt(txt.map(n=>{const s=cs(n); return s.fontSize+'/'+s.fontWeight+'/'+s.lineHeight})).slice(0,14),
+  // ★ 큰 타입은 크기·행간만 재면 안 된다 — 아래 세 필드가 없으면 숫자를 정확히 옮기고도 다른 물건이 나온다
+  bigType: txt.filter(n=>parseFloat(cs(n).fontSize)>=40).slice(0,12).map(n=>{
+            const s=cs(n), t=n.textContent.trim();
+            return {fs:s.fontSize, lh:s.lineHeight, ws:s.whiteSpace,
+                    chars:t.length, lines:Math.round(n.getBoundingClientRect().height/parseFloat(s.lineHeight))};
+          }),
   family: cnt(txt.map(n=>cs(n).fontFamily.split(',')[0].replace(/["']/g,''))).slice(0,5),
   space:  cnt(vis.flatMap(n=>{const s=cs(n);
             return [s.paddingTop,s.paddingBottom,s.marginTop,s.marginBottom].filter(v=>v!=='0px'&&px(v)>0)})).slice(0,16),
@@ -78,6 +84,33 @@ JSON.stringify({
 
 - duration 중앙값. 0.15s와 0.4s는 성격이 다르다
 - easing 이름. `ease` 인지 커스텀 `cubic-bezier` 인지
+
+## ★ 집계표는 "얼마나"는 알려주지만 "어디에"는 안 알려준다
+
+두 함정이 실제로 터졌다. 둘 다 **숫자를 정확히 옮기고도 다른 물건이 나온** 경우다.
+
+### ① 큰 타입의 행간은 행간이 아닐 수 있다
+
+한 측정에서 `160px / 행간 113px (0.71)` 이 나와 두 줄 헤드라인에 그대로 걸었더니
+**글자가 겹쳐 못 읽는 화면**이 됐다. 다시 재보니 원본의 160px 노드 11개가 전부
+`chars:2 · lines:1 · white-space:normal` 이었다 — **두 글자짜리 토큰이고 절대 줄바꿈을 안 한다.**
+113px은 행간이 아니라 **한 덩어리 상자를 조인 값**이었다.
+여러 줄짜리는 따로 `58 / 72(1.25) / 700 + pre-line` 으로 직접 줄을 끊고 있었다.
+
+**40px 이상 텍스트는 `chars` · `lines` · `whiteSpace` 를 함께 본다.**
+한 줄짜리 토큰의 행간을 여러 줄에 적용하지 않는다.
+
+### ② 최빈값은 컴포넌트 반복 수에 휘둘린다
+
+간격 최빈이 `16px` 95회로 나와 원본(26px)과 뒤집힌 사례가 있었는데,
+**95회 중 90회가 `TD`/`TH` 셀 패딩**이었다(원본에는 표가 없었다).
+습관 진단이 아니라 표를 하나 넣은 결과였다.
+
+**충실도 대조에서 최빈값이 어긋나면 태그별로 쪼개 보고 판단한다.**
+
+```js
+cnt(vis.map(n=>n.tagName+':'+cs(n).paddingTop).filter(v=>!v.endsWith(':0px'))).slice(0,20)
+```
 
 ## 두 번째 페이지로 확정한다
 
