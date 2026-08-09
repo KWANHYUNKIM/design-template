@@ -82,7 +82,10 @@ img{display:block;max-width:100%}
 .hero .track{display:flex;height:500px;transition:transform .4s ease}
 .hero .cell{flex:0 0 100%;height:500px;position:relative;
   display:flex;align-items:center;justify-content:center}
-.hero .cell .art{position:absolute;inset:0}
+.hero .cell .art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero .cell::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(255,255,255,.94) 0%,rgba(255,255,255,.82) 42%,rgba(255,255,255,0) 72%)}
+.hero .cell .cap{z-index:1}
 .hero .cell .cap{position:relative;max-width:var(--w);width:100%;padding:0 var(--s40)}
 .hero .cell h2{font-size:var(--t-36);line-height:var(--lh-36);font-weight:700;letter-spacing:var(--tr-l)}
 .hero .cell p{font-size:var(--t-19);line-height:var(--lh-19);color:var(--body);margin-top:var(--s12)}
@@ -276,8 +279,9 @@ body[data-v="search"] .v:not(#v-search){display:none}
 .dt{padding-top:var(--s16);padding-bottom:var(--s40)}
 .dtop{display:grid;grid-template-columns:1fr;gap:var(--s24);margin-top:var(--s16)}
 .dtop>*{min-width:0}
-.gal .main{aspect-ratio:1/1;border-radius:var(--r16);
+.gal .main{aspect-ratio:1/1;border-radius:var(--r16);overflow:hidden;
   background:linear-gradient(135deg,#eceef1,#dcdfe4)}
+.gal .main img{width:100%;height:100%;object-fit:cover}
 .gal .thumbs{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--s8);margin-top:var(--s8)}
 .gal .thumbs>*{min-width:0}
 .gal .thumbs button{aspect-ratio:1/1;border-radius:var(--r8);
@@ -550,19 +554,56 @@ var CAPTURE=/[?&]capture=1/.test(location.search);
 if(CAPTURE)document.documentElement.classList.add('capture');
 var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
 
+/* ── 사진 ── Unsplash 무료 이미지. 제품군마다 배정하고 슬롯 비율에 맞춰 서버 크롭한다.
+   컨택트시트로 눈으로 확인해 상표 노출컷(BLUEAIR 로고)과 캡션 불일치컷을 걸러냈다. */
+var IMG={
+ /* 이름 전체로 찾고, 없으면 첫 단어로 떨어진다. 첫 단어만 보면
+    "헹굼 식기 12인"(식기세척기)이 "헹굼"(세탁기) 사진을 물어온다 — 실제로 그랬다 */
+ '헹굼 식기 12인':'photo-1782290546855-03a5def1d265',
+ '달굼 인덕션':'photo-1601760562234-9814eea6663a',
+ '맑샘 정수':'photo-1782290546855-03a5def1d265',
+ '마름 17kg':'photo-1597418048367-7dd01e4404ee',
+ '마름 12kg':'photo-1597418048367-7dd01e4404ee',
+ '적심 가습':'photo-1732229035217-e7e42f61af4b',
+ '머금 제습':'photo-1768471569643-717e823b5f9a',
+ '울림 사운드바':'photo-1595935736128-db1f0a261263',
+ '비춤 프로젝터':'photo-1631679893114-7957e44879db',
+ '청담':'photo-1436473849883-bb3464c23e93',  '오래':'photo-1484154218962-a197022b5858',
+ '헹굼':'photo-1626806819282-2c1dc01a5e0c',  '결기':'photo-1622473590925-e3616c0a41bf',
+ '너름':'photo-1567690187548-f07b1d7bf5a9',  '훑음':'photo-1765970101447-b94b560cb2b1',
+ '마름':'photo-1597418048367-7dd01e4404ee',  '맑샘':'photo-1782290546855-03a5def1d265',
+ '달굼':'photo-1601760562234-9814eea6663a',  '적심':'photo-1732229035217-e7e42f61af4b',
+ '머금':'photo-1768471569643-717e823b5f9a',  '울림':'photo-1595935736128-db1f0a261263',
+ '비춤':'photo-1631679893114-7957e44879db'
+};
+var FALLBACK='linear-gradient(135deg,#eceef1,#dcdfe4)';
+function imgId(name){ name=name||'';
+  return IMG[name] || IMG[name.split(' ')[0]] || 'photo-1782290546855-03a5def1d265' }
+/* ratio = 가로/세로. 원본 슬롯 비율(1 · 1.31 · 0.8)을 그대로 쓴다 */
+function shot(name, ratio, w, cls){
+  var h=Math.round(w/(ratio||1));
+  var u='https://images.unsplash.com/'+imgId(name)+'?w='+w+'&h='+h+
+        '&fit=crop&q=80&auto=format';
+  return '<img class="slot '+(cls||'')+'" src="'+u+'" alt="'+(name||'제품')+'" loading="lazy"'+
+    ' onerror="this.style.background=\''+FALLBACK+'\';this.removeAttribute(\'src\')">';
+}
+
 function won(n){return n.toLocaleString('ko-KR')+'원'}
 function el(id){return document.getElementById(id)}
 function fill(id,html){var n=el(id); if(n)n.innerHTML=html}
 
 /* ── 3 · 히어로 캐러셀 (원본 자식 16 → 배너 4장) ── */
 var HERO=[
- {t:'겨울에도 창을 못 여는 집이라면', s:'온담 공기청정기 청담 시리즈', g:'#e9edf2,#cfd6df'},
- {t:'옷장에서 하루를 덜어냅니다',   s:'의류관리기 결기 3세대',        g:'#efeae4,#ddd4c8'},
- {t:'냉장실이 넓어야 장보기가 편합니다', s:'냉장고 오래 620L',        g:'#e7eeea,#ccd9d2'},
- {t:'헹굼을 한 번 더 하는 이유',    s:'세탁기 헹굼 21kg',            g:'#eaecf2,#d2d6e0'}
+ {t:'겨울에도 창을 못 여는 집이라면', s:'온담 공기청정기 청담 시리즈', p:'청담 400'},
+ {t:'옷장에서 하루를 덜어냅니다',   s:'의류관리기 결기 3세대',        p:'결기 3세대'},
+ {t:'냉장실이 넓어야 장보기가 편합니다', s:'냉장고 오래 620L',        p:'오래 620L'},
+ {t:'헹굼을 한 번 더 하는 이유',    s:'세탁기 헹굼 21kg',            p:'헹굼 21kg'}
 ];
 fill('track', HERO.map(function(h){
-  return '<div class="cell"><div class="art" style="background:linear-gradient(135deg,'+h.g+')"></div>'+
+  return '<div class="cell">'+
+    '<img class="art" src="https://images.unsplash.com/'+imgId(h.p)+
+      '?w=1600&h=560&fit=crop&q=80&auto=format" alt="" loading="lazy"'+
+      ' onerror="this.style.background=\'linear-gradient(135deg,#e9edf2,#cfd6df)\';this.removeAttribute(\'src\')">'+
     '<div class="cap"><h2>'+h.t+'</h2><p>'+h.s+'</p><a class="go" href="#">자세히 보기</a></div></div>';
 }).join(''));
 fill('dots', HERO.map(function(_,i){
@@ -623,7 +664,7 @@ var PROD=[
  ['청소','훑음 로봇',      890000, 10,['지도 학습','자동비움']]
 ];
 function pdCard(p, sq){
-  return '<article class="pd"><div class="slot '+(sq||'sq')+'"></div>'+
+  return '<article class="pd">'+shot(p[1],1,520,'sq')+
     '<div class="cat">'+p[0]+'</div><h3>'+p[1]+'</h3>'+
     '<div class="price"><b>'+won(Math.round(p[2]*(1-p[3]/100)))+'</b><em>'+p[3]+'%</em></div>'+
     '<div class="tags">'+p[4].map(function(t){return '<i>'+t+'</i>'}).join('')+'</div></article>';
@@ -642,7 +683,7 @@ function drawBest(){
   var pool = curCat===0 ? PROD : PROD.filter(function(p,i){return i%4===(curCat-1)%4});
   if(pool.length<5) pool = PROD;
   el('bestgrid').innerHTML = pool.slice(0,10).map(function(p,i){
-    return '<article class="rank"><div class="no">'+(i+1)+'</div><div class="slot sq"></div>'+
+    return '<article class="rank"><div class="no">'+(i+1)+'</div>'+shot(p[1],1,420,'sq')+
       '<h3>'+p[1]+'</h3><b>'+won(Math.round(p[2]*(1-p[3]/100)))+'</b>'+'<span class="sub">'+p[0]+' · '+p[4][0]+'</span></article>';
   }).join('');
   [].forEach.call(el('besttabs').children,function(b,i){b.setAttribute('aria-selected',String(i===curCat))});
@@ -661,7 +702,7 @@ fill('roomtabs', ROOMS.map(function(r,i){
 function drawRoom(){
   var base=ROOMS[curRoom];
   el('roomgrid').innerHTML = PROD.slice(0,8).map(function(p,i){
-    return '<div class="cell"><div class="slot w13"></div><b>'+base+' · '+p[1]+'</b>'+
+    return '<div class="cell">'+shot(p[1],1.31,520,'w13')+'<b>'+base+' · '+p[1]+'</b>'+
       '<span>'+p[4][0]+'</span></div>';
   }).join('');
   [].forEach.call(el('roomtabs').children,function(b,i){b.setAttribute('aria-selected',String(i===curRoom))});
@@ -728,6 +769,7 @@ if(!reduce) setInterval(tick,1000);
    설계서(refs/lge-survey.md) 확정 범위 — 홈·GNB드롭다운·목록·상세·장바구니·검색.
    로그인·결제·주문조회는 만들지 않는다. */
 
+
 /* 제품 원장 — 목록/상세/검색이 모두 이 데이터를 본다 */
 var CATS=[
  {id:'air',  n:'공기·청정', sub:['공기청정기','제습기','가습기','에어컨']},
@@ -766,7 +808,7 @@ document.querySelector('.gnb-b').addEventListener('mouseleave',function(){
 function money(n){ return n.toLocaleString('ko-KR')+'원' }
 function cardHTML(it){
   return '<article class="pd" data-id="'+it.id+'" role="button" tabindex="0">'+
-    '<div class="slot sq"></div><div class="cat">'+it.cat+'</div><h3>'+it.name+'</h3>'+
+    shot(it.name,1,520,'sq')+'<div class="cat">'+it.cat+'</div><h3>'+it.name+'</h3>'+
     '<div class="price"><b>'+money(it.price)+'</b><em>'+it.off+'%</em></div>'+
     '<div class="tags">'+it.tags.map(function(t){return '<i>'+t+'</i>'}).join('')+
     (it.sold?'<i style="color:var(--k)">품절</i>':'')+'</div></article>';
@@ -804,8 +846,15 @@ function openDetail(id){
   el('dtPrice').innerHTML='<b>'+money(it.price)+'</b><em>'+it.off+'%</em><s>'+money(it.list)+'</s>';
   el('dtSpec').innerHTML=it.spec.map(function(r){
     return '<div class="r"><dt>'+r[0]+'</dt><dd>'+r[1]+'</dd></div>'}).join('');
+  var gid=imgId(it.name);
+  el('dtMain').innerHTML='<img src="https://images.unsplash.com/'+gid+
+    '?w=900&h=900&fit=crop&q=82&auto=format" alt="'+it.name+'" loading="lazy"'+
+    ' onerror="this.style.background=\'linear-gradient(135deg,#eceef1,#dcdfe4)\';this.removeAttribute(\'src\')">';
   el('dtThumbs').innerHTML=[0,1,2,3,4].map(function(i){
-    return '<button type="button" data-i="'+i+'" aria-current="'+(i===0)+'" aria-label="이미지 '+(i+1)+'"></button>'}).join('');
+    return '<button type="button" data-i="'+i+'" aria-current="'+(i===0)+'" aria-label="이미지 '+(i+1)+'"'+
+      ' style="background-image:url(https://images.unsplash.com/'+gid+
+      '?w=200&h=200&fit=crop&crop='+['entropy','faces','edges','top','bottom'][i]+
+      '&q=70&auto=format);background-size:cover"></button>'}).join('');
   el('qv').textContent=1;
   el('dtSold').hidden=!it.sold;
   el('dtAdd').disabled=it.sold;
