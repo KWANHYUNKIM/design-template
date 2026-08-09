@@ -306,7 +306,9 @@ const CHECKS = [
     test: s => {
       const HOSTS = ['daangn.com','karrotmarket','toss.im','tossface','baemin.com','woowahan',
                      'coupangcdn','pstatic.net','kakaocdn.net','static.toss'];
-      const hit = HOSTS.filter(h => s.includes(h));
+      // 문자열이 아니라 "실제 URL"만 잡는다.
+      // 파일명(ref-02-woowahan-…)과 출처 주석(refs/woowahan.md)까지 걸리면 오탐이다 — REF02에서 실제로 걸렸다.
+      const hit = HOSTS.filter(h => new RegExp(`https?://[^"'\\s)]*${h.replace('.', '\\.')}`).test(s));
       return hit.length ? `대상 회사 에셋 호스트 참조: ${hit.join(', ')}` : null;
     }},
 
