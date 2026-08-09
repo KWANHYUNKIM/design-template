@@ -94,8 +94,9 @@ for f in templates/run-*.html; do echo "=== $(basename $f)"; \
 4. 「증언 → 가격/FAQ → 닫기」 3연을 쓰지 않는다 (최근 12장 중 8장이 이 순서)
 5. IntersectionObserver 리빌이 이 페이지의 유일한 모션이 아니다
 6. 라벨+`h2`+lead 섹션 헤더가 3회 이하다
-7. **같은 AD의 직전 RUN과 골격을 공유하지 않는다** — 공유 클래스 5개 이하 · 동일 CSS 줄 10% 이하 ·
-   섹션 컴포넌트 재사용 금지. **재는 명령은 구성 대장 §4-7에 있다.** RUN33은 §3.5를 눈으로 보고
+7. **같은 AD의 직전 RUN과 골격을 공유하지 않는다** — `node scripts/skel.mjs run-NN-slug --ad AD-1` 로 잰다.
+   공유 클래스 5개 이하 · 동일 **골격 규칙** 10% 이하 · 섹션 컴포넌트 재사용 금지.
+   **줄 단위로 세면 규격 보일러플레이트가 잡혀 규격을 지킬수록 걸린다** — `skel.mjs` 가 그걸 뺀다. RUN33은 §3.5를 눈으로 보고
    팔레트·주제를 다 갈았는데도 CSS 25%가 같아 오리지널리티 3을 받았다
 
 3번이 리믹스 RUN(짝수)에서 걸리면 **골격은 계승하되 닫는 방식과 꼬리는 새로 짠다.**
@@ -182,7 +183,7 @@ node scripts/shoot.mjs run-NN-slug --capture           # 세 폭 전체 캡처 �
 ## 참조
 
 - `references/composition.md` — **구성 대장.** 5단계 관문의 근거. RUN 끝나면 갱신할 것
-- `references/spec.md` — 산출물 규격 · 반드시 지킬 함정 23종
+- `references/spec.md` — 산출물 규격 · 반드시 지킬 함정 26종
 - `references/scoring.md` — 8기준 채점 세부 기준
 - `art-directors.md` · `EVOLUTION.md` · `design-automation-workflow.md` (저장소 루트)
 - `taste` · `animate` — 이 저장소의 다른 스킬. 3·5·6·8단계에서 발동한다

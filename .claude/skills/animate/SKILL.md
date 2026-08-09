@@ -155,5 +155,5 @@ python3 -m http.server 5500
 
 ## 참조
 
-`.claude/skills/design-loop/references/spec.md`(함정 23종·캡처 모드) · `EVOLUTION.md`(정교화 티어)
+`.claude/skills/design-loop/references/spec.md`(함정 26종·캡처 모드) · `EVOLUTION.md`(정교화 티어)
 · 미감의 방향은 `taste` 스킬이 먼저 정한다

@@ -92,8 +92,38 @@ footer{margin:50px 0 40px;text-align:center;font-size:12px;color:var(--mut);font
 </div>
 </section>
 
-<div class="sec-h"><h2>실행 기록</h2><span class="c">31 runs</span><span class="line"></span></div>
+<div class="sec-h"><h2>실행 기록</h2><span class="c">32 runs</span><span class="line"></span></div>
 
+
+<!-- ── RUN 34 ─────────────────────────────────────────────── -->
+<article class="run">
+<div class="bar"><span class="id">RUN 34</span><span class="name">무월 MUWOL · 천문대 관측 시간 배정 (챔피언 리믹스 · AD-1 한서린)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#57cfe0;color:#12171b;padding:3px 9px;border-radius:6px;font-size:11px">25/40</b>2026-08-09</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 컨셉 (발명)</p>
+    <div class="thumb" style="background:#12171b;display:flex;align-items:center;justify-content:center"><span class="cap" style="color:#57cfe0;font-weight:700;font-size:30px;letter-spacing:-1px">무월</span></div>
+    <p class="why"><b>아카이타입 = 배정 공고 + 알고리즘 공개.</b> "배정에서 다투는 것은 <b>누가 더 중요한가</b>인데 그건 정할 수 없다" — 식을 먼저 적고 지면의 모든 숫자를 거기서 파생시킨다. 큰 CTA가 아니라 <b>대기자 명단</b>으로 닫는다.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 무드 · 구조 · 이펙트 (진화)</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6"><b>AD-1 한서린</b> 배정. §3.5가 「크림 금지」라 해서 <b>밤하늘 지면</b>으로 갔다 — 지난 AD-1 둘(25·31)이 크림이었다. <span class="sw"><i style="background:#57cfe0"></i>시안</span>은 저장소 첫 청록계. 조작형은 <b>달 위상</b>: 옮기면 18개 점수가 재계산되고 <b>보름에서 동점 규칙이 발동해</b> 배정 경계가 뒤집힌다.</div>
+    <div class="kw"><span>관측 시간 배정</span><span>식 선언 → 파생</span><span>동점 규칙</span><span>대기자 명단</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 독립 크리틱 → 25/40 (최저점)</p>
+      <ul>
+        <li><b>발명 수치 약 35종을 크리틱이 전수 재계산해 하나도 안 틀렸다 — 저장소 처음</b>. 18개 점수·순위·커트라인·동점 발동·표1(16/58=27.6%)·표2(131/365=35.9%)·띠(62×27.6%=17)·대기자 명단 11행의 <code>ceil(순번÷4)</code>까지 전부 일치. 인용 두 건이 그 발동을 각각 다른 각도로 증언하고 수치도 맞는다</li>
+        <li><b>구성 대장 7조건 전부 통과</b> — 새로 만든 <code>skel.mjs</code>로 재니 공유 클래스 1개·골격 겹침 1.0%</li>
+        <li><b style="color:#c0392b">그런데 최저점이다.</b> <b>390~1000px 전 구간에서 그 점수가 「29 / 0」으로 두 줄로 쪼개져 있었다</b> — 명시 <code>grid-column</code> 뒤에 자동배치 자식이 와서 마지막 칸이 3행 1열(35px)로 떨어진 것. <b><code>--probe</code> 8종이 10폭에서 전부 0인데 통과했다</b></li>
+        <li><b style="color:#c0392b">JS를 끄면 배정판이 통째로 없었다</b> — <code>noJS</code> 검사가 <code>opacity:0</code> 개수만 세어 「애초에 마크업에 없는 것」을 원리적으로 못 잡았다. 검사를 <b>보이는 텍스트 길이 비</b>로 바꿨다</li>
+        <li><b>검증을 반출물로 하고 독자로 안 했다</b> — 기본 렌더가 그믐인데 닫는 섹션과 인용은 보름 판을 가리켰다. <code>?capture=1</code>만 보름으로 클릭하게 해 뒀으니 정본이 보름인 줄 알면서 독자용 기본값을 안 고친 것</li>
+        <li><b>검사기 2종을 넣고 양방향 검증했다</b> — <code>gridFlow</code>(명시 배치 뒤 자동배치)와 텍스트비 <code>noJS</code>. 결함을 되심으면 잡고, 네 RUN × 두 폭에서 오탐 0</li>
+        <li><b>관문 조건 자체가 틀렸던 것도 잡았다</b> — 조건 7번을 줄 단위로 재니 22%가 나왔는데 겹치는 줄이 거의 전부 규격 강제(토큰·스크롤가드·리빌게이트·capture·fold)였다. <b>규격을 지킬수록 걸리는 모순.</b> <code>skel.mjs</code>로 보일러플레이트를 빼니 RUN31↔34 1.0%(무죄) · RUN30↔33 12.2%(유죄)로 갈렸다</li>
+        <li class="todo"><b>남은 약점: 완성도 2(역행) · 임팩트 2 · 타이포 3 · 오리지널리티 3</b> — §3.5의 「공공 문서 서식 금지」를 명시해 뒀는데 어겼다. AD-1이 25·31·34 연속 3회 한국어 기관 문서</li>
+      </ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok">● 진화 루프 · 독립 크리틱</span><a class="btn" href="templates/run-34-muwol.html">랜딩 열기 →</a><span class="path">templates/run-34-muwol.html</span></div>
+  </div>
+</div>
+</article>
 
 <!-- ── RUN 33 ─────────────────────────────────────────────── -->
 <article class="run">

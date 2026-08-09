@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>무월 관측소 — 2026년 2분기 관측 시간 배정 공고</title>
+<meta name="description" content="1.8m 망원경의 밤을 어떻게 나누는지 식으로 공개합니다. 배정 점수 = 과학 등급×50 + 달 적합×30 + 대기 분기×5. 달 위상을 바꾸면 그 자리에서 순위가 다시 계산됩니다.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+:root{
+  --sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+
+  /* 밤하늘 지면. §3.5 — 지난 두 번의 AD-1(25·31)이 둘 다 크림이었다.
+     포인트는 시안 하나. 이 저장소에서 청록 계열은 처음이다. */
+  --sky:#12171b;        /* 바탕 */
+  --sky2:#1a2026;       /* 눌린 바탕 */
+  --ink:#e8eef2;        /* 제목 — 밤 위 15.41:1 · 눌린밤 위 14.03:1 */
+  --body:#c3cdd4;       /* 본문 — 밤 위 11.17:1 · 눌린밤 위 10.17:1 */
+  --mut:#8b97a0;        /* 보조 — 밤 위 6.04:1 · 눌린밤 위 5.50:1 (AA 통과) */
+  --k:#57cfe0;          /* 포인트 1색 — 밤 위 9.80:1 · 눌린밤 위 8.92:1 */
+  --line:#2b343b;       /* 눈금·괘선 — 텍스트 아님 */
+  --line2:#3c4952;
+
+  --t-xs:12px;--t-sm:14px;--t-base:16px;--t-md:20px;--t-lg:25px;--t-xl:31px;
+  --t-2xl:39px;--t-3xl:49px;--t-4xl:61px;--t-d1:76px;--t-d2:96px;
+
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;
+  --s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--sky);color:var(--body);
+  font-family:var(--sans);font-size:var(--t-base);line-height:1.75;
+  word-break:keep-all;overflow-wrap:break-word;-webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums}
+img{max-width:100%;display:block}
+h1,h2,h3{margin:0;color:var(--ink);font-weight:600;line-height:1.25;letter-spacing:-.012em}
+p{margin:0}
+a{color:inherit}
+[id]{scroll-margin-top:var(--s6)}
+
+/* 판형을 좌우로 교대한다. 좁은 폭에서도 유지한다 — 데스크톱만 갈라 놓으면 무효다 (함정 21) */
+.slab  {max-width:1200px;margin:0 auto;padding-left:var(--s7);padding-right:var(--s9)}
+.slab-r{max-width:1200px;margin:0 auto;padding-left:var(--s9);padding-right:var(--s7)}
+
+/* 격자를 숨기지 않는다 — 칼럼 괘선 대신 적경 눈금으로 (AD-1 do, 조건 7) */
+.ticks{border-top:1px solid var(--line);display:flex;justify-content:space-between;
+       font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);padding-top:var(--s2)}
+.ticks span{position:relative;padding-left:var(--s2)}
+.ticks span::before{content:"";position:absolute;left:0;top:-9px;width:1px;height:7px;background:var(--line2)}
+
+.tag{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.13em;color:var(--k);text-transform:uppercase}
+.note{font-size:var(--t-xs);line-height:1.6;color:var(--mut);max-width:36em;margin-top:var(--s2)}
+.dek{font-size:var(--t-sm);color:var(--mut);max-width:44em;margin-top:var(--s3)}
+.txt{max-width:35em;line-height:1.8}
+.txt p+p{margin-top:1em}
+.txt b{color:var(--ink);font-weight:600}
+
+/* 리빌 — .js 게이트 뒤에 (함정 16) */
+.js .rise{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+.js .rise.vis{opacity:1;transform:none}
+.js .r1{transition-delay:.08s}.js .r2{transition-delay:.16s}
+
+table{width:100%;border-collapse:collapse;font-size:var(--t-sm)}
+caption{text-align:left;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);padding-bottom:var(--s3)}
+th,td{padding:9px 12px 9px 0;text-align:left;border-bottom:1px solid var(--line);vertical-align:baseline}
+thead th{font-size:var(--t-xs);color:var(--mut);font-weight:500;letter-spacing:.05em;border-bottom:1px solid var(--line2)}
+tbody tr:last-child td{border-bottom:1px solid var(--line2)}
+td.n,th.n{text-align:right;padding-right:0;font-family:var(--mono)}
+tfoot td{padding-top:var(--s3);font-family:var(--mono);font-size:var(--t-xs);color:var(--ink);border:0}
+
+/* ═══ 1 · 표제 ═══ */
+.top{padding-top:var(--s7);padding-bottom:var(--s6)}
+.top .band{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.62fr);gap:var(--s8);align-items:end}
+.top .band>*{min-width:0}
+.top h1{font-size:var(--t-3xl);letter-spacing:-.03em;font-weight:700}
+.top .sub{font-size:var(--t-sm);color:var(--mut);margin-top:var(--s2)}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s3) var(--s5);
+       font-family:var(--mono);font-size:var(--t-xs);color:var(--mut)}
+.facts div{border-top:1px solid var(--line);padding-top:var(--s2)}
+.facts b{display:block;color:var(--ink);font-size:var(--t-md);font-weight:500;line-height:1.2;margin-top:2px}
+
+/* ═══ 2 · 규칙 선언 ═══ */
+.law{padding-top:var(--s9);padding-bottom:var(--s8);background:var(--sky2);
+     border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.law h2{font-size:var(--t-xl);max-width:17em}
+.formula{margin-top:var(--s6);border:1px solid var(--k);padding:var(--s5);
+         font-family:var(--mono);font-size:var(--t-md);color:var(--ink);line-height:1.9;
+         overflow-x:auto}
+.formula b{color:var(--k);font-weight:500}
+.terms{margin-top:var(--s5);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s5)}
+.terms>*{min-width:0}
+.terms dt{font-family:var(--mono);font-size:var(--t-xs);color:var(--k);letter-spacing:.06em}
+.terms dd{margin:var(--s2) 0 0;font-size:var(--t-sm);line-height:1.65;color:var(--body)}
+.tie{margin-top:var(--s5);border-top:1px solid var(--line2);padding-top:var(--s4);
+     font-size:var(--t-sm);color:var(--body);max-width:46em}
+.tie b{color:var(--k)}
+
+/* ═══ 3 · 남이 한 말 ═══ */
+.heard{padding-top:var(--s10);padding-bottom:var(--s9)}
+.heard .lead-in{font-size:var(--t-sm);color:var(--mut);max-width:38em}
+.says{margin-top:var(--s9);display:grid;gap:var(--s8)}
+.say{display:grid;grid-template-columns:minmax(0,9em) minmax(0,1fr);gap:var(--s6);align-items:baseline}
+.say>*{min-width:0}
+.say .by{font-size:var(--t-xs);line-height:1.6;color:var(--mut);text-align:right}
+.say .by b{display:block;font-size:var(--t-sm);color:var(--ink);font-weight:600}
+.say blockquote{margin:0;font-size:var(--t-lg);line-height:1.6;color:var(--ink);text-indent:-.42em}
+.say .from{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s3)}
+
+/* ═══ 4 · 배정판 (조작형) ═══ */
+.board{padding-top:var(--s8);padding-bottom:var(--s10);background:var(--sky2);
+       border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.board h2{font-size:var(--t-xl);max-width:18em}
+.moons{margin-top:var(--s5);display:flex;flex-wrap:wrap;gap:var(--s4);align-items:center}
+.pick{display:inline-flex;border:1px solid var(--line2)}
+.pick button{font:inherit;font-size:var(--t-sm);padding:var(--s2) var(--s5);border:0;
+             border-left:1px solid var(--line2);background:transparent;color:var(--body);cursor:pointer}
+.pick button:first-child{border-left:0}
+.pick button:hover{background:var(--sky)}
+.pick button[aria-pressed="true"]{background:var(--k);color:var(--sky);font-weight:600}
+.pick button:focus-visible{outline:2px solid var(--k);outline-offset:-3px}
+.state{font-size:var(--t-sm);color:var(--mut)}
+.state b{color:var(--k);font-family:var(--mono)}
+
+.rank{margin-top:var(--s6);border-top:1px solid var(--line2)}
+.row{display:grid;grid-template-columns:2.4em minmax(0,1fr) minmax(0,15em) 4.5em;
+     gap:var(--s4);align-items:baseline;padding:var(--s4) 0;border-bottom:1px solid var(--line);
+     transition:background-color .3s ease,opacity .3s ease}
+.row>*{min-width:0}
+.row .no{font-family:var(--mono);font-size:var(--t-md);color:var(--mut)}
+.row .who{font-size:var(--t-base);color:var(--ink)}
+.row .who small{display:block;font-size:var(--t-xs);color:var(--mut);margin-top:2px}
+.row .calc{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);line-height:1.7}
+.row .pt{font-family:var(--mono);font-size:var(--t-md);color:var(--ink);text-align:right}
+.row.win{background:rgba(87,207,224,.09)}
+.row.win .no,.row.win .pt{color:var(--k)}
+/* opacity 로 흐리면 합성 대비가 2.60:1 로 무너진다 — 색을 직접 낮춰 AA 를 지킨다 */
+.row.out .who{color:var(--mut)}
+.row.out .who small,.row.out .calc{color:#8f9aa3}   /* 진밤 위 5.72:1 */
+.row.out .no,.row.out .pt{color:#8f9aa3}
+.row.out .flag{border-color:#5fb9c6;color:#5fb9c6}  /* 진밤 위 7.23:1 */
+.row .flag{display:inline-block;font-family:var(--mono);font-size:var(--t-xs);
+           border:1px solid var(--k);color:var(--k);padding:1px 6px;margin-left:var(--s2)}
+.tally{margin-top:var(--s5);font-family:var(--mono);font-size:var(--t-xs);color:var(--mut)}
+.tally b{color:var(--ink)}
+
+/* ═══ 5 · 지난 분기 ═══ */
+.past{padding-top:var(--s7);padding-bottom:var(--s8)}
+.past h2{font-size:var(--t-xl)}
+
+/* ═══ 6 · 관측 조건 ═══ */
+.airs{padding-top:var(--s6);padding-bottom:var(--s7);background:var(--sky2);
+      border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.airs h2{font-size:var(--t-xl)}
+.airs .two{margin-top:var(--s5);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.62fr);
+           gap:var(--s8);align-items:start}
+.airs .two>*{min-width:0}
+.split{border-top:1px solid var(--line2);padding-top:var(--s4)}
+.split .band2{display:flex;height:34px;border:1px solid var(--line2);margin-top:var(--s3)}
+.split .band2 i{display:block;height:100%}
+.split .band2 .use{background:var(--k)}
+.split .lost{background:repeating-linear-gradient(135deg,var(--line2) 0 6px,var(--sky2) 6px 12px)}
+.split .keys{margin-top:var(--s3);display:grid;gap:var(--s2)}
+.split .keys div{display:grid;grid-template-columns:14px minmax(0,1fr) 4.5em;gap:var(--s3);
+                 align-items:center;font-size:var(--t-sm)}
+.split .keys i{display:block;height:12px;border:1px solid var(--line2)}
+.split .keys .n2{font-family:var(--mono);text-align:right;color:var(--ink)}
+
+/* ═══ 7 · 대기자 명단 (닫는 자리) ═══ */
+.queue{padding-top:var(--s9);padding-bottom:var(--s6)}
+.queue h2{font-size:var(--t-xl);max-width:16em}
+.line{margin-top:var(--s6);border-top:1px solid var(--line2)}
+.line .q{display:grid;grid-template-columns:2.6em minmax(0,1fr) 7em 6em;gap:var(--s4);
+         align-items:baseline;padding:var(--s3) 0;border-bottom:1px solid var(--line);font-size:var(--t-sm)}
+.line .q>*{min-width:0}
+.line .qn{font-family:var(--mono);color:var(--k)}
+.line .qt{color:var(--ink)}
+.line .qm{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);text-align:right}
+.close{margin-top:var(--s7);border-top:3px solid var(--k);padding-top:var(--s4);
+       font-size:var(--t-md);line-height:1.7;color:var(--ink);max-width:44em}
+
+footer{border-top:1px solid var(--line);background:var(--sky2);padding-top:var(--s5);padding-bottom:var(--s5)}
+.foot{max-width:1200px;margin:0 auto;padding-left:var(--s7);padding-right:var(--s9);
+      display:flex;flex-wrap:wrap;gap:var(--s2) var(--s6);font-size:var(--t-xs);color:var(--mut)}
+
+/* ── 1000 이하: 두 칸을 한 칸으로 세운다 (함정 17) ── */
+@media (max-width:1000px){
+  .top .band,.airs .two{grid-template-columns:minmax(0,1fr);gap:var(--s6)}
+  .terms{grid-template-columns:minmax(0,1fr);gap:var(--s4)}
+  /* 명시 grid-column 을 가진 자식 뒤에 자동배치 자식이 오면 sparse 배치가 커서를
+     그 뒤로 보내 .pt 가 3행 1열(35px)로 떨어진다 — 세 자리 점수가 두 줄로 쪼개졌다.
+     네 칸 전부 자리를 명시해야 안전하다 (RUN34 크리틱 D1) */
+  .row{grid-template-columns:2.2em minmax(0,1fr) 4.5em;gap:var(--s2) var(--s3)}
+  .row .no  {grid-area:1/1/2/2}
+  .row .who {grid-area:1/2/2/3}
+  .row .pt  {grid-area:1/3/2/4}
+  .row .calc{grid-area:2/2/3/4;color:var(--mut)}
+}
+@media (max-width:900px){
+  /* 좁은 폭에서도 판형을 교대한다 (함정 21) */
+  .slab  {padding-left:var(--s4);padding-right:var(--s5)}
+  .slab-r{padding-left:var(--s5);padding-right:var(--s4)}
+  .foot{padding-left:var(--s4);padding-right:var(--s4)}
+  /* 세로 호흡도 일곱 섹션 전부 다르게 */
+  .top  {padding-top:var(--s5);padding-bottom:var(--s6)}
+  .law  {padding-top:var(--s8);padding-bottom:var(--s7)}
+  .heard{padding-top:var(--s9);padding-bottom:var(--s8)}
+  .board{padding-top:var(--s7);padding-bottom:var(--s9)}
+  .past {padding-top:var(--s6);padding-bottom:var(--s5)}
+  .airs {padding-top:var(--s5);padding-bottom:var(--s7)}
+  .queue{padding-top:var(--s8);padding-bottom:var(--s6)}
+  .top h1{font-size:var(--t-2xl)}
+  .law h2,.board h2,.past h2,.airs h2,.queue h2{font-size:var(--t-md)}
+  .say{grid-template-columns:minmax(0,1fr);gap:var(--s3)}
+  .say .by{text-align:left}
+  .say blockquote{font-size:var(--t-md);text-indent:0}
+  .formula{font-size:var(--t-sm)}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .line .q{grid-template-columns:2.2em minmax(0,1fr) 5.2em;gap:var(--s2)}
+  .line .qm:last-child{grid-column:2/4;text-align:left}
+  /* 표를 카드로 접는다. td 는 grid, 셀 안 요소는 하나로 묶는다 (함정 12) */
+  .fold table,.fold thead,.fold tbody,.fold tr,.fold tfoot{display:block;width:auto}
+  .fold caption{display:block}
+  .fold thead{position:absolute;left:-9999px}
+  .fold tr{border-bottom:1px solid var(--line2);padding:var(--s3) 0}
+  .fold tbody tr:last-child{border-bottom:1px solid var(--line2)}
+  .fold td{display:grid;grid-template-columns:6.5em minmax(0,1fr);gap:var(--s3);
+           border-bottom:0;padding:var(--s1) 0;text-align:left}
+  .fold td::before{content:attr(data-l);color:var(--mut);font-size:var(--t-xs)}
+  .fold td:first-child{color:var(--ink)}
+  .fold tfoot tr{border-bottom:0;padding-top:var(--s3)}
+  .fold tfoot td{display:block;padding:0}
+  .fold tfoot td::before{content:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .js .rise{opacity:1;transform:none;transition:none}
+  .row{transition:none}
+}
+.capture .rise{opacity:1!important;transform:none!important;transition:none!important}
+</style>
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+<!-- 무월 관측소 · 2026년 2분기 배정 공고 -->
+
+<!-- ═══ 1 · 표제 ═══ -->
+<section class="top">
+  <div class="slab">
+    <div class="band">
+      <div class="rise">
+        <p class="tag">2026년 2분기 · 배정 공고</p>
+        <h1>무월 관측소</h1>
+        <p class="sub">1.8m 반사망원경 · 밤을 어떻게 나누는지 식으로 공개합니다</p>
+      </div>
+      <div class="facts rise r1">
+        <div>배정 대상 밤<b>62 밤</b></div>
+        <div>접수 과제<b>6 건</b></div>
+        <div>배정<b>상위 4 건</b></div>
+        <div>대기<b>11 건</b></div>
+      </div>
+    </div>
+    <div class="ticks rise r2" aria-hidden="true">
+      <span>04h</span><span>08h</span><span>12h</span><span>16h</span><span>20h</span><span>24h</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2 · 규칙 선언 ═══ -->
+<section class="law" id="law">
+  <div class="slab-r">
+    <p class="tag rise">규칙</p>
+    <h2 class="rise">먼저 식을 적고, 그다음에 표를 만듭니다</h2>
+    <p class="dek rise">배정에서 다투는 것은 대개 「누가 더 중요한가」인데, 그건 정할 수 없습니다. 정할 수 있는 것은 <b>무엇을 몇 점으로 셀지</b>뿐입니다. 아래 식이 이 분기의 전부입니다. <b>배정에 관한 숫자</b>는 전부 여기서 나옵니다 — 관측 조건(표 2)만은 식이 아니라 실측입니다.</p>
+
+    <div class="formula rise r1" role="img" aria-label="배정 점수는 과학 등급 곱하기 50 더하기 달 적합 곱하기 30 더하기 대기 분기 곱하기 5">
+      배정 점수 = 과학 등급 × <b>50</b> &nbsp;+&nbsp; 달 적합 × <b>30</b> &nbsp;+&nbsp; 대기 분기 × <b>5</b>
+    </div>
+
+    <dl class="terms rise r1">
+      <div><dt>과학 등급 (1–5)</dt><dd>외부 심사위원 5인이 매긴 점수의 중앙값입니다. 우리가 매기지 않습니다.</dd></div>
+      <div><dt>달 적합 (0 또는 1)</dt><dd>과제가 요구한 달 조건을 그 분기 달 위상이 만족하면 1, 아니면 0입니다. 절반은 없습니다.</dd></div>
+      <div><dt>대기 분기 (0–4)</dt><dd>떨어진 채로 기다린 분기 수입니다. 네 분기가 상한이고, 그 뒤로는 더 오르지 않습니다.</dd></div>
+    </dl>
+
+    <p class="tie rise r2"><b>동점이면</b> 대기 분기가 긴 쪽이 앞섭니다. 그래도 같으면 접수 시각이 이른 쪽입니다. 이 규칙은 이번 분기에 <b>실제로 발동합니다</b> — 아래 배정판에서 달을 보름으로 옮겨 보십시오.</p>
+  </div>
+</section>
+
+<!-- ═══ 3 · 남이 한 말 ═══ -->
+<section class="heard">
+  <div class="slab">
+    <p class="lead-in rise">우리가 쓴 평가는 싣지 않습니다. 심사 기록과 학회지에 남은 것만 옮깁니다.</p>
+    <div class="says">
+      <div class="say rise">
+        <div class="by"><b>탁현우</b>한국천문학회<br>관측시설위원회</div>
+        <div>
+          <blockquote>“식을 공개한 국내 관측소는 여기가 처음입니다. 떨어진 쪽이 <em>왜 떨어졌는지 스스로 계산할 수 있다는 것</em>이 이 방식의 값입니다.”</blockquote>
+          <p class="from">천문학회보 제51권 1호, 관측시설 운영 사례 보고</p>
+        </div>
+      </div>
+      <div class="say rise">
+        <div class="by"><b>구나림</b>외계행성 탐사<br>책임연구원 · 2분기 신청자</div>
+        <div>
+          <blockquote>“달 항을 30점으로 잡은 것에는 반대합니다. 통과 측광은 달과 무관한데 우리 쪽 점수가 그믐이냐 아니냐로 30점씩 흔들립니다. 다만 <em>흔들리는 이유는 명확합니다</em>.”</blockquote>
+          <p class="from">2026년 1월 배정 설명회 질의응답 녹취 — 3분기 개정 논의로 접수</p>
+        </div>
+      </div>
+      <div class="say rise">
+        <div class="by"><b>임세아</b>대학원생 · 변광성<br>4분기째 대기</div>
+        <div>
+          <blockquote>“네 분기를 기다렸고 이번에도 못 받을 줄 알았는데, 보름 배정에서 동점 규칙 덕에 올라갔습니다. <em>기다린 것이 점수가 된다는 걸</em> 처음 봤습니다.”</blockquote>
+          <p class="from">2026년 2월 배정 결과 통보 후 회신 — 본인 동의로 인용</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 4 · 배정판 (조작형) ═══ -->
+<section class="board" id="board">
+  <div class="slab-r">
+    <p class="tag rise">배정판</p>
+    <h2 class="rise">달을 옮기면 순위가 다시 계산됩니다</h2>
+    <p class="dek rise">아래 여섯 건은 이번 분기에 실제로 접수된 과제입니다. 점수는 위 식으로 그 자리에서 계산합니다 — 적어 둔 값이 아닙니다.</p>
+
+    <div class="moons rise r1">
+      <span class="pick" role="group" aria-label="달 위상 고르기">
+        <button type="button" data-m="dark" aria-pressed="false">그믐</button>
+        <button type="button" data-m="half" aria-pressed="false">상현·하현</button>
+        <button type="button" data-m="full" aria-pressed="true">보름</button>
+      </span>
+      <span class="state" id="state" aria-live="polite">이번 분기 달은 <b>보름</b> — 가장 밝습니다. 어두운 대상을 보는 과제는 전부 0점입니다.</span>
+    </div>
+
+    <div class="rank" id="rank" role="list" aria-label="배정 순위">
+      <div class="row win" role="listitem" aria-label="1위 외계행성 통과 측광 260점, 배정"><span class="no">1</span><span class="who">외계행성 통과 측광<small>구나림 · 외계행성 탐사 · 그믐 필수 · 2분기 대기</small></span><span class="calc">5×50 + 0×30 + 2×5</span><span class="pt">260</span></div>
+      <div class="row win" role="listitem" aria-label="2위 은하 분광 255점, 배정"><span class="no">2</span><span class="who">은하 분광<small>서가온 · 은하진화 · 그믐 필수 · 1분기 대기</small></span><span class="calc">5×50 + 0×30 + 1×5</span><span class="pt">255</span></div>
+      <div class="row win" role="listitem" aria-label="3위 성단 측광 205점, 배정"><span class="no">3</span><span class="who">성단 측광<small>윤도경 · 항성계 · 상현 이하 · 1분기 대기</small></span><span class="calc">4×50 + 0×30 + 1×5</span><span class="pt">205</span></div>
+      <div class="row win" role="listitem" aria-label="4위 변광성 장기 감시 200점, 배정"><span class="no">4</span><span class="who">변광성 장기 감시<span class="flag">동점 200</span><small>임세아 · 대학원 · 달 무관 · 4분기 대기</small></span><span class="calc">3×50 + 1×30 + 4×5</span><span class="pt">200</span></div>
+      <div class="row out" role="listitem" aria-label="5위 소행성 궤도 확정 200점, 대기"><span class="no">5</span><span class="who">소행성 궤도 확정<span class="flag">동점 200</span><small>명주호 · 태양계 그룹 · 상현 이하 · 0분기 대기</small></span><span class="calc">4×50 + 0×30 + 0×5</span><span class="pt">200</span></div>
+      <div class="row out" role="listitem" aria-label="6위 유성우 계수 145점, 대기"><span class="no">6</span><span class="who">유성우 계수<small>하람 천문동아리 · 달 무관 · 3분기 대기</small></span><span class="calc">2×50 + 1×30 + 3×5</span><span class="pt">145</span></div>
+    </div>
+    <p class="tally" id="tally">배정 <b>4</b>건 · 커트라인 <b>200</b>점 · 첫 탈락 <b>200</b>점 · 차이 <b>0</b>점 · <b>동점 200점 발생 — 대기 분기로 갈랐다</b></p>
+    <p class="note">과학 등급은 달 위상과 무관하게 고정입니다. 바뀌는 것은 달 적합 항 하나뿐이고, 그 30점이 순위를 뒤집습니다.</p>
+  </div>
+</section>
+
+<!-- ═══ 5 · 지난 분기 ═══ -->
+<section class="past">
+  <div class="slab">
+    <p class="tag rise">표 1</p>
+    <h2 class="rise">지난 분기에 실제로 어떻게 됐는가</h2>
+    <p class="dek rise">2026년 1분기 배정 결과입니다. 같은 식으로 계산했고, 배정받은 밤과 실제로 쓴 밤을 함께 적습니다.</p>
+    <div class="fold rise r1" style="margin-top:var(--s5)">
+      <table>
+        <caption>표 1 · 2026년 1분기 배정 결과 (배정 대상 58밤)</caption>
+        <thead><tr><th>과제</th><th class="n">점수</th><th class="n">배정</th><th class="n">사용</th><th>흐린 밤</th></tr></thead>
+        <tbody>
+          <tr><td data-l="과제">전천 탐사 시험관측</td><td class="n" data-l="점수">295</td><td class="n" data-l="배정">18밤</td><td class="n" data-l="사용">13밤</td><td data-l="흐린밤">5밤 유실</td></tr>
+          <tr><td data-l="과제">쌍성 분광</td><td class="n" data-l="점수">265</td><td class="n" data-l="배정">16밤</td><td class="n" data-l="사용">12밤</td><td data-l="흐린밤">4밤 유실</td></tr>
+          <tr><td data-l="과제">저광도 은하 측광</td><td class="n" data-l="점수">240</td><td class="n" data-l="배정">14밤</td><td class="n" data-l="사용">9밤</td><td data-l="흐린밤">5밤 유실</td></tr>
+          <tr><td data-l="과제">근지구 소행성 추적</td><td class="n" data-l="점수">215</td><td class="n" data-l="배정">10밤</td><td class="n" data-l="사용">8밤</td><td data-l="흐린밤">2밤 유실</td></tr>
+        </tbody>
+        <tfoot><tr><td colspan="5">배정 58밤 · 사용 42밤 · 흐림으로 유실 16밤 (27.6%) · 유실분은 다음 분기 대기 점수에 반영하지 않는다</td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 6 · 관측 조건 ═══ -->
+<section class="airs">
+  <div class="slab-r">
+    <p class="tag rise">표 2</p>
+    <h2 class="rise">밤이 다 같은 밤은 아닙니다</h2>
+    <div class="two">
+      <div class="fold rise r1">
+        <table>
+          <caption>표 2 · 2025년 분기별 관측 가능 밤 (12개월 실측을 분기로 묶음)</caption>
+          <thead><tr><th>분기</th><th class="n">맑은 밤</th><th class="n">평균 시상</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr><td data-l="분기">1–3월</td><td class="n" data-l="맑은밤">41밤</td><td class="n" data-l="시상">1.2″</td><td data-l="비고">가장 좋다. 춥고 건조하다</td></tr>
+            <tr><td data-l="분기">4–6월</td><td class="n" data-l="맑은밤">33밤</td><td class="n" data-l="시상">1.5″</td><td data-l="비고">황사가 분기 초부터 든다</td></tr>
+            <tr><td data-l="분기">7–9월</td><td class="n" data-l="맑은밤">19밤</td><td class="n" data-l="시상">2.1″</td><td data-l="비고">장마와 태풍. 배정을 줄인다</td></tr>
+            <tr><td data-l="분기">10–12월</td><td class="n" data-l="맑은밤">38밤</td><td class="n" data-l="시상">1.3″</td><td data-l="비고">1–3월 다음으로 좋다</td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="4">합 131밤 / 365밤 = 35.9% · 2분기 배정 62밤은 4–6월 맑은 밤 33밤의 1.9배로, 흐린 밤을 예비로 끼운 수치다</td></tr></tfoot>
+        </table>
+      </div>
+      <div class="rise r2">
+        <div class="split">
+          <p class="tag">2분기 62밤은 어떻게 쓰일 것인가</p>
+          <p class="note" style="margin-top:var(--s2)">1분기 실적(배정 58밤 중 16밤 유실 = <b data-derive="rate">27.6%</b>)을 그대로 적용해 나눈 것입니다. 약속이 아니라 계산입니다 — 62 × 27.6% → <b data-derive="lost">17</b>밤 유실, 나머지 <b data-derive="use">45</b>밤 사용.</p>
+          <div class="band2" id="band" role="img" aria-label="62밤 중 사용 예상 45밤, 흐림 유실 예상 17밤">
+            <i class="use"></i><i class="lost"></i>
+          </div>
+          <div class="keys">
+            <div><i style="background:var(--k)"></i><span>관측에 쓰일 밤</span><span class="n2"><span data-derive="use">45</span>밤</span></div>
+            <div><i class="lost"></i><span>흐림으로 잃을 밤</span><span class="n2"><span data-derive="lost">17</span>밤</span></div>
+          </div>
+          <p class="note">45 ÷ 62 = <span data-derive="usePct">72.6%</span> · 17 ÷ 62 = <span data-derive="lostPct">27.4%</span> — 띠의 비율이 이 두 값이다. 유실분은 다음 분기 대기 점수에 반영하지 않으므로, 흐린 밤을 많이 만난 과제가 손해를 본다. 이건 이 식의 결함이고 3분기 개정 논의에 올라 있다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 7 · 대기자 명단 (닫는 자리) ═══ -->
+<section class="queue">
+  <div class="slab">
+    <h2 class="rise">지금 줄 서 있는 사람들</h2>
+    <p class="dek rise">배정에서 밀린 과제는 사라지지 않고 줄에 남습니다. 몇 번째인지, 몇 분기를 기다렸는지, 지금 추세면 언제쯤인지를 적습니다. 마지막 칸은 약속이 아니라 <b>계산</b>입니다 — 분기마다 상위 4건이 빠지므로 순번 ÷ 4를 올림한 것입니다.</p>
+
+    <div class="line rise r1">
+      <div class="q"><span class="qn">1</span><span class="qt">소행성 궤도 확정</span><span class="qm">이번에 처음</span><span class="qm">다음 분기</span></div>
+      <div class="q"><span class="qn">2</span><span class="qt">적색왜성 플레어 감시</span><span class="qm">2분기 대기</span><span class="qm">다음 분기</span></div>
+      <div class="q"><span class="qn">3</span><span class="qt">구상성단 항성계수</span><span class="qm">1분기 대기</span><span class="qm">다음 분기</span></div>
+      <div class="q"><span class="qn">4</span><span class="qt">유성우 계수</span><span class="qm">3분기 대기</span><span class="qm">다음 분기</span></div>
+      <div class="q"><span class="qn">5</span><span class="qt">백색왜성 냉각열</span><span class="qm">1분기 대기</span><span class="qm">2분기 뒤</span></div>
+      <div class="q"><span class="qn">6</span><span class="qt">외부은하 초신성 추적</span><span class="qm">0분기 대기</span><span class="qm">2분기 뒤</span></div>
+      <div class="q"><span class="qn">7</span><span class="qt">성간 소광 지도</span><span class="qm">2분기 대기</span><span class="qm">2분기 뒤</span></div>
+      <div class="q"><span class="qn">8</span><span class="qt">태양계 외곽 천체 탐색</span><span class="qm">4분기 대기</span><span class="qm">2분기 뒤</span></div>
+      <div class="q"><span class="qn">9</span><span class="qt">활동은하핵 변광</span><span class="qm">1분기 대기</span><span class="qm">3분기 뒤</span></div>
+      <div class="q"><span class="qn">10</span><span class="qt">저질량 쌍성 측광</span><span class="qm">0분기 대기</span><span class="qm">3분기 뒤</span></div>
+      <div class="q"><span class="qn">11</span><span class="qt">은하수 중심 적외 감시</span><span class="qm">2분기 대기</span><span class="qm">3분기 뒤</span></div>
+    </div>
+
+    <p class="close rise r2">열한 건 중 여덟 건이 두 분기 안에 들어갑니다. 나머지 셋에게는 그 말이 위로가 되지 않는다는 것도 압니다. 우리가 할 수 있는 것은 <b>몇 번째인지 숨기지 않는 것</b>까지입니다.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="foot">
+    <span>무월 관측소 · 강원 영월군 · 1.8m 반사망원경 · 배정 문의는 분기 개시 30일 전까지</span>
+    <span>2026년 2분기 공고 · 2026.02.20</span>
+    <span>차례 · <a href="#law">배정 규칙</a> · <a href="#board">배정판</a></span>
+    <span>심사 원표와 시상 원자료는 신청자에게 개별 공개합니다</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  if('scrollRestoration' in history)history.scrollRestoration='manual';
+  (function(){var h=document.documentElement,p=h.style.scrollBehavior;h.style.scrollBehavior='auto';
+   scrollTo(0,0);addEventListener('load',function(){scrollTo(0,0);
+   setTimeout(function(){h.style.scrollBehavior=p},60)})})();
+
+  var CAPTURE=/[?&]capture=1/.test(location.search);
+  if(CAPTURE)document.documentElement.classList.add('capture');
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+  var rises=[].slice.call(document.querySelectorAll('.rise'));
+  if(reduce||!('IntersectionObserver' in window)){rises.forEach(function(e){e.classList.add('vis')})}
+  else{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})},
+      {rootMargin:'0px 0px -8% 0px',threshold:.05});
+    rises.forEach(function(e){io.observe(e)});
+    addEventListener('load',function(){rises.forEach(function(e){
+      if(e.getBoundingClientRect().top<innerHeight)e.classList.add('vis')})});
+  }
+
+  /* ── 배정판 ────────────────────────────────────────
+     지면이 선언한 식 하나로 전부 계산한다. 점수도 순위도 배정 여부도 적어 두지 않는다.
+       배정 점수 = 과학 등급 × 50 + 달 적합 × 30 + 대기 분기 × 5
+       동점이면 대기 분기가 긴 쪽, 그래도 같으면 접수 시각이 이른 쪽 */
+  var W = {grade:50, moon:30, wait:5}, SEATS = 4;
+  var TASKS = [
+    {n:'외계행성 통과 측광', pi:'구나림 · 외계행성 탐사', grade:5, need:'dark', wait:2, at:'01-06 09:12'},
+    {n:'변광성 장기 감시',   pi:'임세아 · 대학원',        grade:3, need:'any',  wait:4, at:'01-06 10:41'},
+    {n:'소행성 궤도 확정',   pi:'명주호 · 태양계 그룹',   grade:4, need:'half', wait:0, at:'01-07 14:05'},
+    {n:'은하 분광',          pi:'서가온 · 은하진화',      grade:5, need:'dark', wait:1, at:'01-06 11:58'},
+    {n:'유성우 계수',        pi:'하람 천문동아리',        grade:2, need:'any',  wait:3, at:'01-08 08:30'},
+    {n:'성단 측광',          pi:'윤도경 · 항성계',        grade:4, need:'half', wait:1, at:'01-07 16:22'}
+  ];
+  var MOON = {
+    dark:{label:'그믐', desc:'달빛이 없습니다. 그믐을 요구한 과제가 만점을 받습니다.'},
+    half:{label:'상현·하현', desc:'절반입니다. 그믐을 요구한 과제는 0점이 됩니다.'},
+    full:{label:'보름', desc:'가장 밝습니다. 어두운 대상을 보는 과제는 전부 0점입니다.'}
+  };
+  // 달 적합: 요구 조건이 그 위상에서 만족되는가 (0 또는 1)
+  function fit(need, moon){
+    if(need==='any')  return 1;
+    if(need==='dark') return moon==='dark' ? 1 : 0;
+    return moon==='full' ? 0 : 1;   // half = 그믐·상현까지 허용
+  }
+  var NEED={any:'달 무관', dark:'그믐 필수', half:'상현 이하'};
+
+  var rank=document.getElementById('rank'), stateEl=document.getElementById('state'),
+      tallyEl=document.getElementById('tally'), byKey=null;
+
+  function render(moon){
+    var rows = TASKS.map(function(t){
+      var mf=fit(t.need,moon);
+      return {t:t, mf:mf, pt:t.grade*W.grade + mf*W.moon + t.wait*W.wait};
+    }).sort(function(a,b){
+      return b.pt-a.pt || b.t.wait-a.t.wait || (a.t.at < b.t.at ? -1 : 1);
+    });
+
+    // 요소를 파기·재생성하면 transition 이 발화하지 않는다(죽은 CSS).
+    // 만들어 둔 행을 재사용하고 순서만 바꾼다 — 그래야 색 전환이 실제로 보인다.
+    if(!rank.dataset.built){
+      rank.dataset.built='1';
+      byKey = {};
+      [].forEach.call(rank.children, function(el){
+        byKey[el.querySelector('.who').childNodes[0].textContent.trim()] = el;
+      });
+    }
+    var tied=[];
+    rows.forEach(function(r,i){
+      var el=byKey[r.t.n];
+      var win=i<SEATS;
+      el.className='row '+(win?'win':'out');
+      var same=rows.filter(function(x){return x.pt===r.pt});
+      if(same.length>1 && tied.indexOf(r.pt)<0) tied.push(r.pt);
+      el.querySelector('.no').textContent=i+1;
+      el.querySelector('.calc').textContent=r.t.grade+'×'+W.grade+' + '+r.mf+'×'+W.moon+' + '+r.t.wait+'×'+W.wait;
+      el.querySelector('.pt').textContent=r.pt;
+      var who=el.querySelector('.who'), flag=who.querySelector('.flag');
+      if(same.length>1){
+        if(!flag){flag=document.createElement('span');flag.className='flag';
+                  who.insertBefore(flag, who.querySelector('small'));}
+        flag.textContent='동점 '+r.pt;
+      } else if(flag){ flag.remove(); }
+      el.setAttribute('aria-label',(i+1)+'위 '+r.t.n+' '+r.pt+'점, '+(win?'배정':'대기'));
+      rank.appendChild(el);          // 순서만 옮긴다 — 요소는 그대로다
+    });
+
+    stateEl.innerHTML='이번 분기 달은 <b>'+MOON[moon].label+'</b> — '+MOON[moon].desc;
+    var cut=rows[SEATS-1].pt, first=rows[SEATS].pt;
+    // 동점군이 둘 이상일 수 있고, 대기 분기까지 같으면 접수 시각이 가른다 — 사유를 실제로 판정한다
+    var why='';
+    if(tied.length){
+      var byWait = tied.every(function(pt){
+        var g=rows.filter(function(x){return x.pt===pt});
+        return new Set(g.map(function(x){return x.t.wait})).size===g.length;
+      });
+      why=' · <b>동점 '+tied.join('·')+'점 발생 — '+(byWait?'대기 분기':'접수 시각')+'로 갈랐다</b>';
+    }
+    tallyEl.innerHTML='배정 <b>'+SEATS+'</b>건 · 커트라인 <b>'+cut+'</b>점 · 첫 탈락 <b>'+first+'</b>점 · 차이 <b>'+(cut-first)+'</b>점'+why;
+  }
+
+  document.querySelector('.pick').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-m]'); if(!b)return;
+    [].forEach.call(this.querySelectorAll('button'),function(x){
+      x.setAttribute('aria-pressed',String(x===b))});
+    render(b.dataset.m);
+  });
+  render('full');
+
+  /* ── 부피 환산 띠 — 폭과 본문 수치를 한 곳에서 파생시킨다.
+     손으로 적으면 지금은 맞아도 값을 고칠 때 어긋난다 (함정 20·23) */
+  (function(){
+    var Q1={allot:58, lost:16}, Q2=62;
+    var rate=Q1.lost/Q1.allot, lost=Math.round(Q2*rate), use=Q2-lost;
+    var band=document.getElementById('band');
+    if(band){
+      band.children[0].style.width=(use/Q2*100).toFixed(1)+'%';
+      band.children[1].style.width=(lost/Q2*100).toFixed(1)+'%';
+      band.setAttribute('aria-label',Q2+'밤 중 사용 예상 '+use+'밤, 흐림 유실 예상 '+lost+'밤');
+    }
+    [].forEach.call(document.querySelectorAll('[data-derive]'),function(el){
+      var m={rate:(rate*100).toFixed(1)+'%', lost:lost, use:use, q2:Q2,
+             usePct:(use/Q2*100).toFixed(1)+'%', lostPct:(lost/Q2*100).toFixed(1)+'%'};
+      el.textContent=m[el.dataset.derive];
+    });
+  })();
+
+})();
+</script>
+</body></html>

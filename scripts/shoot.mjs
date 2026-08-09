@@ -128,29 +128,71 @@ const PROBE = `(() => {
   // 미디어쿼리 경계에서 열 배정이 뒤집히면 표가 4칸에 갇히고 옆 칸이 통째로 빈다.
   // 같은 줄에 놓인 형제끼리 "쓰는 폭 ÷ 받은 폭"을 비교한다.
   const track = [];
+  // 같은 줄에 놓인 형제를 찾는다. top 을 버킷으로 나누면 align-items:baseline 에서
+  // 4열 행이 2열로 잘못 묶인다(RUN34에서 오탐). 세로 범위가 겹치는지로 묶는다.
+  function sameRows(g){
+    const kids = [...g.children].map(c => c.getBoundingClientRect())
+      .map((r, i) => ({ el: g.children[i], r }))
+      .filter(x => x.r.width >= 40 && x.r.height > 0)
+      .sort((a, b) => a.r.top - b.r.top);
+    const out = [];
+    for (const k of kids) {
+      const grp = out[out.length - 1];
+      if (grp) {
+        const gt = Math.min(...grp.map(x => x.r.top)), gb = Math.max(...grp.map(x => x.r.bottom));
+        const ov = Math.min(gb, k.r.bottom) - Math.max(gt, k.r.top);
+        if (ov > Math.min(gb - gt, k.r.height) * 0.5) { grp.push(k); continue; }
+      }
+      out.push([k]);
+    }
+    return out;
+  }
   for (const g of document.querySelectorAll('*')) {
     if (getComputedStyle(g).display !== 'grid') continue;
-    const rows = new Map();
-    for (const c of g.children) {
-      const r = c.getBoundingClientRect();
-      if (r.width < 40 || r.height === 0) continue;
-      const k = Math.round(r.top / 8);
-      (rows.get(k) || rows.set(k, []).get(k)).push({ el: c, w: r.width });
+    for (const sibs of sameRows(g)) {
+      if (sibs.length !== 2) continue;               // 두 칸 나란한 자리만 본다
+      // 폭으로는 "구멍"을 잴 수 없다 — 블록 자식은 언제나 부모 폭을 채우므로 여유가 0으로 나온다.
+      // 실제 신호는 **세로 불균형**이다: 넓은 트랙이 짧은 콘텐츠에, 좁은 트랙이 긴 콘텐츠에 갔을 때
+      // 넓은 쪽 아래가 통째로 빈다 (RUN31 901px — 넓은 칸 351px / 좁은 칸 548px).
+      const m = sibs.map(x => ({ el: x.el, w: x.r.width, h: x.r.height }));
+      const [a1, b1] = m;
+      if (Math.min(a1.w, b1.w) < 180) continue;      // 라벨 열은 대상이 아니다
+      const wide = a1.w >= b1.w ? a1 : b1, narrow = a1.w >= b1.w ? b1 : a1;
+      if (wide.h < narrow.h * 0.7 && narrow.h - wide.h > 120)
+        track.push('넓은 트랙이 짧은 쪽에: ' + (wide.el.className || wide.el.tagName) +
+                   ' 폭' + Math.round(wide.w) + '·높이' + Math.round(wide.h) +
+                   ' vs ' + (narrow.el.className || narrow.el.tagName) +
+                   ' 폭' + Math.round(narrow.w) + '·높이' + Math.round(narrow.h));
     }
-    for (const sibs of rows.values()) {
-      if (sibs.length !== 2) continue;
-      for (const s2 of sibs) s2.used = Math.max(...[...s2.el.querySelectorAll('*')]
-        .map(x => x.getBoundingClientRect().width).concat([0]));
-      const [p, q] = sibs;
-      // 좁은 칸이 제 콘텐츠보다 작고, 넓은 칸은 콘텐츠보다 한참 크면 뒤바뀐 것이다
-      const slackP = p.w - p.used, slackQ = q.w - q.used;
-      if (slackP > 160 && slackQ < 8)
-        track.push('좁은 칸이 콘텐츠에 밀림: ' + (q.el.className || q.el.tagName) +
-                   ' 받은폭 ' + Math.round(q.w) + ' / 옆 칸 여유 ' + Math.round(slackP));
-      if (slackQ > 160 && slackP < 8)
-        track.push('좁은 칸이 콘텐츠에 밀림: ' + (p.el.className || p.el.tagName) +
-                   ' 받은폭 ' + Math.round(p.w) + ' / 옆 칸 여유 ' + Math.round(slackQ));
+  }
+
+  // 명시 grid-column 을 가진 자식 뒤에 자동배치 자식이 오면 sparse 배치가 커서를 그 뒤로 보내
+  // 마지막 칸이 다음 행 1열로 떨어진다 — 세 자리 숫자가 두 줄로 쪼개졌다 (RUN34 D1).
+  // 실렌더로 잡는다: 한 그리드 안에서 자식들의 행이 예상보다 많으면 경고.
+  const flow = [];
+  for (const g of document.querySelectorAll('*')) {
+    const cs = getComputedStyle(g);
+    if (cs.display !== 'grid') continue;
+    const cols = cs.gridTemplateColumns.split(' ').filter(Boolean).length;
+    if (cols < 2) continue;
+    const kids = [...g.children].filter(c => c.getBoundingClientRect().height > 0);
+    if (kids.length < 3 || kids.length > 8) continue;
+    // 좁은 폭에서 grid 자식이 줄바꿈되는 것 자체는 정상이다 — 그걸로 경고하면 소음만 난다.
+    // 잡아야 할 것은 하나뿐: **명시 배치를 가진 자식 뒤에 자동배치 자식이 와서 밀려난 경우.**
+    if (kids.length > cols) {
+      const explicit = kids.slice(0, -1).some(c => getComputedStyle(c).gridColumnStart !== 'auto');
+      const last = kids[kids.length - 1].getBoundingClientRect();
+      const first = kids[0].getBoundingClientRect();
+      const gr = g.getBoundingClientRect();
+      const track = gr.width / cols;
+      // 밀려난 것의 특징: 다음 줄로 내려가면서 **첫 열로, 트랙 하나 폭으로** 떨어진다.
+      // 의도된 여러 줄 배치는 마지막 칸이 넓거나 첫 열이 아니다.
+      if (explicit && last.top > first.bottom - 2
+          && last.width < track * 1.1 && Math.abs(last.left - first.left) < 4)
+        flow.push((g.className || g.tagName) + ' 마지막 칸이 1열·트랙폭으로 밀려남 ('
+                  + Math.round(last.width) + 'px, 명시 배치 뒤 자동배치)');
     }
+    if (flow.length > 5) break;
   }
 
   // 접힌 표에서 셀 안 grid 아이템이 셋 이상이면 값이 라벨 열로 떨어진다 (spec 함정 12 · RUN33 재발)
@@ -187,7 +229,11 @@ const PROBE = `(() => {
   }
 
   // 판형·호흡이 이 폭에서도 살아 있는가 (RUN33 — 데스크톱만 갈라 놓으면 무효다)
-  const sheets = [...document.querySelectorAll('[class*="sheet"]')]
+  // 컨테이너를 클래스 이름으로 찾으면 안 된다 — RUN34 는 .slab 이라 놓쳤다.
+  // 성질로 찾는다: max-width 가 있고 좌우 margin 이 auto 인 블록
+  const sheets = [...document.querySelectorAll('section > *')]
+    .filter(e => { const c = getComputedStyle(e);
+      return c.maxWidth !== 'none' && c.marginLeft === c.marginRight && parseInt(c.paddingLeft) >= 0; })
     .map(e => { const c = getComputedStyle(e); return c.paddingLeft + '|' + c.paddingRight; });
   const secs = [...document.querySelectorAll('section')]
     .map(e => { const c = getComputedStyle(e); return parseInt(c.paddingTop) + '/' + parseInt(c.paddingBottom); });
@@ -202,7 +248,7 @@ const PROBE = `(() => {
     docH: document.body.scrollHeight,
     overflowCount: bad.length, overflowBad: bad.slice(0, 12),
     farFootnotes: fn, gridSkew: skew.slice(0, 8), trackMismatch: track.slice(0, 6),
-    foldedCells: cells, svgIssues: svgBad.slice(0, 6), rhythm, rhythmWarn }, null, 1);
+    foldedCells: cells, svgIssues: svgBad.slice(0, 6), gridFlow: flow.slice(0, 5), rhythm, rhythmWarn }, null, 1);
 })()`;
 
 try {
@@ -227,18 +273,27 @@ try {
       const p = await conn.send('Runtime.evaluate', { expression: PROBE, returnByValue: true });
       console.log(`\n── ${w}px ──`);
       console.log(p.result.value);
+      const onLen = await conn.send('Runtime.evaluate', {
+        expression: 'document.body.innerText.length', returnByValue: true });
+      const onText = Number(onLen.result.value) || 0;
       // 스크립트를 끄고 한 번 더 — 리빌이 .rise{opacity:0} 인 채로 남으면 지면이 백지가 된다
       await conn.send('Emulation.setScriptExecutionDisabled', { value: true });
       await conn.send('Page.navigate', { url });
       await sleep(2200);
       const n = await conn.send('Runtime.evaluate', {
-        expression: `(()=>{let hid=0,tot=0;
+        expression: `(()=>{let hid=0;
           for(const e of document.querySelectorAll('*')){const s=getComputedStyle(e);
-            if(s.opacity==='0'&&e.getBoundingClientRect().height>0)hid++;tot++}
-          return JSON.stringify({noJS:{숨은요소:hid,전체:tot,
-            판정:hid>3?'⚠ 스크립트를 끄면 내용이 사라진다':'OK'}})})()`,
-        returnByValue: true, awaitPromise: false });
-      console.log(' ' + n.result.value);
+            if(s.opacity==='0'&&e.getBoundingClientRect().height>0)hid++}
+          return JSON.stringify({hidden:hid, textLen:document.body.innerText.length})})()`,
+        returnByValue: true });
+      const off = JSON.parse(n.result.value);
+      // 보이는 텍스트 길이를 JS 켠 것과 비교한다. opacity 개수만 세면
+      // 「JS 가 만들어 넣는 내용이 애초에 마크업에 없는 것」을 원리적으로 못 잡는다 (RUN34 D2)
+      const ratio = onText ? off.textLen / onText : 1;
+      console.log(' ' + JSON.stringify({ noJS: {
+        숨은요소: off.hidden, 텍스트: off.textLen + '/' + onText + ' = ' + (ratio * 100).toFixed(0) + '%',
+        판정: (off.hidden > 3 || ratio < 0.9)
+          ? '⚠ 스크립트를 끄면 내용이 사라진다' : 'OK' } }));
       await conn.send('Emulation.setScriptExecutionDisabled', { value: false });
       continue;
     }
