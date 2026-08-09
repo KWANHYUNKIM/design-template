@@ -11,8 +11,8 @@
 
   /* 낮 — 콘크리트. 순백 금지 */
   --paper:#e5e2da;
-  --ink:#0b0b0c;
-  --fg:#141416;
+  --ink:#0b0b0c;    /* on --paper = 15.2:1 (실측) */
+  --fg:#141416;     /* on --paper = 14.2:1 (실측) */
   --body:#3c3d40;   /* on --paper = 8.4:1 (실측) */
   --mut:#5f6165;    /* on --paper = 4.8:1 (실측) */
   --line:#0b0b0c;
@@ -34,8 +34,8 @@
 }
 html[data-t="night"]{
   --paper:#08090a;
-  --ink:#f2efe8;
-  --fg:#f2efe8;
+  --ink:#f2efe8;    /* on --paper = 17.4:1 (실측) */
+  --fg:#f2efe8;     /* on --paper = 17.4:1 (실측) */
   --body:#b9b6ae;   /* on --paper = 9.8:1 (실측) */
   --mut:#83817b;    /* on --paper = 5.1:1 (실측) */
   --line:#3a3d40;
@@ -102,7 +102,9 @@ html[data-t="night"] .word i{-webkit-text-stroke-color:var(--k)}
 .facts .l{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s2)}
 
 /* ───────── 3 · 벽면 ───────── */
-.wall{border-bottom:var(--b) solid var(--line);padding-top:var(--s9);padding-bottom:var(--s9)}
+/* 섹션 호흡을 일부러 어긋나게 둔다 — 전부 같은 상하 패딩이면 리듬이 기계가 된다.
+   벽면은 넓게 열고, 공정은 위를 조여 사진이 앞 섹션을 밀고 들어오게, 닫는 섹션은 가장 크게 */
+.wall{border-bottom:var(--b) solid var(--line);padding-top:var(--s10);padding-bottom:var(--s8)}
 .wtop{display:grid;grid-template-columns:1fr;gap:var(--s5);align-items:end}
 .wtop>*{min-width:0}
 .wall h2{font-size:var(--t-2xl);font-weight:900;letter-spacing:-.045em;line-height:1.06;max-width:16ch}
@@ -116,13 +118,15 @@ html[data-t="night"] .picks button[aria-pressed="true"]{background:var(--k);colo
 .picks .cnt{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);align-self:center;margin-left:var(--s2)}
 
 .rack{margin-top:var(--s6);border:var(--b) solid var(--line);background:var(--sink);
-  min-height:300px;padding:var(--s5);display:flex;gap:var(--s4);align-items:flex-end;
+  min-height:300px;padding:var(--s5);display:flex;gap:var(--s4);align-items:stretch;
   flex-wrap:wrap;position:relative}
 .rack .empty{font-family:var(--mono);font-size:var(--t-sm);color:var(--mut);margin:auto}
-.sign{border:var(--b) solid var(--line);padding:var(--s4) var(--s5);background:var(--panel);
-  flex:1 1 200px;min-width:0}
-.sign .face{font-size:var(--t-xl);font-weight:900;letter-spacing:-.05em;line-height:1;color:var(--ink)}
-.sign .tag{font-family:var(--mono);font-size:var(--t-xs);color:var(--body);margin-top:var(--s3)}
+/* 걸린 판은 벽 높이를 채운다 — 위가 비면 벽이 아니라 빈 상자로 읽힌다 */
+.sign{border:var(--b) solid var(--line);padding:var(--s5);background:var(--panel);
+  flex:1 1 200px;min-width:0;display:flex;flex-direction:column}
+.sign .face{font-size:clamp(var(--t-2xl),5vw,var(--t-d1));font-weight:900;letter-spacing:-.06em;
+  line-height:.95;color:var(--ink)}
+.sign .tag{font-family:var(--mono);font-size:var(--t-xs);color:var(--body);margin-top:auto;padding-top:var(--s5)}
 .sign .dist{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s1)}
 /* 발광 유형 — 낮에는 재질만 다르고, 밤에는 켜진 것만 읽힌다 */
 .sign[data-lit="1"] .face{color:var(--ink)}
@@ -144,7 +148,7 @@ tr:last-child td{border-bottom:0}
 .tblwrap .none{padding:var(--s5);font-family:var(--mono);font-size:var(--t-sm);color:var(--mut)}
 
 /* ───────── 4 · 공정 ───────── */
-.made{border-bottom:var(--b) solid var(--line);padding-top:var(--s9);padding-bottom:var(--s9)}
+.made{border-bottom:var(--b) solid var(--line);padding-top:var(--s7);padding-bottom:var(--s10)}
 .made h2{font-size:var(--t-2xl);font-weight:900;letter-spacing:-.045em;max-width:18ch}
 .mgrid{display:grid;grid-template-columns:1fr;gap:var(--s6);margin-top:var(--s7)}
 .mgrid>*{min-width:0}
@@ -165,7 +169,7 @@ html[data-t="day"] .mfig .n{color:var(--ink)}
 .steps .tx span{font-size:var(--t-sm);color:var(--body)}
 
 /* ───────── 5 · 남이 한 말 ───────── */
-.said{border-bottom:var(--b) solid var(--line);padding-top:var(--s9);padding-bottom:var(--s9)}
+.said{border-bottom:var(--b) solid var(--line);padding-top:var(--s10);padding-bottom:var(--s7)}
 .sbar{display:flex;flex-wrap:wrap;gap:var(--s7);align-items:baseline;
   border-bottom:var(--b) solid var(--line);padding-bottom:var(--s5)}
 .sbar .big{font-size:var(--t-4xl);font-weight:900;letter-spacing:-.05em;line-height:1;white-space:nowrap}
@@ -185,7 +189,7 @@ html[data-t="day"] .mfig .n{color:var(--ink)}
 .creds li b{color:var(--fg);font-weight:800}
 
 /* ───────── 6 · 닫는 방식 : 우리가 만들지 않는 것 ───────── */
-.no{padding-top:var(--s9);padding-bottom:var(--s9)}
+.no{padding-top:var(--s10);padding-bottom:var(--s10)}
 .no h2{font-size:clamp(var(--t-2xl),7vw,var(--t-d1));font-weight:900;letter-spacing:-.055em;
   line-height:.98;max-width:14ch}
 .no .lead{font-size:var(--t-base);color:var(--body);max-width:46ch;margin-top:var(--s5)}
