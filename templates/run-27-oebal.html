@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko" data-j="oebal"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>외발 — 한지 제지소 조사 기록</title>
+<meta name="description" content="닥 껍질에서 종이가 되기까지. 외발뜨기로 뜬 한지의 지종별 제원과 조판 기록. 종이를 고르면 이 지면이 그 종이가 됩니다.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap">
+<style>
+:root{
+  --serif:'Nanum Myeongjo',Batang,'Times New Roman',serif;
+  --sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+
+  /* 기본 지종 = 외발지. 아래 [data-j] 가 지종마다 이 값들을 바꾼다 */
+  --paper:#efe9dc;
+  --ink:#1a1712;   /* on --paper = 14.8:1 (실측) */
+  --fg:#1a1712;    /* on --paper = 14.8:1 (실측) */
+  --body:#3d362b;  /* on --paper = 9.9:1 (실측) */
+  --mut:#6b6154;   /* on --paper = 5.0:1 (실측) */
+  --k:#a8321e;     /* 인주 — on --paper = 5.5:1 (실측) */
+  --rule:#c9c0ad;
+  --tint:#e6dfd0;
+
+  /* 지질이 조판을 바꾼다 — 얇고 잘 번지는 종이일수록 행간을 넓혀야 읽힌다 */
+  --lh:1.85;
+  --tr:.005em;
+  --hair:1px;
+
+  /* 타입 스케일 — 모듈러 1.25배(base 17). 본문 조판을 먼저 확정하고 나머지를 붙였다 */
+  --t-xs:12px;--t-sm:14px;--t-base:17px;--t-md:21px;--t-lg:26px;--t-xl:33px;
+  --t-2xl:41px;--t-3xl:51px;--t-4xl:64px;--t-d1:80px;--t-d2:100px;
+
+  /* 간격 스케일 — 4배수 */
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;
+  --s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+}
+/* ── 지종 4종 ── 바탕·먹색만이 아니라 행간·자간·괘선까지 함께 바뀐다 */
+html[data-j="chobae"]{ --paper:#f4f1e8;--ink:#25201a;--fg:#25201a;--body:#4a4237;--mut:#756b5c;
+  --rule:#d6cfbe;--tint:#ece7da;--lh:1.98;--tr:.012em;--hair:1px }
+html[data-j="oebal"] { --paper:#efe9dc;--ink:#1a1712;--fg:#1a1712;--body:#3d362b;--mut:#6b6154;
+  --rule:#c9c0ad;--tint:#e6dfd0;--lh:1.85;--tr:.005em;--hair:1px }
+html[data-j="jangji"]{ --paper:#e9e1cd;--ink:#141109;--fg:#141109;--body:#332c1e;--mut:#615746;
+  --rule:#bdb298;--tint:#dfd6bf;--lh:1.72;--tr:0em;--hair:2px }
+html[data-j="gakji"] { --paper:#e4dcc6;--ink:#0e0b05;--fg:#0e0b05;--body:#2b2416;--mut:#59503c;
+  --rule:#b3a689;--tint:#d9cfb5;--lh:1.64;--tr:-.004em;--hair:2px }
+
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--body);
+  font-family:var(--serif);font-size:var(--t-base);line-height:var(--lh);letter-spacing:var(--tr);
+  -webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3,p,ul,ol,figure,table,blockquote{margin:0}
+ul{padding:0;list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+.wrap{max-width:1180px;margin:0 auto;padding-left:var(--s5);padding-right:var(--s5)}
+/* 본문 조판을 먼저 확정했다 — 행장 45~72자, 행간은 지종이 정한다 */
+.p{font-size:var(--t-base);line-height:var(--lh);color:var(--body);max-width:68ch}
+.p + .p{margin-top:var(--s5)}
+.lbl{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.rise{opacity:0;transform:translateY(12px)}
+.rise.vis{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease}
+figure figcaption{font-family:var(--sans);font-size:var(--t-sm);line-height:1.6;color:var(--mut);
+  margin-top:var(--s3);max-width:52ch;letter-spacing:0}
+figure figcaption b{color:var(--body);font-weight:600}
+
+/* ── 1 · 표제부 ── 얇게 시작한다 */
+.masthead{border-bottom:var(--hair) solid var(--ink);padding-top:var(--s6);padding-bottom:var(--s4)}
+.mrow{display:flex;flex-wrap:wrap;gap:var(--s4) var(--s6);align-items:baseline}
+.mrow .ttl{font-size:var(--t-md);font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+.mrow .sp{flex:1}
+.mrow .iss{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.06em}
+
+/* ── 2 · 서문 ── 크게 연다 */
+.open{padding-top:var(--s10);padding-bottom:var(--s7)}
+.open h1{font-family:var(--serif);font-size:clamp(var(--t-2xl),6.5vw,var(--t-d1));font-weight:800;
+  line-height:1.18;letter-spacing:-.03em;color:var(--ink);max-width:19ch}
+.open h1 em{font-style:normal;color:var(--k)}
+.ogrid{display:grid;grid-template-columns:1fr;gap:var(--s7);margin-top:var(--s7);align-items:start}
+.ogrid>*{min-width:0}
+/* 드롭캡 — 편집 지면의 시작을 표시한다 */
+.drop::first-letter{float:left;font-size:calc(var(--t-base) * 3.6);line-height:.82;font-weight:800;
+  color:var(--k);padding-right:var(--s3);padding-top:var(--s1)}
+.ofig img{width:100%;height:340px;object-fit:cover;
+  background:linear-gradient(140deg,#cfc6ae,#7d735c)}
+
+/* ── 3 · 지종 고르기 ── 위를 조이고 아래를 비운다 */
+.pick{border-top:var(--hair) solid var(--rule);padding-top:var(--s7);padding-bottom:var(--s10)}
+.pick h2{font-size:var(--t-xl);font-weight:800;color:var(--ink);letter-spacing:-.025em;
+  line-height:1.3;max-width:22ch;margin-top:var(--s3)}
+.pick .intro{margin-top:var(--s5)}
+.tabs{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s6);
+  border-bottom:var(--hair) solid var(--rule);padding-bottom:var(--s4)}
+.tabs button{font-family:var(--sans);font-size:var(--t-sm);font-weight:600;color:var(--mut);
+  padding:var(--s2) var(--s4);border:var(--hair) solid var(--rule);letter-spacing:0}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tabs .hint{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);align-self:center;margin-left:var(--s3)}
+
+.spec{display:grid;grid-template-columns:1fr;gap:var(--s7);margin-top:var(--s7);align-items:start}
+.spec>*{min-width:0}
+.swatch img{width:100%;height:300px;object-fit:cover;background:var(--tint)}
+/* 같은 문단이 지종에 따라 다시 조판된다 — 바탕색만 바뀌는 게 아니다 */
+.setblock{border-left:3px solid var(--k);padding-left:var(--s5);background:var(--tint);
+  padding-top:var(--s5);padding-bottom:var(--s5);padding-right:var(--s5)}
+.setblock .t{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.08em;
+  text-transform:uppercase}
+.setblock p{font-size:var(--t-base);line-height:var(--lh);letter-spacing:var(--tr);
+  color:var(--body);margin-top:var(--s4);max-width:44ch}
+.setblock .meta{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s5);
+  border-top:var(--hair) solid var(--rule);padding-top:var(--s3);line-height:1.9}
+
+.tbl{margin-top:var(--s8);overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:660px}
+caption{font-family:var(--sans);font-size:var(--t-sm);color:var(--mut);text-align:left;
+  padding-bottom:var(--s3);letter-spacing:0}
+th,td{text-align:left;padding:var(--s3) var(--s4);border-bottom:var(--hair) solid var(--rule);
+  font-family:var(--sans);font-size:var(--t-sm);color:var(--body);letter-spacing:0}
+th{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--mut);border-bottom:2px solid var(--ink)}
+td b{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+tr[data-on="1"] td{background:var(--tint)}
+tr:last-child td{border-bottom:0}
+
+/* ── 4 · 구술 ── 넓게 열고 좁게 닫는다 */
+.talk{border-top:var(--hair) solid var(--rule);padding-top:var(--s9);padding-bottom:var(--s5)}
+.tgrid{display:grid;grid-template-columns:1fr;gap:var(--s7);margin-top:var(--s6)}
+.tgrid>*{min-width:0}
+.tfig img{width:100%;height:400px;object-fit:cover;background:linear-gradient(140deg,#b8ae95,#4a4335)}
+.pull{font-size:var(--t-lg);line-height:1.55;font-weight:700;color:var(--ink);
+  border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);
+  padding-top:var(--s5);padding-bottom:var(--s5);max-width:24ch;quotes:none}
+.qa{margin-top:var(--s6)}
+.qa dt{font-family:var(--sans);font-size:var(--t-sm);font-weight:700;color:var(--mut);
+  letter-spacing:0;margin-top:var(--s5)}
+.qa dd{margin:var(--s2) 0 0;font-size:var(--t-base);line-height:var(--lh);color:var(--body);max-width:62ch}
+.fn{font-family:var(--sans);font-size:var(--t-xs);vertical-align:super;color:var(--k);letter-spacing:0}
+.notes{margin-top:var(--s7);border-top:var(--hair) solid var(--rule);padding-top:var(--s4)}
+.notes li{font-family:var(--sans);font-size:var(--t-sm);line-height:1.7;color:var(--mut);
+  margin-top:var(--s2);max-width:64ch;letter-spacing:0}
+.notes li b{color:var(--body);font-weight:600}
+
+/* ── 5 · 공정 ── 좁게 열고 넓게 닫는다 */
+.made{padding-top:var(--s5);padding-bottom:var(--s9)}
+.mgrid{display:grid;grid-template-columns:1fr;gap:var(--s7);margin-top:var(--s6);align-items:start}
+.mgrid>*{min-width:0}
+.mfig img{width:100%;height:320px;object-fit:cover;background:linear-gradient(140deg,#c3b79b,#6a6049)}
+.steps li{border-top:var(--hair) solid var(--rule);padding-top:var(--s4);padding-bottom:var(--s4);
+  display:grid;grid-template-columns:auto 1fr;gap:var(--s5)}
+.steps li>*{min-width:0}
+.steps .n{font-family:var(--mono);font-size:var(--t-xs);color:var(--k);padding-top:6px}
+.steps b{display:block;font-size:var(--t-md);font-weight:700;color:var(--ink);line-height:1.4}
+.steps span.d{display:block;font-size:var(--t-base);line-height:var(--lh);color:var(--body);
+  margin-top:var(--s2);max-width:56ch}
+
+/* ── 6 · 쓰임 ── */
+.use{border-top:var(--hair) solid var(--rule);padding-top:var(--s8);padding-bottom:var(--s6)}
+.ufig img{width:100%;height:420px;object-fit:cover;background:linear-gradient(140deg,#ddd5c0,#3b352a)}
+.use .p{margin-top:var(--s6)}
+/* 인용 — 지면에서 남의 말은 조판을 달리해 구분한다 */
+.cites{margin-top:var(--s8);border-top:var(--hair) solid var(--rule);padding-top:var(--s5)}
+.cites blockquote{margin-top:var(--s6);display:grid;grid-template-columns:1fr;gap:var(--s3)}
+.cites blockquote>*{min-width:0}
+.cites blockquote p{font-size:var(--t-md);line-height:1.62;color:var(--ink);max-width:46ch;
+  text-indent:-.4em}
+.cites blockquote p::before{content:'“'}
+.cites blockquote p::after{content:'”'}
+.cites cite{font-family:var(--sans);font-style:normal;font-size:var(--t-sm);color:var(--mut);
+  letter-spacing:0;line-height:1.6}
+.cites cite b{color:var(--body);font-weight:700}
+.cites .src{font-family:var(--sans);font-size:var(--t-xs);color:var(--mut);letter-spacing:0;
+  margin-top:var(--s6);border-top:var(--hair) solid var(--rule);padding-top:var(--s3);max-width:60ch}
+@media(min-width:820px){ .cites blockquote{grid-template-columns:1.5fr .9fr;gap:var(--s7);align-items:baseline} }
+
+/* ── 7 · 판권 ── 큰 전환 블록 없이 판권으로 닫는다 */
+.colophon{border-top:2px solid var(--ink);padding-top:var(--s10);padding-bottom:var(--s10)}
+.colophon h2{font-size:var(--t-md);font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.cgrid{display:grid;grid-template-columns:1fr;gap:var(--s6);margin-top:var(--s6)}
+.cgrid>*{min-width:0}
+.cgrid dl{margin:0}
+.cgrid dt{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--mut);margin-top:var(--s4)}
+.cgrid dd{margin:var(--s1) 0 0;font-size:var(--t-base);color:var(--body);line-height:1.6}
+.cgrid dd b{color:var(--ink);font-weight:700}
+.seal{font-family:var(--serif);font-size:var(--t-lg);font-weight:800;color:var(--paper);
+  background:var(--k);width:88px;height:88px;display:flex;align-items:center;justify-content:center;
+  line-height:1.1;text-align:center}
+
+@media(min-width:820px){
+  .ogrid{grid-template-columns:1.15fr .85fr;gap:var(--s8)}
+  .spec{grid-template-columns:.8fr 1.2fr;gap:var(--s8)}
+  .tgrid{grid-template-columns:.9fr 1.1fr;gap:var(--s8)}
+  .mgrid{grid-template-columns:1.1fr .9fr;gap:var(--s8)}
+  .cgrid{grid-template-columns:1fr 1fr auto;gap:var(--s8)}
+  .open{padding-top:var(--s10);padding-bottom:var(--s8)}
+}
+/* 900px 이하 — 표를 세워 쌓는다. 익명 테이블 박스의 min-content가 남지 않게 tr·td까지 내린다 */
+@media(max-width:900px){
+  table{min-width:0;display:block}
+  thead{display:none}
+  tbody,tr,td{display:block;width:100%}
+  tr{border-bottom:2px solid var(--ink);padding-top:var(--s3);padding-bottom:var(--s3)}
+  tr:last-child{border-bottom:0}
+  td{border-bottom:0;padding-left:0;padding-right:0;display:flex;gap:var(--s4);justify-content:space-between}
+  td::before{content:attr(data-h);font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);
+    text-transform:uppercase;letter-spacing:.06em;flex:0 0 auto}
+  .pull{max-width:none}
+}
+@media(prefers-reduced-motion:reduce){ .rise{opacity:1;transform:none;transition:none} }
+html.capture .rise{opacity:1;transform:none;transition:none}
+</style></head><body>
+
+<!-- 1 · 표제부 -->
+<header class="masthead wrap">
+  <div class="mrow">
+    <span class="ttl">외발</span>
+    <span class="lbl">한지 제지소 · 조사 기록</span>
+    <span class="sp"></span>
+    <span class="iss">제7호 · 2026 봄 · 전북 임실</span>
+  </div>
+</header>
+
+<!-- 2 · 서문 -->
+<section class="open wrap">
+  <p class="lbl">서문</p>
+  <h1>닥 껍질이 종이가 되는 데 <em>여든여덟 번</em>의 손이 갑니다.</h1>
+  <div class="ogrid">
+    <div>
+      <p class="p drop">우리는 종이를 판다고 말하지 않습니다. 한 해 동안 무엇을 얼마나 떴는지를 적어 두고,
+        그 기록을 보고 찾아오는 분들과 일합니다. 이 지면은 그 기록의 일부입니다.
+        지난해 우리 발틀에서 나온 종이는 넉 장 중 한 장이 도련 과정에서 되돌아갔습니다.
+        되돌아간 것도 함께 적었습니다.</p>
+      <p class="p">종이는 고르는 물건이 아니라 <b>맞추는 물건</b>에 가깝습니다.
+        같은 먹, 같은 붓이라도 종이가 바뀌면 획이 달라지고, 획이 달라지면 지면의 행간도 달라져야 합니다.
+        아래에서 지종을 하나 고르시면 <b>이 지면 전체가 그 종이의 조판 규칙으로 다시 짜입니다</b>.
+        바탕색만 바뀌는 것이 아니라 행간과 자간, 괘선의 굵기가 함께 움직입니다.</p>
+    </div>
+    <figure class="ofig rise">
+      <img src="https://images.unsplash.com/photo-1694575255502-073e75d39826?w=1100&q=82&auto=format&fit=crop"
+           alt="발틀을 물에 담가 종이를 뜨는 장인의 손" loading="lazy"
+           onerror="this.style.background='linear-gradient(140deg,#cfc6ae,#7d735c)';this.removeAttribute('src')">
+      <figcaption><b>초지(抄紙).</b> 닥죽을 푼 물에 발틀을 담가 앞뒤·좌우로 흔들어 섬유를 걸러 올립니다.
+        한 장을 뜨는 데 걸리는 시간은 열두 초 남짓이고, 이 열두 초가 종이의 결을 정합니다.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 3 · 지종 고르기 -->
+<section class="pick wrap">
+  <p class="lbl">지종</p>
+  <h2>종이를 고르면 이 지면이 그 종이가 됩니다</h2>
+  <p class="p intro">아래 넷은 지난해 우리가 실제로 뜬 지종입니다. 하나를 누르시면 바탕과 먹색,
+    그리고 <b>본문 행간·자간·괘선 굵기</b>가 그 지종의 조판 규칙으로 바뀝니다.
+    얇고 잘 번지는 종이일수록 행간을 넓혀야 글자가 서로를 침범하지 않기 때문입니다.</p>
+
+  <div class="tabs" id="tabs" role="tablist" aria-label="지종 고르기"></div>
+
+  <div class="spec">
+    <figure class="swatch">
+      <img id="sw" src="https://images.unsplash.com/photo-1686806372892-6a18b402bcef?w=900&q=82&auto=format&fit=crop"
+           alt="외발지 표면 견본" loading="lazy"
+           onerror="this.style.background='#e6dfd0';this.removeAttribute('src')">
+      <figcaption id="swcap"><b>외발지 견본.</b> 외발뜨기로 뜬 면. 섬유가 한 방향으로 눕지 않아
+        가로세로 인장이 고릅니다.</figcaption>
+    </figure>
+    <div class="setblock">
+      <div class="t">같은 문단 · 이 지종의 조판</div>
+      <p id="setp">먹을 올리면 종이가 먼저 말을 합니다. 닥 섬유가 길게 얽힌 자리에서는 획이 버티고,
+        짧게 끊긴 자리에서는 먹이 옆으로 눕습니다. 그래서 조판은 활자보다 종이에서 시작합니다.</p>
+      <div class="meta" id="setmeta"></div>
+    </div>
+  </div>
+
+  <div class="tbl">
+    <table>
+      <caption>지종별 제원 — 2026년 3월 실측. 번짐은 한지먹 3배 희석·붓 세필 기준입니다.</caption>
+      <thead><tr><th>지종</th><th>평량</th><th>먹 번짐</th><th>권장 행간</th><th>보존 연한</th><th>지난해 초지</th></tr></thead>
+      <tbody id="tb"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 4 · 구술 -->
+<section class="talk wrap">
+  <p class="lbl">구술</p>
+  <div class="tgrid">
+    <figure class="tfig rise">
+      <img src="https://images.unsplash.com/photo-1621383655480-15ca7cf2104f?w=1000&q=82&auto=format&fit=crop"
+           alt="발에서 갓 뜬 젖은 종이를 떼어내는 작업" loading="lazy"
+           onerror="this.style.background='linear-gradient(140deg,#b8ae95,#4a4335)';this.removeAttribute('src')">
+      <figcaption><b>습지 분리.</b> 갓 뜬 종이는 물을 머금어 제 무게로 찢어집니다.
+        발에서 떼어 겹쳐 쌓을 때 손끝의 각도가 어긋나면 그 장은 그대로 버립니다.</figcaption>
+    </figure>
+    <div>
+      <blockquote class="pull">"좋은 종이는 오래 가는 종이가 아니라, 오래 갈 이유가 있는 종이입니다."</blockquote>
+      <dl class="qa">
+        <dt>— 넉 장 중 한 장을 버린다고 들었습니다.</dt>
+        <dd>도련<span class="fn">1</span>에서 걸립니다. 두께가 0.02밀리만 흔들려도 표구할 때 배접지와 붙는 힘이
+          달라져요. 그건 십 년 뒤에 들뜹니다. 지금 버리는 게 싼 겁니다.</dd>
+        <dt>— 기계로 뜨면 균일하지 않습니까.</dt>
+        <dd>균일합니다. 대신 섬유가 한 방향으로 눕습니다. 가로로는 잘 찢어지고 세로로는 안 찢어지는 종이가 되죠.
+          외발뜨기<span class="fn">2</span>는 발을 앞뒤로도 좌우로도 흔들기 때문에 섬유가 그물처럼 얽힙니다.
+          천년지라는 말이 여기서 나옵니다.</dd>
+        <dt>— 지난해 가장 어려웠던 주문은요.</dt>
+        <dd>문화재 수리용 초배지였습니다. 평량 23그램에 맞추면서 얼룩이 없어야 했는데,
+          닥을 삶는 잿물 농도를 세 번 다시 잡았습니다. 마흔두 장 납품하는 데 백열여섯 장을 떴습니다.</dd>
+      </dl>
+      <ul class="notes">
+        <li><b>1 도련(搗鍊)</b> — 마른 종이를 여러 장 겹쳐 다듬잇방망이로 두드려 표면을 다지는 공정.
+          두드릴수록 조직이 치밀해져 먹 번짐이 줄고 광택이 생깁니다.</li>
+        <li><b>2 외발뜨기</b> — 발틀을 끈에 매달아 한 손으로 흔들며 뜨는 한국 고유의 초지법.
+          물살을 앞뒤·좌우 양방향으로 주어 섬유를 교차시킵니다.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · 공정 -->
+<section class="made wrap">
+  <div class="mgrid">
+    <div>
+      <p class="lbl">공정</p>
+      <ol class="steps" style="margin-top:var(--s5)">
+        <li><span class="n">01</span><span><b>수확과 껍질 벗기기</b><span class="d">겨울에 벤 한 해 자란 닥을 쪄서 겉껍질을 벗깁니다. 겉껍질을 남기면 그 자리가 누렇게 뜹니다.</span></span></li>
+        <li><span class="n">02</span><span><b>잿물 삶기</b><span class="d">메밀대·콩대를 태운 잿물에 삶습니다. 화학 표백을 쓰지 않는 이유는 섬유가 끊기기 때문입니다.</span></span></li>
+        <li><span class="n">03</span><span><b>티 고르기</b><span class="d">삶은 껍질에서 검은 점을 손으로 골라냅니다. 한 사람이 하루에 고르는 양이 종이 예순 장 분량입니다.</span></span></li>
+        <li><span class="n">04</span><span><b>고해와 닥풀</b><span class="d">두드려 섬유를 풀고 황촉규 뿌리 즙을 섞습니다. 섬유가 물에 고르게 뜨게 하는 역할입니다.</span></span></li>
+        <li><span class="n">05</span><span><b>초지</b><span class="d">발틀을 흔들어 뜹니다. 이 공정만 사람이 바뀌면 결과가 바뀝니다.</span></span></li>
+        <li><span class="n">06</span><span><b>건조와 도련</b><span class="d">온돌에 붙여 말린 뒤 겹쳐 두드립니다. 도련 횟수가 지종을 가릅니다.</span></span></li>
+      </ol>
+    </div>
+    <figure class="mfig rise">
+      <img src="https://images.unsplash.com/photo-1710946539093-c9050ab54417?w=900&q=82&auto=format&fit=crop"
+           alt="벗겨져 말라가는 나무껍질의 결" loading="lazy"
+           onerror="this.style.background='linear-gradient(140deg,#c3b79b,#6a6049)';this.removeAttribute('src')">
+      <figcaption><b>닥 껍질.</b> 벗겨 말린 백피. 이 상태에서 섬유 길이가 길수록 종이가 질겨집니다.
+        한 해 자란 닥의 섬유가 가장 길고, 두 해를 넘기면 굵어지되 짧아집니다.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 6 · 쓰임 -->
+<section class="use wrap">
+  <p class="lbl">쓰임</p>
+  <figure class="ufig rise" style="margin-top:var(--s5)">
+    <img src="https://images.unsplash.com/photo-1765188988295-0e8a993aa7c8?w=1200&q=82&auto=format&fit=crop"
+         alt="넓게 편 종이 위에 붓으로 글씨를 쓰는 장면" loading="lazy"
+         onerror="this.style.background='linear-gradient(140deg,#ddd5c0,#3b352a)';this.removeAttribute('src')">
+    <figcaption><b>지난해 납품처.</b> 국립기관 보존처리 3곳, 서예·전각 공방 11곳, 표구사 7곳,
+      한지등 공방 2곳. 판매처를 늘리는 대신 <b>같은 곳에 오래 대는 쪽</b>을 택했습니다.</figcaption>
+  </figure>
+  <p class="p">쓰는 분이 종이를 바꾸면 우리는 그 이유를 묻습니다. 대개는 종이가 아니라 보관 환경이
+    바뀐 경우였습니다. 습도가 높은 수장고로 옮겼거나, 조명이 바뀌었거나. 그래서 납품서에는
+    지종과 함께 <b>권장 보관 조건</b>을 적어 보냅니다. 이 기록은 그 납품서에서 시작했습니다.</p>
+
+  <div class="cites">
+    <p class="lbl">쓰는 쪽에서 온 말</p>
+    <blockquote>
+      <p>배접하고 삼 년째인데 들뜬 자리가 없습니다. 초배지를 23그램에 맞춰 달라고 한 게
+        까다로운 주문인 줄 알았는데, 그 두께가 아니면 본지가 먼저 상한다는 설명을 듣고
+        오히려 배웠습니다.</p>
+      <cite><b>서정하</b> · 한국전통문화대 보존과학연구소 · 2025.11 납품 회신</cite>
+    </blockquote>
+    <blockquote>
+      <p>각지는 도련을 몇 번 쳤는지까지 적어 보내 줍니다. 그걸 적어 주는 데는 여기밖에 없어서
+        전각 수업 교재용으로 계속 씁니다.</p>
+      <cite><b>민준교</b> · 각연재 전각공방 대표 · 2026.01 재주문서</cite>
+    </blockquote>
+    <blockquote>
+      <p>습도 60% 수장고로 옮긴 뒤 다른 종이는 물결이 생겼는데 이건 그대로였습니다.
+        보관 조건을 납품서에 적어 보내는 이유를 그때 알았습니다.</p>
+      <cite><b>오세림</b> · 목포 근대역사관 학예연구사 · 2025.08 서면</cite>
+    </blockquote>
+    <p class="src">위 세 건은 납품 후 받은 서면·회신에서 당사자 동의를 얻어 옮긴 것입니다.
+      원문은 제지소 사무실에 보관합니다.</p>
+  </div>
+</section>
+
+<!-- 7 · 판권 -->
+<section class="colophon wrap">
+  <h2>판권</h2>
+  <div class="cgrid">
+    <dl>
+      <dt>제작</dt><dd><b>외발 한지</b> · 전북 임실군 신평면</dd>
+      <dt>기록</dt><dd>제7호 · 2026년 3월 조사</dd>
+      <dt>본문 조판</dt><dd>나눔명조 · 본문 <b>17px</b> · 행간은 지종이 정함</dd>
+    </dl>
+    <dl>
+      <dt>지난해 초지</dt><dd><b>4,180장</b> · 도련 반려 <b>1,045장</b>(25.0%)</dd>
+      <dt>납품</dt><dd>23곳 · 3,135장</dd>
+      <dt>문의</dt><dd>063-644-0712 · 평일 09–17시</dd>
+    </dl>
+    <div class="seal" aria-hidden="true">외발</div>
+  </div>
+</section>
+
+<script>
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+scrollTo(0,0);
+addEventListener('load',function(){scrollTo(0,0)});
+
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+/* ── 지종 4종 ── 평량이 높고 도련을 많이 할수록 번짐이 줄고, 번짐이 줄면 행간을 좁힐 수 있다 */
+var J=[
+ {id:'chobae',name:'초배지',  gsm:23,bleed:1.8,lh:'1.98',life:200, made:1160,
+  img:'photo-1601662528567-526cd06f6582',
+  cap:'<b>초배지 견본.</b> 가장 얇게 뜬 면. 빛에 비추면 발자국(발 무늬)이 그대로 보입니다.',
+  note:'문화재 배접 하지(下紙)용. 얇아 먹이 옆으로 눕기 때문에 행간을 가장 넓게 잡습니다.'},
+ {id:'oebal', name:'외발지',  gsm:38,bleed:1.2,lh:'1.85',life:800, made:1720,
+  img:'photo-1686806372892-6a18b402bcef',
+  cap:'<b>외발지 견본.</b> 외발뜨기로 뜬 면. 섬유가 한 방향으로 눕지 않아 가로세로 인장이 고릅니다.',
+  note:'서예·전각 상용지. 이 기록의 기준 지종이며 지면의 기본 조판도 여기에 맞췄습니다.'},
+ {id:'jangji',name:'장지',    gsm:62,bleed:0.7,lh:'1.72',life:900, made:880,
+  img:'photo-1659166925474-1706ba9546e4',
+  cap:'<b>장지 견본.</b> 두껍게 뜬 면. 두 겹을 붙여 뜨기 때문에 단면에 층이 보입니다.',
+  note:'표구·병풍용. 두꺼워 번짐이 적으므로 행간을 좁혀도 획이 서로를 침범하지 않습니다.'},
+ {id:'gakji', name:'각지(도침)',gsm:45,bleed:0.4,lh:'1.64',life:1000,made:420,
+  img:'photo-1706271952285-01b5e3fc2d78',
+  cap:'<b>각지 견본.</b> 도련을 40회 이상 친 면. 표면이 다져져 비스듬히 보면 광택이 돕니다.',
+  note:'서책·간찰용. 표면이 치밀해 번짐이 가장 적고, 그만큼 행간을 가장 좁게 짤 수 있습니다.'}
+];
+var cur='oebal';
+
+var tabs=document.getElementById('tabs'),
+    sw=document.getElementById('sw'), swcap=document.getElementById('swcap'),
+    setmeta=document.getElementById('setmeta'), tb=document.getElementById('tb');
+
+J.forEach(function(j){
+  var b=document.createElement('button');
+  b.type='button';b.setAttribute('role','tab');b.dataset.id=j.id;b.textContent=j.name;
+  b.addEventListener('click',function(){ cur=j.id; draw(); });
+  tabs.appendChild(b);
+});
+var hint=document.createElement('span');
+hint.className='hint';hint.textContent='누르면 지면이 바뀝니다';
+tabs.appendChild(hint);
+
+function get(id){ return J.filter(function(x){return x.id===id})[0] }
+
+function draw(){
+  var j=get(cur);
+  document.documentElement.dataset.j=j.id;
+  [].forEach.call(tabs.querySelectorAll('button'),function(b){
+    b.setAttribute('aria-selected',String(b.dataset.id===cur));
+  });
+  sw.src='https://images.unsplash.com/'+j.img+'?w=900&q=82&auto=format&fit=crop';
+  sw.alt=j.name+' 표면 견본';
+  swcap.innerHTML=j.cap;
+  setmeta.innerHTML='평량 '+j.gsm+' g/㎡ &nbsp;·&nbsp; 먹 번짐 '+j.bleed.toFixed(1)+' mm &nbsp;·&nbsp; 행간 '+j.lh+
+    '<br>'+j.note;
+  tb.innerHTML=J.map(function(x){
+    return '<tr data-on="'+(x.id===cur?1:0)+'">'+
+      '<td data-h="지종"><b>'+x.name+'</b></td>'+
+      '<td data-h="평량"><b>'+x.gsm+'</b> g/㎡</td>'+
+      '<td data-h="먹 번짐"><b>'+x.bleed.toFixed(1)+'</b> mm</td>'+
+      '<td data-h="권장 행간"><b>'+x.lh+'</b></td>'+
+      '<td data-h="보존 연한"><b>'+x.life.toLocaleString('ko-KR')+'</b> 년</td>'+
+      '<td data-h="지난해 초지"><b>'+x.made.toLocaleString('ko-KR')+'</b> 장</td></tr>';
+  }).join('');
+}
+draw();
+
+var rises=[].slice.call(document.querySelectorAll('.rise'));
+function showAll(){rises.forEach(function(el){el.classList.add('vis')})}
+if(reduce||!('IntersectionObserver' in window)){
+  showAll();
+}else{
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}});
+  },{rootMargin:'0px 0px -8% 0px'});
+  rises.forEach(function(el){io.observe(el)});
+  addEventListener('load',function(){
+    rises.forEach(function(el){ if(el.getBoundingClientRect().top < innerHeight)el.classList.add('vis') });
+  });
+}
+</script>
+</body></html>
