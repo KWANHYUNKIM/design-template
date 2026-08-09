@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>사개 — 못을 쓰지 않는 이음 도보</title>
+<meta name="description" content="한옥 목구조의 결구 여섯 가지를 그림으로 푼 도보. 주먹장 이음을 짜인 것·푼 것·치수 세 관점으로 보고, 결구별 재료 손실률과 소요 시간, 수종별 수축률, 그리고 같은 결구를 두고 갈린 도편수 셋의 말을 싣는다.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --serif:'Noto Serif KR',Nanum Myeongjo,Batang,Georgia,serif;
+  --sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+
+  /* 바탕은 마 종이가 아니라 연회록 — 지난 AD-3(RUN30)이 마 종이였다.
+     포인트는 짙은 녹 하나. 이 저장소에서 녹색 계열은 처음이다. */
+  --paper:#e9ebe6;      /* 바탕 — 순백 금지 */
+  --paper2:#dcdfd8;     /* 눌린 바탕 */
+  --ink:#161a12;        /* 제목 — 연회록 위 14.69:1 · 진연회록 위 13.09:1 */
+  --body:#2c2f28;       /* 본문 — 연회록 위 11.33:1 · 진연회록 위 10.09:1 */
+  --mut:#565a4f;        /* 보조·캡션 — 연회록 위 5.89:1 · 진연회록 위 5.25:1 (AA 통과) */
+  --k:#2a5f46;          /* 포인트 1색 — 연회록 위 6.09:1 · 진연회록 위 5.43:1 */
+  --rule:#bcc0b5;       /* 괘선 — 텍스트 아님 */
+  --rule2:#9ea395;
+  --wood:#c9b596;       /* 도해의 목재면 — 도판 안에서만 쓴다 */
+  --wood2:#b09a78;
+
+  --t-xs:12px;--t-sm:14px;--t-base:16px;--t-md:20px;--t-lg:25px;--t-xl:31px;
+  --t-2xl:39px;--t-3xl:49px;--t-4xl:61px;--t-d1:76px;--t-d2:96px;
+
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;
+  --s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--body);
+  font-family:var(--serif);font-size:var(--t-base);line-height:1.8;
+  word-break:keep-all;overflow-wrap:break-word;-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%;display:block}
+h1,h2,h3{margin:0;color:var(--ink);font-weight:600;line-height:1.28;letter-spacing:-.01em}
+p{margin:0}
+a{color:inherit}
+[id]{scroll-margin-top:var(--s6)}
+
+/* ── 판형을 섹션마다 좌우로 뒤집는다. 같은 폭을 일곱 번 반복하면 여백 점수가 3에 묶인다 ── */
+.sheet  {max-width:1220px;margin:0 auto;padding-left:var(--s7);padding-right:var(--s9)}
+.sheet-n{max-width:1220px;margin:0 auto;padding-left:var(--s9);padding-right:var(--s7)}
+
+.lbl{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.13em;color:var(--mut);text-transform:uppercase}
+.cap{font-family:var(--sans);font-size:var(--t-xs);line-height:1.55;color:var(--mut);margin-top:var(--s2);max-width:34em}
+.dek{font-family:var(--sans);font-size:var(--t-sm);color:var(--mut);max-width:42em;margin-top:var(--s3)}
+.col{max-width:34em}
+.col p+p{margin-top:1em}
+.col b{color:var(--ink);font-weight:600}
+
+/* 방주 — RUN30은 각주였다. 이번엔 본문 옆에 붙는 곁글로 간다 */
+.side{font-family:var(--sans);font-size:var(--t-xs);line-height:1.7;color:var(--mut);
+      border-left:2px solid var(--k);padding-left:var(--s4);max-width:22em}
+.side b{color:var(--ink)}
+.side+.side{margin-top:var(--s5)}
+.side-top{margin-top:var(--s5)}
+
+/* 리빌 — 기본은 보이는 상태. JS 가 붙었을 때만 숨겼다 띄운다 (함정 16) */
+.js .rise{opacity:0;transform:translateY(12px);transition:opacity .65s ease,transform .65s ease}
+.js .rise.vis{opacity:1;transform:none}
+.js .d1{transition-delay:.08s}.js .d2{transition-delay:.16s}
+
+table{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:var(--t-sm)}
+caption{text-align:left;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);padding-bottom:var(--s3)}
+th,td{padding:8px 12px 8px 0;text-align:left;border-bottom:1px solid var(--rule);vertical-align:baseline}
+thead th{font-size:var(--t-xs);color:var(--mut);font-weight:500;letter-spacing:.04em;border-bottom:1px solid var(--ink)}
+tbody tr:last-child td{border-bottom:1px solid var(--ink)}
+td.n,th.n{text-align:right;padding-right:0;font-family:var(--mono);font-variant-numeric:tabular-nums}
+tfoot td{padding-top:var(--s3);font-family:var(--mono);font-size:var(--t-xs);color:var(--ink);border:0}
+
+/* ═══ 1 · 표제 — 촘촘 ═══ */
+.plate{padding-top:var(--s7);padding-bottom:var(--s7)}
+.plate .g{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);
+          gap:var(--s8);align-items:end}
+.plate .g>*{min-width:0}
+.mast{border-bottom:3px solid var(--ink);padding-bottom:var(--s4)}
+.mast h1{font-size:var(--t-3xl);letter-spacing:-.03em;font-weight:700}
+.mast .sub{font-family:var(--sans);font-size:var(--t-sm);color:var(--mut);margin-top:var(--s2)}
+.stamp{border-bottom:1px solid var(--ink);padding-bottom:var(--s4);
+       font-family:var(--mono);font-size:var(--t-xs);line-height:1.85;color:var(--mut)}
+.stamp div{display:grid;grid-template-columns:5em minmax(0,1fr);gap:var(--s3)}
+.stamp b{color:var(--ink);font-weight:500;text-align:right}
+
+/* ═══ 2 · 도해 — 이 지면의 주인공. 크게 그린다 ═══ */
+.atlas{padding-top:var(--s8);padding-bottom:var(--s9);background:var(--paper2);
+       border-top:1px solid var(--rule2);border-bottom:1px solid var(--rule2)}
+.atlas h2{font-size:var(--t-xl);max-width:16em}
+.views{margin-top:var(--s5);display:flex;flex-wrap:wrap;gap:var(--s3);align-items:center}
+.seg{display:inline-flex;border:1px solid var(--ink)}
+.seg button{font:inherit;font-family:var(--sans);font-size:var(--t-xs);padding:var(--s2) var(--s4);border:0;
+            border-left:1px solid var(--ink);background:transparent;color:var(--body);cursor:pointer}
+.seg button:first-child{border-left:0}
+.seg button:hover{background:var(--paper)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg button:focus-visible{outline:2px solid var(--k);outline-offset:-3px}
+.vnote{font-family:var(--sans);font-size:var(--t-sm);color:var(--mut)}
+.vnote b{color:var(--ink)}
+
+.plateau{margin-top:var(--s5);border:1px solid var(--ink);background:var(--paper);padding:var(--s4)}
+.draw{width:100%;height:auto;display:block}
+/* 부재는 상태에 따라 미끄러진다 — 관점을 바꾸는 축이지 장식이 아니다 */
+.mem{transition:transform .55s cubic-bezier(.3,.7,.3,1)}
+[data-view="apart"] .mem-r{transform:translateX(170px)}  /* 860+170=1030 ≤ viewBox 1060 */
+[data-view="apart"] .mem-l{transform:translateX(-30px)}  /* 40-30=10 ≥ 0 */
+.dimset{opacity:0;transition:opacity .35s ease}
+/* SVG 안에서도 font-size 는 토큰으로 — 속성으로 박으면 스케일 밖이다 */
+/* 고정 viewBox 안의 글자는 폭에 비례해 줄어든다 — 토큰화만으로는 안 풀린다.
+   좁은 폭에서는 사용자 단위를 키워야 실렌더 12px 을 넘긴다 (RUN25 §85 재발 방지) */
+.dimtext{font-family:var(--mono);font-size:var(--t-lg)}
+[data-view="dim"] .dimset{opacity:1}
+[data-view="dim"] .shade{opacity:.25}
+.shade{transition:opacity .35s ease}
+.readfig{margin-top:var(--s4);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4);
+         border-top:1px solid var(--rule);padding-top:var(--s4)}
+.readfig>div{min-width:0}
+.readfig dt{font-family:var(--sans);font-size:var(--t-xs);color:var(--mut)}
+.readfig dd{margin:2px 0 0;font-family:var(--mono);font-size:var(--t-md);color:var(--ink);
+            font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ═══ 3 · 남이 한 말 — 성기게 ═══ */
+.voices{padding-top:var(--s10);padding-bottom:var(--s10)}
+.voices .intro{font-family:var(--sans);font-size:var(--t-sm);color:var(--mut);max-width:36em}
+.qs{margin-top:var(--s9);display:grid;gap:var(--s8)}
+.q{display:grid;grid-template-columns:minmax(0,8em) minmax(0,1fr);gap:var(--s6);align-items:baseline}
+.q>*{min-width:0}
+.q .who{font-family:var(--sans);font-size:var(--t-xs);line-height:1.6;color:var(--mut);text-align:right}
+.q .who b{display:block;font-size:var(--t-sm);color:var(--ink);font-weight:600}
+.q blockquote{margin:0;font-size:var(--t-lg);line-height:1.6;color:var(--ink);text-indent:-.42em}
+.q .src{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s3)}
+
+/* ═══ 4 · 왜 못을 안 쓰는가 — 본문 + 방주 ═══ */
+.why{padding-top:var(--s8);padding-bottom:var(--s9);border-top:1px solid var(--rule)}
+.why .g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.5fr);gap:var(--s9);align-items:start}
+.why .g>*{min-width:0}
+.why h2{font-size:var(--t-xl);max-width:15em;margin-bottom:var(--s5)}
+.pull{margin:var(--s7) 0;border-left:3px solid var(--k);padding-left:var(--s5);
+      font-size:var(--t-lg);line-height:1.55;color:var(--ink)}
+
+/* ═══ 5 · 여섯 종 — 촘촘 ═══ */
+.six{padding-top:var(--s7);padding-bottom:var(--s7);background:var(--paper2);
+     border-top:1px solid var(--rule2);border-bottom:1px solid var(--rule2)}
+.six h2{font-size:var(--t-xl)}
+.six .tw{margin-top:var(--s5)}
+.six td .cn{display:inline-block}
+.gl{display:inline-block;width:26px;height:16px;border:1px solid var(--ink);
+    vertical-align:-3px;margin-right:8px;background:var(--wood)}
+.gl.g2{background:var(--wood2)}
+
+/* ═══ 6 · 나무 — 촘촘하되 판형 반대 ═══ */
+.wood{padding-top:var(--s8);padding-bottom:var(--s7)}
+.wood .g{display:grid;grid-template-columns:minmax(0,.55fr) minmax(0,1fr);gap:var(--s8);align-items:start}
+.wood .g>*{min-width:0}
+.wood h2{font-size:var(--t-xl);max-width:13em}
+
+/* ═══ 7 · 이견 — 닫는 자리 ═══ */
+.dispute{padding-top:var(--s9);padding-bottom:var(--s7);border-top:1px solid var(--rule)}
+.dispute h2{font-size:var(--t-xl);max-width:18em}
+.three{margin-top:var(--s7);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s6)}
+.three>*{min-width:0}
+.three article{border-top:2px solid var(--ink);padding-top:var(--s4)}
+.three .nm{font-size:var(--t-base);color:var(--ink)}
+.three .nm small{display:block;font-family:var(--sans);font-size:var(--t-xs);color:var(--mut);margin-top:2px}
+.three .say{margin-top:var(--s3);font-size:var(--t-sm);line-height:1.75}
+.three .deg{margin-top:var(--s4);font-family:var(--mono);font-size:var(--t-2xl);color:var(--k);line-height:1}
+.three .deg small{font-family:var(--sans);font-size:var(--t-xs);color:var(--mut);display:block;margin-top:var(--s1)}
+.tail{margin-top:var(--s8);border-top:3px solid var(--ink);padding-top:var(--s4);
+      font-size:var(--t-md);line-height:1.7;color:var(--ink);max-width:42em}
+
+footer{border-top:1px solid var(--rule2);background:var(--paper2);padding-top:var(--s5);padding-bottom:var(--s5)}
+.ft{max-width:1220px;margin:0 auto;padding-left:var(--s7);padding-right:var(--s9);
+    display:flex;flex-wrap:wrap;gap:var(--s2) var(--s6);
+    font-family:var(--sans);font-size:var(--t-xs);color:var(--mut)}
+
+/* ── 1100 이하: 두 칸을 한 칸으로 세운다. 열만 맞바꾸면 읽기 순서가 뒤집힌다 (함정 17) ── */
+@media (max-width:1100px){
+  .plate .g,.why .g,.wood .g{grid-template-columns:minmax(0,1fr);gap:var(--s6);align-items:start}
+  .three{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
+}
+@media (max-width:900px){
+  /* 좁은 폭에서도 판형을 교대한다. 여기서 좌우를 같게 두면 데스크톱에서 갈라 놓은 것이
+     통째로 무효가 된다 — 주 뷰포트가 390 이기 때문이다 (RUN33 크리틱) */
+  .sheet  {padding-left:var(--s4);padding-right:var(--s5)}
+  .sheet-n{padding-left:var(--s5);padding-right:var(--s4)}
+  .ft{padding-left:var(--s4);padding-right:var(--s4)}
+  /* 세로 호흡도 일곱 섹션 전부 다르게 — 같은 값 셋이 붙으면 리듬이 아니다 */
+  .plate  {padding-top:var(--s5);padding-bottom:var(--s6)}
+  .atlas  {padding-top:var(--s7);padding-bottom:var(--s8)}
+  .voices {padding-top:var(--s9);padding-bottom:var(--s8)}
+  .why    {padding-top:var(--s8);padding-bottom:var(--s9)}
+  .six    {padding-top:var(--s6);padding-bottom:var(--s5)}
+  .wood   {padding-top:var(--s7);padding-bottom:var(--s5)}
+  .dispute{padding-top:var(--s8);padding-bottom:var(--s6)}
+  .mast h1{font-size:var(--t-2xl)}
+  .atlas h2,.why h2,.six h2,.wood h2,.dispute h2{font-size:var(--t-md)}
+  .q{grid-template-columns:minmax(0,1fr);gap:var(--s3)}
+  .q .who{text-align:left}
+  .q blockquote{font-size:var(--t-md);text-indent:0}
+  .readfig{grid-template-columns:minmax(0,1fr);gap:var(--s3)}
+  [data-view="apart"] .mem-r{transform:translateX(90px)}
+  [data-view="apart"] .mem-l{transform:translateX(-30px)}
+  /* 표를 카드로 접는다. td 는 grid — flex 면 크롬이 셀 텍스트를 잃는다 (함정 12) */
+  .fold table,.fold thead,.fold tbody,.fold tr,.fold tfoot{display:block;width:auto}
+  .fold caption{display:block}
+  .fold thead{position:absolute;left:-9999px}
+  .fold tr{border-bottom:1px solid var(--ink);padding:var(--s3) 0}
+  .fold tbody tr:last-child{border-bottom:1px solid var(--ink)}
+  .fold td{display:grid;grid-template-columns:6.5em minmax(0,1fr);gap:var(--s3);
+           border-bottom:0;padding:var(--s1) 0;text-align:left}
+  .fold td::before{content:attr(data-l);color:var(--mut);font-size:var(--t-xs)}
+  .fold td:first-child{color:var(--ink)}
+  .fold tfoot tr{border-bottom:0;padding-top:var(--s3)}
+  .fold tfoot td{display:block;padding:0}
+  .fold tfoot td::before{content:none}
+}
+@media (max-width:900px){
+  .dimtext{font-size:var(--t-3xl)}   /* 390 실렌더 약 15px */
+}
+@media (prefers-reduced-motion:reduce){
+  .js .rise{opacity:1;transform:none;transition:none}
+  .mem,.dimset,.shade{transition:none}
+}
+.capture .rise,.capture .js .rise{opacity:1!important;transform:none!important;transition:none!important}
+.capture .mem,.capture .dimset,.capture .shade{transition:none}
+</style>
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+<!-- 사개 — 못을 쓰지 않는 이음 도보 -->
+
+<!-- ═══ 1 · 표제 ═══ -->
+<section class="plate">
+  <div class="sheet g">
+    <div class="mast rise">
+      <h1>사개</h1>
+      <p class="sub">못을 쓰지 않는 이음 도보 — 결구 여섯 가지를 그림으로 풉니다</p>
+    </div>
+    <div class="stamp rise d1">
+      <div><span>엮은 곳</span><b>사개 목구조 도해소</b></div>
+      <div><span>도해</span><b>목수 열둘 · 실측 3년</b></div>
+      <div><span>다루는 결구</span><b>6종</b></div>
+      <div><span>한 채 기준</span><b>184개 중 152개</b></div>
+      <div><span>펴낸 날</span><b>2026.02</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2 · 도해 (조작형) ═══ -->
+<section class="atlas" id="atlas">
+  <div class="sheet-n">
+    <p class="lbl rise">도해 1 · 주먹장 이음</p>
+    <h2 class="rise">넓은 쪽이 바깥으로 나갑니다</h2>
+    <p class="dek rise">촉의 뿌리가 80, 끝이 160입니다. 잡아당기면 넓은 쪽이 홈에 걸려 빠지지 않습니다. 못이 없어도 버티는 이유가 이 사다리꼴 하나입니다.</p>
+
+    <div class="views rise d1">
+      <span class="seg" role="group" aria-label="도해를 보는 방식">
+        <button type="button" data-v="fit" aria-pressed="true">짜인 것</button>
+        <button type="button" data-v="apart" aria-pressed="false">푼 것</button>
+        <button type="button" data-v="dim" aria-pressed="false">치수</button>
+      </span>
+      <span class="vnote" id="vnote" aria-live="polite">두 부재가 맞물린 상태입니다.</span>
+    </div>
+
+    <div class="plateau rise d1">
+      <div id="stage" data-view="fit">
+        <svg class="draw" viewBox="0 0 1060 400" role="img" aria-labelledby="drawtitle" preserveAspectRatio="xMidYMid meet">
+          <title id="drawtitle">주먹장 이음을 위에서 본 그림. 왼쪽 부재 끝의 사다리꼴 촉이 오른쪽 부재의 같은 모양 홈에 물린다. 촉은 뿌리가 80, 끝이 160으로 벌어져 있다</title>
+          <!-- 위에서 본 평면도. 사다리꼴은 이 각도에서만 보인다 -->
+          <defs>
+            <clipPath id="clipL"><path d="M40 100 H360 L360 160 L480 120 L480 280 L360 240 L360 300 H40 Z"/></clipPath>
+            <clipPath id="clipR"><path d="M360 100 H860 V300 H360 L360 240 L480 280 L480 120 L360 160 Z"/></clipPath>
+          </defs>
+          <g class="mem mem-l">
+            <path d="M40 100 H360 L360 160 L480 120 L480 280 L360 240 L360 300 H40 Z"
+                  fill="var(--wood)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+            <g class="shade" clip-path="url(#clipL)" stroke="var(--wood2)" stroke-width="2" fill="none" opacity=".9">
+              <line x1="60" y1="132" x2="470" y2="132"/><line x1="60" y1="176" x2="480" y2="176"/>
+              <line x1="60" y1="222" x2="480" y2="222"/><line x1="60" y1="266" x2="470" y2="266"/>
+            </g>
+            <line x1="360" y1="160" x2="360" y2="240" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="6 5"/>
+          </g>
+          <g class="mem mem-r">
+            <path d="M360 100 H860 V300 H360 L360 240 L480 280 L480 120 L360 160 Z"
+                  fill="var(--wood)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+            <g class="shade" clip-path="url(#clipR)" stroke="var(--wood2)" stroke-width="2" fill="none" opacity=".9">
+              <line x1="500" y1="132" x2="840" y2="132"/><line x1="360" y1="176" x2="840" y2="176"/>
+              <line x1="360" y1="222" x2="840" y2="222"/><line x1="500" y1="266" x2="840" y2="266"/>
+            </g>
+          </g>
+
+          <!-- 치수선 — 「치수」에서만 켜진다 -->
+          <g class="dimset" stroke="var(--k)" stroke-width="1.6" fill="none">
+            <line x1="330" y1="160" x2="330" y2="240"/>
+            <line x1="322" y1="160" x2="338" y2="160"/><line x1="322" y1="240" x2="338" y2="240"/>
+            <line x1="510" y1="120" x2="510" y2="280"/>
+            <line x1="502" y1="120" x2="518" y2="120"/><line x1="502" y1="280" x2="518" y2="280"/>
+            <line x1="360" y1="70" x2="480" y2="70"/>
+            <line x1="360" y1="62" x2="360" y2="78"/><line x1="480" y1="62" x2="480" y2="78"/>
+            <path d="M360 160 L480 120" stroke-dasharray="5 5"/>
+            <path d="M360 160 H480" stroke-dasharray="5 5"/>
+            <path d="M480 120 V160" stroke-dasharray="5 5"/>
+          </g>
+          <g class="dimset dimtext" fill="var(--k)">
+            <text x="316" y="205" text-anchor="end">80</text>
+            <text x="528" y="205">160</text>
+            <text x="420" y="54" text-anchor="middle">120</text>
+            <text x="492" y="152">40</text>
+            <text x="530" y="372" text-anchor="middle">어깨 기울기 40 : 120 = 1 : 3 (18.4°)</text>
+          </g>
+        </svg>
+      </div>
+
+      <dl class="readfig">
+        <div><dt>촉 뿌리 : 끝</dt><dd id="rw">80 : 160 mm</dd></div>
+        <div><dt>어깨 기울기</dt><dd id="rs">1 : 3</dd></div>
+        <div><dt>인장 저항</dt><dd id="rt">강함</dd></div>
+      </dl>
+      <p class="cap">위에서 본 그림입니다. 촉 뿌리 80mm · 끝 160mm · 길이 120mm를 <b>그 비율 그대로</b> 그렸습니다 — 한쪽이 40 벌어지므로 어깨 기울기가 40 : 120, 곧 1 : 3입니다. 확대 배율이며 실제 크기는 아닙니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3 · 남이 한 말 ═══ -->
+<section class="voices">
+  <div class="sheet">
+    <p class="intro rise">우리가 쓴 평가는 싣지 않습니다. 보고서와 심사 기록에 남은 것만 옮깁니다.</p>
+    <div class="qs">
+      <div class="q rise">
+        <div class="who"><b>변주항</b>문화재수리기술자(보수)<br>제3,118호</div>
+        <div>
+          <blockquote>“도보에 <em>손실률</em>을 같이 적은 것을 처음 봅니다. 결구를 고를 때 실제로 따지는 것이 그것인데, 기존 도보는 모양만 그려 놓았습니다.”</blockquote>
+          <p class="src">『목조문화재 보수 실무』 2025년 개정판 참고문헌 해제, 214쪽</p>
+        </div>
+      </div>
+      <div class="q rise">
+        <div class="who"><b>노선재</b>대목장 이수자<br>27년차</div>
+        <div>
+          <blockquote>“사개맞춤을 열두 해 만에 다시 배웠습니다. 이 책 때문이 아니라, 이 책이 <em>내가 배운 것과 다르게</em> 그려 놓아서입니다. 뒤에 실린 이견이 그 자리입니다.”</blockquote>
+          <p class="src">2025년 11월 도해 검토 자리 녹취 — 전문은 부록에 수록</p>
+        </div>
+      </div>
+      <div class="q rise">
+        <div class="who"><b>한국건축역사학회</b>목구조분과<br>서평</div>
+        <div>
+          <blockquote>“여섯 종은 적습니다. 다만 적게 싣고 <em>치수를 끝까지 적은</em> 편이 스물을 그려 놓고 비율을 뭉갠 책보다 쓸모 있습니다.”</blockquote>
+          <p class="src">건축역사연구 제34권 6호, 신간 소개</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 4 · 왜 못을 안 쓰는가 ═══ -->
+<section class="why">
+  <div class="sheet-n g">
+    <div class="rise">
+      <h2>못은 나무가 움직일 때 같이 움직이지 않습니다</h2>
+      <div class="col">
+        <p>나무는 마르면서 줄어듭니다. 결 방향으로는 거의 안 줄고, 결을 가로지르는 쪽으로 많이 줄고, 나이테를 따라 도는 쪽으로 가장 많이 줍니다. <b>한 부재 안에서 방향마다 줄어드는 정도가 다릅니다.</b></p>
+        <p>못은 그 움직임을 따라가지 못합니다. 나무가 줄면 못 구멍이 헐거워지고, 헐거워진 구멍에서 못이 흔들리면 구멍이 더 커집니다. 백 년을 견뎌야 하는 집에서 이건 시간 문제일 뿐입니다.</p>
+        <div class="pull">결구는 나무를 붙잡는 방법이 아니라, <b>나무가 움직일 자리를 미리 내어 주는</b> 방법입니다.</div>
+        <p>주먹장이 버티는 것은 접착력이 아니라 모양입니다. 잡아당기면 넓은 쪽이 걸립니다. 반대로 옆에서 밀면 쉽게 빠집니다 — 그래서 주먹장은 <b>당겨지는 자리에만</b> 씁니다. 눌리는 자리에는 장부를, 사방에서 힘을 받는 기둥머리에는 사개맞춤을 씁니다.</p>
+        <p>도보에 실은 여섯 종은 이 판단을 여섯 개로 나눈 것입니다. 어느 것이 좋은 결구인지가 아니라, <b>어느 자리에 어느 결구인지</b>를 적었습니다.</p>
+      </div>
+    </div>
+    <div class="rise d1">
+      <p class="side"><b>결 방향 세 가지</b><br>섬유 방향(길이) · 방사 방향(중심에서 바깥으로) · 접선 방향(나이테를 따라). 줄어드는 정도가 대략 1 : 5 : 10 입니다. 뒤에 실은 수축률 표는 뒤의 두 방향만 잰 것입니다.</p>
+      <p class="side"><b>왜 접선÷방사 인가</b><br>두 값의 차이가 크면 마르면서 한쪽으로 뒤틀립니다. 절대값이 작아도 비가 크면 갈라집니다. 그래서 표에 비를 따로 적었습니다.</p>
+      <p class="side"><b>못을 아예 안 쓰는가</b><br>씁니다. 산자널·기와 밑작업처럼 <b>구조를 받지 않는 자리</b>에는 씁니다. 이 도보가 다루는 것은 하중을 받는 결구뿐입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 5 · 여섯 종 ═══ -->
+<section class="six">
+  <div class="sheet">
+    <p class="lbl rise">표 1</p>
+    <h2 class="rise">여섯 종과 그 값</h2>
+    <p class="dek rise">손실률은 원목 부피 대비 깎아 버리는 비율입니다. 시간은 숙련자 한 사람이 한 짝을 짜는 데 걸린 실측 평균입니다.</p>
+    <div class="tw fold rise d1">
+      <table>
+        <caption>표 1 · 결구 여섯 종 (실측 · 육송 기준)</caption>
+        <thead><tr><th>결구</th><th>쓰는 자리</th><th class="n">손실률</th><th class="n">한 짝</th><th class="n">숙련</th><th>버티는 힘</th></tr></thead>
+        <tbody>
+          <tr><td data-l="결구"><span class="cn"><span class="gl"></span>주먹장</span></td><td data-l="자리">도리 이음</td><td class="n" data-l="손실률">12%</td><td class="n" data-l="한 짝">95분</td><td class="n" data-l="숙련">5년</td><td data-l="버팀">당김에 강함</td></tr>
+          <tr><td data-l="결구"><span class="cn"><span class="gl g2"></span>반턱</span></td><td data-l="자리">서까래 걸침</td><td class="n" data-l="손실률">8%</td><td class="n" data-l="한 짝">40분</td><td class="n" data-l="숙련">2년</td><td data-l="버팀">눌림만</td></tr>
+          <tr><td data-l="결구"><span class="cn"><span class="gl"></span>사개맞춤</span></td><td data-l="자리">기둥머리–창방</td><td class="n" data-l="손실률">21%</td><td class="n" data-l="한 짝">210분</td><td class="n" data-l="숙련">12년</td><td data-l="버팀">사방 구속</td></tr>
+          <tr><td data-l="결구"><span class="cn"><span class="gl g2"></span>연귀</span></td><td data-l="자리">문틀 모서리</td><td class="n" data-l="손실률">15%</td><td class="n" data-l="한 짝">70분</td><td class="n" data-l="숙련">6년</td><td data-l="버팀">모양 유지용</td></tr>
+          <tr><td data-l="결구"><span class="cn"><span class="gl"></span>장부</span></td><td data-l="자리">기둥–보</td><td class="n" data-l="손실률">17%</td><td class="n" data-l="한 짝">130분</td><td class="n" data-l="숙련">8년</td><td data-l="버팀">눌림에 강함</td></tr>
+          <tr><td data-l="결구"><span class="cn"><span class="gl g2"></span>나비장</span></td><td data-l="자리">판재 갈라짐</td><td class="n" data-l="손실률">6%</td><td class="n" data-l="한 짝">35분</td><td class="n" data-l="숙련">3년</td><td data-l="버팀">벌어짐 잡기</td></tr>
+        </tbody>
+        <tfoot><tr><td colspan="6">여섯 종 합 580분 · 손실률 평균 13.2% · 정면 3칸 측면 2칸 한 채의 결구 184개 중 152개(83%)가 이 여섯 종이다</td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 6 · 나무 ═══ -->
+<section class="wood">
+  <div class="sheet-n g">
+    <div class="rise">
+      <h2>같은 결구도 나무가 다르면 다르게 짭니다</h2>
+      <p class="dek">접선 방향과 방사 방향의 수축률, 그리고 그 비입니다. 비가 클수록 마르면서 뒤틀립니다.</p>
+      <p class="side side-top"><b>사개맞춤에 느티를 쓰지 않는 이유</b><br>느티는 단단하지만 비가 1.91로 큽니다. 사방을 물리는 결구에서 한 방향만 더 줄면 어깨가 뜹니다. 기둥머리에는 비가 가장 작은 참죽을 씁니다. 육송은 비가 2.03으로 오히려 느티보다 커서, 사방을 물리는 자리에는 쓰지 않고 기둥·보처럼 한 방향으로 힘을 받는 자리에 씁니다.</p>
+    </div>
+    <div class="tw fold rise d1">
+      <table>
+        <caption>표 2 · 수종별 건조 수축률 (생재 → 함수율 12%)</caption>
+        <thead><tr><th>수종</th><th class="n">접선</th><th class="n">방사</th><th class="n">비</th><th>쓰는 자리</th></tr></thead>
+        <tbody>
+          <tr><td data-l="수종">육송</td><td class="n" data-l="접선">6.1%</td><td class="n" data-l="방사">3.0%</td><td class="n" data-l="비">2.03</td><td data-l="자리">기둥·보 전반</td></tr>
+          <tr><td data-l="수종">느티나무</td><td class="n" data-l="접선">8.8%</td><td class="n" data-l="방사">4.6%</td><td class="n" data-l="비">1.91</td><td data-l="자리">마루·문틀</td></tr>
+          <tr><td data-l="수종">참죽</td><td class="n" data-l="접선">5.2%</td><td class="n" data-l="방사">2.9%</td><td class="n" data-l="비">1.79</td><td data-l="자리">기둥머리·창방</td></tr>
+          <tr><td data-l="수종">밤나무</td><td class="n" data-l="접선">6.4%</td><td class="n" data-l="방사">3.4%</td><td class="n" data-l="비">1.88</td><td data-l="자리">토대·하방</td></tr>
+        </tbody>
+        <tfoot><tr><td colspan="5">비 = 접선 ÷ 방사 · 6.1÷3.0=2.03 · 8.8÷4.6=1.91 · 5.2÷2.9=1.79 · 6.4÷3.4=1.88 · 비가 가장 작은 참죽을 사개맞춤에 쓴다</td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 7 · 이견 (닫는 자리) ═══ -->
+<section class="dispute">
+  <div class="sheet">
+    <h2 class="rise">같은 결구를 두고 세 사람이 다르게 말합니다</h2>
+    <p class="dek rise">사개맞춤 어깨를 몇 도로 깎느냐를 두고 도해 검토 자리에서 갈렸습니다. 셋 다 근거가 있어 하나로 정하지 않았습니다. 도보에는 우리가 실측한 값을 싣고, 아래에 세 사람의 말을 그대로 둡니다.</p>
+
+    <div class="three rise d1">
+      <article>
+        <p class="nm">노선재<small>대목장 이수자 · 27년차</small></p>
+        <p class="say">“여든다섯이 맞습니다. 곧게 세울수록 어깨가 두껍고, 두꺼워야 삼백 년을 갑니다. 각을 눕히는 건 짜기 쉬우라고 하는 짓입니다.”</p>
+        <p class="deg">85°<small>수직에 가깝게</small></p>
+      </article>
+      <article>
+        <p class="nm">고영달<small>도편수 · 41년차</small></p>
+        <p class="say">“여든이 맞습니다. 어깨가 두꺼우면 창방이 안 들어갑니다. 안 들어가면 현장에서 깎아 내는데, 그때 깎은 자리가 제일 먼저 상합니다.”</p>
+        <p class="deg">80°<small>조립 여유를 둔다</small></p>
+      </article>
+      <article>
+        <p class="nm">서인후<small>목조문화재 실측 · 19년차</small></p>
+        <p class="say">“정할 일이 아닙니다. 실측한 조선 후기 건물 서른한 채에서 76°부터 88°까지 나왔습니다. 집마다 나무가 달랐던 것뿐입니다.”</p>
+        <p class="deg">76–88°<small>실측 범위 · 31채</small></p>
+      </article>
+    </div>
+
+    <p class="tail rise d2">도보에 실은 값은 <b>82°</b>입니다. 셋 중 누가 옳아서가 아니라, 실측 서른한 채의 중앙값이기 때문입니다. 다음 판에서는 서른한 채를 예순 채로 늘려 다시 재겠습니다.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="ft">
+    <span>사개 목구조 도해소 · 경북 안동시 서후면 · 도해 열람은 예약제, 평일 10:00–17:00</span>
+    <span>초판 2026년 2월 · 600부</span>
+    <span>차례 · <a href="#atlas">주먹장 도해</a></span>
+    <span>실측 원자료와 검토 녹취 전문은 부록에 싣습니다</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  if('scrollRestoration' in history)history.scrollRestoration='manual';
+  (function(){var h=document.documentElement,p=h.style.scrollBehavior;h.style.scrollBehavior='auto';
+   scrollTo(0,0);addEventListener('load',function(){scrollTo(0,0);
+   setTimeout(function(){h.style.scrollBehavior=p},60)})})();
+
+  var CAPTURE=/[?&]capture=1/.test(location.search);
+  if(CAPTURE)document.documentElement.classList.add('capture');
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+  var rises=[].slice.call(document.querySelectorAll('.rise'));
+  if(reduce||!('IntersectionObserver' in window)){rises.forEach(function(e){e.classList.add('vis')})}
+  else{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})},
+      {rootMargin:'0px 0px -8% 0px',threshold:.05});
+    rises.forEach(function(e){io.observe(e)});
+    addEventListener('load',function(){rises.forEach(function(e){
+      if(e.getBoundingClientRect().top<innerHeight)e.classList.add('vis')})});
+  }
+
+  /* ── 관점 전환 — 시간이 아니라 보는 방식을 바꾸는 축 ──
+     리드아웃은 상수가 아니라 **도해의 path 좌표에서 뽑는다.**
+     그림을 고치면 숫자가 따라 바뀐다. 값을 적어 두면 계산인지 아닌지 구별되지 않는다. */
+  function geom(){
+    var d=document.querySelector('.mem-l path').getAttribute('d');
+    var n=(d.match(/-?\d+(?:\.\d+)?/g)||[]).map(Number);
+    // M40 100 H360 L360 160 L480 120 L480 280 L360 240 L360 300 H40 Z
+    //  n: 0=40 1=100 | 2=360(H) | 3,4=360,160 뿌리위 | 5,6=480,120 끝위
+    //     7,8=480,280 끝아래 | 9,10=360,240 뿌리아래
+    var rootTop=n[4], rootBot=n[10], tipTop=n[6], tipBot=n[8];
+    var xRoot=n[3], xTip=n[5];
+    var root=Math.abs(rootBot-rootTop), tip=Math.abs(tipBot-tipTop), len=Math.abs(xTip-xRoot);
+    var flare=(tip-root)/2;
+    return {root:root, tip:tip, len:len, flare:flare,
+            ratio:(tip/root), slope:(len/flare), deg:Math.atan(flare/len)*180/Math.PI};
+  }
+  var G=geom();
+  var VIEW={
+    fit:{
+      note:'두 부재가 맞물린 상태입니다. 위에서 본 그림입니다.',
+      title:'주먹장 이음을 위에서 본 그림. 촉이 홈에 물려 있다.',
+      rows:[['물리는 길이', G.len+' mm'],
+            ['맞닿는 면', '4 면'],
+            ['인장 저항', '강함']]},
+    apart:{
+      note:'촉과 홈을 떼어 놓았습니다. <b>뿌리 '+G.root+', 끝 '+G.tip+'</b> — 끝이 '+G.ratio+'배로 벌어져 있습니다.',
+      title:'촉과 홈을 떼어 놓은 그림. 왼쪽 부재의 사다리꼴 촉과 오른쪽 부재의 같은 모양 홈이 보인다.',
+      rows:[['촉 뿌리 : 끝', G.root+' : '+G.tip+' mm'],
+            ['벌어진 비', '1 : '+G.ratio],
+            ['인장 저항', '강함']]},
+    dim:{
+      note:'치수선을 켰습니다. 촉 길이 '+G.len+'에 한쪽이 '+G.flare+' 벌어져 <b>1 : '+G.slope+'</b>입니다.',
+      title:'치수를 표시한 그림. 촉 뿌리 '+G.root+', 끝 '+G.tip+', 길이 '+G.len+'.',
+      rows:[['어깨 기울기', '1 : '+G.slope],
+            ['어깨 각도', G.deg.toFixed(1)+'°'],
+            ['한쪽 벌어짐', G.flare+' mm']]}
+  };
+  var stage=document.getElementById('stage'), vnote=document.getElementById('vnote'),
+      dts=document.querySelectorAll('.readfig dt'), dds=document.querySelectorAll('.readfig dd'),
+      dtitle=document.getElementById('drawtitle');
+  function paint(v){
+    var V=VIEW[v];
+    stage.dataset.view=v;
+    vnote.innerHTML=V.note;
+    dtitle.textContent=V.title;
+    V.rows.forEach(function(r,i){ if(dts[i]){dts[i].textContent=r[0]; dds[i].textContent=r[1];} });
+  }
+  document.querySelector('.seg').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-v]'); if(!b)return;
+    [].forEach.call(this.querySelectorAll('button'),function(x){
+      x.setAttribute('aria-pressed',String(x===b))});
+    paint(b.dataset.v);
+  });
+  paint('fit');
+
+  // 캡처 반출물에는 치수가 켜진 판이 낫다
+  if(CAPTURE)addEventListener('load',function(){
+    setTimeout(function(){document.querySelector('.seg button[data-v="dim"]').click()},60)});
+})();
+</script>
+</body></html>

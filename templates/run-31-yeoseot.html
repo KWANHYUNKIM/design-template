@@ -268,13 +268,20 @@ footer{border-top:1px solid var(--rule2);background:var(--paper2);
 }
 /* ── 900px 이하: 한 칸으로 ── */
 @media (max-width:900px){
-  .sheet{padding-left:var(--s4);padding-right:var(--s4)}
+  /* 좁은 폭에서도 판형을 교대한다 — 12칼럼 격자가 사라진 자리를 판형이 대신한다 (RUN33 크리틱) */
+  .sheet{padding-left:var(--s4);padding-right:var(--s5)}
+  section:nth-of-type(even) .sheet{padding-left:var(--s5);padding-right:var(--s4)}
   .ft{padding-left:var(--s4);padding-right:var(--s4)}
+  /* 세로 호흡도 갈라 놓는다 — 3조합으로는 리듬이 아니다 */
+  .head{padding-top:var(--s5);padding-bottom:var(--s6)}
+  .why{padding-top:var(--s9);padding-bottom:var(--s8)}
+  .adopt{padding-top:var(--s7);padding-bottom:var(--s5)}
+  .spec{padding-top:var(--s8);padding-bottom:var(--s9)}
+  .order{padding-top:var(--s9);padding-bottom:var(--s7)}
+  .paper{padding-top:var(--s6);padding-bottom:var(--s5)}
+  .gloss{padding-top:var(--s7);padding-bottom:var(--s6)}
   .g12{grid-template-columns:minmax(0,1fr)}
   .g12>*{grid-column:auto!important;grid-row:auto!important}
-  .head{padding-top:var(--s5);padding-bottom:var(--s6)}
-  .why,.order{padding-top:var(--s8);padding-bottom:var(--s8)}
-  .spec,.adopt,.paper,.gloss{padding-top:var(--s7);padding-bottom:var(--s6)}
   .mast h1{font-size:var(--t-2xl)}
   .why h2,.spec h2,.order h2,.paper h2,.gloss h2{font-size:var(--t-md)}
   .docmeta,.headfig,.headlead,.why .txt,.why .fig,.spec .dia,.spec .tw,

@@ -153,11 +153,56 @@ const PROBE = `(() => {
     }
   }
 
+  // 접힌 표에서 셀 안 grid 아이템이 셋 이상이면 값이 라벨 열로 떨어진다 (spec 함정 12 · RUN33 재발)
+  const cells = [];
+  for (const td of document.querySelectorAll('td')) {
+    if (getComputedStyle(td).display !== 'grid') continue;
+    let items = 0;
+    for (const n of td.childNodes) {
+      if (n.nodeType === 1 && getComputedStyle(n).display !== 'none') items++;
+      else if (n.nodeType === 3 && n.textContent.trim()) items++;
+    }
+    if (items > 1) cells.push((td.dataset.l || td.cellIndex) + ' 안에 grid 아이템 ' + (items + 1) + '개');
+    if (cells.length > 5) break;
+  }
+
+  // SVG — viewBox 를 벗어난 도형·글자, 그리고 실렌더 글자 크기 (RUN25 §85 · RUN33 D3/D4/D5)
+  const svgBad = [];
+  for (const svg of document.querySelectorAll('svg[viewBox]')) {
+    const vb = svg.viewBox.baseVal, rect = svg.getBoundingClientRect();
+    if (!vb.width || !rect.width) continue;
+    const scale = rect.width / vb.width;
+    for (const el of svg.querySelectorAll('text,path,rect,line,polygon')) {
+      let b; try { b = el.getBBox(); } catch { continue; }
+      if (!b.width && !b.height) continue;
+      if (b.x < vb.x - 1 || b.y < vb.y - 1 ||
+          b.x + b.width > vb.x + vb.width + 1 || b.y + b.height > vb.y + vb.height + 1)
+        svgBad.push('viewBox 밖: <' + el.tagName + '> ' + Math.round(b.x) + '~' + Math.round(b.x + b.width));
+      if (el.tagName === 'text') {
+        const px = parseFloat(getComputedStyle(el).fontSize) * scale;
+        if (px < 12) svgBad.push('SVG 글자 실렌더 ' + px.toFixed(1) + 'px (12 미만)');
+      }
+      if (svgBad.length > 6) break;
+    }
+  }
+
+  // 판형·호흡이 이 폭에서도 살아 있는가 (RUN33 — 데스크톱만 갈라 놓으면 무효다)
+  const sheets = [...document.querySelectorAll('[class*="sheet"]')]
+    .map(e => { const c = getComputedStyle(e); return c.paddingLeft + '|' + c.paddingRight; });
+  const secs = [...document.querySelectorAll('section')]
+    .map(e => { const c = getComputedStyle(e); return parseInt(c.paddingTop) + '/' + parseInt(c.paddingBottom); });
+  const rhythm = { 가로판형: new Set(sheets).size, 세로조합: new Set(secs).size, 섹션: secs.length };
+  const rhythmWarn = [];
+  if (secs.length >= 5 && rhythm.가로판형 < 2) rhythmWarn.push('가로 판형이 한 종류 — 여백 점수가 3에 묶인다');
+  if (secs.length >= 5 && rhythm.세로조합 < Math.ceil(secs.length * .6))
+    rhythmWarn.push('세로 호흡 ' + rhythm.세로조합 + '조합 / 섹션 ' + secs.length + '개 — 반복이 많다');
+
   return JSON.stringify({ vw, scrollW: document.documentElement.scrollWidth,
     overflow: document.documentElement.scrollWidth > vw,
     docH: document.body.scrollHeight,
     overflowCount: bad.length, overflowBad: bad.slice(0, 12),
-    farFootnotes: fn, gridSkew: skew.slice(0, 8), trackMismatch: track.slice(0, 6) }, null, 1);
+    farFootnotes: fn, gridSkew: skew.slice(0, 8), trackMismatch: track.slice(0, 6),
+    foldedCells: cells, svgIssues: svgBad.slice(0, 6), rhythm, rhythmWarn }, null, 1);
 })()`;
 
 try {

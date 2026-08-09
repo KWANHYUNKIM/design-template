@@ -249,7 +249,10 @@ footer{border-top:1px solid var(--rule2);background:var(--paper2);
 
 /* ── 900px 이하 ── */
 @media (max-width:900px){
-  .sheet,.sheet-n,.ft{padding-left:var(--s4);padding-right:var(--s4)}
+  /* 좁은 폭에서도 판형을 교대한다 — 여기서 좌우를 같게 두면 데스크톱의 교대가 무효다 (RUN33 크리틱) */
+  .sheet  {padding-left:var(--s4);padding-right:var(--s5)}
+  .sheet-n{padding-left:var(--s5);padding-right:var(--s4)}
+  .ft{padding-left:var(--s4);padding-right:var(--s4)}
   .plate-g,.season-g,.rig,.field-g,.discard-g{grid-template-columns:minmax(0,1fr);gap:var(--s6)}
   .plate{padding-top:var(--s5);padding-bottom:var(--s6)}
   .voices,.field{padding-top:var(--s8);padding-bottom:var(--s8)}
