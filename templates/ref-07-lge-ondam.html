@@ -225,8 +225,130 @@ footer .f{font-size:var(--t-13);line-height:var(--lh-13)}
 footer .f b{display:block;font-size:var(--t-16);line-height:var(--lh-16a);color:var(--paper);
   font-weight:700;letter-spacing:var(--tr-m);margin-bottom:var(--s12)}
 
-@media(min-width:1000px){ .mkt .in{grid-template-columns:1fr 1fr;gap:var(--s40)} }
+/* ══ 뷰 스위칭 ══ 설계서(refs/lge-survey.md)의 화면 6종을 한 파일 안에서 전환한다
+   원본은 페이지 이동이지만 자체완결 규격을 지키려고 뷰로 접었다 */
+body[data-v="home"]   .v:not(#v-home),
+body[data-v="list"]   .v:not(#v-list),
+body[data-v="detail"] .v:not(#v-detail),
+body[data-v="search"] .v:not(#v-search){display:none}
+
+/* ── GNB 드롭다운 ── 원본 판정: 호버로 열리고 URL·높이 불변 */
+.gnb-b .menu{position:relative}
+.drop{position:absolute;left:0;right:0;top:64px;background:var(--paper);
+  border-bottom:1px solid var(--line);box-shadow:var(--sh);z-index:40;display:none}
+.drop.open{display:block}
+.drop .in{max-width:var(--w);margin:0 auto;padding:var(--s24) var(--s16);
+  display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s24)}
+.drop .in>*{min-width:0}
+.drop h4{font-size:var(--t-14);line-height:var(--lh-14);font-weight:700;letter-spacing:var(--tr-m)}
+.drop ul{margin-top:var(--s12)}
+.drop li{margin-top:var(--s8)}
+.drop a{font-size:var(--t-13);line-height:var(--lh-13);color:var(--body)}
+.drop a:hover{color:var(--k)}
+
+/* ── 헤더 아이콘 · 검색 · 장바구니 ── */
+.gnb-b .sbox{display:flex;align-items:center;gap:var(--s8);
+  border:1px solid var(--line);border-radius:var(--r100);padding:var(--s6) var(--s16)}
+.gnb-b .sbox input{border:0;outline:0;font:inherit;letter-spacing:inherit;width:150px;background:none}
+.gnb-b .cart-btn{position:relative;font-size:var(--t-14);line-height:var(--lh-14);font-weight:600;
+  border:1px solid var(--line);border-radius:var(--r100);padding:var(--s6) var(--s16)}
+.gnb-b .cart-btn b{color:var(--k)}
+
+/* ── 3 · 카테고리 목록 ── */
+.crumb{font-size:var(--t-13);line-height:var(--lh-13);color:var(--mut);padding-top:var(--s16)}
+.crumb b{color:var(--ink);font-weight:600}
+.lst{padding-top:var(--s16);padding-bottom:var(--s40)}
+.lst h1{font-size:var(--t-22);line-height:var(--lh-22);font-weight:700;letter-spacing:var(--tr-l)}
+.filters{display:flex;flex-wrap:wrap;gap:var(--s8);margin-top:var(--s16);
+  border-bottom:1px solid var(--line);padding-bottom:var(--s16)}
+.filters button{font-size:var(--t-13);line-height:var(--lh-13);font-weight:500;color:var(--body);
+  border:1px solid var(--line);border-radius:var(--r100);padding:var(--s7) var(--s16)}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink);font-weight:600}
+.filters .sp{flex:1}
+.filters .cnt{font-size:var(--t-13);line-height:var(--lh-13);color:var(--mut);align-self:center}
+.lgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s16);margin-top:var(--s24)}
+.lgrid>*{min-width:0}
+.empty{grid-column:1/-1;padding:var(--s40);text-align:center;border-radius:var(--r16);
+  box-shadow:var(--sh);font-size:var(--t-16);line-height:var(--lh-16b);color:var(--body)}
+.empty b{display:block;color:var(--ink);margin-bottom:var(--s8)}
+
+/* ── 4 · 제품 상세 ── */
+.dt{padding-top:var(--s16);padding-bottom:var(--s40)}
+.dtop{display:grid;grid-template-columns:1fr;gap:var(--s24);margin-top:var(--s16)}
+.dtop>*{min-width:0}
+.gal .main{aspect-ratio:1/1;border-radius:var(--r16);
+  background:linear-gradient(135deg,#eceef1,#dcdfe4)}
+.gal .thumbs{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--s8);margin-top:var(--s8)}
+.gal .thumbs>*{min-width:0}
+.gal .thumbs button{aspect-ratio:1/1;border-radius:var(--r8);
+  background:linear-gradient(135deg,#f0f2f4,#e3e6ea);border:2px solid transparent}
+.gal .thumbs button[aria-current="true"]{border-color:var(--ink)}
+.dinfo .cat{font-size:var(--t-13);line-height:var(--lh-13);color:var(--mut)}
+.dinfo h1{font-size:var(--t-36);line-height:var(--lh-36);font-weight:700;letter-spacing:var(--tr-l);
+  margin-top:var(--s8)}
+.dinfo .pr{display:flex;align-items:baseline;gap:var(--s8);margin-top:var(--s16)}
+.dinfo .pr b{font-size:var(--t-36);line-height:var(--lh-36);font-weight:700;letter-spacing:var(--tr-l);
+  font-variant-numeric:tabular-nums}
+.dinfo .pr em{font-style:normal;font-size:var(--t-22);line-height:var(--lh-22);font-weight:700;color:var(--k)}
+.dinfo .pr s{font-size:var(--t-16);line-height:var(--lh-16a);color:var(--mut)}
+.dspec{margin-top:var(--s24);border-top:1px solid var(--line)}
+.dspec .r{display:flex;gap:var(--s16);border-bottom:1px solid var(--line);
+  padding-top:var(--s12);padding-bottom:var(--s12)}
+.dspec dt{flex:0 0 120px;font-size:var(--t-13);line-height:var(--lh-13);color:var(--mut)}
+.dspec dd{margin:0;font-size:var(--t-14);line-height:var(--lh-14);font-weight:500}
+.buybar{display:flex;gap:var(--s12);align-items:center;margin-top:var(--s24);flex-wrap:wrap}
+.qty{display:flex;align-items:center;border:1px solid var(--line);border-radius:var(--r8);overflow:hidden}
+.qty button{padding:var(--s9) var(--s16);font-size:var(--t-16);line-height:var(--lh-16a);font-weight:700}
+.qty output{min-width:48px;text-align:center;font-size:var(--t-14);line-height:var(--lh-14);
+  font-weight:700;font-variant-numeric:tabular-nums}
+.buybar .add{flex:1;min-width:180px;font-size:var(--t-16);line-height:var(--lh-16a);font-weight:700;
+  color:var(--paper);background:var(--dark);border-radius:var(--r8);padding:var(--s16)}
+.buybar .add[disabled]{background:var(--hair);cursor:not-allowed}
+.soldout{font-size:var(--t-13);line-height:var(--lh-13);font-weight:700;color:var(--k)}
+
+/* ── 5 · 장바구니 드로어 ── */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;display:none}
+.scrim.open{display:block}
+.cart{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--paper);
+  z-index:51;display:none;flex-direction:column}
+.cart.open{display:flex}
+.cart .hd{display:flex;align-items:center;gap:var(--s12);padding:var(--s16);
+  border-bottom:1px solid var(--line)}
+.cart .hd b{font-size:var(--t-19);line-height:var(--lh-19);font-weight:700;letter-spacing:var(--tr-m)}
+.cart .hd .sp{flex:1}
+.cart .hd button{font-size:var(--t-19);line-height:var(--lh-19);padding:var(--s4) var(--s8)}
+.cart .body{flex:1;overflow-y:auto;padding:var(--s16)}
+.citem{display:grid;grid-template-columns:64px 1fr auto;gap:var(--s12);
+  padding-bottom:var(--s16);margin-bottom:var(--s16);border-bottom:1px solid var(--line)}
+.citem>*{min-width:0}
+.citem .th{aspect-ratio:1/1;border-radius:var(--r8);background:linear-gradient(135deg,#eceef1,#dcdfe4)}
+.citem b{font-size:var(--t-14);line-height:var(--lh-14);font-weight:600}
+.citem .p{font-size:var(--t-14);line-height:var(--lh-14);font-weight:700;margin-top:var(--s4);
+  font-variant-numeric:tabular-nums}
+.citem .del{font-size:var(--t-13);line-height:var(--lh-13);color:var(--mut)}
+.cart .ft{border-top:1px solid var(--line);padding:var(--s16)}
+.cart .sum{display:flex;justify-content:space-between;align-items:baseline}
+.cart .sum span{font-size:var(--t-14);line-height:var(--lh-14);color:var(--body)}
+.cart .sum b{font-size:var(--t-22);line-height:var(--lh-22);font-weight:700;letter-spacing:var(--tr-l);
+  font-variant-numeric:tabular-nums}
+.cart .go{display:block;width:100%;margin-top:var(--s16);text-align:center;
+  font-size:var(--t-16);line-height:var(--lh-16a);font-weight:700;color:var(--paper);
+  background:var(--dark);border-radius:var(--r8);padding:var(--s16)}
+.cart .note{font-size:var(--t-12);line-height:var(--lh-12);color:var(--mut);margin-top:var(--s12);text-align:center}
+.cempty{text-align:center;padding:var(--s40) var(--s16);color:var(--body);
+  font-size:var(--t-14);line-height:var(--lh-14)}
+
+@media(min-width:1000px){
+  .mkt .in{grid-template-columns:1fr 1fr;gap:var(--s40)}
+  .dtop{grid-template-columns:1fr 1fr;gap:var(--s40)}
+}
 @media(max-width:999px){
+  /* 헤더가 390에서 넘쳤다 — 검색창을 접고 장바구니만 남긴다 */
+  .gnb-b .sbox{display:none}
+  .gnb-b .in{gap:var(--s12)}
+  .drop{display:none!important}
+  .lgrid{grid-template-columns:repeat(2,1fr)}
+  .dspec dt{flex:0 0 88px}
   .promo .row,.list .row,.deal .row{grid-template-columns:repeat(2,1fr)}
   .best .grid,.tabban .grid{grid-template-columns:repeat(2,1fr)}
   .sq .row{grid-template-columns:1fr}
@@ -246,13 +368,23 @@ html.capture .rise{opacity:1;transition:none}
 </div></div>
 
 <!-- 2 · GNB 하단 64 -->
-<header class="gnb-b"><div class="in">
-  <span class="logo">온담</span>
-  <nav><a href="#">공기·청정</a><a href="#">주방</a><a href="#">세탁·의류</a><a href="#">영상·음향</a><a href="#">기획전</a></nav>
-  <span class="sp"></span>
-  <span class="ic"><span></span><span></span><span></span></span>
-</div></header>
+<header class="gnb-b menu">
+  <div class="in">
+    <a class="logo" href="#" data-go="home">온담</a>
+    <nav id="gnb"></nav>
+    <span class="sp"></span>
+    <form class="sbox" id="sform" role="search">
+      <input id="q" type="search" placeholder="제품 검색" aria-label="제품 검색">
+      <button type="submit" aria-label="검색">↵</button>
+    </form>
+    <button type="button" class="cart-btn" id="cartbtn" aria-haspopup="dialog">
+      장바구니 <b id="cnt">0</b>
+    </button>
+  </div>
+  <div class="drop" id="drop"><div class="in"></div></div>
+</header>
 
+<div class="v" id="v-home">
 <!-- 3 · 히어로 500 -->
 <section class="hero" id="hero">
   <div class="track" id="track"></div>
@@ -339,6 +471,63 @@ html.capture .rise{opacity:1;transition:none}
 <!-- 17 · 가로 배너 374 -->
 <section class="hban"><div class="w"><div class="row" id="hban"></div></div></section>
 
+</div>
+
+
+<!-- ── 3 · 카테고리 목록 ── -->
+<main class="v w lst" id="v-list">
+  <p class="crumb"><a href="#" data-go="home">홈</a> · <b id="lstCat">전체</b></p>
+  <h1 id="lstTitle">전체 제품</h1>
+  <div class="filters" id="lstFilters"></div>
+  <div class="lgrid" id="lstGrid"></div>
+</main>
+
+<!-- ── 4 · 제품 상세 ── -->
+<main class="v w dt" id="v-detail">
+  <p class="crumb"><a href="#" data-go="home">홈</a> · <a href="#" data-go="list">목록</a> · <b id="dtCrumb"></b></p>
+  <div class="dtop">
+    <div class="gal">
+      <div class="main" id="dtMain"></div>
+      <div class="thumbs" id="dtThumbs"></div>
+    </div>
+    <div class="dinfo">
+      <div class="cat" id="dtCat"></div>
+      <h1 id="dtName"></h1>
+      <div class="pr" id="dtPrice"></div>
+      <dl class="dspec" id="dtSpec"></dl>
+      <div class="buybar">
+        <div class="qty" role="group" aria-label="수량">
+          <button type="button" id="qm" aria-label="수량 줄이기">−</button>
+          <output id="qv">1</output>
+          <button type="button" id="qp" aria-label="수량 늘리기">＋</button>
+        </div>
+        <button type="button" class="add" id="dtAdd">장바구니 담기</button>
+      </div>
+      <p class="soldout" id="dtSold" hidden>품절 — 재입고 알림만 신청할 수 있습니다.</p>
+    </div>
+  </div>
+</main>
+
+<!-- ── 6 · 검색 결과 ── -->
+<main class="v w lst" id="v-search">
+  <p class="crumb"><a href="#" data-go="home">홈</a> · <b>검색</b></p>
+  <h1 id="srTitle">검색 결과</h1>
+  <div class="lgrid" id="srGrid"></div>
+</main>
+
+<!-- ── 5 · 장바구니 드로어 ── -->
+<div class="scrim" id="scrim"></div>
+<aside class="cart" id="cart" role="dialog" aria-modal="true" aria-label="장바구니">
+  <div class="hd"><b>장바구니</b><span class="sp"></span>
+    <button type="button" id="cartclose" aria-label="닫기">✕</button></div>
+  <div class="body" id="cartBody"></div>
+  <div class="ft">
+    <div class="sum"><span>합계</span><b id="cartSum">0원</b></div>
+    <a class="go" href="#" id="cartGo">주문서 작성</a>
+    <p class="note">결제 단계는 이 견본에 없습니다.</p>
+  </div>
+</aside>
+
 <footer><div class="w">
   <div class="links">
     <a href="#">회사소개</a><a href="#">이용약관</a><a href="#">개인정보처리방침</a><a href="#">고객지원</a>
@@ -412,7 +601,26 @@ var PROD=[
  ['건조','마름 17kg',    1180000, 7, ['히트펌프','섬유별 코스']],
  ['영상','너름 65형',    1690000, 18,['저반사 패널','자동 밝기']],
  ['청소','훑음 무선',     540000, 9, ['1.2kg','먼지통 자동비움']],
- ['주방','헹굼 식기 12인',960000, 11,['고온 살균','잔반 감지']]
+ ['주방','헹굼 식기 12인',960000, 11,['고온 살균','잔반 감지']],
+ /* 목록 화면을 위해 분류마다 여러 대를 둔다 — 원본은 카테고리당 수십 종이다 */
+ ['공기청정','청담 200',   498000, 14,['소형 원룸','필터 잔여 표시']],
+ ['공기청정','청담 600',  1120000, 9, ['30평형','이중 팬']],
+ ['공기청정','머금 제습',  690000, 16,['하루 20L','자동 배수']],
+ ['공기청정','적심 가습',  310000, 12,['자연기화','항균 필터']],
+ ['주방','오래 380L',     1290000, 13,['1인 가구','정온 ±0.5℃']],
+ ['주방','오래 870L',     3180000, 6, ['4도어','와인칸']],
+ ['주방','맑샘 정수',      740000, 10,['직수형','온·냉·정']],
+ ['주방','달굼 인덕션',    880000, 8, ['3구','화력 표시']],
+ ['세탁','헹굼 12kg',      790000, 15,['소용량','저진동']],
+ ['세탁','마름 12kg',      880000, 12,['히트펌프','저온 건조']],
+ ['세탁','결기 2세대',    1090000, 18,['3벌 수납','스팀']],
+ ['세탁','결기 미니',      690000, 11,['벽걸이','신발 코스']],
+ ['영상','너름 55형',     1090000, 14,['저반사','게임 모드']],
+ ['영상','너름 75형',     2680000, 9, ['광시야각','자동 밝기']],
+ ['영상','울림 사운드바',  540000, 13,['3.1채널','벽걸이']],
+ ['영상','비춤 프로젝터',  980000, 7, ['자동 초점','천장 설치']],
+ ['청소','훑음 스틱',      380000, 17,['0.9kg','벽 거치']],
+ ['청소','훑음 로봇',      890000, 10,['지도 학습','자동비움']]
 ];
 function pdCard(p, sq){
   return '<article class="pd"><div class="slot '+(sq||'sq')+'"></div>'+
@@ -515,6 +723,168 @@ function tick(){
   el('clock').textContent=h+':'+m+':'+s+' 남음';
 }
 if(!reduce) setInterval(tick,1000);
+
+/* ══════ 뷰 스위칭 ══════
+   설계서(refs/lge-survey.md) 확정 범위 — 홈·GNB드롭다운·목록·상세·장바구니·검색.
+   로그인·결제·주문조회는 만들지 않는다. */
+
+/* 제품 원장 — 목록/상세/검색이 모두 이 데이터를 본다 */
+var CATS=[
+ {id:'air',  n:'공기·청정', sub:['공기청정기','제습기','가습기','에어컨']},
+ {id:'kit',  n:'주방',      sub:['냉장고','식기세척기','인덕션','정수기']},
+ {id:'wash', n:'세탁·의류', sub:['세탁기','건조기','의류관리기','스타일러']},
+ {id:'av',   n:'영상·음향', sub:['TV','사운드바','프로젝터','모니터']},
+ {id:'care', n:'소모품',    sub:['필터','호스','세제','부품']}
+];
+var CAT_OF={'공기청정':'air','의류관리':'wash','냉장':'kit','세탁':'wash','건조':'wash','영상':'av','청소':'care','주방':'kit'};
+var ITEMS=PROD.map(function(p,i){
+  return {id:'p'+i, cat:p[0], catId:CAT_OF[p[0]]||'air', name:p[1],
+          list:p[2], off:p[3], price:Math.round(p[2]*(1-p[3]/100)),
+          tags:p[4], sold:(i===6),
+          spec:[['모델명', p[1].replace(/\s/g,'-')+'-K'],['에너지등급','1등급'],
+                ['소비전력',(28+i*7)+'W'],['설치','기본 설치 무료'],['보증','3년']]};
+});
+var cart=[], view='home', curList={cat:'all',sort:'rec'}, dtId=null, dtQty=1, dtImg=0;
+
+function setView(v){ view=v; document.body.dataset.v=v; scrollTo(0,0); }
+document.body.dataset.v='home';
+
+/* ── GNB 드롭다운 ── 원본 판정대로 호버로 열고 URL은 안 바꾼다 */
+var gnb=el('gnb'), drop=el('drop');
+gnb.innerHTML=CATS.map(function(c){return '<a href="#" data-cat="'+c.id+'">'+c.n+'</a>'}).join('');
+drop.querySelector('.in').innerHTML=CATS.map(function(c){
+  return '<div><h4>'+c.n+'</h4><ul>'+c.sub.map(function(s){
+    return '<li><a href="#" data-cat="'+c.id+'">'+s+'</a></li>'}).join('')+'</ul></div>';
+}).join('');
+var dropTimer;
+document.querySelector('.gnb-b').addEventListener('mouseenter',function(){
+  clearTimeout(dropTimer); drop.classList.add('open') });
+document.querySelector('.gnb-b').addEventListener('mouseleave',function(){
+  dropTimer=setTimeout(function(){drop.classList.remove('open')},200) });
+
+/* ── 목록 ── */
+function money(n){ return n.toLocaleString('ko-KR')+'원' }
+function cardHTML(it){
+  return '<article class="pd" data-id="'+it.id+'" role="button" tabindex="0">'+
+    '<div class="slot sq"></div><div class="cat">'+it.cat+'</div><h3>'+it.name+'</h3>'+
+    '<div class="price"><b>'+money(it.price)+'</b><em>'+it.off+'%</em></div>'+
+    '<div class="tags">'+it.tags.map(function(t){return '<i>'+t+'</i>'}).join('')+
+    (it.sold?'<i style="color:var(--k)">품절</i>':'')+'</div></article>';
+}
+function drawList(){
+  var c=CATS.filter(function(x){return x.id===curList.cat})[0];
+  el('lstCat').textContent = c? c.n : '전체';
+  el('lstTitle').textContent = (c? c.n : '전체')+' 제품';
+  el('lstFilters').innerHTML =
+    [{id:'all',n:'전체'}].concat(CATS).map(function(x){
+      return '<button type="button" data-f="'+x.id+'" aria-pressed="'+(x.id===curList.cat)+'">'+x.n+'</button>';
+    }).join('')+'<span class="sp"></span>'+
+    '<button type="button" data-s="rec" aria-pressed="'+(curList.sort==='rec')+'">추천순</button>'+
+    '<button type="button" data-s="low" aria-pressed="'+(curList.sort==='low')+'">낮은 가격순</button>';
+  var list=ITEMS.filter(function(it){return curList.cat==='all'||it.catId===curList.cat});
+  if(curList.sort==='low') list=list.slice().sort(function(a,b){return a.price-b.price});
+  el('lstGrid').innerHTML = list.length
+    ? list.map(cardHTML).join('')
+    : '<div class="empty"><b>조건에 맞는 제품이 없습니다</b>다른 분류를 골라 보세요.</div>';
+}
+el('lstFilters').addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b)return;
+  if(b.dataset.f) curList.cat=b.dataset.f;
+  if(b.dataset.s) curList.sort=b.dataset.s;
+  drawList();
+});
+
+/* ── 상세 ── */
+function openDetail(id){
+  dtId=id; dtQty=1; dtImg=0;
+  var it=ITEMS.filter(function(x){return x.id===id})[0]; if(!it)return;
+  el('dtCrumb').textContent=it.name;
+  el('dtCat').textContent=it.cat;
+  el('dtName').textContent=it.name;
+  el('dtPrice').innerHTML='<b>'+money(it.price)+'</b><em>'+it.off+'%</em><s>'+money(it.list)+'</s>';
+  el('dtSpec').innerHTML=it.spec.map(function(r){
+    return '<div class="r"><dt>'+r[0]+'</dt><dd>'+r[1]+'</dd></div>'}).join('');
+  el('dtThumbs').innerHTML=[0,1,2,3,4].map(function(i){
+    return '<button type="button" data-i="'+i+'" aria-current="'+(i===0)+'" aria-label="이미지 '+(i+1)+'"></button>'}).join('');
+  el('qv').textContent=1;
+  el('dtSold').hidden=!it.sold;
+  el('dtAdd').disabled=it.sold;
+  el('dtAdd').textContent=it.sold?'품절':'장바구니 담기';
+  setView('detail');
+}
+el('dtThumbs').addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b)return; dtImg=+b.dataset.i;
+  [].forEach.call(el('dtThumbs').children,function(x,i){x.setAttribute('aria-current',String(i===dtImg))});
+});
+el('qm').addEventListener('click',function(){ dtQty=Math.max(1,dtQty-1); el('qv').textContent=dtQty });
+el('qp').addEventListener('click',function(){ dtQty=Math.min(9,dtQty+1); el('qv').textContent=dtQty });
+el('dtAdd').addEventListener('click',function(){
+  var it=ITEMS.filter(function(x){return x.id===dtId})[0]; if(!it||it.sold)return;
+  var line=cart.filter(function(c){return c.id===it.id})[0];
+  if(line) line.q+=dtQty; else cart.push({id:it.id,name:it.name,price:it.price,q:dtQty});
+  drawCart(); openCart();
+});
+
+/* ── 장바구니 ── */
+function drawCart(){
+  var n=cart.reduce(function(a,c){return a+c.q},0);
+  el('cnt').textContent=n;
+  el('cartBody').innerHTML = cart.length
+    ? cart.map(function(c){
+        return '<div class="citem"><div class="th"></div>'+
+          '<div><b>'+c.name+'</b><div class="p">'+money(c.price*c.q)+'</div>'+
+          '<div class="del">수량 '+c.q+'개</div></div>'+
+          '<button type="button" class="del" data-del="'+c.id+'">삭제</button></div>';
+      }).join('')
+    : '<p class="cempty">담긴 제품이 없습니다.<br>목록에서 제품을 골라 담아 보세요.</p>';
+  el('cartSum').textContent=money(cart.reduce(function(a,c){return a+c.price*c.q},0));
+}
+el('cartBody').addEventListener('click',function(e){
+  var b=e.target.closest('[data-del]'); if(!b)return;
+  cart=cart.filter(function(c){return c.id!==b.dataset.del}); drawCart();
+});
+function openCart(){ el('cart').classList.add('open'); el('scrim').classList.add('open') }
+function closeCart(){ el('cart').classList.remove('open'); el('scrim').classList.remove('open') }
+el('cartbtn').addEventListener('click',openCart);
+el('cartclose').addEventListener('click',closeCart);
+el('scrim').addEventListener('click',closeCart);
+el('cartGo').addEventListener('click',function(e){ e.preventDefault();
+  alert('주문서 작성까지가 이 견본의 범위입니다. 결제 단계는 만들지 않았습니다.'); });
+drawCart();
+
+/* ── 검색 ── */
+el('sform').addEventListener('submit',function(e){
+  e.preventDefault();
+  var q=(el('q').value||'').trim();
+  var hit=ITEMS.filter(function(it){
+    return !q || it.name.indexOf(q)>-1 || it.cat.indexOf(q)>-1 ||
+           it.tags.some(function(t){return t.indexOf(q)>-1}) });
+  el('srTitle').textContent = q? '"'+q+'" 검색 결과 '+hit.length+'건' : '전체 제품';
+  el('srGrid').innerHTML = hit.length
+    ? hit.map(cardHTML).join('')
+    : '<div class="empty"><b>"'+q+'" 에 대한 결과가 없습니다</b>제품명이나 분류로 다시 찾아보세요.</div>';
+  setView('search');
+});
+
+/* ── 라우터 ── 카드·카테고리·로고 클릭을 한 곳에서 받는다 */
+document.addEventListener('click',function(e){
+  var go=e.target.closest('[data-go]');
+  if(go){ e.preventDefault();
+    if(go.dataset.go==='list'){ drawList(); setView('list') } else setView('home');
+    return; }
+  var cat=e.target.closest('[data-cat]');
+  if(cat){ e.preventDefault(); curList.cat=cat.dataset.cat; curList.sort='rec';
+    drop.classList.remove('open'); drawList(); setView('list'); return; }
+  var card=e.target.closest('.pd[data-id]');
+  if(card){ openDetail(card.dataset.id); return; }
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape') closeCart();
+  if(e.key!=='Enter') return;
+  var card=e.target.closest && e.target.closest('.pd[data-id]');
+  if(card) openDetail(card.dataset.id);
+});
+drawList();
 
 var rises=[].slice.call(document.querySelectorAll('.rise'));
 if(reduce||!('IntersectionObserver' in window)){
