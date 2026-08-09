@@ -97,6 +97,33 @@ footer{margin:50px 0 40px;text-align:center;font-size:12px;color:var(--mut);font
 
 <!-- ── RUN 36 ─────────────────────────────────────────────── -->
 <article class="run">
+<div class="bar"><span class="id">REF 01</span><span class="name">채움 CHAEUM · 급식 식자재 발주 (레퍼런스 실측 · 새 프로세스)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#2f6f4e;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">충실도 6/6</b>2026-08-09</span></div>
+<div class="grid">
+  <div class="left">
+    <p class="lbl">① 프로세스 (신규)</p>
+    <div class="thumb" style="background:#f3f4f5;display:flex;align-items:center;justify-content:center"><span class="cap" style="color:#1a1c20;font-weight:700;font-size:30px">채<span style="color:#2f6f4e">움</span></span></div>
+    <p class="why"><b>design-loop이 아니라 design-ref다.</b> 브랜드를 발명하는 대신 <b>실제 서비스의 디자인 시스템을 브라우저로 실측</b>해 뽑고, 그 시스템 위에 브랜드·카피·수치만 새로 얹었다. 눈으로 흉내내지 않고 <code>getComputedStyle</code>로 재서 옮긴다.</p>
+  </div>
+  <div class="right">
+    <p class="lbl">② 왜 만들었나</p>
+    <div style="font-size:13px;color:var(--body);background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">design-loop은 매 RUN 브랜드를 발명하는데 <b>발명하는 주체가 하나라서 손맛이 한 점으로 수렴</b>한다. 아트디렉터 3인을 넣어도 그 셋을 한 모델이 연기하는 것이라 한계가 있었다. 실제 회사들의 시스템은 서로 진짜로 다르므로, 가져오면 수렴이 구조적으로 깨진다.</div>
+    <div class="kw"><span>실측 추출</span><span>충실도 대조</span><span>선 검사</span><span>급식 발주</span></div>
+    <div class="human"><p class="lbl" style="margin-top:14px">③ 충실도 대조 → 6축 전부 통과</p>
+      <ul>
+        <li><b>측정이 왜 필요한지가 첫 판에서 증명됐다</b> — 눈으로 봤으면 "친근하고 둥근 느낌"으로 적었을 것이다. 실제로 나온 건 <b>타입 크기가 넷뿐</b>(14·16·20·32, 모듈러 아님) · <b>같은 14px에 행간 세 종</b>(19/24/27)으로 위계를 만듦 · <b>box-shadow 466노드 중 0건</b> · <b>포인트색이 UI에 0건</b>(svg에만) · gap 최빈 2px</li>
+        <li><b>1차 대조에서 세 축이 어긋났고 전부 내 습관이었다</b> — gap 2px를 1회만 씀(원본 최빈 19회) · 라운드 6을 기본처럼 씀(원본은 16이 기본) · 푸터 행간을 넓게 줘 14px 기본 행간 분포가 뒤집힘. <b>이게 이 프로세스의 진단 값이다</b></li>
+        <li><b>충실도와 접근성이 충돌했다</b> — 원본 최다 텍스트색이 종이 위 <b>3.11:1로 AA 미달</b>이었다. 그대로 옮겼으면 접근성을 어긴 템플릿을 공개했을 것이다. 원본이 이미 쓰는 두 번째 회색(6.01:1)을 본문 주력으로 올려 <b>팔레트를 벗어나지 않으면서</b> 기준을 넘겼다</li>
+        <li><b>선 검사 3종을 검사기에 넣었다</b> — 대상 브랜드명이 보이는 텍스트에 남거나, 그 회사 에셋 호스트를 참조하거나, 출처 주석이 없으면 오류. <code>ref-</code> 파일에만 돈다</li>
+        <li><b>업종을 옮겼다</b> — 시스템은 가져오되 같은 업종이면 오인 위험이 커진다. 지역 중고거래 → B2B 급식 발주</li>
+        <li>390·1440 iframe 실측 오버플로 0 · <code>verify.mjs</code> 오류 0·경고 0</li>
+      </ul></div>
+    <p class="lbl" style="margin-top:14px">④ 결과물</p>
+    <div class="result"><span class="ok" style="color:#2f6f4e">● 레퍼런스 실측 · 충실도 검증됨</span><a class="btn" href="templates/ref-01-daangn-chaeum.html">랜딩 열기 →</a><span class="path">templates/ref-01-daangn-chaeum.html</span></div>
+  </div>
+</div>
+</article>
+
+<article class="run">
 <div class="bar"><span class="id">RUN 36</span><span class="name">옮김 OMGIM · 번역 판본 대조 저널 제12호 (챔피언 리믹스 · AD-3 유서경)</span><span class="date" style="display:flex;gap:10px;align-items:center"><b style="background:#5b3d9e;color:#fff;padding:3px 9px;border-radius:6px;font-size:11px">27/40</b>2026-08-09</span></div>
 <div class="grid">
   <div class="left">

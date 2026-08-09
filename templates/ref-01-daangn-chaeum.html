@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- 시스템 출처: refs/daangn.md (2026-08-09 실측) · 브랜드·카피·수치는 전부 발명 -->
+<title>채움 — 어린이집·유치원 식자재 발주</title>
+<meta name="description" content="식단을 고르면 품목이 자동으로 담깁니다. 원아 수만 넣으면 수량까지 계산됩니다. 어린이집·유치원 급식 식자재 발주.">
+<style>
+:root{
+  /* 서체 — 원본은 웹폰트를 로드하지 않는다. 시스템 폰트 그대로 간다 */
+  --sans:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+
+  /* 색 — 원본 실측값. 다만 최다 사용 회색(#868b94)은 종이 위 3.11:1 로 AA 미달이라
+     본문에 쓰지 않는다. 원본의 두 번째 회색을 본문 주력으로 올리고,
+     연한 회색은 구분선·아이콘 등 비텍스트에만 남긴다 */
+  --paper:#f3f4f5;
+  --card:#ffffff;
+  --ink:#1a1c20;    /* on --paper = 15.5:1 (실측) */
+  --fg:#1a1c20;     /* on --paper = 15.5:1 (실측) */
+  --body:#555d6d;   /* on --paper = 6.0:1 (실측) — 원본 2번 회색 */
+  --mut:#4b5462;    /* on --card  = 7.6:1 (실측) */
+  --hair:#868b94;   /* 원본 최다 회색 = 3.1:1 → 텍스트 금지, 선·아이콘 전용 */
+  --line:#e3e5e8;
+  --dark:#2a3038;
+  /* 포인트색은 UI에 쓰지 않는다 — 원본에서 svg/path 에서만 검출됐다 */
+  --mark:#2f6f4e;
+
+  /* 타입 — 원본은 네 크기뿐이고 모듈러가 아니다 (14 → 16 → 20 → 32) */
+  --t-14:14px;--t-16:16px;--t-20:20px;--t-32:32px;
+  /* 같은 14px에 행간 세 종. 크기가 아니라 행간으로 역할을 가른다 */
+  --lh-a:19px;--lh-b:24px;--lh-c:27px;
+  --lh-16:22px;--lh-20:27px;--lh-32:38px;
+
+  /* 간격 — 원본 주력은 8·12. 큰 값은 거의 안 쓴다 */
+  --s2:2px;--s4:4px;--s8:8px;--s10:10px;--s12:12px;--s16:16px;--s24:24px;--s32:32px;
+
+  --r6:6px;--r16:16px;--rfull:9999px;
+  --w:1340px;
+  --dur:.15s;--ease:cubic-bezier(.35,0,.35,1);
+}
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--body);font-family:var(--sans);
+  font-size:var(--t-14);line-height:var(--lh-a);
+  -webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word;overflow-x:hidden}
+h1,h2,h3,p,ul,ol,dl,table,figure{margin:0}
+ul{padding:0;list-style:none}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+/* 층위는 그림자가 아니라 배경색 차이로 만든다 — 원본은 466노드 중 box-shadow 0건 */
+.wrap{max-width:var(--w);margin:0 auto;padding-left:var(--s16);padding-right:var(--s16)}
+.rise{opacity:0;transform:translateY(6px)}
+.rise.vis{opacity:1;transform:none;transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease)}
+
+/* ── 헤더 60px ── */
+.bar{height:60px;background:var(--card);border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:20}
+.bar .in{max-width:var(--w);margin:0 auto;padding-left:var(--s16);padding-right:var(--s16);
+  height:60px;display:flex;align-items:center;gap:var(--s12)}
+.logo{font-size:var(--t-20);line-height:var(--lh-20);font-weight:700;color:var(--ink);letter-spacing:-.02em}
+.logo i{font-style:normal;color:var(--mark)}
+.bar .sp{flex:1}
+.bar .loc{font-size:var(--t-14);line-height:var(--lh-a);color:var(--body);
+  background:var(--paper);border-radius:var(--rfull);padding:var(--s8) var(--s12)}
+.bar .cta{font-size:var(--t-14);line-height:var(--lh-a);font-weight:700;color:var(--card);
+  background:var(--dark);border-radius:var(--r6);padding:var(--s8) var(--s16);
+  transition:opacity var(--dur) var(--ease)}
+.bar .cta:hover{opacity:.86}
+
+/* ── 알림 띠 ── 원본의 얇은 상단 섹션(75px) 자리 */
+.notice{background:var(--dark);color:var(--card)}
+.notice .in{max-width:var(--w);margin:0 auto;padding:var(--s12) var(--s16);
+  display:flex;gap:var(--s8);align-items:baseline;flex-wrap:wrap}
+.notice b{font-size:var(--t-14);line-height:var(--lh-a);font-weight:700}
+.notice span{font-size:var(--t-14);line-height:var(--lh-a);color:#c7cbd2}
+
+/* ── 히어로 ── */
+.hero{padding-top:var(--s32);padding-bottom:var(--s24)}
+.hero h1{font-size:var(--t-32);line-height:var(--lh-32);font-weight:700;color:var(--ink);
+  letter-spacing:-.03em;max-width:20ch}
+.hero p{font-size:var(--t-14);line-height:var(--lh-c);color:var(--body);
+  margin-top:var(--s12);max-width:46ch}
+.stats{display:flex;flex-wrap:wrap;gap:var(--s24);margin-top:var(--s24)}
+.stats div{min-width:0}
+.stats b{display:block;font-size:var(--t-20);line-height:var(--lh-20);font-weight:700;color:var(--ink)}
+.stats span{display:block;font-size:var(--t-14);line-height:var(--lh-a);color:var(--body);margin-top:var(--s2)}
+
+/* ── 식단 고르기 ── 조작형 */
+/* sticky 바가 60px이므로 앵커는 그만큼 내려 착지시킨다 */
+[id]{scroll-margin-top:76px}
+.pick{padding-bottom:var(--s24)}
+.pick h2{font-size:var(--t-20);line-height:var(--lh-20);font-weight:700;color:var(--ink)}
+.pick .sub{font-size:var(--t-14);line-height:var(--lh-b);color:var(--body);margin-top:var(--s4);max-width:52ch}
+.menus{display:flex;flex-wrap:wrap;gap:var(--s8);margin-top:var(--s16)}
+.menus button{font-size:var(--t-14);line-height:var(--lh-a);font-weight:700;color:var(--body);
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r6);
+  padding:var(--s8) var(--s16);transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.menus button[aria-pressed="true"]{background:var(--dark);color:var(--card);border-color:var(--dark)}
+.headcount{display:flex;align-items:center;gap:var(--s8);margin-top:var(--s12);flex-wrap:wrap}
+.headcount label{font-size:var(--t-14);line-height:var(--lh-a);color:var(--body)}
+.headcount .step{display:flex;align-items:center;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--r6);overflow:hidden}
+.headcount .step button{padding:var(--s8) var(--s12);font-size:var(--t-16);line-height:var(--lh-16);
+  font-weight:700;color:var(--ink);transition:background var(--dur) var(--ease)}
+.headcount .step button:hover{background:var(--paper)}
+.headcount .step output{font-size:var(--t-14);line-height:var(--lh-a);font-weight:700;color:var(--ink);
+  min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
+
+/* ── 품목 리스트 ── 원본의 gap 2px 밀도를 그대로 쓴다 */
+.list{background:var(--card);border-radius:var(--r16);padding:var(--s8);margin-top:var(--s16)}
+.list ul{display:flex;flex-direction:column;gap:var(--s2)}
+.row{display:grid;grid-template-columns:1fr auto;gap:var(--s12);
+  padding:var(--s12);border-radius:var(--r16);transition:background var(--dur) var(--ease)}
+.row>*{min-width:0}
+.row:hover{background:var(--paper)}
+.row .nm{font-size:var(--t-14);line-height:var(--lh-a);font-weight:700;color:var(--ink)}
+.row .dt{font-size:var(--t-14);line-height:var(--lh-a);color:var(--body);margin-top:var(--s2)}
+.row .qt{font-size:var(--t-14);line-height:var(--lh-a);font-weight:700;color:var(--ink);
+  text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.row .pr{font-size:var(--t-14);line-height:var(--lh-a);color:var(--body);
+  text-align:right;margin-top:var(--s2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.sum{display:flex;flex-wrap:wrap;gap:var(--s12);align-items:baseline;
+  border-top:1px solid var(--line);margin-top:var(--s8);padding:var(--s16) var(--s12) var(--s8)}
+.sum .lbl{font-size:var(--t-14);line-height:var(--lh-a);color:var(--body)}
+.sum .tot{font-size:var(--t-20);line-height:var(--lh-20);font-weight:700;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.sum .sp{flex:1}
+.sum .due{font-size:var(--t-14);line-height:var(--lh-a);color:var(--body)}
+.sum .due b{color:var(--ink)}
+
+/* ── 발주 조건 ── */
+.terms{padding-top:var(--s24);padding-bottom:var(--s24)}
+.terms h2{font-size:var(--t-20);line-height:var(--lh-20);font-weight:700;color:var(--ink)}
+.tgrid{display:grid;grid-template-columns:1fr;gap:var(--s2);margin-top:var(--s16)}
+.tgrid>*{min-width:0}
+.tcard{background:var(--card);border-radius:var(--r16);padding:var(--s16)}
+.tcard dt{font-size:var(--t-14);line-height:var(--lh-a);color:var(--body)}
+.tcard dd{margin:var(--s4) 0 0;font-size:var(--t-16);line-height:var(--lh-16);font-weight:700;color:var(--ink)}
+.tcard p{font-size:var(--t-14);line-height:var(--lh-b);color:var(--body);margin-top:var(--s8)}
+
+/* ── 후기 ── */
+.say{padding-bottom:var(--s24)}
+.say h2{font-size:var(--t-20);line-height:var(--lh-20);font-weight:700;color:var(--ink)}
+.sgrid{display:grid;grid-template-columns:1fr;gap:var(--s2);margin-top:var(--s16)}
+.sgrid>*{min-width:0}
+.scard{background:var(--card);border-radius:var(--r16);padding:var(--s16)}
+.scard p{font-size:var(--t-14);line-height:var(--lh-c);color:var(--ink)}
+.scard .who{font-size:var(--t-14);line-height:var(--lh-a);color:var(--body);margin-top:var(--s12)}
+.scard .who b{color:var(--ink);font-weight:700}
+
+/* ── 푸터 ── 원본의 특징: 푸터가 본문만큼 길고 링크를 대량으로 편다 ── */
+footer{background:var(--card);border-top:1px solid var(--line);
+  padding-top:var(--s32);padding-bottom:var(--s32);margin-top:var(--s16)}
+.fgrid{display:grid;grid-template-columns:1fr;gap:var(--s24)}
+.fgrid>*{min-width:0}
+.fcol h3{font-size:var(--t-14);line-height:var(--lh-a);font-weight:700;color:var(--ink)}
+.fcol ul{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s12);margin-top:var(--s8)}
+.fcol li{font-size:var(--t-14);line-height:var(--lh-a);color:var(--body)}
+.fcol li a{transition:color var(--dur) var(--ease)}
+.fcol li a:hover{color:var(--ink)}
+.fbot{border-top:1px solid var(--line);margin-top:var(--s24);padding-top:var(--s16);
+  font-size:var(--t-14);line-height:var(--lh-b);color:var(--body)}
+
+@media(min-width:760px){
+  .tgrid{grid-template-columns:repeat(3,1fr)}
+  .sgrid{grid-template-columns:repeat(3,1fr)}
+  .row{grid-template-columns:1fr 140px}
+}
+@media(min-width:1000px){
+  .fgrid{grid-template-columns:1.4fr 1fr 1fr}
+  .hero{padding-top:var(--s32);padding-bottom:var(--s32)}
+}
+@media(max-width:759px){
+  .bar .loc{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .rise{opacity:1;transform:none;transition:none}
+  .row,.menus button,.bar .cta{transition:none}
+}
+html.capture .rise{opacity:1;transform:none;transition:none}
+</style></head><body>
+
+<header class="bar">
+  <div class="in">
+    <span class="logo">채<i>움</i></span>
+    <span class="loc">서울 은평 · 배송권역 3</span>
+    <span class="sp"></span>
+    <a class="cta" href="#order">발주 시작</a>
+  </div>
+</header>
+
+<div class="notice">
+  <div class="in">
+    <b>오늘 발주 마감 15:00</b>
+    <span>지금 넣으면 내일 06:30 도착합니다. 권역별 마감이 다릅니다.</span>
+  </div>
+</div>
+
+<section class="hero wrap">
+  <h1>식단을 고르면 품목이 알아서 담깁니다.</h1>
+  <p>어린이집·유치원 급식 담당 선생님이 발주에 쓰는 시간은 한 주 평균 3시간 20분입니다.
+    채움은 식단표만 고르면 품목·수량·단가를 계산해 장바구니를 미리 채워 둡니다.</p>
+  <div class="stats">
+    <div><b>1,840곳</b><span>이용 시설</span></div>
+    <div><b>06:30</b><span>새벽 도착 · 권역 3</span></div>
+    <div><b>3시간 20분</b><span>주당 절약 시간</span></div>
+    <div><b>0.4%</b><span>오배송률 · 최근 6개월</span></div>
+  </div>
+</section>
+
+<section class="pick wrap" id="order">
+  <h2 class="rise">식단 고르기</h2>
+  <p class="sub rise">아래는 이번 주 표준 식단입니다. 고르면 품목이 통째로 바뀌고,
+    원아 수를 조정하면 수량과 금액이 다시 계산됩니다.</p>
+
+  <div class="menus" id="menus" role="group" aria-label="식단 고르기"></div>
+
+  <div class="headcount">
+    <label id="hclabel">원아 수</label>
+    <div class="step" role="group" aria-labelledby="hclabel">
+      <button type="button" id="minus" aria-label="원아 수 줄이기">−</button>
+      <output id="hc" aria-live="polite">80명</output>
+      <button type="button" id="plus" aria-label="원아 수 늘리기">＋</button>
+    </div>
+  </div>
+
+  <div class="list">
+    <ul id="rows"></ul>
+    <div class="sum">
+      <span class="lbl">품목 <b id="cnt">0</b>종 합계</span>
+      <span class="tot" id="tot">0원</span>
+      <span class="sp"></span>
+      <span class="due">도착 <b id="due">—</b></span>
+    </div>
+  </div>
+</section>
+
+<section class="terms wrap">
+  <h2>발주 조건</h2>
+  <div class="tgrid">
+    <dl class="tcard"><dt>최소 발주</dt><dd>8만원</dd>
+      <p>권역 3은 6만원부터 배송합니다. 미달 시 다음 날로 이월되며 별도 비용은 없습니다.</p></dl>
+    <dl class="tcard"><dt>마감과 도착</dt><dd>15:00 마감 · 06:30 도착</dd>
+      <p>마감 이후 발주는 다음 배송분으로 넘어갑니다. 공휴일 전날은 13:00에 마감합니다.</p></dl>
+    <dl class="tcard"><dt>반품</dt><dd>도착 당일 09:00까지</dd>
+      <p>수량 부족·품질 이상은 사진 한 장이면 처리됩니다. 재배송은 같은 날 오후에 갑니다.</p></dl>
+  </div>
+</section>
+
+<section class="say wrap">
+  <h2>쓰는 곳에서 온 말</h2>
+  <div class="sgrid">
+    <div class="scard">
+      <p>식단표를 엑셀로 옮겨 적던 걸 안 하게 됐어요. 원아가 늘면 숫자만 바꾸면 되니까
+        발주에 쓰던 시간이 절반 아래로 떨어졌습니다.</p>
+      <div class="who"><b>임세라</b> 은평 햇살어린이집 조리실장 · 2025.09부터 이용</div>
+    </div>
+    <div class="scard">
+      <p>새벽에 오는 게 제일 큽니다. 아침에 문 열면 이미 와 있어서 검수만 하면 돼요.
+        오배송이 한 번 있었는데 그날 오후에 다시 왔습니다.</p>
+      <div class="who"><b>배윤호</b> 서대문 나무유치원 원감 · 2024.03부터 이용</div>
+    </div>
+    <div class="scard">
+      <p>반품을 사진으로 받아 주는 게 의외로 중요했습니다. 예전엔 전화로 설명하다
+        결국 그냥 쓰는 일이 많았거든요.</p>
+      <div class="who"><b>고은비</b> 마포 다솔어린이집 원장 · 2025.01부터 이용</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div class="fcol">
+        <h3>배송 권역</h3>
+        <ul>
+          <li><a href="#order">은평</a></li><li><a href="#order">서대문</a></li><li><a href="#order">마포</a></li>
+          <li><a href="#order">종로</a></li><li><a href="#order">중구</a></li><li><a href="#order">용산</a></li>
+          <li><a href="#order">성동</a></li><li><a href="#order">광진</a></li><li><a href="#order">동대문</a></li>
+          <li><a href="#order">중랑</a></li><li><a href="#order">성북</a></li><li><a href="#order">강북</a></li>
+          <li><a href="#order">도봉</a></li><li><a href="#order">노원</a></li><li><a href="#order">양천</a></li>
+          <li><a href="#order">강서</a></li><li><a href="#order">구로</a></li><li><a href="#order">금천</a></li>
+          <li><a href="#order">영등포</a></li><li><a href="#order">동작</a></li><li><a href="#order">관악</a></li>
+          <li><a href="#order">서초</a></li><li><a href="#order">강남</a></li><li><a href="#order">송파</a></li>
+          <li><a href="#order">강동</a></li><li><a href="#order">고양</a></li><li><a href="#order">파주</a></li>
+          <li><a href="#order">김포</a></li><li><a href="#order">부천</a></li><li><a href="#order">광명</a></li>
+        </ul>
+      </div>
+      <div class="fcol">
+        <h3>품목</h3>
+        <ul>
+          <li><a href="#order">쌀·잡곡</a></li><li><a href="#order">채소</a></li><li><a href="#order">과일</a></li>
+          <li><a href="#order">육류</a></li><li><a href="#order">수산</a></li><li><a href="#order">계란</a></li>
+          <li><a href="#order">두부·콩</a></li><li><a href="#order">유제품</a></li><li><a href="#order">건어물</a></li>
+          <li><a href="#order">장류</a></li><li><a href="#order">양념</a></li><li><a href="#order">면류</a></li>
+          <li><a href="#order">김치</a></li><li><a href="#order">냉동</a></li><li><a href="#order">간식</a></li>
+          <li><a href="#order">위생용품</a></li>
+        </ul>
+      </div>
+      <div class="fcol">
+        <h3>안내</h3>
+        <ul>
+          <li><a href="#order">이용 방법</a></li><li><a href="#order">권역별 마감</a></li>
+          <li><a href="#order">반품 규정</a></li><li><a href="#order">원산지 표기</a></li>
+          <li><a href="#order">위생 검사 결과</a></li><li><a href="#order">세금계산서</a></li>
+          <li><a href="#order">자주 묻는 질문</a></li><li><a href="#order">공지사항</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fbot">
+      채움 · 서울특별시 은평구 통일로 1044 · 사업자등록번호 318-86-02914 ·
+      통신판매업 2021-서울은평-0733 · 식품판매업 신고 제2021-0451호<br>
+      고객센터 02-388-6120 · 평일 08–18시 · 발주 마감 관련 문의는 권역별 담당자에게 연결됩니다.
+    </div>
+  </div>
+</footer>
+
+<script>
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+scrollTo(0,0);
+addEventListener('load',function(){scrollTo(0,0)});
+
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+/* 1인분 기준 g·단가(원/kg). 원아 수를 곱해 수량과 금액을 낸다 */
+var MENUS=[
+ {id:'a',name:'월 · 소고기무국',due:'내일 06:30',items:[
+   {n:'백미',d:'국내산 · 20kg',g:80,p:3200},
+   {n:'소고기 양지',d:'국내산 1등급 · 냉장',g:35,p:29800},
+   {n:'무',d:'국내산 · 개당 1.2kg',g:60,p:2100},
+   {n:'대파',d:'국내산 · 단',g:12,p:4600},
+   {n:'배추김치',d:'국내산 · 10kg',g:40,p:6900},
+   {n:'계란',d:'특란 · 30구',g:50,p:5400}]},
+ {id:'b',name:'화 · 닭갈비덮밥',due:'내일 06:30',items:[
+   {n:'백미',d:'국내산 · 20kg',g:85,p:3200},
+   {n:'닭다리살',d:'국내산 · 냉장',g:70,p:11200},
+   {n:'양배추',d:'국내산 · 통',g:55,p:2400},
+   {n:'고구마',d:'국내산 · 5kg',g:30,p:4300},
+   {n:'고추장',d:'국내산 · 3kg',g:8,p:7800},
+   {n:'깍두기',d:'국내산 · 10kg',g:40,p:7200}]},
+ {id:'c',name:'수 · 된장찌개',due:'모레 06:30',items:[
+   {n:'백미',d:'국내산 · 20kg',g:80,p:3200},
+   {n:'두부',d:'국내산 콩 · 판두부',g:45,p:3900},
+   {n:'애호박',d:'국내산 · 개',g:35,p:2800},
+   {n:'감자',d:'국내산 · 5kg',g:50,p:3600},
+   {n:'된장',d:'국내산 · 3kg',g:10,p:8400},
+   {n:'멸치',d:'국내산 · 육수용 1kg',g:6,p:24000},
+   {n:'총각김치',d:'국내산 · 10kg',g:40,p:7600}]}
+];
+var cur='a', head=80;
+
+var menus=document.getElementById('menus'), rows=document.getElementById('rows'),
+    tot=document.getElementById('tot'), cnt=document.getElementById('cnt'),
+    due=document.getElementById('due'), hc=document.getElementById('hc');
+
+MENUS.forEach(function(m){
+  var b=document.createElement('button');
+  b.type='button'; b.dataset.id=m.id; b.textContent=m.name;
+  b.addEventListener('click',function(){ cur=m.id; draw(); });
+  menus.appendChild(b);
+});
+document.getElementById('minus').addEventListener('click',function(){ head=Math.max(20,head-10); draw() });
+document.getElementById('plus').addEventListener('click',function(){ head=Math.min(300,head+10); draw() });
+
+function won(n){ return n.toLocaleString('ko-KR')+'원' }
+function kg(g){ return (g/1000).toFixed(1)+'kg' }
+
+function draw(){
+  var m=MENUS.filter(function(x){return x.id===cur})[0];
+  [].forEach.call(menus.querySelectorAll('button'),function(b){
+    b.setAttribute('aria-pressed',String(b.dataset.id===cur));
+  });
+  hc.textContent=head+'명';
+  var sum=0;
+  rows.innerHTML=m.items.map(function(it){
+    var grams=it.g*head, cost=Math.round(grams/1000*it.p);
+    sum+=cost;
+    return '<li class="row"><div><div class="nm">'+it.n+'</div><div class="dt">'+it.d+'</div></div>'+
+      '<div><div class="qt">'+kg(grams)+'</div><div class="pr">'+won(cost)+'</div></div></li>';
+  }).join('');
+  cnt.textContent=m.items.length;
+  tot.textContent=won(sum);
+  due.textContent=m.due;
+}
+draw();
+
+var rises=[].slice.call(document.querySelectorAll('.rise'));
+if(reduce||!('IntersectionObserver' in window)){
+  rises.forEach(function(el){el.classList.add('vis')});
+}else{
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}});
+  },{rootMargin:'0px 0px -6% 0px'});
+  rises.forEach(function(el){io.observe(el)});
+  addEventListener('load',function(){
+    rises.forEach(function(el){ if(el.getBoundingClientRect().top<innerHeight)el.classList.add('vis') });
+  });
+}
+</script>
+</body></html>
