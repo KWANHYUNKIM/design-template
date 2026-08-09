@@ -29,26 +29,30 @@
 --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
 
 /* 대비비는 실제로 깔리는 배경 3종(ink · ink2 · paper) 위에서 전부 실측 */
---ink:#0a0a0a;      /* 지면 */
---ink2:#141414;     /* 블록 바닥 */
---paper:#f2f0ea;    /* 반전 밴드 */
---fg:#f7f7f5;       /* 본문   — ink 18.46 / ink2 17.17 */
---body:#c9c9c4;     /* 보조   — ink 11.91 / ink2 11.08 */
---mut:#9a9a94;      /* 캡션   — ink  7.00 / ink2  6.51. 12px에도 AA */
---pink:#0a0a0a;     /* 종이 위 본문 — paper 17.37 */
---pbody:#3a3a36;    /* 종이 위 보조 — paper 10.02 */
---pmut:#5a5a54;     /* 종이 위 캡션 — paper  6.09 */
---k:#ff3b00;        /* 포인트 1색 — ink 5.54 / ink2 5.16 (AA).
-                       종이 위는 3.14뿐이라 24px 이상 또는 배경으로만 쓴다.
-                       주황 배경 위 글자는 흰색(3.57)이 아니라 잉크(5.54)로 */
+--ink:#0a0a0a;      /* 지면 — 이 위: fg 18.46:1 · body 11.91:1 · mut 7.00:1 · k 5.54:1 */
+--ink2:#141414;     /* 블록 바닥 — 이 위: fg 17.17:1 · body 11.08:1 · mut 6.51:1 · k 5.16:1 */
+--paper:#f2f0ea;    /* 반전 밴드 — 이 위: pink 17.37:1 · pbody 10.02:1 · pmut 6.09:1 · k 3.14:1 */
+--fg:#f7f7f5;       /* 본문   — ink 18.46:1 / ink2 17.17:1 */
+--body:#c9c9c4;     /* 보조   — ink 11.91:1 / ink2 11.08:1 */
+--mut:#9a9a94;      /* 캡션   — ink 7.00:1 / ink2 6.51:1. 12px에도 AA */
+--pink:#0a0a0a;     /* 종이 위 본문 — paper 17.37:1 */
+--pbody:#3a3a36;    /* 종이 위 보조 — paper 10.02:1 */
+--pmut:#5a5a54;     /* 종이 위 캡션 — paper 6.09:1 */
+--k:#ff3b00;        /* 포인트 1색 — ink 5.54:1 / ink2 5.16:1 (AA).
+                       종이 위는 3.14:1 뿐이라 24px 이상(AA large) 또는 배경으로만 쓴다.
+                       주황 배경 위 글자는 흰색(3.33:1)이 아니라 잉크(5.54:1)로 */
 --line:#2e2e2e;     /* 얇은 괘선 */
+--pline:#cfccc3;    /* 종이 위 얇은 괘선 — paper 대비 1.3, 구획선 전용(글자 금지) */
 --hard:#f7f7f5;     /* 굵은 테두리 — 층위는 그림자가 아니라 선으로 만든다 */
 
 /* 타입 스케일 — 극단으로 벌리고 중간을 비운다. 31/39/49px 단계는 쓰지 않는다 */
 --t-xs:12px;--t-sm:14px;--t-base:17px;--t-lg:24px;
 --t-d1:clamp(38px,6.4vw,72px);
 --t-d2:min(21vw,280px);     /* 스윕 숫자도 지면 폭을 쓴다 — 이 페이지는 큰 숫자로 말한다 */
---t-d3:min(52vw,620px);     /* 3자리 숫자가 항상 지면 폭을 넘도록 */
+/* "132"의 글리프 폭은 1.87em 이다. 56vw 로 두면 1.05×뷰포트가 되어
+   390~1960px 모든 폭에서 마지막 자리가 실제로 화면 밖으로 나간다.
+   620px 상한을 두었을 때는 820px 이상에서 지면 안에 멈춰 "흘러나감"이 말뿐이었다 */
+--t-d3:min(56vw,1100px);
 /* 간격 — 4배수 */
 --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
 }
@@ -85,7 +89,7 @@ figure,p,blockquote,dl,dd,ol{margin:0}
 .top .sp{flex:1}
 .top .meta{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.06em}
 .top .go{font-family:var(--mono);font-size:var(--t-xs);font-weight:700;letter-spacing:.08em;
- background:var(--k);color:var(--ink);padding:9px 14px;border:0;transition:.1s linear;white-space:nowrap}
+ background:var(--k);color:var(--ink);padding:var(--s3) var(--s4);border:0;transition:.1s linear;white-space:nowrap}
 .top .go:hover{background:var(--fg)}
 
 /* ── 계측 리포트 밴드 : 페이지가 광고가 아니라 리포트로 시작한다 ── */
@@ -97,8 +101,12 @@ figure,p,blockquote,dl,dd,ol{margin:0}
  font-variant-numeric:tabular-nums}
 .rpt .sp{flex:1}
 
+/* ── 섹션 호흡 — 전부 같은 상하 패딩이면 스크롤이 기계가 된다.
+   촘촘한 구간(xo·say 머리·rigs 꼬리)과 비운 구간(hero 꼬리·rigs 머리·say 꼬리)을 번갈아 둔다.
+   s8/s9 를 다섯 섹션에 그대로 복사했던 판본은 여백 점수가 3에서 막혔다 ── */
+
 /* ── 히어로 : 압도적으로 큰 것 하나. 화면 밖으로 흘러나간다 ── */
-.hero{padding-top:var(--s8);padding-bottom:var(--s9);position:relative}
+.hero{padding-top:var(--s8);padding-bottom:var(--s10);position:relative}
 .hero .kicker{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.18em;
  text-transform:uppercase;color:var(--k);font-weight:700}
 /* 지면 폭을 꽉 채우고 오른쪽으로 흘러나간다. 이 페이지에서 압도적인 것은 이것 하나뿐 */
@@ -109,7 +117,7 @@ figure,p,blockquote,dl,dd,ol{margin:0}
  margin-top:var(--s3);color:var(--body);font-weight:900}
 .hero .claim{font-size:var(--t-lg);font-weight:800;letter-spacing:-.02em;max-width:20ch;
  margin:var(--s6) 0 0;line-height:1.25}
-.hero .claim em{font-style:normal;background:var(--k);color:var(--ink);padding:0 6px}
+.hero .claim em{font-style:normal;background:var(--k);color:var(--ink);padding:0 var(--s2)}
 /* 스펙 박스가 숫자 위로 올라타 일부를 가린다 — 의도적 어긋남 */
 .hero .spec{border:3px solid var(--hard);background:var(--ink);padding:var(--s5);
  position:relative;z-index:2;max-width:560px;margin:calc(var(--s9) * -1) 0 0 auto}
@@ -120,14 +128,15 @@ figure,p,blockquote,dl,dd,ol{margin:0}
 .hero .spec dd{margin:0;font-family:var(--mono);font-size:var(--t-sm);font-weight:700;
  color:var(--fg);font-variant-numeric:tabular-nums}
 .hero .shot{border:3px solid var(--hard);margin-top:var(--s6);background:var(--ink2)}
-/* contrast 를 올리면 원본의 하이라이트가 순백으로 뭉개져 종이 밴드와 색으로 경합한다 */
-.hero .shot img{width:100%;height:100%;object-fit:cover;object-position:26% 50%;
- aspect-ratio:16/9;filter:grayscale(1) contrast(.92) brightness(.86)}
+/* 세로 원본을 16:9 로 자르면 높이의 42%만 남는다 — 하늘을 버리고 캐비닛 면이 오도록 아래로 민다.
+   contrast 를 올리면 하이라이트가 순백으로 뭉개져 반전 밴드와 색으로 경합한다 */
+.hero .shot img{width:100%;height:100%;object-fit:cover;object-position:50% 62%;
+ aspect-ratio:16/9;filter:grayscale(1) contrast(1.02) brightness(.82)}
 .hero .cap{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);
  margin-top:var(--s2);line-height:1.6}
 
 /* ── ★ 크로스오버 : 조작하면 대역이 실제로 다시 나뉜다 ── */
-.xo{border-top:3px solid var(--hard);padding-top:var(--s8);padding-bottom:var(--s9)}
+.xo{border-top:3px solid var(--hard);padding-top:var(--s7);padding-bottom:var(--s8)}
 .xo h2{font-size:var(--t-d1);font-weight:900;letter-spacing:-.04em;line-height:1;margin:var(--s3) 0 0}
 .xo .sub{font-size:var(--t-base);color:var(--body);max-width:56ch;margin:var(--s4) 0 0}
 .xoBox{border:3px solid var(--hard);margin-top:var(--s6);background:var(--ink2)}
@@ -137,7 +146,7 @@ figure,p,blockquote,dl,dd,ol{margin:0}
  text-transform:uppercase;color:var(--mut)}
 .xoBox .head .sp{flex:1}
 .xoBox .head .rst{font-family:var(--mono);font-size:var(--t-xs);font-weight:700;letter-spacing:.08em;
- border:2px solid var(--hard);padding:6px 12px;transition:.1s linear}
+ border:2px solid var(--hard);padding:var(--s2) var(--s3);transition:.1s linear}
 .xoBox .head .rst:hover{background:var(--fg);color:var(--ink)}
 .xoBox .plot{padding:var(--s5)}
 svg.xoSvg{display:block;width:100%;height:auto;touch-action:none}
@@ -157,12 +166,12 @@ svg.xoSvg .hnd:focus-visible{outline:2px solid var(--k);outline-offset:2px}
 .unit:last-child{border-bottom:0}
 .unit .nm{font-size:var(--t-base);font-weight:900;letter-spacing:-.01em;white-space:nowrap}
 .unit .nm s{text-decoration:none;display:block;font-family:var(--mono);font-size:var(--t-xs);
- font-weight:400;color:var(--mut);letter-spacing:.06em;margin-top:2px}
+ font-weight:400;color:var(--mut);letter-spacing:.06em;margin-top:var(--s1)}
 .unit .bar{height:14px;border:2px solid var(--hard);position:relative}
 .unit .bar i{position:absolute;top:0;bottom:0;left:0;background:var(--k);display:block}
 .unit .rd{font-family:var(--mono);font-size:var(--t-sm);font-weight:700;
  font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
-.unit .rd s{text-decoration:none;display:block;font-size:var(--t-xs);font-weight:400;color:var(--mut);margin-top:2px}
+.unit .rd s{text-decoration:none;display:block;font-size:var(--t-xs);font-weight:400;color:var(--mut);margin-top:var(--s1)}
 .warn{border-top:3px solid var(--hard);padding:var(--s4) var(--s5);
  font-family:var(--mono);font-size:var(--t-sm);line-height:1.6;font-weight:700}
 .warn.ok{color:var(--body);font-weight:400}
@@ -187,9 +196,21 @@ svg.xoSvg .hnd:focus-visible{outline:2px solid var(--k);outline-offset:2px}
 .sweep .ticks span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
 .sweep .ticks span:first-child{transform:none}
 .sweep .ticks span:last-child{transform:translateX(-100%)}
+/* 핀을 푸는 폴백(reduced-motion · capture)에서는 스크럽 자체를 끄고 세 상태를 세로로 펼친다.
+   핀만 풀고 스크럽 계산을 남기면 (offsetHeight − innerHeight) 가 음수가 되어 값이 거꾸로 흐른다 */
+.sweep .fold{display:none}
+.sweep.folded .live{display:none}
+.sweep.folded .fold{display:block}
+.sweep .fold .row{border-top:3px solid var(--hard);padding-top:var(--s4);margin-top:var(--s5);
+ display:grid;grid-template-columns:minmax(max-content,auto) 1fr;gap:var(--s3) var(--s5);align-items:baseline}
+.sweep .fold .row>*{min-width:0}
+.sweep .fold .rg{font-family:var(--mono);font-size:var(--t-sm);font-weight:700;color:var(--k);
+ white-space:nowrap;font-variant-numeric:tabular-nums}
+.sweep .fold .wh{font-size:var(--t-lg);font-weight:900;letter-spacing:-.02em}
+.sweep .fold .sy{font-size:var(--t-base);color:var(--body);margin-top:var(--s2);max-width:56ch}
 
 /* ── 설치 원장 : 카드가 아니라 장부 ── */
-.rigs{border-top:3px solid var(--hard);padding-top:var(--s8);padding-bottom:var(--s9)}
+.rigs{border-top:3px solid var(--hard);padding-top:var(--s10);padding-bottom:var(--s6)}
 .rigs h2{font-size:var(--t-d1);font-weight:900;letter-spacing:-.04em;line-height:1;margin:var(--s3) 0 0}
 .rigs table{width:100%;border-collapse:collapse;margin-top:var(--s6);font-size:var(--t-sm)}
 .rigs caption{text-align:left;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);
@@ -206,7 +227,7 @@ svg.xoSvg .hnd:focus-visible{outline:2px solid var(--k);outline-offset:2px}
 .rigs .cap{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s2);line-height:1.6}
 
 /* ── 트러스트 : 크기가 다른 세 개. 균등 카드 금지 ── */
-.say{border-top:3px solid var(--hard);padding-top:var(--s8);padding-bottom:var(--s9)}
+.say{border-top:3px solid var(--hard);padding-top:var(--s6);padding-bottom:var(--s10)}
 .say h2{font-size:var(--t-d1);font-weight:900;letter-spacing:-.04em;line-height:1;margin:var(--s3) 0 0}
 .q{border:3px solid var(--hard);padding:var(--s5);margin-top:var(--s6)}
 .q.lead{background:var(--paper);color:var(--pink)}
@@ -217,7 +238,7 @@ svg.xoSvg .hnd:focus-visible{outline:2px solid var(--k);outline-offset:2px}
 .q.lead .by{color:var(--pbody)}
 .q .by b{color:var(--fg);font-weight:700}
 .q.lead .by b{color:var(--pink)}
-.q .by .vf{border:2px solid currentColor;padding:2px 7px;margin-left:var(--s2);white-space:nowrap}
+.q .by .vf{border:2px solid currentColor;padding:var(--s1) var(--s2);margin-left:var(--s2);white-space:nowrap}
 .qrow{display:grid;grid-template-columns:1fr;gap:var(--s5)}
 .qrow>*{min-width:0}
 .tally{border:3px solid var(--hard);margin-top:var(--s6);display:grid;grid-template-columns:1fr}
@@ -229,7 +250,7 @@ svg.xoSvg .hnd:focus-visible{outline:2px solid var(--k);outline-offset:2px}
 
 /* ── 닫기 : 큰 CTA 대신 반입 조건 실무표 ── */
 .load{border-top:3px solid var(--hard);background:var(--paper);color:var(--pink);
- padding-top:var(--s8);padding-bottom:var(--s9)}
+ padding-top:var(--s9);padding-bottom:var(--s8)}
 .load h2{font-size:var(--t-d1);font-weight:900;letter-spacing:-.04em;line-height:1;margin:var(--s3) 0 0}
 .load .lbl{color:var(--pmut)}
 .load .lead{font-size:var(--t-base);color:var(--pbody);max-width:56ch;margin:var(--s4) 0 0}
@@ -238,7 +259,7 @@ svg.xoSvg .hnd:focus-visible{outline:2px solid var(--k);outline-offset:2px}
 .load li{counter-increment:c;display:grid;
  grid-template-columns:minmax(max-content,auto) 1fr minmax(max-content,auto);
  gap:var(--s3) var(--s5);align-items:baseline;
- padding:var(--s4) 0;border-bottom:1px solid #cfccc3}
+ padding:var(--s4) 0;border-bottom:1px solid var(--pline)}
 .load li>*{min-width:0}
 /* 종이 위 주황은 3.16:1 뿐이다 — :root 주석대로 24px 이상(AA large 3.0)에서만 쓴다.
    12px 로 두면 AA 미달이었다 */
@@ -252,7 +273,7 @@ svg.xoSvg .hnd:focus-visible{outline:2px solid var(--k);outline-offset:2px}
 .load .end p{margin:0;font-size:var(--t-sm);color:var(--pbody);max-width:44ch}
 .load .end .sp{flex:1}
 .load .end a{font-family:var(--mono);font-size:var(--t-sm);font-weight:700;letter-spacing:.06em;
- background:var(--k);color:var(--ink);padding:12px 18px;border:0;transition:.1s linear}
+ background:var(--k);color:var(--ink);padding:var(--s3) var(--s5);border:0;transition:.1s linear}
 .load .end a:hover{background:var(--pink);color:var(--paper)}
 
 footer{border-top:3px solid var(--hard);padding-top:var(--s6);padding-bottom:var(--s9)}
@@ -279,11 +300,31 @@ footer b{color:var(--body);font-weight:700}
  .unit{grid-template-columns:1fr;gap:var(--s3)}
  .unit .rd{text-align:left}
  .sweep{height:300vh}
- /* display:block 아래서도 width:100% 가 살아 있어 표가 컨테이너에 맞춰 줄어든다 —
-    overflow-x:auto 가 무의미해지고 비고 열이 89px로 뭉갠다. 래퍼에 스크롤을 주고
-    표에는 최소폭을 박는다 */
- .rigs .tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
- .rigs table{min-width:720px}
+ /* 가로 스크롤로 넘기면 표에서 가장 쓸모 있는 열(비고)이 스크롤 뒤로 숨는다.
+    5열을 327px 에 밀어넣지도, 굴리지도 않고 — 행을 세워 쌓는다.
+    tr·td 까지 block 으로 내려야 익명 테이블 박스가 사라져 폭이 컨테이너에 맞는다
+    (table 에만 display:block 을 걸면 min-content 720px 이 그대로 남아 잘린다) */
+ .rigs .tblwrap{overflow-x:visible}
+ .rigs table{display:block;min-width:0;margin-top:var(--s5)}
+ .rigs colgroup,.rigs thead{display:none}
+ /* display:table-caption 은 블록화된 표 안에서 shrink-to-fit 이 되어 한 단어 폭(52px)으로 접힌다 */
+ .rigs caption{display:block}
+ .rigs tbody,.rigs tr,.rigs td{display:block}
+ .rigs tr{border-top:3px solid var(--hard);padding:var(--s4) 0 var(--s5)}
+ .rigs td{border-bottom:0;padding:0}
+ .rigs td.n{font-size:var(--t-lg);padding-bottom:var(--s3)}
+ .rigs td.m,.rigs td.d{white-space:normal;padding-top:var(--s2)}
+ .rigs td[data-l]:before{content:attr(data-l);display:inline-block;width:var(--s8);
+  font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em;color:var(--mut)}
+ /* 비고는 라벨과 문장을 한 줄에 두면 둘째 줄부터 들여쓰기가 어긋난다 — 라벨을 위로 올린다 */
+ .rigs td.d:before{display:block;width:auto;margin-bottom:var(--s1)}
+ /* 원장표에서 고친 것과 같은 문제가 닫는 섹션에도 있었다 —
+    질문·답을 한 줄에 두면 nowrap 답변(140~179px)이 폭을 먼저 먹고
+    질문 열이 72px 로 뭉개져 「바닥이 / 137kg을 / 한 점에 / 받을 수 / 있습니까?」 5줄이 된다.
+    3열 그리드는 이 파일에서 두 곳뿐이고, 둘 다 좁은 폭에서는 접는다 */
+ .load li{grid-template-columns:minmax(max-content,auto) 1fr;gap:var(--s2) var(--s4)}
+ .load li .q2{grid-column:2}
+ .load li .a2{grid-column:2;text-align:left;white-space:normal;color:var(--pmut)}
 }
 @media(prefers-reduced-motion:reduce){
  .rise{opacity:1;transform:none;transition:none}
@@ -297,6 +338,8 @@ html.capture .rise{opacity:1;transform:none;transition:none}
 html.capture .top{position:static}
 html.capture .sweep{height:auto}
 html.capture .sweep .stick{position:static;height:auto;padding:var(--s9) 0}
+/* 바가 static 이 되면 앵커 여백도 필요 없다 — 반출물에 80px 빈 줄로 남지 않게 되돌린다 */
+html.capture #xo,html.capture #sweep,html.capture #load{scroll-margin-top:0}
 </style></head><body>
 
 <div class="top">
@@ -322,21 +365,23 @@ html.capture .sweep .stick{position:static;height:auto;padding:var(--s9) 0}
 
 <!-- 히어로 -->
 <section class="hero wrap">
-  <p class="kicker rise">최대 연속 음압 · 무향실 실측</p>
+  <p class="kicker rise">피크 음압 · 무향실 실측</p>
   <p class="big num rise">1<u>32</u><span class="uu">dB SPL</span></p>
   <div class="spec rise">
     <dl>
       <dt>구성</dt><dd>18″ 우퍼 ×1 · 8″ 미드 ×2 · 1.4″ 컴프레션 ×1</dd>
       <dt>대역</dt><dd>32Hz — 19kHz (±3dB)</dd>
-      <dt>피크 전력</dt><dd>2,400W</dd>
+      <dt>음압</dt><dd>연속 126dB · 피크 132dB (1m 축상)</dd>
+      <dt>전력</dt><dd>연속 700W · 피크 2,400W</dd>
       <dt>중량</dt><dd>저역 96kg + 중고역 41kg = 137kg</dd>
+      <dt>확장</dt><dd>서브우퍼 TONG-S18 별매 · 스택당 1~2대</dd>
     </dl>
   </div>
   <p class="claim rise">큰 소리가 아니라 <em>버티는 소리</em>를 만듭니다.</p>
   <figure class="shot rise">
-    <img src="https://images.unsplash.com/photo-1771611755359-bcd64deecce3?w=1400&q=80&auto=format&fit=crop" alt="스피커 우퍼 콘의 클로즈업" loading="lazy" onerror="this.style.display='none';this.parentNode.style.background='#1c1c1c';this.parentNode.style.aspectRatio='16/9'">
+    <img src="https://images.unsplash.com/photo-1742473533398-9aa25d09f327?w=1400&q=80&auto=format&fit=crop" alt="합판 캐비닛을 쌓고 위에 컴프레션 혼을 얹은 야외 사운드 스택" loading="lazy" onerror="this.style.display='none';this.parentNode.style.background='#1c1c1c';this.parentNode.style.aspectRatio='16/9'">
   </figure>
-  <p class="cap rise">우퍼 콘 — 표면에 방수 도포를 두 번 올린다. 습한 지하 공연장에 나간 개체는 3년마다 회수해 같은 무향실에서 다시 재고, 편차를 리포트에 붙인다.</p>
+  <p class="cap rise">우리가 물려받은 형태 — 합판을 짜 올리고 맨 위에 혼을 얹는 야외 스택. TONG-3은 이 배치를 3웨이 액티브로 다시 계산한 것이고, 캐비닛을 손으로 짜는 것만 그대로 남겼다. 도포는 두 번 올리고, 습한 지하에 나간 개체는 3년마다 회수해 같은 무향실에서 다시 잰다.</p>
 </section>
 
 <!-- ★ 크로스오버 -->
@@ -352,7 +397,9 @@ html.capture .sweep .stick{position:static;height:auto;padding:var(--s9) 0}
       <button class="rst" type="button" id="xoReset">공장값으로</button>
     </div>
     <div class="plot">
-      <svg class="xoSvg" id="xoSvg" role="img" aria-label="크로스오버 분할 다이어그램">
+      <!-- role="img" 를 쓰면 ARIA children-presentational 규칙에 따라 안의 role="slider" 두 개가
+           보조기술 트리에서 지워진다 — 조작 가능한 도판의 루트는 group 이어야 한다 -->
+      <svg class="xoSvg" id="xoSvg" role="group" aria-label="크로스오버 분할 다이어그램 — 분할점 두 개를 좌우로 옮길 수 있습니다">
         <g id="xoG"></g>
       </svg>
     </div>
@@ -366,11 +413,14 @@ html.capture .sweep .stick{position:static;height:auto;padding:var(--s9) 0}
   <div class="stick">
     <div class="in">
       <p class="lbl rise">스윕 · 32Hz → 19kHz</p>
-      <p class="hz num" id="swHz">32<u>Hz</u></p>
-      <p class="who" id="swWho">우퍼</p>
-      <p class="txt" id="swSay">—</p>
-      <div class="track"><i id="swBar"></i></div>
-      <div class="ticks" id="swTicks" aria-hidden="true"></div>
+      <div class="live" id="swLive">
+        <p class="hz num" id="swHz">32<u>Hz</u></p>
+        <p class="who" id="swWho">우퍼</p>
+        <p class="txt" id="swSay">—</p>
+        <div class="track"><i id="swBar"></i></div>
+        <div class="ticks" id="swTicks" aria-hidden="true"></div>
+      </div>
+      <div class="fold" id="swFold"></div>
     </div>
   </div>
 </section>
@@ -385,11 +435,11 @@ html.capture .sweep .stick{position:static;height:auto;padding:var(--s9) 0}
     <colgroup><col style="width:14%"><col style="width:15%"><col style="width:11%"><col style="width:12%"><col style="width:48%"></colgroup>
     <thead><tr><th scope="col">현장</th><th scope="col">구성</th><th scope="col">천장고</th><th scope="col">가동</th><th scope="col">비고</th></tr></thead>
     <tbody>
-      <tr><td class="n">벙커</td><td class="m">2스택 · 4서브</td><td class="m">3.2m</td><td class="m">4,180h</td><td class="d">서울 을지로 · 지하 2층. 반입구가 좁아 캐비닛을 분해해 넣었다.</td></tr>
-      <tr><td class="n">소금창고</td><td class="m">2스택 · 2서브</td><td class="m">6.8m</td><td class="m">2,940h</td><td class="d">부산 영도 · 창고 개조. 천장이 높아 저역이 돌아 나온다.</td></tr>
-      <tr><td class="n">연산</td><td class="m">1스택 · 2서브</td><td class="m">2.9m</td><td class="m">2,110h</td><td class="d">대구 · 소극장. 크로스오버를 260Hz로 올려 중역을 미드에 넘겼다.</td></tr>
-      <tr><td class="n">돌담</td><td class="m">2스택 · 2서브</td><td class="m">4.1m</td><td class="m">1,260h</td><td class="d">제주 · 해풍 노출. 콘 도포를 2회 재시공.</td></tr>
-      <tr><td class="n">지층</td><td class="m">1스택 · 2서브</td><td class="m">2.7m</td><td class="m">710h</td><td class="d">서울 홍대 · 2026.02 설치. 최신 개체.</td></tr>
+      <tr><td class="n">벙커</td><td class="m" data-l="구성">2스택 · 4서브</td><td class="m" data-l="천장고">3.2m</td><td class="m" data-l="가동">4,180h</td><td class="d" data-l="비고">서울 을지로 · 지하 2층. 반입구가 좁아 캐비닛을 분해해 넣었다.</td></tr>
+      <tr><td class="n">소금창고</td><td class="m" data-l="구성">2스택 · 2서브</td><td class="m" data-l="천장고">6.8m</td><td class="m" data-l="가동">2,940h</td><td class="d" data-l="비고">부산 영도 · 창고 개조. 천장이 높아 저역이 돌아 나온다.</td></tr>
+      <tr><td class="n">연산</td><td class="m" data-l="구성">1스택 · 2서브</td><td class="m" data-l="천장고">2.9m</td><td class="m" data-l="가동">2,110h</td><td class="d" data-l="비고">대구 · 소극장. 크로스오버를 260Hz로 올려 중역을 미드에 넘겼다.</td></tr>
+      <tr><td class="n">돌담</td><td class="m" data-l="구성">2스택 · 2서브</td><td class="m" data-l="천장고">4.1m</td><td class="m" data-l="가동">1,260h</td><td class="d" data-l="비고">제주 · 해풍 노출. 콘 도포를 2회 재시공.</td></tr>
+      <tr><td class="n">지층</td><td class="m" data-l="구성">1스택 · 2서브</td><td class="m" data-l="천장고">2.7m</td><td class="m" data-l="가동">710h</td><td class="d" data-l="비고">서울 홍대 · 2026.02 설치. 최신 개체.</td></tr>
     </tbody>
   </table>
   </div>
@@ -436,7 +486,7 @@ html.capture .sweep .stick{position:static;height:auto;padding:var(--s9) 0}
     <ol>
       <li><span class="q2">반입구 최소 폭이 900mm 이상입니까?</span><span class="a2">저역 캐비닛 폭 860mm</span></li>
       <li><span class="q2">바닥이 137kg을 한 점에 받을 수 있습니까?</span><span class="a2">접지면 0.42㎡ · 326kg/㎡</span></li>
-      <li><span class="q2">단상 220V 30A 전용 회선이 있습니까?</span><span class="a2">피크 2,400W · 여유 2.7배</span></li>
+      <li><span class="q2">단상 220V 30A 전용 회선이 있습니까?</span><span class="a2">피크 2,400W · 여유 2.75배</span></li>
       <li><span class="q2">천장고가 2.6m를 넘습니까?</span><span class="a2">스택 높이 2.31m</span></li>
       <li><span class="q2">매단다면 트러스 정격이 400kg 이상입니까?</span><span class="a2">2점 비행 시 안전율 2.9</span></li>
     </ol>
@@ -554,17 +604,24 @@ function setX(k,f){
   if(k==='x1') X.x1=Math.min(Math.max(f,50), X.x2/2);
   else         X.x2=Math.max(Math.min(f,12000), X.x1*2);
   drawXO(); paintUnits();
+  /* 폴백에서도 분할점을 옮기면 펼쳐 둔 세 대역이 같이 바뀌어야 한다 */
+  if(typeof paintFold==='function')paintFold();
 }
 
 function paintUnits(){
   var seg=[[FLO,X.x1],[X.x1,X.x2],[X.x2,FHI]];
   var total=lg(FHI/FLO)/lg(2);
+  /* 이 값은 옥타브 폭의 비율이다 — 「부하(전력)」로 쓰면 18인치 우퍼가 30% 로 표기돼
+     사실과 반대가 된다. 라벨은 그 양의 이름을 그대로 부른다: 대역 점유.
+     그리고 마지막 칸은 100에서 빼서 합이 99% 로 어긋나지 않게 한다 */
+  var sh=seg.map(function(s){return Math.round(lg(s[1]/s[0])/lg(2)/total*100)});
+  sh[2]=100-sh[0]-sh[1];
   unitsEl.innerHTML=seg.map(function(s,i){
-    var o=oct(s[0],s[1]), share=Math.round(lg(s[1]/s[0])/lg(2)/total*100);
+    var o=oct(s[0],s[1]), share=sh[i];
     return '<div class="unit">'
       +'<div class="nm">'+UNITS[i].nm+'<s>'+UNITS[i].sub+'</s></div>'
       +'<div class="bar"><i style="width:'+share+'%"></i></div>'
-      +'<div class="rd">'+hz(s[0])+' — '+hz(s[1])+'<s>'+o.toFixed(1)+'옥타브 · 부하 '+share+'%</s></div>'
+      +'<div class="rd">'+hz(s[0])+' — '+hz(s[1])+'<s>'+o.toFixed(1)+'옥타브 · 대역 점유 '+share+'%</s></div>'
       +'</div>';
   }).join('');
 
@@ -587,6 +644,7 @@ addEventListener('pointermove',function(e){
 addEventListener('pointerup',function(){drag=null});
 document.getElementById('xoReset').addEventListener('click',function(){
   X.x1=DEF.x1; X.x2=DEF.x2; drawXO(); paintUnits();
+  if(typeof paintFold==='function')paintFold();
 });
 
 /* ── 주파수 스윕 ── */
@@ -605,9 +663,26 @@ var SAY=[
   }).join('');
 })();
 
+/* 핀이 풀린 상태(reduced-motion · capture)에서는 스크럽이 성립하지 않는다 —
+   섹션 높이가 뷰포트보다 작아져 분모가 음수가 되고 진행률이 역주행한다.
+   그래서 계산을 끄고, 세 대역을 표로 펼쳐 세 문장 모두 읽히게 한다 */
+var FOLD=reduce||CAPTURE, foldEl=document.getElementById('swFold');
+if(FOLD)sweepEl.classList.add('folded');
+function paintFold(){
+  if(!FOLD)return;
+  var seg=[[FLO,X.x1],[X.x1,X.x2],[X.x2,FHI]];
+  foldEl.innerHTML=seg.map(function(s,i){
+    return '<div class="row"><p class="rg num">'+hz(s[0])+' — '+hz(s[1])+'</p>'
+      +'<div><p class="wh">'+SAY[i][0]+'</p><p class="sy">'+SAY[i][1]+'</p></div></div>';
+  }).join('');
+}
+
 function paintSweep(){
-  var r=sweepEl.getBoundingClientRect(), h=sweepEl.offsetHeight-innerHeight;
-  var p=CAPTURE?0.5:Math.min(1,Math.max(0,-r.top/(h||1)));
+  if(FOLD){paintFold();return}
+  var r=sweepEl.getBoundingClientRect();
+  /* (h||1) 은 0만 막고 음수를 막지 못한다 — 반드시 1 이상으로 클램프한다 */
+  var h=Math.max(1,sweepEl.offsetHeight-innerHeight);
+  var p=Math.min(1,Math.max(0,-r.top/h));
   var f=freq(p);
   swHz.innerHTML=(f>=1000?(Math.round(f/100)/10):Math.round(f))+'<u>'+(f>=1000?'kHz':'Hz')+'</u>';
   var i=f<X.x1?0:(f<X.x2?1:2);
@@ -631,7 +706,7 @@ if(CAPTURE||reduce){
 /* viewBox 가 컨테이너 실폭에 묶여 있으므로 폭이 바뀌면 다시 그린다 */
 var rt;
 addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){drawXO();paintUnits()},120)});
-addEventListener('scroll',paintSweep,{passive:true});
+if(!FOLD)addEventListener('scroll',paintSweep,{passive:true});
 
 drawXO(); paintUnits(); paintSweep();
 </script>

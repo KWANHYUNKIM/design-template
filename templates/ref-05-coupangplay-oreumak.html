@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- 시스템 출처: refs/coupang-play.md (2026-08-09 실측 · 뷰포트 1920 · 348노드) ·
+     브랜드·카피·지점명·수치·후기는 전부 발명. 업종을 옮겼다: 영상 스트리밍 → 실내 스포츠 시설 -->
+<title>오르막 — 실내 암벽장 통합 정기권</title>
+<meta name="description" content="여덟 곳을 한 장으로 씁니다. 벽 높이·코스 수·혼잡도·거리를 그대로 공개하고, 어떤 기준으로 고를지는 직접 정하세요.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+:root{
+  /* 서체 — 원본은 76개 텍스트 노드 전부 Pretendard 하나뿐이다 */
+  --sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+
+  /* 색 — 원본 실측 팔레트. 텍스트색은 전부 AA를 넘는다(원본이 이미 풀어놨다) */
+  --paper:#f0f1f3;        /* 원본 2번째 배경 — 여기서는 지면 바탕 */
+  --card:#ffffff;         /* 원본 최다 배경 — 여기서는 카드면 */
+  --tint:#e5f2ff;         /* 원본 파랑틴트 */
+  --dark:#0f1114;
+  --line:#dfe1e5;
+  --ink:#0f1114;          /* --paper 위 16.73:1 */
+  --fg:#ffffff;           /* --dark 위 18.91:1 */
+  --body:#31353c;         /* --paper 위 10.90:1 */
+  --mut:#656b78;          /* --paper 위 4.73:1 */
+  /* ★포인트색 한 값을 바탕별 세 판본으로 쪼개 쓰는 것이 이 시스템의 규칙이다 */
+  --k:#0080ff;            /* 버튼 바탕 전용. 흰 글자 위 3.80:1 → 24px 이상에서만 */
+  --klink:#006bc6;        /* --card 위 5.36:1 — 밝은 바탕의 링크·작은 버튼 */
+  --kdark:#5d9eff;        /* --dark 위 7.02:1 — 어두운 바탕의 강조 */
+
+  /* 타입 — 원본은 12단계이고 모듈러가 아니다. 76 → 160 구간이 2.1배로 비어 있다 */
+  --t-15:15px;--t-16:16px;--t-17:17px;--t-20:20px;--t-22:22px;--t-24:24px;
+  --t-28:28px;--t-32:32px;--t-38:38px;--t-58:58px;--t-76:76px;--t-160:160px;
+  /* 행간 — 크기가 커질수록 비율이 내려간다.
+     ★160/113(0.71)은 「여러 줄의 행간」이 아니다. 원본의 160px 노드 11개는
+       전부 2글자·1줄·900 이고 줄바꿈을 하지 않는다. 113px 은 한 덩어리 상자를
+       조인 값이다. 여러 줄 디스플레이는 58/72(1.25)/700 이고 줄을 직접 끊는다.
+       이걸 안 재고 두 줄에 0.71 을 걸면 글자가 겹쳐 읽히지 않는다(실제로 그랬다) */
+  --lh-15:20px;--lh-16:24px;--lh-17:20px;--lh-20:26px;--lh-22:29px;--lh-24:36px;
+  --lh-28:35px;--lh-32:40px;--lh-38:46px;--lh-58:72px;--lh-160:113px;
+  --lh-76:54px;  /* 토큰용 — 160의 0.71 비율을 그대로 76에 적용한 값 */
+
+  /* 간격 — 원본 최빈이 26px(1.625rem)이라 8배수 격자가 아니다 */
+  --s5:5px;--s6:6px;--s12:12px;--s16:16px;--s18:18px;--s22:22px;--s26:26px;
+  --s32:32px;--s44:44px;--s52:52px;--s58:58px;--s64:64px;--s100:100px;
+
+  /* 표면 — 원본 348노드 중 box-shadow 0건. 층위는 배경 4단으로만 만든다 */
+  --r4:4px;--r8:8px;--r13:13px;--rfull:9999px;
+  --w:1200px;--wread:800px;--wnarrow:600px;
+  --bar:64px;
+  --dur:.25s;--ease:cubic-bezier(0,.5,.5,1);--dur2:.2s;
+}
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--body);font-family:var(--sans);
+  font-size:var(--t-17);line-height:var(--lh-17);
+  /* ★원본은 76개 텍스트 노드 전부 letter-spacing:normal 이다. 한 곳도 건드리지 않는다 */
+  letter-spacing:normal;
+  -webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word;overflow-x:hidden}
+h1,h2,h3,h4,p,ul,ol,table{margin:0}
+/* UA 가로 마진 40px 리셋 — 안 하면 이 요소들만 판형 밖으로 밀린다 */
+figure,blockquote,dd{margin:0}
+ul{padding:0;list-style:none}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;letter-spacing:normal}
+:focus-visible{outline:3px solid var(--klink);outline-offset:2px}
+.wrap{max-width:var(--w);margin:0 auto;padding-left:var(--s26);padding-right:var(--s26)}
+.rise{transform:translateY(10px)}
+.js .rise{opacity:0}
+.js .rise.vis{opacity:1;transform:none;
+  transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease)}
+[id]{scroll-margin-top:calc(var(--bar) + var(--s26))}
+.eyb{font-size:var(--t-15);line-height:var(--lh-15);font-weight:700;color:var(--mut)}
+.sec-h{font-size:var(--t-38);line-height:var(--lh-38);font-weight:700;color:var(--ink)}
+.lead{font-size:var(--t-24);line-height:var(--lh-24);color:var(--body);max-width:var(--wread)}
+
+/* ── 헤더 ── */
+.bar{position:sticky;top:0;z-index:30;height:var(--bar);
+  background:var(--card);border-bottom:1px solid var(--line)}
+.bar .row{max-width:var(--w);margin:0 auto;padding-left:var(--s26);padding-right:var(--s26);
+  height:var(--bar);display:flex;align-items:center;gap:var(--s16)}
+.logo{font-size:var(--t-22);line-height:var(--lh-22);font-weight:900;color:var(--ink)}
+.logo em{font-style:normal;color:var(--klink)}
+.bar .sp{flex:1}
+.bar nav{display:flex;gap:var(--s16)}
+.bar nav a{font-size:var(--t-17);line-height:var(--lh-17);font-weight:500;color:var(--body);
+  transition:color var(--dur2) ease}
+.bar nav a:hover{color:var(--klink)}
+/* 작은 버튼은 포인트색 원값(#0080FF)을 못 쓴다 — 흰 글자 위 3.80:1 이라 17px에서 미달.
+   원본 팔레트 안의 어두운 판본으로 내린다 (흰 글자 위 5.36:1) */
+.btn-s{font-size:var(--t-17);line-height:var(--lh-17);font-weight:700;color:var(--fg);
+  background:var(--klink);border-radius:var(--r13);padding:var(--s12) var(--s18);
+  transition:opacity var(--dur2) ease}
+.btn-s:hover{opacity:.88}
+/* 큰 버튼만 원값을 쓴다 — 24px/700 이라 큰글씨 기준 3:1 을 넘긴다 */
+.btn-l{display:inline-block;font-size:var(--t-24);line-height:var(--lh-24);font-weight:700;
+  color:var(--fg);background:var(--k);border-radius:var(--r13);
+  padding:var(--s22) var(--s58);transition:transform var(--dur) var(--ease),opacity var(--dur2) ease}
+.btn-l:hover{transform:translateY(-2px);opacity:.94}
+
+/* ── 히어로 ── 사진 모자이크 위 먹 스크림 ── */
+.hero{position:relative;background:var(--dark);color:var(--fg);overflow:hidden;
+  padding-top:var(--s100);padding-bottom:var(--s64)}
+.mosaic{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);
+  grid-auto-rows:1fr;gap:var(--s5);z-index:0}
+.mosaic figure{position:relative;overflow:hidden;min-width:0}
+.mosaic img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/5}
+.scrim{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(180deg,rgba(15,17,20,.72) 0%,rgba(15,17,20,.90) 46%,var(--dark) 100%)}
+/* 그레인 */
+.grain{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.42;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.36'/></svg>")}
+.hero .wrap{position:relative;z-index:3}
+.hero .eyb{color:var(--kdark)}
+/* ★이 시스템의 핵심 — 2글자 토큰만 160px/900/113px 로 세운다. 절대 줄바꿈하지 않는다 */
+.tok{display:block;font-size:var(--t-160);line-height:var(--lh-160);font-weight:900;
+  color:var(--kdark);letter-spacing:normal;white-space:nowrap}
+/* 여러 줄은 58/72(1.25)/700 — 줄은 자동 줄바꿈이 아니라 직접 끊는다 */
+.disp{display:block;font-size:var(--t-58);line-height:var(--lh-58);font-weight:700;
+  color:var(--fg);letter-spacing:normal;margin-top:var(--s12)}
+h1{margin-top:var(--s26)}
+.hero p{font-size:var(--t-24);line-height:var(--lh-24);color:#c9ced8;
+  margin-top:var(--s44);max-width:44ch}
+.hero .cta{margin-top:var(--s44);display:flex;gap:var(--s16);align-items:center;flex-wrap:wrap}
+.hero .fine{font-size:var(--t-17);line-height:var(--lh-17);color:#9aa2b0}
+
+/* ── 숫자 ── */
+.nums{padding-top:var(--s64);padding-bottom:var(--s52)}
+.nums ul{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s26)}
+.nums li{min-width:0;background:var(--card);border-radius:var(--r13);padding:var(--s32)}
+.nums b{display:block;font-size:var(--t-58);line-height:var(--lh-58);font-weight:900;color:var(--ink)}
+.nums b span{font-size:var(--t-28);line-height:var(--lh-28);font-weight:700;color:var(--mut);
+  white-space:nowrap}
+.nums p{font-size:var(--t-17);line-height:var(--lh-17);color:var(--mut);margin-top:var(--s6)}
+
+/* ── 조작형: 정렬 기준을 바꾸면 순위가 실제로 뒤집힌다 ── */
+.rank{padding-top:var(--s52);padding-bottom:var(--s100)}
+.chips{display:flex;gap:var(--s12);flex-wrap:wrap;margin-top:var(--s26)}
+.chip{font-size:var(--t-17);line-height:var(--lh-17);font-weight:700;color:var(--body);
+  background:var(--card);border:1px solid var(--line);border-radius:var(--rfull);
+  padding:var(--s12) var(--s22);transition:background var(--dur2) ease,color var(--dur2) ease,border-color var(--dur2) ease}
+.chip:hover{border-color:var(--klink);color:var(--klink)}
+.chip[aria-pressed="true"]{background:var(--klink);border-color:var(--klink);color:var(--fg)}
+.readout{margin-top:var(--s44);background:var(--dark);border-radius:var(--r13);
+  padding-top:var(--s44);padding-bottom:var(--s44);padding-left:var(--s44);padding-right:var(--s44);
+  display:grid;grid-template-columns:minmax(max-content,auto) minmax(0,1fr);
+  gap:var(--s32);align-items:center}
+.readout .big{font-size:var(--t-58);line-height:var(--lh-58);font-weight:700;color:var(--fg);
+  white-space:nowrap;margin-top:var(--s6)}
+.readout .big span{font-size:var(--t-28);line-height:var(--lh-28);font-weight:700;color:#9aa2b0;
+  white-space:nowrap}
+.readout .who{font-size:var(--t-32);line-height:var(--lh-32);font-weight:700;color:var(--fg)}
+.readout .why{font-size:var(--t-17);line-height:var(--lh-17);color:#9aa2b0;margin-top:var(--s6)}
+.tbl-wrap{margin-top:var(--s32);background:var(--card);border-radius:var(--r13);
+  padding-top:var(--s16);padding-bottom:var(--s16);padding-left:var(--s16);padding-right:var(--s16)}
+table{width:100%;border-collapse:collapse}
+caption{font-size:var(--t-17);line-height:var(--lh-17);color:var(--mut);
+  text-align:left;padding-top:var(--s12);padding-bottom:var(--s16)}
+th,td{text-align:right;padding-top:var(--s16);padding-bottom:var(--s16);
+  padding-left:var(--s12);padding-right:var(--s12);border-bottom:1px solid var(--line)}
+th{font-size:var(--t-15);line-height:var(--lh-15);font-weight:700;color:var(--mut);white-space:nowrap}
+td{font-size:var(--t-20);line-height:var(--lh-20);font-weight:500;color:var(--body);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal}
+tbody tr:last-child td{border-bottom:0}
+tbody tr{transition:background var(--dur2) ease}
+tbody tr.top td{background:var(--tint);color:var(--ink);font-weight:700}
+.nm{display:inline-flex;align-items:baseline;gap:var(--s12);min-width:0}
+.nm i{font-style:normal;font-size:var(--t-15);line-height:var(--lh-15);font-weight:900;
+  color:var(--mut);width:2ch;flex:none}
+.nm b{font-size:var(--t-20);line-height:var(--lh-20);font-weight:700;color:var(--ink)}
+tbody tr.top .nm i{color:var(--klink)}
+th.on,td.on{background:var(--tint)}
+tbody tr.top td.on{background:#cfe4fb}
+
+/* ── 지점 ── */
+.spots{padding-top:var(--s44);padding-bottom:var(--s58)}
+.spots .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s26);margin-top:var(--s32)}
+.spots figure{min-width:0;background:var(--card);border-radius:var(--r13);overflow:hidden}
+.spots img{width:100%;aspect-ratio:3/2;object-fit:cover}
+.spots figcaption{padding-top:var(--s18);padding-bottom:var(--s26);
+  padding-left:var(--s18);padding-right:var(--s18)}
+.spots figcaption b{display:block;font-size:var(--t-22);line-height:var(--lh-22);
+  font-weight:700;color:var(--ink)}
+.spots figcaption span{display:block;font-size:var(--t-17);line-height:var(--lh-17);
+  color:var(--mut);margin-top:var(--s6)}
+
+/* ── 후기 ── */
+.trust{background:var(--card);padding-top:var(--s100);padding-bottom:var(--s44)}
+.trust .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s26);margin-top:var(--s32)}
+.trust blockquote{min-width:0;background:var(--paper);border-radius:var(--r13);padding:var(--s32)}
+.trust p{font-size:var(--t-24);line-height:var(--lh-24);color:var(--body)}
+.trust footer{margin-top:var(--s26);font-size:var(--t-15);line-height:var(--lh-15);color:var(--mut)}
+.trust footer b{display:block;font-size:var(--t-17);line-height:var(--lh-17);
+  font-weight:700;color:var(--ink)}
+
+/* ── 요금 ── */
+.price{padding-top:var(--s58);padding-bottom:var(--s64)}
+.price .box{max-width:var(--wnarrow);background:var(--tint);border-radius:var(--r13);
+  padding:var(--s44);margin-top:var(--s32)}
+.price .amt{font-size:var(--t-58);line-height:var(--lh-58);font-weight:900;color:var(--ink)}
+.price .amt span{font-size:var(--t-24);line-height:var(--lh-24);font-weight:700;color:var(--body);
+  white-space:nowrap}
+.price ul{margin-top:var(--s26);display:grid;gap:var(--s12)}
+.price li{font-size:var(--t-20);line-height:var(--lh-20);color:var(--body)}
+.price li b{font-weight:700;color:var(--klink)}
+.price .btn-l{margin-top:var(--s32)}
+
+/* ── 푸터 ── */
+.foot{background:var(--dark);color:#9aa2b0;padding-top:var(--s32);padding-bottom:var(--s52)}
+.foot .logo{color:var(--fg)}
+.foot .logo em{color:var(--kdark)}
+.foot p{font-size:var(--t-16);line-height:var(--lh-16);margin-top:var(--s16);max-width:52ch}
+.foot .rows{display:flex;gap:var(--s26);flex-wrap:wrap;margin-top:var(--s26)}
+.foot a{font-size:var(--t-16);line-height:var(--lh-16);color:#c9ced8;
+  transition:color var(--dur2) ease}
+.foot a:hover{color:var(--kdark)}
+
+/* ── 900 이하 ── */
+@media (max-width:900px){
+  .wrap{padding-left:var(--s18);padding-right:var(--s18)}
+  .bar .row{padding-left:var(--s18);padding-right:var(--s18)}
+  .bar nav{display:none}
+  .hero{padding-top:var(--s58);padding-bottom:var(--s44)}
+  .mosaic{grid-template-columns:repeat(2,1fr)}
+  .tok{font-size:var(--t-76);line-height:var(--lh-76)}
+  .disp{font-size:var(--t-32);line-height:var(--lh-32)}
+  .hero p{font-size:var(--t-20);line-height:var(--lh-20);margin-top:var(--s26)}
+  .btn-l{font-size:var(--t-20);line-height:var(--lh-20);padding:var(--s18) var(--s32)}
+  .nums ul{grid-template-columns:1fr}
+  .nums b{font-size:var(--t-38);line-height:var(--lh-38)}
+  .sec-h{font-size:var(--t-28);line-height:var(--lh-28)}
+  .lead{font-size:var(--t-20);line-height:var(--lh-20)}
+  .readout{grid-template-columns:1fr;gap:var(--s16);
+    padding-top:var(--s26);padding-bottom:var(--s26);
+    padding-left:var(--s26);padding-right:var(--s26)}
+  .readout .big{font-size:var(--t-38);line-height:var(--lh-38)}
+  .readout .who{font-size:var(--t-22);line-height:var(--lh-22)}
+  .spots .grid,.trust .grid{grid-template-columns:1fr}
+  .trust p{font-size:var(--t-20);line-height:var(--lh-20)}
+  .price .box{padding:var(--s26)}
+  .price .amt{font-size:var(--t-38);line-height:var(--lh-38)}
+
+  /* 표를 카드로 접는다 — td 는 flex 가 아니라 grid 여야 한다(크롬이 셀 텍스트를 잃는다) */
+  .fold thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .fold caption{display:block}
+  .fold table,.fold tbody,.fold tr,.fold td{display:block;width:100%}
+  .fold tr{background:var(--paper);border-radius:var(--r13);
+    padding-top:var(--s16);padding-bottom:var(--s6);
+    padding-left:var(--s16);padding-right:var(--s16);margin-bottom:var(--s12)}
+  .fold tbody tr.top{background:var(--tint)}
+  .fold td{display:grid;grid-template-columns:minmax(0,1fr) max-content;
+    gap:var(--s12);align-items:baseline;text-align:left;
+    padding-left:0;padding-right:0;padding-top:var(--s6);padding-bottom:var(--s6);
+    border-bottom:0}
+  /* 기본 규칙이 (0,1,3) 이라 같은 셀렉터로 되받아야 한다 */
+  .fold tbody tr:last-child td{border-bottom:0}
+  .fold td::before{content:attr(data-l);font-size:var(--t-15);line-height:var(--lh-15);
+    font-weight:700;color:var(--mut)}
+  .fold td:first-child{grid-template-columns:1fr;padding-bottom:var(--s12)}
+  .fold td:first-child::before{content:none}
+  .fold td.on{background:none}
+  .fold tbody tr.top td.on{background:none}
+  .fold tbody tr.top td::before{color:var(--klink)}
+}
+@media (max-width:520px){
+  .mosaic{grid-template-columns:repeat(2,1fr)}
+  .disp{font-size:var(--t-28);line-height:var(--lh-28)}
+  .chips{gap:var(--s6)}
+  .chip{padding:var(--s12) var(--s16)}
+}
+
+/* ── 폴백 ── 실제로 선언된 트랜지션만 끈다 ── */
+@media (prefers-reduced-motion:reduce){
+  .js .rise,.js .rise.vis{opacity:1;transform:none;transition:none}
+  .btn-l,.btn-s,.chip,.bar nav a,.foot a,tbody tr{transition:none}
+}
+.capture .rise,.js.capture .rise{opacity:1;transform:none;transition:none}
+.capture .btn-l,.capture .chip,.capture tbody tr{transition:none}
+.capture .grain{opacity:.28}
+</style>
+</head>
+<body>
+<script>
+document.documentElement.classList.add('js');
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){var h=document.documentElement,p=h.style.scrollBehavior;h.style.scrollBehavior='auto';
+ scrollTo(0,0);addEventListener('load',function(){scrollTo(0,0);
+ setTimeout(function(){h.style.scrollBehavior=p},60)})})();
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE)document.documentElement.classList.add('capture');
+</script>
+
+<header class="bar">
+  <div class="row">
+    <a class="logo" href="#top">오르<em>막</em></a>
+    <span class="sp"></span>
+    <nav>
+      <a href="#jijeom">지점</a>
+      <a href="#hugi">후기</a>
+      <a href="#yogeum">요금</a>
+    </nav>
+    <a class="btn-s" href="#yogeum">정기권 끊기</a>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <div class="mosaic" aria-hidden="true">
+    <figure><img src="https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&h=1000&fit=crop" alt="" loading="eager" onerror="this.style.background='linear-gradient(150deg,#1b2230,#0f1114)';this.removeAttribute('src')"></figure>
+    <figure><img src="https://images.unsplash.com/photo-1696105538782-7815474f28e0?w=800&h=1000&fit=crop" alt="" loading="eager" onerror="this.style.background='linear-gradient(150deg,#1b2230,#0f1114)';this.removeAttribute('src')"></figure>
+    <figure><img src="https://images.unsplash.com/photo-1696105538708-6be6c90707a1?w=800&h=1000&fit=crop" alt="" loading="eager" onerror="this.style.background='linear-gradient(150deg,#1b2230,#0f1114)';this.removeAttribute('src')"></figure>
+    <figure><img src="https://images.unsplash.com/photo-1727999988371-d9e014d884ad?w=800&h=1000&fit=crop" alt="" loading="eager" onerror="this.style.background='linear-gradient(150deg,#1b2230,#0f1114)';this.removeAttribute('src')"></figure>
+    <figure><img src="https://images.unsplash.com/photo-1775654792524-739718a3b001?w=800&h=1000&fit=crop" alt="" loading="lazy" onerror="this.style.background='linear-gradient(150deg,#1b2230,#0f1114)';this.removeAttribute('src')"></figure>
+    <figure><img src="https://images.unsplash.com/photo-1775655111255-706378cdf2ca?w=800&h=1000&fit=crop" alt="" loading="lazy" onerror="this.style.background='linear-gradient(150deg,#1b2230,#0f1114)';this.removeAttribute('src')"></figure>
+    <figure><img src="https://images.unsplash.com/photo-1728000442481-20bf8df1d584?w=800&h=1000&fit=crop" alt="" loading="lazy" onerror="this.style.background='linear-gradient(150deg,#1b2230,#0f1114)';this.removeAttribute('src')"></figure>
+    <figure><img src="https://images.unsplash.com/photo-1659666287295-7da26c3f80d4?w=800&h=1000&fit=crop" alt="" loading="lazy" onerror="this.style.background='linear-gradient(150deg,#1b2230,#0f1114)';this.removeAttribute('src')"></figure>
+  </div>
+  <div class="scrim" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="eyb">여덟 곳 · 한 장</p>
+    <h1><span class="tok">기준</span><span class="disp">부터 고릅니다.<br>벽은 그 다음입니다.</span></h1>
+    <p>어디가 제일 좋냐고 물으면 답이 안 나옵니다. 높은 벽이 좋은 사람과 안 붐비는 곳이 좋은 사람은 다른 데를 골라야 하니까요. 그래서 여덟 곳의 숫자를 그대로 열어 두었습니다.</p>
+    <div class="cta">
+      <a class="btn-l" href="#yogeum">정기권 끊기</a>
+      <span class="fine">첫 달 해지 수수료 없음</span>
+    </div>
+  </div>
+</section>
+
+<section class="nums wrap">
+  <ul>
+    <li class="rise"><b>907<span>개</span></b><p>여덟 지점의 볼더 코스 합계 (2026년 8월 기준)</p></li>
+    <li class="rise"><b>5.4<span>m</span></b><p>가장 높은 리드 벽 — 판교 각재점</p></li>
+    <li class="rise"><b>4,120<span>명</span></b><p>통합 정기권을 쓰고 있는 회원</p></li>
+  </ul>
+</section>
+
+<section class="rank wrap" id="jijeom">
+  <p class="eyb">직접 정하세요</p>
+  <h2 class="sec-h">기준을 바꾸면 1등이 바뀝니다</h2>
+  <p class="lead">아래 네 기준 중 하나를 누르면 여덟 지점이 그 기준으로 다시 줄을 섭니다. 네 번 다 눌러 보면 알게 되는 것이 하나 있습니다 — <b>네 기준 모두에서 1등인 지점은 없습니다.</b></p>
+
+  <div class="chips" role="group" aria-label="정렬 기준">
+    <button class="chip" type="button" data-key="dist" data-dir="asc" aria-pressed="true">가까운 순</button>
+    <button class="chip" type="button" data-key="high" data-dir="desc" aria-pressed="false">벽이 높은 순</button>
+    <button class="chip" type="button" data-key="route" data-dir="desc" aria-pressed="false">코스가 많은 순</button>
+    <button class="chip" type="button" data-key="busy" data-dir="asc" aria-pressed="false">덜 붐비는 순</button>
+  </div>
+
+  <div class="readout" aria-live="polite">
+    <p class="tok" id="ro-tok">거리</p>
+    <div>
+      <p class="who" id="ro-who">성수 정비소점</p>
+      <p class="big" id="ro-val">2.4<span> km</span></p>
+      <p class="why" id="ro-why">가까운 순 1위 — 여덟 곳 중 가장 가깝습니다.</p>
+    </div>
+  </div>
+
+  <div class="tbl-wrap fold">
+    <table id="tbl">
+      <caption>여덟 지점의 실측치. 거리는 서울시청 기준입니다.</caption>
+      <thead>
+        <tr>
+          <th scope="col">지점</th>
+          <th scope="col" data-col="high">벽 높이</th>
+          <th scope="col" data-col="route">볼더 코스</th>
+          <th scope="col" data-col="busy">평일 저녁 밀도</th>
+          <th scope="col" data-col="dist">거리</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-high="4.5" data-route="118" data-busy="34" data-dist="2.4" class="top"><td data-l="지점"><span class="nm"><i>1</i><b>성수 정비소점</b></span></td><td data-l="벽 높이">4.5 m</td><td data-l="볼더 코스">118 개</td><td data-l="평일 저녁 밀도">34 명/시</td><td data-l="거리" class="on">2.4 km</td></tr>
+        <tr data-high="4.2" data-route="96" data-busy="21" data-dist="5.1"><td data-l="지점"><span class="nm"><i>2</i><b>망원 물치점</b></span></td><td data-l="벽 높이">4.2 m</td><td data-l="볼더 코스">96 개</td><td data-l="평일 저녁 밀도">21 명/시</td><td data-l="거리" class="on">5.1 km</td></tr>
+        <tr data-high="5.1" data-route="142" data-busy="47" data-dist="8.7"><td data-l="지점"><span class="nm"><i>3</i><b>구로 절삭점</b></span></td><td data-l="벽 높이">5.1 m</td><td data-l="볼더 코스">142 개</td><td data-l="평일 저녁 밀도">47 명/시</td><td data-l="거리" class="on">8.7 km</td></tr>
+        <tr data-high="4.8" data-route="87" data-busy="18" data-dist="12.3"><td data-l="지점"><span class="nm"><i>4</i><b>수유 너덜점</b></span></td><td data-l="벽 높이">4.8 m</td><td data-l="볼더 코스">87 개</td><td data-l="평일 저녁 밀도">18 명/시</td><td data-l="거리" class="on">12.3 km</td></tr>
+        <tr data-high="5.4" data-route="131" data-busy="52" data-dist="19.6"><td data-l="지점"><span class="nm"><i>5</i><b>판교 각재점</b></span></td><td data-l="벽 높이">5.4 m</td><td data-l="볼더 코스">131 개</td><td data-l="평일 저녁 밀도">52 명/시</td><td data-l="거리" class="on">19.6 km</td></tr>
+        <tr data-high="4.4" data-route="104" data-busy="29" data-dist="24.8"><td data-l="지점"><span class="nm"><i>6</i><b>부평 삼각점</b></span></td><td data-l="벽 높이">4.4 m</td><td data-l="볼더 코스">104 개</td><td data-l="평일 저녁 밀도">29 명/시</td><td data-l="거리" class="on">24.8 km</td></tr>
+        <tr data-high="5.0" data-route="76" data-busy="16" data-dist="141"><td data-l="지점"><span class="nm"><i>7</i><b>대전 둔치점</b></span></td><td data-l="벽 높이">5.0 m</td><td data-l="볼더 코스">76 개</td><td data-l="평일 저녁 밀도">16 명/시</td><td data-l="거리" class="on">141 km</td></tr>
+        <tr data-high="4.6" data-route="153" data-busy="41" data-dist="325"><td data-l="지점"><span class="nm"><i>8</i><b>부산 초량점</b></span></td><td data-l="벽 높이">4.6 m</td><td data-l="볼더 코스">153 개</td><td data-l="평일 저녁 밀도">41 명/시</td><td data-l="거리" class="on">325 km</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="spots wrap">
+  <p class="eyb">벽</p>
+  <h2 class="sec-h">같은 정기권으로 들어갑니다</h2>
+  <div class="grid">
+    <figure class="rise">
+      <img src="https://images.unsplash.com/photo-1775654792600-12423fcee42b?w=900&h=600&fit=crop" alt="창이 큰 실내 암벽장에서 한 사람이 홀드가 촘촘히 박힌 넓은 벽을 올려다보고 있다" loading="lazy" onerror="this.style.background='linear-gradient(150deg,#dfe3e9,#f0f1f3)';this.removeAttribute('src')">
+      <figcaption><b>구로 절삭점</b><span>천장까지 5.1m. 여덟 곳 중 벽이 두 번째로 높고, 그만큼 평일 저녁이 가장 붐빕니다.</span></figcaption>
+    </figure>
+    <figure class="rise">
+      <img src="https://images.unsplash.com/photo-1728000073158-b9b887b894e2?w=900&h=600&fit=crop" alt="검은 볼륨이 붙은 합판 벽에서 번호표를 단 사람이 다음 홀드로 손을 뻗고 있다" loading="lazy" onerror="this.style.background='linear-gradient(150deg,#dfe3e9,#f0f1f3)';this.removeAttribute('src')">
+      <figcaption><b>판교 각재점</b><span>매달 첫 주에 코스를 전부 새로 답니다. 131개 중 절반이 그 주에 바뀝니다.</span></figcaption>
+    </figure>
+    <figure class="rise">
+      <img src="https://images.unsplash.com/photo-1775655111279-748c2dccd065?w=900&h=600&fit=crop" alt="암벽장 매트 위에 한 사람이 팔을 벌리고 누워 쉬고 있다" loading="lazy" onerror="this.style.background='linear-gradient(150deg,#dfe3e9,#f0f1f3)';this.removeAttribute('src')">
+      <figcaption><b>수유 너덜점</b><span>평일 저녁 밀도 18명/시로 가장 한산합니다. 매트에 누워 쉬어도 눈치가 안 보입니다.</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="trust" id="hugi">
+  <div class="wrap">
+    <p class="eyb">쓰는 사람들</p>
+    <h2 class="sec-h">숫자 말고 사람 말</h2>
+    <div class="grid">
+      <blockquote class="rise">
+        <p>“높은 벽만 찾아다녔는데, 붐비는 날엔 두 시간에 네 번 붙는 게 전부였습니다. 밀도를 보고 지점을 바꾸니 같은 두 시간에 열한 번 붙었어요.”</p>
+        <footer><b>정해든</b>서울시립대 산악부 주장 · 2026년 5월 14일</footer>
+      </blockquote>
+      <blockquote class="rise">
+        <p>“리그 연습을 여러 곳에서 돌려야 하는데, 지점마다 따로 끊으면 월 20만원이 넘습니다. 한 장으로 여덟 곳을 도니 그 계산이 사라졌습니다.”</p>
+        <footer><b>문가온</b>사회인 클라이밍 리그 ‘벽걸이’ 운영 · 2026년 6월 2일</footer>
+      </blockquote>
+      <blockquote class="rise">
+        <p>“재활 중인 분께는 낮은 벽에 한산한 곳을 권합니다. 그 조건을 숫자로 확인할 수 있는 데가 여기 말고 없어서 상담할 때 이 표를 씁니다.”</p>
+        <footer><b>배진서</b>스포츠재활 물리치료사 · 2026년 4월 21일</footer>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<section class="price wrap" id="yogeum">
+  <p class="eyb">요금</p>
+  <h2 class="sec-h">한 장, 여덟 곳</h2>
+  <div class="box">
+    <p class="amt">79,000<span> 원 / 월</span></p>
+    <ul>
+      <li>1회 이용권은 <b>18,000원</b>입니다. 한 달에 <b>5회</b>부터 정기권이 쌉니다.</li>
+      <li>여덟 지점 전부 같은 정기권으로 들어갑니다. 지점 지정 없음.</li>
+      <li>암벽화·초크 대여 포함. 강습은 별도입니다.</li>
+      <li>첫 달은 해지 수수료가 없습니다.</li>
+    </ul>
+    <a class="btn-l" href="#top">정기권 끊기</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="logo">오르<em>막</em></p>
+    <p>실내 암벽장 통합 정기권. 표에 적힌 벽 높이·코스 수·밀도는 각 지점이 매달 1일에 다시 재어 보내 주는 값입니다.</p>
+    <div class="rows">
+      <a href="#jijeom">지점</a>
+      <a href="#hugi">후기</a>
+      <a href="#yogeum">요금</a>
+      <a href="#top">맨 위로</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+  /* ── 리빌 ── */
+  var rise=[].slice.call(document.querySelectorAll('.rise'));
+  if(reduce||!('IntersectionObserver' in window)){
+    rise.forEach(function(n){n.classList.add('vis')});
+  }else{
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})
+    },{rootMargin:'0px 0px -8% 0px'});
+    rise.forEach(function(n){io.observe(n)});
+    addEventListener('load',function(){
+      rise.forEach(function(n){
+        if(n.getBoundingClientRect().top<innerHeight)n.classList.add('vis')})});
+  }
+
+  /* ── 정렬 기준을 바꾸면 순위가 뒤집힌다 ──
+     리드아웃 수치는 상수가 아니라 표의 data-* 에서 파생시킨다.
+     상수로 적어 두면 표와 어긋나도 알 수 없다. */
+  var tbody=document.querySelector('#tbl tbody');
+  if(!tbody)return;
+  var rows=[].slice.call(tbody.rows);
+  var chips=[].slice.call(document.querySelectorAll('.chip'));
+  var UNIT={high:' m',route:' 개',busy:' 명/시',dist:' km'};
+  /* 160px 자리에는 두 글자만 세운다 — 원본의 160px 노드는 전부 2글자·1줄이었다 */
+  var TOK={high:'높이',route:'코스',busy:'밀도',dist:'거리'};
+  var TAIL={
+    high:'여덟 곳 중 천장이 가장 높습니다.',
+    route:'여덟 곳 중 코스가 가장 많습니다.',
+    busy:'여덟 곳 중 평일 저녁이 가장 한산합니다.',
+    dist:'여덟 곳 중 가장 가깝습니다.'
+  };
+  var elVal=document.getElementById('ro-val'),
+      elWho=document.getElementById('ro-who'),
+      elWhy=document.getElementById('ro-why'),
+      elTok=document.getElementById('ro-tok');
+
+  function num(tr,key){return parseFloat(tr.getAttribute('data-'+key))}
+
+  function apply(key,dir,label){
+    var sorted=rows.slice().sort(function(a,b){
+      var d=num(a,key)-num(b,key);
+      return dir==='asc'?d:-d;
+    });
+    sorted.forEach(function(tr,i){
+      tr.querySelector('.nm i').textContent=String(i+1);
+      tr.classList.toggle('top',i===0);
+      tbody.appendChild(tr);
+    });
+    [].slice.call(document.querySelectorAll('#tbl .on')).forEach(function(c){
+      c.classList.remove('on')});
+    var idx=null;
+    [].slice.call(document.querySelectorAll('#tbl thead th')).forEach(function(th,i){
+      if(th.getAttribute('data-col')===key){idx=i;th.classList.add('on')}});
+    if(idx!==null)sorted.forEach(function(tr){tr.cells[idx].classList.add('on')});
+
+    /* 표의 값에서 그대로 읽는다 */
+    var win=sorted[0];
+    elTok.textContent=TOK[key];
+    elVal.innerHTML=String(num(win,key))+'<span>'+UNIT[key]+'</span>';
+    elWho.textContent=win.querySelector('.nm b').textContent;
+    elWhy.textContent=label+' 1위 — '+TAIL[key];
+  }
+
+  chips.forEach(function(c){
+    c.addEventListener('click',function(){
+      chips.forEach(function(o){o.setAttribute('aria-pressed',String(o===c))});
+      apply(c.getAttribute('data-key'),c.getAttribute('data-dir'),c.textContent.trim());
+    });
+  });
+})();
+</script>
+</body></html>

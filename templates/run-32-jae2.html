@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>제2재료 · 제47회 반출 경매 — 성수동 동일빌딩 해체 자재 650t</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+/* ─────────────────────────────────────────────────────────────────────────
+   RUN 32 · 제2재료 — 챔피언(RUN16 KELVIN 37) 리믹스
+   아트디렉터: AD-2 도진 (브루탈리스트)
+     do    : 압도적으로 큰 요소 하나 · 타입 스케일 극단(본문 17 ↔ 760) ·
+             중간 단계 비움 · 굵은 테두리 4px · 각진 모서리 · 고대비 · 원색 ·
+             비대칭/겹침 · 인터랙션은 짧고 단호하게(이징 없음)
+     don't : 부드러운 그림자·유리질·블러 · 3열 균등 카드 그리드 ·
+             파스텔·중간톤 · "세련되게 정리"하려는 충동
+   KELVIN에서 계승 (다운그레이드 금지)
+     · UI는 무채색, 색은 규칙이 있을 때만 — 포인트 1색
+     · 스크롤 스크럽 (색온도 → 해체 층수)
+     · 조작 결과가 눈에 보이는 인터랙션
+     · 제3자 트러스트 (실명·직함·낙찰 회차·시험성적서)
+   같은 디렉터를 받은 RUN26과 갈라놓은 것
+     · 지면을 뒤집었다 — RUN26은 검정 지면 + 크림 밴드 하나,
+       이쪽은 크림 지면(인쇄물) + 검정 반전 블록 둘
+     · 블리드 방향 — RUN26은 숫자를 오른쪽으로 흘렸고, 이쪽은 위를 자른다
+     · 인터랙션 종류 — 드래그가 아니라 정렬 기준 전환(순위가 뒤집힌다) + 담기 비교
+     · 닫는 방식 — 탈락 체크리스트가 아니라 「유찰 기록」(안 팔린 것과 그 이유)
+   ───────────────────────────────────────────────────────────────────────── */
+:root{
+--sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+/* 로드하지 않는 폰트 이름은 적지 않는다 — 시스템 모노만 */
+--mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+
+/* 대비비는 실제로 깔리는 배경 3종(paper · paper2 · ink2) 위에서 전부 실측 */
+--paper:#f2efe6;    /* 지면(뉴스프린트) — 이 위: ink 16.91:1 · body 9.91:1 · mut 7.36:1 · k 6.00:1 */
+--paper2:#e7e3d7;   /* 줄무늬 행 — 이 위: ink 15.15:1 · body 8.88:1 · mut 6.60:1 · k 5.38:1 */
+--ink:#0d0d0c;      /* 잉크(본문·괘선) — paper 16.91:1 / paper2 15.15:1 */
+--ink2:#141412;     /* 반전 블록 바닥 — 이 위: pfg 16.46:1 · pbody 10.78:1 · pmut 6.55:1 */
+--body:#3b3a35;     /* 보조 — paper 9.91:1 / paper2 8.88:1 */
+--mut:#4f4d45;      /* 캡션 — paper 7.36:1 / paper2 6.60:1. 12px에도 AA */
+--pfg:#f4f2ea;      /* 반전 위 본문 — ink2 16.46:1 */
+--pbody:#c9c6bb;    /* 반전 위 보조 — ink2 10.78:1 */
+--pmut:#9d9a90;     /* 반전 위 캡션 — ink2 6.55:1 */
+--k:#1f3df5;        /* 포인트 1색 — paper 6.00:1 / paper2 5.38:1 (작은 글자도 AA).
+                       단, 반전 블록 위는 2.67:1 뿐이므로 다크에서는 글자로 쓰지 않고
+                       배경(막대·블록)으로만 쓴다. 청색 배경 위 글자는 잉크(2.82)가 아니라
+                       지면색(6.00)으로 얹는다 */
+--line:#c8c3b4;     /* 종이 위 얇은 괘선 — 구획 전용, 글자 금지 */
+--pline:#33322d;    /* 반전 위 얇은 괘선 — 구획 전용 */
+--hard:#0d0d0c;     /* 굵은 테두리 = 잉크. 층위는 그림자가 아니라 선으로 만든다 */
+
+/* 타입 스케일 — 극단으로 벌리고 중간을 비운다. 20/25/31/39/49px 단계는 쓰지 않는다 */
+--t-xs:12px;--t-sm:14px;--t-base:17px;--t-lg:24px;
+--t-d1:clamp(34px,5.4vw,64px);
+--t-d2:min(24vw,300px);   /* 층 스크럽의 층 표기 */
+--t-d3:min(46vw,760px);   /* 히어로 — 위가 잘리는 숫자 하나 */
+/* 간격 — 4배수 */
+--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+/* sticky 바(59px)가 앵커 착지점을 덮는다 */
+#lots,#cut,#fail{scroll-margin-top:76px}
+body{margin:0;font-family:var(--sans);background:var(--paper);color:var(--ink);
+ -webkit-font-smoothing:antialiased;line-height:1.5;
+ word-break:keep-all;overflow-wrap:break-word}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer}
+/* UA 기본 margin 초기화 — figure의 1em 40px 은 격자 칸을 밀어내고,
+   p의 1em 은 760px 글자에서 760px 여백이 된다. 간격은 전부 명시로만 만든다 */
+figure,p,blockquote,dl,dd,ol,ul,h1,h2,h3,table{margin:0}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1300px;margin:0 auto;padding-left:var(--s5);padding-right:var(--s5)}
+.lbl{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.lbl b{color:var(--k);font-weight:700}
+.blk{background:var(--ink);color:var(--paper);padding:0 var(--s2)}   /* 잉크 블록 강조 — 1회만 */
+
+/* 리빌은 짧고 단호하게 — 떠오르지 않는다 */
+.rise{opacity:0;transform:translateY(8px);transition:.2s linear}
+.rise.vis{opacity:1;transform:none}
+
+/* ── 상단 바 : 블러 없음 · 각진 모서리 · 4px 밑선 ── */
+.top{position:sticky;top:0;z-index:60;background:var(--paper);border-bottom:4px solid var(--hard)}
+.top .in{max-width:1300px;margin:0 auto;padding:var(--s3) var(--s5);display:flex;align-items:center;gap:var(--s4)}
+.top .lg{font-size:var(--t-lg);font-weight:900;letter-spacing:-.04em}
+.top .lg s{text-decoration:none;font-family:var(--mono);font-size:var(--t-xs);font-weight:700;
+ letter-spacing:.14em;margin-left:var(--s2);color:var(--mut)}
+.top .sp{flex:1}
+.top .meta{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.06em;
+ font-variant-numeric:tabular-nums}
+.top .go{font-family:var(--mono);font-size:var(--t-xs);font-weight:700;letter-spacing:.08em;
+ background:var(--k);color:var(--paper);padding:var(--s3) var(--s4);transition:.1s linear;white-space:nowrap}
+.top .go:hover{background:var(--ink)}
+
+/* ── 회차 공고 : 페이지가 광고가 아니라 공고로 시작한다 ── */
+.notice{background:var(--ink2);color:var(--pfg);border-bottom:4px solid var(--hard)}
+.notice .in{max-width:1300px;margin:0 auto;padding:var(--s5);display:grid;gap:var(--s4) var(--s6);
+ grid-template-columns:1fr}
+.notice .in>*{min-width:0}
+.notice dt{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;
+ color:var(--pmut)}
+.notice dd{font-family:var(--mono);font-size:var(--t-sm);font-weight:700;color:var(--pfg);
+ font-variant-numeric:tabular-nums;margin-top:var(--s1)}
+.notice dd em{font-style:normal;background:var(--k);color:var(--paper);padding:0 var(--s2)}
+
+/* ── 히어로 : 압도적으로 큰 것 하나. 위가 잘린다 ── */
+.hero{padding-top:var(--s7);padding-bottom:var(--s10)}
+.hero .kicker{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.18em;
+ text-transform:uppercase;color:var(--k);font-weight:700}
+/* 숫자의 머리를 지면 밖으로 내보낸다 — 자르는 쪽이 래퍼다.
+   래퍼 이름을 `.cut` 으로 두면 아래 층 스크럽 섹션 `.cut`(400vh·반전 블록)의
+   규칙을 그대로 받아 히어로가 400vh 다크 블록이 된다 — 클래스명은 겹치지 않게 (RUN21 교훈) */
+.hero .crop{overflow:hidden;margin-top:var(--s5)}
+.hero .big{font-size:var(--t-d3);font-weight:900;letter-spacing:-.055em;line-height:.72;
+ margin-top:-.11em;white-space:nowrap;font-variant-numeric:tabular-nums}
+.hero .big u{text-decoration:none;font-size:.22em;letter-spacing:-.01em;vertical-align:baseline;
+ background:var(--k);color:var(--paper);padding:0 .12em;margin-left:.06em}
+.hero .row{display:grid;grid-template-columns:1fr;gap:var(--s5);margin-top:var(--s6)}
+.hero .row>*{min-width:0}
+.hero .claim{font-size:var(--t-lg);font-weight:800;letter-spacing:-.02em;line-height:1.3;max-width:26ch}
+.hero .sub{font-size:var(--t-base);color:var(--body);margin-top:var(--s4);max-width:52ch}
+.hero .shot{border:4px solid var(--hard);background:var(--paper2)}
+.hero .shot img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:38% 34%;
+ filter:grayscale(1) contrast(1.08)}
+.hero .cap{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s2);line-height:1.6}
+
+/* ── 증언 : 앞쪽 절반에 둔다. 크기가 다른 세 개 ── */
+.said{border-top:4px solid var(--hard);padding-top:var(--s9);padding-bottom:var(--s6)}
+.said h2{font-size:var(--t-d1);font-weight:900;letter-spacing:-.04em;line-height:1.02}
+.said .q1{border-top:4px solid var(--hard);margin-top:var(--s6);padding-top:var(--s5)}
+.said .q1 blockquote{font-size:var(--t-lg);font-weight:800;letter-spacing:-.02em;line-height:1.35;max-width:44ch}
+.said .qrow{display:grid;grid-template-columns:1fr;gap:var(--s5);margin-top:var(--s6)}
+.said .qrow>*{min-width:0}
+.said .q2{border-top:1px solid var(--line);padding-top:var(--s4)}
+.said .q2 blockquote{font-size:var(--t-base);font-weight:700;line-height:1.6}
+.said .by{margin-top:var(--s4);font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);
+ letter-spacing:.05em;line-height:1.9}
+.said .by b{color:var(--ink);font-weight:700}
+.said .by i{font-style:normal;border:2px solid var(--ink);padding:var(--s1) var(--s2);margin-left:var(--s2);
+ white-space:nowrap}
+.said .cert{margin-top:var(--s6);border:4px solid var(--hard);padding:var(--s4) var(--s5);
+ display:flex;flex-wrap:wrap;gap:var(--s3) var(--s6);align-items:baseline;
+ font-family:var(--mono);font-size:var(--t-sm);font-variant-numeric:tabular-nums}
+.said .cert b{font-weight:700}
+.said .cert s{text-decoration:none;color:var(--mut);font-size:var(--t-xs)}
+
+/* ── ★ 로트 표 : 정렬 기준을 바꾸면 순위가 뒤집힌다 ── */
+.sort{border-top:4px solid var(--hard);padding-top:var(--s6);padding-bottom:var(--s9)}
+.sort h2{font-size:var(--t-d1);font-weight:900;letter-spacing:-.04em;line-height:1.02;margin-top:var(--s3)}
+.sort .lead{font-size:var(--t-base);color:var(--body);max-width:56ch;margin-top:var(--s4)}
+/* 정렬 버튼 — 알약 금지, 각진 사각 4개 */
+.keys{display:flex;flex-wrap:wrap;gap:0;margin-top:var(--s6);border:4px solid var(--hard)}
+.keys button{flex:1 1 auto;font-family:var(--mono);font-size:var(--t-xs);font-weight:700;
+ letter-spacing:.08em;padding:var(--s4) var(--s3);border-right:1px solid var(--line);
+ transition:.1s linear;white-space:nowrap;text-align:left;min-width:0}
+.keys button:last-child{border-right:0}
+.keys button s{text-decoration:none;display:block;font-size:var(--t-xs);font-weight:400;
+ color:var(--mut);letter-spacing:.02em;margin-top:var(--s1)}
+.keys button:hover{background:var(--paper2)}
+.keys button[aria-pressed=true]{background:var(--k);color:var(--paper)}
+.keys button[aria-pressed=true] s{color:var(--paper)}
+/* 결론 — 정렬을 바꾸면 이 문장이 바뀐다. 표보다 이게 이 섹션의 주장이다 */
+.verdict{border-left:4px solid var(--k);padding:var(--s4) 0 var(--s4) var(--s5);margin-top:var(--s6);
+ font-size:var(--t-lg);font-weight:800;letter-spacing:-.02em;line-height:1.35;max-width:52ch}
+.verdict b{color:var(--k)}
+table.lots{width:100%;border-collapse:collapse;margin-top:var(--s6);font-size:var(--t-sm)}
+table.lots caption{text-align:left;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);
+ letter-spacing:.06em;padding-bottom:var(--s3)}
+table.lots th{text-align:left;font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;
+ text-transform:uppercase;color:var(--mut);font-weight:700;padding:var(--s3) var(--s4) var(--s3) 0;
+ border-top:4px solid var(--hard);border-bottom:1px solid var(--line);white-space:nowrap}
+table.lots td{padding:var(--s4) var(--s4) var(--s4) 0;border-bottom:1px solid var(--line);
+ vertical-align:baseline}
+table.lots tbody tr:nth-child(even){background:var(--paper2)}
+table.lots .rk{font-family:var(--mono);font-size:var(--t-base);font-weight:700;
+ font-variant-numeric:tabular-nums;width:3ch;padding-left:var(--s2)}
+table.lots .id{font-family:var(--mono);font-size:var(--t-xs);font-weight:700;letter-spacing:.06em;
+ white-space:nowrap}
+table.lots .id b{background:var(--ink);color:var(--paper);padding:var(--s1) var(--s2);display:inline-block}
+table.lots .nm{font-size:var(--t-base);font-weight:800;letter-spacing:-.01em;min-width:14ch}
+table.lots .nm s{text-decoration:none;display:block;font-family:var(--mono);font-size:var(--t-xs);
+ font-weight:400;color:var(--mut);margin-top:var(--s1)}
+table.lots .qt{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--body)}
+table.lots .bar{width:34%;min-width:90px}
+table.lots .bar span{display:block;height:14px;border:2px solid var(--hard)}
+table.lots .bar i{display:block;height:100%;background:var(--k);width:0;transition:width .16s linear}
+table.lots .vl{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums;
+ white-space:nowrap;text-align:right}
+table.lots .vl s{text-decoration:none;display:block;font-size:var(--t-xs);font-weight:400;color:var(--mut);
+ margin-top:var(--s1)}
+table.lots .pk{text-align:right;white-space:nowrap}
+table.lots .pk button{font-family:var(--mono);font-size:var(--t-xs);font-weight:700;letter-spacing:.06em;
+ border:2px solid var(--ink);padding:var(--s1) var(--s3);transition:.1s linear}
+table.lots .pk button:hover{background:var(--ink);color:var(--paper)}
+table.lots .pk button[aria-pressed=true]{background:var(--k);border-color:var(--k);color:var(--paper)}
+/* 담기 비교 — 두 개를 고르면 여기서 갈린다 */
+.vs{border:4px solid var(--hard);margin-top:var(--s6)}
+.vs .hd{display:flex;flex-wrap:wrap;gap:var(--s3);align-items:baseline;padding:var(--s4) var(--s5);
+ border-bottom:4px solid var(--hard);font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;
+ text-transform:uppercase;color:var(--mut)}
+.vs .hd .sp{flex:1}
+.vs .hd button{font-family:var(--mono);font-size:var(--t-xs);font-weight:700;letter-spacing:.06em;
+ border:2px solid var(--ink);padding:var(--s1) var(--s3);text-transform:none;letter-spacing:.04em}
+.vs .hd button:hover{background:var(--ink);color:var(--paper)}
+.vs .bd{padding:var(--s5)}
+.vs .empty{font-size:var(--t-base);color:var(--mut);font-family:var(--mono);font-size:var(--t-sm)}
+.vsrow{display:grid;grid-template-columns:minmax(max-content,auto) 1fr 1fr;gap:var(--s3) var(--s5);
+ align-items:baseline;padding:var(--s3) 0;border-bottom:1px solid var(--line)}
+.vsrow>*{min-width:0}
+.vsrow:last-child{border-bottom:0}
+.vsrow .k{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em;color:var(--mut)}
+.vsrow .a,.vsrow .b{font-family:var(--mono);font-size:var(--t-base);font-weight:700;
+ font-variant-numeric:tabular-nums}
+.vsrow .win{color:var(--k)}
+.vsrow .win:after{content:'  ▲';font-size:var(--t-xs)}
+.vsrow.hdr .a,.vsrow.hdr .b{font-size:var(--t-base);font-weight:900;font-family:var(--sans)}
+.vs .note{margin-top:var(--s5);font-size:var(--t-base);font-weight:700;line-height:1.5;max-width:56ch}
+
+/* ── 층 스크럽 : 스크롤이 12층에서 지하 2층까지 끌고 내려간다 (반전 블록) ── */
+.cut{position:relative;height:400vh;background:var(--ink2);color:var(--pfg);
+ border-top:4px solid var(--hard);border-bottom:4px solid var(--hard)}
+.cut .stick{position:sticky;top:0;height:100vh;display:flex;align-items:center;overflow:hidden}
+.cut .in{max-width:1300px;margin:0 auto;padding:0 var(--s5);width:100%;
+ display:grid;grid-template-columns:1fr;gap:var(--s5);align-items:center}
+.cut .in>*{min-width:0}
+.cut .lbl{color:var(--pmut)}
+.cut .fl{font-size:var(--t-d2);font-weight:900;letter-spacing:-.05em;line-height:.86;
+ font-variant-numeric:tabular-nums;white-space:nowrap;margin-top:var(--s3)}
+.cut .fl u{text-decoration:none;font-size:.24em;color:var(--pmut);margin-left:.1em;letter-spacing:0}
+.cut .mat{font-size:var(--t-base);color:var(--pbody);margin-top:var(--s4);max-width:44ch;line-height:1.7}
+.cut .mat b{color:var(--pfg);font-weight:700}
+.cut .acc{margin-top:var(--s5);font-family:var(--mono);font-size:var(--t-sm);color:var(--pmut);
+ font-variant-numeric:tabular-nums}
+.cut .acc b{color:var(--pfg);font-size:var(--t-lg);font-weight:900;letter-spacing:-.02em}
+.cut .acc span{white-space:nowrap}
+/* 건물 단면 — 14개 층 막대. 지금 층 그룹만 청색으로 찬다 */
+.sec{display:grid;gap:3px}
+.sec .f{display:grid;grid-template-columns:minmax(max-content,auto) 1fr;gap:var(--s3);align-items:center}
+.sec .f>*{min-width:0}
+.sec .f em{font-style:normal;font-family:var(--mono);font-size:var(--t-xs);color:var(--pmut);
+ font-variant-numeric:tabular-nums;text-align:right;width:4ch}
+.sec .f i{display:block;height:15px;border:2px solid var(--pline);background:transparent;transition:.12s linear}
+.sec .f.on i{background:var(--k);border-color:var(--k)}
+.sec .f.on em{color:var(--pfg);font-weight:700}
+.sec .f.g i{border-style:dashed}
+/* 폴백 : 핀을 풀면 스크럽 분모가 음수가 된다 — 계산을 끄고 네 구간을 세로로 펼친다 */
+.cut .fold{display:none}
+.cut.folded .live{display:none}
+.cut.folded .fold{display:block}
+.cut.folded{height:auto}
+.cut.folded .stick{position:static;height:auto;padding:var(--s9) 0}
+.cut .fold .fr{border-top:4px solid var(--pline);padding-top:var(--s4);margin-top:var(--s5);
+ display:grid;grid-template-columns:minmax(max-content,auto) 1fr;gap:var(--s3) var(--s5);align-items:baseline}
+.cut .fold .fr>*{min-width:0}
+.cut .fold .fr .fn{font-family:var(--mono);font-size:var(--t-lg);font-weight:900;white-space:nowrap;
+ font-variant-numeric:tabular-nums}
+.cut .fold .fr .fm{font-size:var(--t-base);color:var(--pbody);line-height:1.7}
+.cut .fold .fr .fm b{color:var(--pfg)}
+
+/* ── 지난 회차 낙찰 기록 ── */
+.past{padding-top:var(--s10);padding-bottom:var(--s7)}
+.past h2{font-size:var(--t-d1);font-weight:900;letter-spacing:-.04em;line-height:1.02}
+.past .tblwrap{margin-top:var(--s6)}
+.past table{width:100%;border-collapse:collapse;font-size:var(--t-sm)}
+.past caption{text-align:left;font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);
+ letter-spacing:.06em;padding-bottom:var(--s3)}
+.past th{text-align:left;font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;
+ text-transform:uppercase;color:var(--mut);font-weight:700;padding:var(--s3) var(--s4) var(--s3) 0;
+ border-top:4px solid var(--hard);border-bottom:1px solid var(--line);white-space:nowrap}
+.past td{padding:var(--s4) var(--s4) var(--s4) 0;border-bottom:1px solid var(--line);vertical-align:baseline}
+.past td.n{font-weight:900;font-size:var(--t-base);white-space:nowrap}
+.past td.m{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--body)}
+.past td.r{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.past .avg{margin-top:var(--s6);border:4px solid var(--hard);padding:var(--s5);
+ display:grid;grid-template-columns:1fr;gap:var(--s5)}
+.past .avg>*{min-width:0}
+.past .avg .v{font-size:var(--t-d1);font-weight:900;letter-spacing:-.04em;line-height:1;
+ font-variant-numeric:tabular-nums;white-space:nowrap}
+.past .avg .v u{text-decoration:none;font-size:.32em;color:var(--mut);margin-left:.1em}
+.past .avg .l{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);letter-spacing:.06em;
+ margin-top:var(--s2);line-height:1.7}
+.past .shot{margin-top:var(--s7);border:4px solid var(--hard);background:var(--paper2)}
+.past .shot img{width:100%;aspect-ratio:21/9;object-fit:cover;filter:grayscale(1) contrast(1.05)}
+.past .cap{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s2);line-height:1.6}
+
+/* ── 닫기 : 유찰 기록. 팔린 것이 아니라 안 팔린 것으로 닫는다 ── */
+.fail{border-top:4px solid var(--hard);padding-top:var(--s8);padding-bottom:var(--s10)}
+.fail h2{font-size:var(--t-d1);font-weight:900;letter-spacing:-.04em;line-height:1.02;margin-top:var(--s3)}
+.fail .lead{font-size:var(--t-base);color:var(--body);max-width:56ch;margin-top:var(--s4)}
+.fail ol{list-style:none;counter-reset:v;padding:0;margin-top:var(--s6);border-top:4px solid var(--hard)}
+.fail li{counter-increment:v;border-bottom:1px solid var(--line);padding:var(--s5) 0;
+ display:grid;grid-template-columns:minmax(max-content,auto) 1fr;gap:var(--s3) var(--s5)}
+.fail li>*{min-width:0}
+.fail li:before{content:'유찰 ' counter(v);font-family:var(--mono);font-size:var(--t-xs);font-weight:700;
+ letter-spacing:.08em;color:var(--paper);background:var(--ink);padding:var(--s1) var(--s2);
+ align-self:start;white-space:nowrap}
+.fail li .t{font-size:var(--t-lg);font-weight:900;letter-spacing:-.02em;line-height:1.25}
+.fail li .t s{text-decoration:none;display:block;font-family:var(--mono);font-size:var(--t-xs);
+ font-weight:400;color:var(--mut);letter-spacing:.06em;margin-top:var(--s2)}
+.fail li .w{font-size:var(--t-base);color:var(--body);line-height:1.7;margin-top:var(--s3)}
+.fail li .w b{color:var(--ink);font-weight:700}
+.fail .shot{margin-top:var(--s7);border:4px solid var(--hard);background:var(--paper2)}
+.fail .shot img{width:100%;aspect-ratio:2/1;object-fit:cover;object-position:50% 62%;
+ filter:grayscale(1) contrast(1.06)}
+.fail .cap{font-family:var(--mono);font-size:var(--t-xs);color:var(--mut);margin-top:var(--s2);line-height:1.6}
+.fail .end{margin-top:var(--s7);border-top:4px solid var(--hard);padding-top:var(--s5);
+ font-size:var(--t-lg);font-weight:800;letter-spacing:-.02em;line-height:1.35;max-width:48ch}
+
+footer{background:var(--ink2);color:var(--pmut);border-top:4px solid var(--hard);
+ padding-top:var(--s5);padding-bottom:var(--s8)}
+footer .in{display:grid;grid-template-columns:1fr;gap:var(--s5);
+ font-family:var(--mono);font-size:var(--t-xs);line-height:2}
+footer .in>*{min-width:0}
+footer b{color:var(--pbody);font-weight:700}
+
+/* ── 넓은 화면 ── */
+@media(min-width:820px){
+ /* 다섯 칸을 한 줄에 넣으면 「출처 현장」만 두세 줄이 되어 같은 행 안에서 높이가 43~190px 로
+    벌어진다(8폭 스윕에서 901·1024에서만 잡혔다) — 긴 항목은 자기 줄을 준다 */
+ .notice .in{grid-template-columns:repeat(4,auto);align-items:start}
+ .notice .in .sp{grid-column:1/-1;border-top:1px solid var(--pline);padding-top:var(--s4)}
+ .hero .row{grid-template-columns:1.05fr 1.35fr}
+ .said .qrow{grid-template-columns:1fr 1fr}
+ /* 균등 3분할은 이 디렉터의 금기에 가장 가깝다 — 칸 폭을 어긋나게 둔다 */
+ .past .avg{grid-template-columns:1.4fr 1fr 1.2fr}
+ .cut .in{grid-template-columns:1.25fr .75fr;gap:var(--s8)}
+ footer .in{grid-template-columns:2fr 1fr 1fr}
+}
+@media(max-width:819px){
+ /* 46vw 로 두면 「t」 블록이 지면 오른쪽으로 6px 새어 나간다 — 자르는 방향은 위 하나뿐이어야 한다 */
+ :root{--t-d3:min(41vw,760px)}
+ .hero .big{letter-spacing:-.04em}
+ /* 7열 표를 342px 에 밀어넣지도, 가로로 굴리지도 않는다 — 행을 세워 쌓는다.
+    tr·td 까지 block 으로 내려야 익명 테이블 박스가 사라져 폭이 컨테이너에 맞는다 */
+ table.lots{display:block}
+ table.lots caption{display:block}
+ table.lots colgroup,table.lots thead{display:none}
+ table.lots tbody,table.lots tr,table.lots td{display:block}
+ table.lots tbody tr{border-top:4px solid var(--hard);padding:var(--s4) var(--s3);
+  display:grid;grid-template-columns:minmax(max-content,auto) 1fr;gap:var(--s2) var(--s4);align-items:baseline}
+ table.lots td{border-bottom:0;padding:0}
+ table.lots .rk{grid-row:1;width:auto;padding-left:0;font-size:var(--t-lg);font-weight:900}
+ table.lots .nm{grid-row:1;grid-column:2}
+ table.lots .id{grid-column:1/-1;grid-row:2;color:var(--mut)}
+ table.lots .qt,table.lots .bar,table.lots .vl,table.lots .pk{grid-column:1/-1}
+ table.lots .vl{text-align:left}
+ table.lots .pk{text-align:left;margin-top:var(--s2)}
+ table.lots .bar{width:auto;min-width:0}
+ .vsrow{grid-template-columns:1fr 1fr}
+ .vsrow .k{grid-column:1/-1}
+ /* 900px 이하에서는 핀·스크럽을 해제한다 (안 하면 빈 400vh 구간이 생긴다) */
+ .cut{height:auto}
+ .cut .stick{position:static;height:auto;padding:var(--s8) 0}
+ /* 낙찰 기록도 같은 처방을 쓴다 — 6열을 가로로 굴리면 「최고가 로트」와 「낙찰자」가
+    스크롤 뒤로 숨는데, 그 두 열이 이 표의 내용 전부다. 로트 표와 같은 방식으로 행을 세운다 */
+ .past table{display:block}
+ .past caption{display:block}
+ .past thead{display:none}
+ .past tbody,.past tr,.past td{display:block}
+ .past tbody tr{border-top:4px solid var(--hard);padding:var(--s4) 0 var(--s5);
+  display:grid;grid-template-columns:minmax(max-content,auto) 1fr;gap:var(--s2) var(--s4);align-items:baseline}
+ .past td{border-bottom:0;padding:0}
+ .past td.n{grid-column:1;grid-row:1;font-size:var(--t-lg)}
+ .past td.r{grid-column:2;grid-row:1;text-align:right;font-size:var(--t-lg);font-weight:900}
+ .past td.m{grid-column:1/-1;white-space:normal}
+ .past td[data-l]:before{content:attr(data-l) ' ';font-family:var(--mono);font-size:var(--t-xs);
+  letter-spacing:.08em;color:var(--mut)}
+}
+@media(prefers-reduced-motion:reduce){
+ .rise{opacity:1;transform:none;transition:none}
+ html{scroll-behavior:auto}
+ table.lots .bar i{transition:none}
+ .sec .f i{transition:none}
+}
+/* 캡처 모드 (?capture=1) — 디자인 툴 반출용 정적 스냅샷 */
+html.capture .rise{opacity:1;transform:none;transition:none}
+html.capture .top{position:static}
+html.capture #lots,html.capture #cut,html.capture #fail{scroll-margin-top:0}
+</style>
+<!-- 스크립트가 죽으면 리빌 21개가 opacity:0 으로 남아 지면의 절반이 사라진다 -->
+<noscript><style>.rise{opacity:1;transform:none}</style></noscript>
+</head><body>
+
+<div class="top">
+  <div class="in">
+    <span class="lg">제2재료<s>SECOND MATTER</s></span>
+    <span class="sp"></span>
+    <span class="meta">제47회 · 공고 D-2026-047</span>
+    <a class="go" href="#lots">로트 12건 보기 →</a>
+  </div>
+</div>
+
+<!-- 회차 공고 -->
+<div class="notice">
+  <dl class="in">
+    <div><dt>회차</dt><dd>제47회 반출 경매</dd></div>
+    <div><dt>열람</dt><dd>2026.08.14 — 08.20 · 10—17시</dd></div>
+    <div><dt>입찰 마감</dt><dd><em>2026.08.21 17:00</em></dd></div>
+    <div><dt>야드</dt><dd>서울 성동구 성수이로 18길</dd></div>
+    <div class="sp"><dt>출처 현장</dt><dd>성수동 동일빌딩 · 1987년 준공 · 지상 12층/지하 2층 · 연면적 8,940㎡</dd></div>
+  </dl>
+</div>
+
+<!-- 히어로 -->
+<section class="hero wrap">
+  <p class="kicker rise">해체 총량 9,800t 중 반출 가능분</p>
+  <div class="crop rise"><p class="big num">650<u>t</u></p></div>
+  <div class="row">
+    <div class="rise">
+      <p class="claim">한 번 쓴 것이 두 번째로 쓰일 때, 값은 <span class="blk">무게</span>로 정해지지 않습니다.</p>
+      <p class="sub">이 카탈로그는 로트 12건을 네 가지 기준으로 줄 세울 수 있게 만들었습니다. 기준을 바꾸면 1위가 바뀌고, 그게 이 업의 전부입니다. 무게로 사면 골재를 사고, 탄소로 사면 알루미늄을 삽니다.</p>
+    </div>
+    <figure class="shot rise">
+      <img src="https://images.unsplash.com/photo-1572949645415-8f26e838a1d4?w=1400&q=80&auto=format&fit=crop" alt="층 슬래브가 드러난 채 해체 중인 건물" loading="lazy" onerror="this.style.display='none';this.parentNode.style.background='#e7e3d7';this.parentNode.style.aspectRatio='16/10'">
+      <p class="cap">해체 12일차 — 슬래브가 층마다 열리면 그 층이 무엇으로 지어졌는지 그때 보인다. 로트는 이 단계에서 층별로 갈라 적는다.</p>
+    </figure>
+  </div>
+</section>
+
+<!-- 증언 : 앞쪽 절반 -->
+<section class="said wrap">
+  <h2 class="rise">우리 말보다,<br>받아 간 사람 말.</h2>
+
+  <div class="q1 rise">
+    <blockquote>“철골을 다시 쓰려면 이력이 있어야 합니다. 여기는 로트마다 원 건물 구조도면과 시험성적서를 같이 줬습니다. 그래서 구조 검토가 통과됐습니다.”</blockquote>
+    <p class="by"><b>남지호</b> · 구조기술사 · 터틀구조엔지니어링<i>제44회 철골 낙찰</i></p>
+  </div>
+
+  <div class="qrow">
+    <div class="q2 rise">
+      <blockquote>“벽돌 18,000장을 받아 카페 한 채를 다 쌓았습니다. 새 벽돌로는 못 냈을 얼굴입니다. 색이 열두 가지쯤 섞여 있었습니다.”</blockquote>
+      <p class="by"><b>문세린</b> · 건축사사무소 안팎 소장<i>제45회 적벽돌 낙찰</i></p>
+    </div>
+    <div class="q2 rise">
+      <blockquote>“마루판은 대패를 한 번 더 먹여야 합니다. 그 수고를 카탈로그에 미리 적어 둔 곳은 여기가 처음이었습니다.”</blockquote>
+      <p class="by"><b>배주완</b> · 목공방 한칸 대표<i>제46회 마루판 낙찰</i></p>
+    </div>
+  </div>
+
+  <div class="cert rise">
+    <span><b>대한자재시험원</b> 성적서 <b>12건</b> 첨부 <s>로트당 1건</s></span>
+    <span>시험항목 <b>항복강도 · 압축강도 · 함수율 · 석면</b></span>
+    <span>열람 <b>야드 현장 + 사본 교부</b> <s>낙찰 전 확인 가능</s></span>
+  </div>
+</section>
+
+<!-- ★ 로트 표 -->
+<section class="sort wrap" id="lots">
+  <p class="lbl rise">정렬 <b>가능</b> · 기준을 바꾸면 순위가 뒤집힌다</p>
+  <h2 class="rise">무엇으로<br>줄을 세울 것인가.</h2>
+  <p class="lead rise">같은 12개 로트입니다. 기준만 바뀝니다. 네 번 눌러 보면 이 회차에서 무엇을 사야 하는지가 네 번 달라집니다 — 그게 값을 정하는 방식이 하나가 아니라는 뜻입니다.</p>
+
+  <div class="keys rise" role="group" aria-label="로트 정렬 기준">
+    <button type="button" data-k="t" aria-pressed="true">무게<s>많은 순 · t</s></button>
+    <button type="button" data-k="won" aria-pressed="false">최저 입찰 총액<s>높은 순 · 만원</s></button>
+    <button type="button" data-k="co2" aria-pressed="false">탄소 절감<s>큰 순 · tCO₂</s></button>
+    <button type="button" data-k="diff" aria-pressed="false">반출 난이도<s>낮은 순 · 1—5등급</s></button>
+  </div>
+
+  <p class="verdict" id="verdict">무게로 보면 1위는 <b>파쇄 골재 399t</b>입니다. 이 회차 650t의 61%가 골재이고, 이건 값이 아니라 처리량입니다.</p>
+
+  <table class="lots" id="lotsTbl">
+    <caption>제47회 로트 12건 · 최저 입찰 총액 합 2억 807만원 · 중량 합 650t · 절감 합 409tCO₂</caption>
+    <thead><tr>
+      <th scope="col">순위</th><th scope="col">로트</th><th scope="col">자재 · 규격</th>
+      <th scope="col">수량</th><th scope="col">지표</th><th scope="col">값</th><th scope="col">비교</th>
+    </tr></thead>
+    <tbody id="lotsBody">
+      <tr data-id="L-02" data-t="399" data-won="718" data-co2="2.0" data-diff="2" data-nm="파쇄 골재">
+        <td class="rk num">1</td><td class="id"><b>L-02</b></td>
+        <td class="nm">콘크리트 파쇄 골재<s>25mm 이하 · 재생골재 2종 · 1.8만원/t</s></td>
+        <td class="qt">399t</td><td class="bar"><span><i style="width:100%"></i></span></td>
+        <td class="vl">399<s>t</s></td>
+        <td class="pk"><button type="button" aria-pressed="false">담기</button></td>
+      </tr>
+      <tr data-id="L-01" data-t="84" data-won="7730" data-co2="134.4" data-diff="4" data-nm="철골 H형강">
+        <td class="rk num">2</td><td class="id"><b>L-01</b></td>
+        <td class="nm">철골 H형강<s>H-400×200 · SS275 · 92.0만원/t</s></td>
+        <td class="qt">84t</td><td class="bar"><span><i style="width:21%"></i></span></td>
+        <td class="vl">84<s>t</s></td>
+        <td class="pk"><button type="button" aria-pressed="false">담기</button></td>
+      </tr>
+      <tr data-id="L-03" data-t="50" data-won="744" data-co2="6.8" data-diff="3" data-nm="화강석 판석">
+        <td class="rk num">3</td><td class="id"><b>L-03</b></td>
+        <td class="nm">화강석 판석<s>외벽 · t30 · 620㎡ · 1.2만원/㎡</s></td>
+        <td class="qt">620㎡</td><td class="bar"><span><i style="width:13%"></i></span></td>
+        <td class="vl">50<s>t</s></td>
+        <td class="pk"><button type="button" aria-pressed="false">담기</button></td>
+      </tr>
+      <tr data-id="L-04" data-t="39" data-won="331" data-co2="8.1" data-diff="1" data-nm="적벽돌">
+        <td class="rk num">4</td><td class="id"><b>L-04</b></td>
+        <td class="nm">적벽돌<s>내부 조적 · 18,400장 · 180원/장</s></td>
+        <td class="qt">18,400장</td><td class="bar"><span><i style="width:10%"></i></span></td>
+        <td class="vl">39<s>t</s></td>
+        <td class="pk"><button type="button" aria-pressed="false">담기</button></td>
+      </tr>
+      <tr data-id="L-06" data-t="22" data-won="4180" data-co2="178.2" data-diff="4" data-nm="알루미늄 프레임">
+        <td class="rk num">5</td><td class="id"><b>L-06</b></td>
+        <td class="nm">알루미늄 커튼월 프레임<s>6063-T5 · 190만원/t</s></td>
+        <td class="qt">22t</td><td class="bar"><span><i style="width:6%"></i></span></td>
+        <td class="vl">22<s>t</s></td>
+        <td class="pk"><button type="button" aria-pressed="false">담기</button></td>
+      </tr>
+      <tr data-id="L-08" data-t="22" data-won="1540" data-co2="35.2" data-diff="3" data-nm="배관용 강관">
+        <td class="rk num">6</td><td class="id"><b>L-08</b></td>
+        <td class="nm">배관용 강관<s>SGP 50—100A · 70만원/t</s></td>
+        <td class="qt">22t</td><td class="bar"><span><i style="width:6%"></i></span></td>
+        <td class="vl">22<s>t</s></td>
+        <td class="pk"><button type="button" aria-pressed="false">담기</button></td>
+      </tr>
+      <tr data-id="L-07" data-t="10" data-won="204" data-co2="5.6" data-diff="5" data-nm="강화유리">
+        <td class="rk num">7</td><td class="id"><b>L-07</b></td>
+        <td class="nm">강화유리<s>t12 · 340㎡ · 6천원/㎡</s></td>
+        <td class="qt">340㎡</td><td class="bar"><span><i style="width:3%"></i></span></td>
+        <td class="vl">10<s>t</s></td>
+        <td class="pk"><button type="button" aria-pressed="false">담기</button></td>
+      </tr>
+      <tr data-id="L-09" data-t="10" data-won="830" data-co2="16.0" data-diff="4" data-nm="데크플레이트">
+        <td class="rk num">8</td><td class="id"><b>L-09</b></td>
+        <td class="nm">데크플레이트<s>아연도 · 83만원/t</s></td>
+        <td class="qt">10t</td><td class="bar"><span><i style="width:3%"></i></span></td>
+        <td class="vl">10<s>t</s></td>
+        <td class="pk"><button type="button" aria-pressed="false">담기</button></td>
+      </tr>
+      <tr data-id="L-05" data-t="6" data-won="108" data-co2="4.4" data-diff="2" data-nm="육송 각재">
+        <td class="rk num">9</td><td class="id"><b>L-05</b></td>
+        <td class="nm">육송 각재<s>거푸집 회수분 · 18만원/t</s></td>
+        <td class="qt">6t</td><td class="bar"><span><i style="width:2%"></i></span></td>
+        <td class="vl">6<s>t</s></td>
+        <td class="pk"><button type="button" aria-pressed="false">담기</button></td>
+      </tr>
+      <tr data-id="L-12" data-t="4" data-won="462" data-co2="3.0" data-diff="2" data-nm="물푸레 마루판">
+        <td class="rk num">10</td><td class="id"><b>L-12</b></td>
+        <td class="nm">물푸레 마루판<s>210㎡ · 2.2만원/㎡</s></td>
+        <td class="qt">210㎡</td><td class="bar"><span><i style="width:1%"></i></span></td>
+        <td class="vl">4<s>t</s></td>
+        <td class="pk"><button type="button" aria-pressed="false">담기</button></td>
+      </tr>
+      <tr data-id="L-11" data-t="3" data-won="2640" data-co2="10.5" data-diff="2" data-nm="구리 전선">
+        <td class="rk num">11</td><td class="id"><b>L-11</b></td>
+        <td class="nm">구리 전선<s>피복 제거분 · 880만원/t</s></td>
+        <td class="qt">3t</td><td class="bar"><span><i style="width:1%"></i></span></td>
+        <td class="vl">3<s>t</s></td>
+        <td class="pk"><button type="button" aria-pressed="false">담기</button></td>
+      </tr>
+      <tr data-id="L-10" data-t="1" data-won="1320" data-co2="4.7" data-diff="2" data-nm="논슬립 황동">
+        <td class="rk num">12</td><td class="id"><b>L-10</b></td>
+        <td class="nm">계단 논슬립 황동<s>240m · 5.5만원/m</s></td>
+        <td class="qt">240m</td><td class="bar"><span><i style="width:0%"></i></span></td>
+        <td class="vl">1<s>t</s></td>
+        <td class="pk"><button type="button" aria-pressed="false">담기</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="vs" id="vs">
+    <div class="hd">
+      <span>담아서 대조 · 최대 2건</span>
+      <span class="sp"></span>
+      <button type="button" id="vsClear">비우기</button>
+    </div>
+    <div class="bd" id="vsBody">
+      <p class="empty">표에서 「담기」를 두 번 누르면 두 로트가 네 기준에서 어떻게 갈리는지 여기서 보입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 층 스크럽 -->
+<section class="cut" id="cut">
+  <div class="stick">
+    <div class="in">
+      <div class="live">
+        <p class="lbl">단면 · 12층 → 지하 2층</p>
+        <p class="fl num" id="flNo">12—9<u>F</u></p>
+        <!-- 첫 구간은 정적으로 적어 둔다 — JS가 죽으면 400vh 빈 다크 블록이 되기 때문 -->
+        <p class="mat" id="flMat">커튼월 층 — <b>알루미늄 프레임 22t</b>과 <b>강화유리 340㎡</b>. 유리는 t당 값이 가장 낮지만 깨지면 0이 되므로 가장 먼저 뗀다. 사무층 <b>마루판 210㎡</b>도 여기서 나온다.</p>
+        <p class="acc">반출 누적 <b id="flAcc"><span class="num">36</span><span>t</span></b> <span id="flPct">/ 650t의 6%</span></p>
+      </div>
+      <div class="fold" id="flFold"></div>
+      <div class="sec live" id="secFig" aria-hidden="true">
+        <div class="f on" data-f="12"><em>12F</em><i></i></div>
+        <div class="f on" data-f="11"><em>11F</em><i></i></div>
+        <div class="f on" data-f="10"><em>10F</em><i></i></div>
+        <div class="f on" data-f="9"><em>9F</em><i></i></div>
+        <div class="f" data-f="8"><em>8F</em><i></i></div>
+        <div class="f" data-f="7"><em>7F</em><i></i></div>
+        <div class="f" data-f="6"><em>6F</em><i></i></div>
+        <div class="f" data-f="5"><em>5F</em><i></i></div>
+        <div class="f" data-f="4"><em>4F</em><i></i></div>
+        <div class="f" data-f="3"><em>3F</em><i></i></div>
+        <div class="f" data-f="2"><em>2F</em><i></i></div>
+        <div class="f" data-f="1"><em>1F</em><i></i></div>
+        <div class="f g" data-f="-1"><em>B1</em><i></i></div>
+        <div class="f g" data-f="-2"><em>B2</em><i></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 지난 회차 낙찰 기록 -->
+<section class="past wrap">
+  <h2 class="rise">지난 세 회차는<br>이렇게 팔렸습니다.</h2>
+  <div class="tblwrap">
+    <table>
+      <caption>제44—46회 · 낙찰자 구분은 사업자등록 기준</caption>
+      <thead><tr>
+        <th scope="col">회차</th><th scope="col">상장</th><th scope="col">낙찰</th>
+        <th scope="col">낙찰률</th><th scope="col">최고가 로트</th><th scope="col">낙찰자</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="n">제44회</td><td class="m" data-l="상장">18건</td><td class="m" data-l="낙찰">14건</td><td class="r">78%</td><td class="m" data-l="최고가">철골 H형강 6,900만원</td><td class="m" data-l="낙찰자">시공사 6 · 공방 5 · 개인 3</td></tr>
+        <tr><td class="n">제45회</td><td class="m" data-l="상장">14건</td><td class="m" data-l="낙찰">10건</td><td class="r">71%</td><td class="m" data-l="최고가">적벽돌 410만원</td><td class="m" data-l="낙찰자">시공사 3 · 공방 5 · 개인 2</td></tr>
+        <tr><td class="n">제46회</td><td class="m" data-l="상장">16건</td><td class="m" data-l="낙찰">13건</td><td class="r">81%</td><td class="m" data-l="최고가">구리 전선 2,480만원</td><td class="m" data-l="낙찰자">시공사 5 · 공방 6 · 개인 2</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="avg rise">
+    <div><div class="v num">77<u>%</u></div><div class="l">3회 평균 낙찰률<br>48건 상장 · 37건 낙찰</div></div>
+    <div><div class="v num">37<u>건</u></div><div class="l">낙찰 합계<br>시공사 14 · 공방 16 · 개인 7</div></div>
+    <div><div class="v num">409<u>tCO₂</u></div><div class="l">이번 회차 절감 예상<br>승용차 170대의 1년치</div></div>
+  </div>
+  <figure class="shot rise">
+    <img src="https://images.unsplash.com/photo-1671022442106-c787685d9fed?w=1600&q=80&auto=format&fit=crop" alt="야드 선반에 길이별로 쌓인 철재 형강과 각관" loading="lazy" onerror="this.style.display='none';this.parentNode.style.background='#e7e3d7';this.parentNode.style.aspectRatio='21/9'">
+  </figure>
+  <p class="cap">성수 야드 — 철재는 낙찰 전에 길이별로 다시 쌓는다. 절단해서 파는 것이 아니라 <b>쓸 수 있는 길이로 남기는 것</b>이 값을 만들기 때문이다.</p>
+</section>
+
+<!-- 닫기 : 유찰 기록 -->
+<section class="fail wrap" id="fail">
+  <p class="lbl rise">닫는 말 대신</p>
+  <h2 class="rise">안 팔린 것도<br>적어 둡니다.</h2>
+  <p class="lead rise">지난 세 회차에서 48건 중 11건이 유찰됐습니다. 유찰률 23%입니다. 아래 셋은 그중에서도 우리가 이유를 알고 있는 것들입니다 — 값을 잘못 매긴 게 아니라, 팔면 안 되는 것이었습니다.</p>
+  <ol>
+    <li>
+      <div>
+        <p class="t">천장 흡음재 4.2t<s>제44회 · 3회 연속 미상장</s></p>
+        <p class="w">1987년 준공이라 <b>석면 함유 가능성</b>이 남아 있습니다. 시험 결과가 확정되기 전에는 상장하지 않습니다. 지금은 밀봉해 야드 뒤편에 두고 있고, 음성 판정이 나오면 제48회에 올립니다.</p>
+      </div>
+    </li>
+    <li>
+      <div>
+        <p class="t">용접 접합 철골 12t<s>제45회 · 유찰</s></p>
+        <p class="w">볼트가 아니라 <b>용접으로 붙은 철골</b>이라 잘라내야 나옵니다. t당 절단·운반비가 74만원인데 낙찰 예상가가 68만원이었습니다. <b>우리도 안 사는 값</b>이라 그대로 유찰시켰습니다.</p>
+      </div>
+    </li>
+    <li>
+      <div>
+        <p class="t">도장 3회 목재 창틀 1.8t<s>제46회 · 유찰 후 연료 반출</s></p>
+        <p class="w">페인트가 세 겹입니다. 샌딩으로 벗기면 <b>남는 두께가 12mm 아래</b>로 떨어져 창틀로 못 씁니다. 목재 재사용이라고 다 재사용이 아니어서, 연료용으로 내보냈습니다.</p>
+      </div>
+    </li>
+  </ol>
+  <figure class="shot rise">
+    <img src="https://images.unsplash.com/photo-1738346643192-f2f8f2cc04c9?w=1400&q=80&auto=format&fit=crop" alt="풀 사이에 깨진 채 쌓여 있는 붉은 벽돌 더미" loading="lazy" onerror="this.style.display='none';this.parentNode.style.background='#e7e3d7';this.parentNode.style.aspectRatio='2/1'">
+  </figure>
+  <p class="cap">깨진 벽돌은 로트가 되지 못한다 — 온장 비율이 70% 아래면 상장하지 않고 골재로 보낸다. 제47회 적벽돌 로트의 온장 비율은 <b>84%</b>다.</p>
+  <p class="end rise">이번 회차에도 안 팔릴 로트가 있을 겁니다. 그건 실패가 아니라, 우리가 파는 물건에 대해 아는 것입니다.</p>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="in">
+      <div>제2재료 <b>SECOND MATTER</b><br>건축 해체 자재 선별 · 반출 경매 · 서울 성동구 성수이로18길<br>열람·입찰 문의 02-467-0247 (평일 09—18시)</div>
+      <div>공고 <b>D-2026-047</b><br>제47회 반출 경매<br>입찰 마감 2026.08.21 17:00</div>
+      <div><a href="#lots">로트 12건</a><br><a href="#cut">층별 단면</a><br><a href="#fail">유찰 기록</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* 캡처 모드 */
+var CAPTURE=/[?&]capture=1/.test(location.search);
+if(CAPTURE){document.documentElement.classList.add('capture');
+  /* 리빌·핀만 풀고 lazy 를 두면 스크롤 없는 반출에서 사진이 빈 프레임으로 나간다 */
+  addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('img[loading=lazy]').forEach(function(i){i.loading='eager';i.src=i.src})});}
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+var narrow=matchMedia('(max-width:819px)').matches;
+
+/* 스크롤복원 — smooth 와 경합하지 않게 초기 리셋 동안만 auto */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){var h=document.documentElement,p=h.style.scrollBehavior;h.style.scrollBehavior='auto';
+ window.scrollTo(0,0);
+ addEventListener('load',function(){window.scrollTo(0,0);setTimeout(function(){h.style.scrollBehavior=p},60)});})();
+
+/* ── ★ 정렬 : 기준을 바꾸면 순위·막대·결론이 함께 바뀐다 ───────────────── */
+var tbody=document.getElementById('lotsBody'), verdict=document.getElementById('verdict');
+var rows=[].slice.call(tbody.querySelectorAll('tr'));
+var KEY={
+ t   :{unit:'t',      dec:0, dir:-1, lo:false},
+ won :{unit:'만원',   dec:0, dir:-1, lo:false},
+ co2 :{unit:'tCO₂',   dec:1, dir:-1, lo:false},
+ diff:{unit:'등급',   dec:0, dir: 1, lo:true }   /* 난이도는 낮은 쪽이 위로 온다 */
+};
+var VERD={
+ t:'무게로 보면 1위는 <b>파쇄 골재 399t</b>입니다. 이 회차 650t의 61%가 골재이고, 이건 값이 아니라 처리량입니다.',
+ won:'총액으로 보면 1위는 <b>철골 H형강 7,730만원</b>입니다. 이 회차 2억 807만원의 37%가 이 한 로트에 있습니다.',
+ co2:'탄소로 보면 순위가 뒤집힙니다 — <b>22t 알루미늄이 84t 철골보다 33% 더 줄입니다.</b> 알루미늄은 신재로 뽑을 때 t당 8.1tCO₂가 들기 때문입니다.',
+ diff:'반출이 쉬운 순으로 보면 1위는 <b>적벽돌</b>입니다. 장비 없이 사람 손으로 옮길 수 있는 유일한 로트이고, 그래서 세 회차 연속 완판됐습니다.'
+};
+var fmt=function(v,d){return v.toLocaleString('ko-KR',{minimumFractionDigits:d,maximumFractionDigits:d})};
+var active='t';
+
+function applySort(k){
+  active=k;
+  var cfg=KEY[k];
+  document.querySelectorAll('.keys button').forEach(function(b){
+    b.setAttribute('aria-pressed', b.dataset.k===k?'true':'false');
+  });
+  var vals=rows.map(function(r){return parseFloat(r.dataset[k])});
+  var max=Math.max.apply(null,vals);
+  /* 난이도는 "1등급이 가장 길다" 가 되어야 막대가 순위와 같은 방향을 본다 */
+  rows.forEach(function(r){
+    var v=parseFloat(r.dataset[k]);
+    var w=cfg.lo?((6-v)/5*100):(v/max*100);
+    r.querySelector('.bar i').style.width=w.toFixed(1)+'%';
+    r.querySelector('.vl').innerHTML=fmt(v,cfg.dec)+'<s>'+cfg.unit+'</s>';
+  });
+  var sorted=rows.slice().sort(function(a,b){
+    var d=(parseFloat(a.dataset[k])-parseFloat(b.dataset[k]))*cfg.dir;
+    return d!==0?d:a.dataset.id.localeCompare(b.dataset.id);
+  });
+  /* 재배열은 부드럽게 흐르지 않는다 — 한 번에 끊어 붙인다 */
+  sorted.forEach(function(r,i){r.querySelector('.rk').textContent=i+1;tbody.appendChild(r)});
+  verdict.innerHTML=VERD[k];
+}
+document.querySelectorAll('.keys button').forEach(function(b){
+  b.addEventListener('click',function(){applySort(b.dataset.k)});
+});
+
+/* ── 담기 비교 : 최대 2건. 세 번째를 담으면 가장 오래된 것이 빠진다 ── */
+var picked=[], vsBody=document.getElementById('vsBody');
+var VS=[
+ {k:'t',   label:'무게',           unit:'t',    dir:-1, dec:0},
+ {k:'won', label:'최저 입찰 총액', unit:'만원', dir:-1, dec:0},
+ {k:'co2', label:'탄소 절감',      unit:'tCO₂', dir:-1, dec:1},
+ {k:'diff',label:'반출 난이도',    unit:'등급', dir: 1, dec:0}
+];
+function paintPick(){
+  rows.forEach(function(r){
+    r.querySelector('.pk button').setAttribute('aria-pressed', picked.indexOf(r)>=0?'true':'false');
+    r.querySelector('.pk button').textContent = picked.indexOf(r)>=0?'담김':'담기';
+  });
+  if(picked.length<2){
+    vsBody.innerHTML='<p class="empty">'+(picked.length===0
+      ? '표에서 「담기」를 두 번 누르면 두 로트가 네 기준에서 어떻게 갈리는지 여기서 보입니다.'
+      : '<b>'+picked[0].dataset.nm+'</b> 담김 — 하나 더 담으면 대조가 시작됩니다.')+'</p>';
+    return;
+  }
+  var A=picked[0], B=picked[1], h='';
+  h+='<div class="vsrow hdr"><span class="k">로트</span>'
+    +'<span class="a">'+A.dataset.id+' '+A.dataset.nm+'</span>'
+    +'<span class="b">'+B.dataset.id+' '+B.dataset.nm+'</span></div>';
+  var winA=0, winB=0;
+  VS.forEach(function(c){
+    var a=parseFloat(A.dataset[c.k]), b=parseFloat(B.dataset[c.k]);
+    var aw=(a-b)*c.dir<0, bw=(b-a)*c.dir<0;
+    if(aw)winA++; if(bw)winB++;
+    h+='<div class="vsrow"><span class="k">'+c.label+' ('+c.unit+')</span>'
+      +'<span class="a'+(aw?' win':'')+'">'+fmt(a,c.dec)+'</span>'
+      +'<span class="b'+(bw?' win':'')+'">'+fmt(b,c.dec)+'</span></div>';
+  });
+  h+='<p class="note">'+(winA===winB
+      ? '네 기준을 반씩 나눠 가졌습니다 — 이 둘은 서로를 대체하지 않습니다.'
+      : '네 기준 중 '+Math.max(winA,winB)+'개에서 <b>'+(winA>winB?A.dataset.nm:B.dataset.nm)
+        +'</b>가 앞섭니다. 나머지 '+Math.min(winA,winB)+'개는 '+(winA>winB?B.dataset.nm:A.dataset.nm)
+        +'가 앞섭니다.')+'</p>';
+  vsBody.innerHTML=h;
+}
+rows.forEach(function(r){
+  r.querySelector('.pk button').addEventListener('click',function(){
+    var i=picked.indexOf(r);
+    if(i>=0)picked.splice(i,1);
+    else{picked.push(r); if(picked.length>2)picked.shift();}
+    paintPick();
+  });
+});
+document.getElementById('vsClear').addEventListener('click',function(){picked=[];paintPick()});
+
+/* ── 층 단면 스크럽 ─────────────────────────────────────────────────── */
+var FLOORS=[
+ {no:'12—9',  fl:[12,11,10,9], mat:'커튼월 층 — <b>알루미늄 프레임 22t</b>과 <b>강화유리 340㎡</b>. 유리는 t당 값이 가장 낮지만 깨지면 0이 되므로 가장 먼저 뗀다. 사무층 <b>마루판 210㎡</b>도 여기서 나온다.', t:36},
+ {no:'8—4',   fl:[8,7,6,5,4],  mat:'기준층 — 이 건물 값의 대부분이 여기 있다. <b>철골 H형강 84t</b>, <b>데크플레이트 10t</b>, 내부 조적 <b>적벽돌 18,400장</b>, 그리고 슬래브를 깬 <b>골재 230t</b>.', t:363},
+ {no:'3—1',   fl:[3,2,1],      mat:'저층부 — 외벽 <b>화강석 620㎡</b>와 계단 <b>논슬립 황동 240m</b>. 황동은 1t뿐인데 총액은 1,320만원으로, 무게와 값이 가장 크게 어긋나는 구간이다.', t:177},
+ {no:'B1—B2', fl:[-1,-2],      mat:'지하 — 기초와 설비. <b>배관용 강관 22t</b>, <b>구리 전선 3t</b>, 그리고 남은 <b>골재 49t</b>. 구리는 3t으로 2,640만원이라 반출 순서를 가장 늦게 잡는다.', t:74}
+];
+var flNo=document.getElementById('flNo'), flMat=document.getElementById('flMat'),
+    flAcc=document.getElementById('flAcc'), flPct=document.getElementById('flPct'),
+    secFig=document.getElementById('secFig'), cutEl=document.getElementById('cut'),
+    flFold=document.getElementById('flFold');
+var TOTAL=650;
+/* 핀을 푸는 조건이면 스크럽 계산을 끄고 네 구간을 세로로 펼친다.
+   (offsetHeight − innerHeight) 가 음수가 되면 진행률이 거꾸로 흐른다 */
+var FOLD=reduce||narrow;
+if(FOLD)cutEl.classList.add('folded');
+
+/* 층 막대는 마크업에 있다 — JS 는 어느 층이 켜지는지만 바꾼다 */
+var figRows=[].slice.call(secFig.querySelectorAll('.f'));
+
+function paintFloor(i){
+  var s=FLOORS[i], acc=0;
+  for(var j=0;j<=i;j++)acc+=FLOORS[j].t;
+  flNo.innerHTML=s.no+'<u>'+(s.no.indexOf('B')===0?'':'F')+'</u>';
+  flMat.innerHTML=s.mat;
+  flAcc.innerHTML='<span class="num">'+acc+'</span><span>t</span>';
+  flPct.textContent='/ 650t의 '+Math.round(acc/TOTAL*100)+'%';
+  figRows.forEach(function(r){
+    r.classList.toggle('on', s.fl.indexOf(parseInt(r.dataset.f,10))>=0);
+  });
+}
+function paintFold(){
+  var acc=0;
+  flFold.innerHTML=FLOORS.map(function(s){
+    acc+=s.t;
+    return '<div class="fr"><p class="fn">'+s.no+(s.no.indexOf('B')===0?'':'F')+'</p>'
+      +'<div><p class="fm">'+s.mat+'</p>'
+      +'<p class="fm"><b>'+s.t+'t</b> · 누적 '+acc+'t (650t의 '+Math.round(acc/TOTAL*100)+'%)</p></div></div>';
+  }).join('');
+}
+function onScrollCut(){
+  if(FOLD)return;
+  var r=cutEl.getBoundingClientRect();
+  var h=Math.max(1, cutEl.offsetHeight-innerHeight);   /* (h||1) 은 음수를 막지 못한다 */
+  var p=Math.min(0.999,Math.max(0,-r.top/h));
+  paintFloor(Math.floor(p*FLOORS.length));
+}
+if(FOLD)paintFold(); else {paintFloor(0); addEventListener('scroll',onScrollCut,{passive:true});}
+
+/* ── 리빌 : IO 실패 대비 load 폴백 ── */
+if(CAPTURE||reduce){
+  document.querySelectorAll('.rise').forEach(function(e){e.classList.add('vis')});
+}else{
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})},{threshold:.12});
+  document.querySelectorAll('.rise').forEach(function(e){io.observe(e)});
+  addEventListener('load',function(){requestAnimationFrame(function(){
+    document.querySelectorAll('.rise').forEach(function(e){
+      if(e.getBoundingClientRect().top<innerHeight)e.classList.add('vis')})})});
+}
+
+/* 폭이 바뀌면 핀 조건이 바뀐다 — 다시 판정한다 */
+var rt;
+addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){
+  var n=matchMedia('(max-width:819px)').matches, f=reduce||n;
+  if(f===FOLD)return;
+  FOLD=f; cutEl.classList.toggle('folded',FOLD);
+  if(FOLD)paintFold(); else paintFloor(0);
+},150)});
+
+applySort('t');
+</script>
+</body></html>

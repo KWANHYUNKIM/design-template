@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>걸음쇠 — 이 영화를 초당 몇 장으로 트시겠습니까</title>
+<meta name="description" content="1927년 무성영화 한 편. 촬영은 초당 16장이었고 지금 극장은 24장으로 돌린다. 그 8장의 차이가 러닝타임과 배우의 걸음에 무엇을 하는지 직접 끌어 본다.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+:root{
+  --sans:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+
+  /* 원색 하나 + 필름 흑백. 중간톤과 중간회색을 쓰지 않는다. */
+  --bg:#0d0d10;
+  --fg:#f2f0ea;    /* --bg 위 17.03:1 (실측) */
+  --dim:#c9c6bd;   /* --bg 위 11.36:1 (실측) — 중간회색을 피해 밝은 쪽으로 잡았다 */
+  --k:#f50f2c;     /* --bg 위 4.61:1 (실측) */
+  --onk:#0d0d10;   /* --k 위 4.61:1 (실측) — 빨강 면 위 글자 */
+  --edge:#2a2a30;  /* 비텍스트 전용 — 얇은 구분선 */
+
+  /* 타입 — 중간을 비운다. 본문 17 다음이 26, 그다음이 44·76, 그리고 디스플레이. */
+  --t-xs:12px;--t-sm:14px;--t-base:17px;--t-lg:26px;--t-2xl:44px;--t-4xl:76px;
+  --t-d:min(44vw,400px);
+
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;
+  --s6:32px;--s7:40px;--s8:56px;--s9:80px;--s10:120px;
+  --w:1240px;
+}
+*{box-sizing:border-box}
+figure,blockquote,dd,dl{margin:0}   /* UA 가로 마진 40px (함정 31) */
+html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);
+  font-size:var(--t-base);line-height:1.62;word-break:keep-all;overflow-wrap:break-word;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+h1,h2,h3{margin:0;font-weight:800;line-height:1.05;letter-spacing:-.035em}
+p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+[id]{scroll-margin-top:var(--s5)}
+
+/* 판형 — 좌우를 섹션마다 뒤집는다. 390 에서도 뒤집힌 채로 둔다. */
+.hold  {max-width:var(--w);margin:0 auto;padding-left:var(--s5);padding-right:var(--s8)}
+.hold-n{max-width:var(--w);margin:0 auto;padding-left:var(--s8);padding-right:var(--s5)}
+
+.tag{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.16em;color:var(--k)}
+.lead{font-size:var(--t-base);color:var(--dim);max-width:44ch;margin-top:var(--s4)}
+
+.rise{opacity:1}
+.js .rise{opacity:0;transform:translateY(14px)}
+/* 이징은 짧고 단호하게 — 부드럽게 흘리지 않는다 */
+.js .rise.vis{opacity:1;transform:none;transition:opacity .14s linear,transform .14s linear}
+
+/* ═══ 1 · 게이트 (조작 도판) ═══ */
+.strip{padding-top:var(--s7);padding-bottom:var(--s8);border-bottom:4px solid var(--fg)}
+.mark{font-family:var(--mono);font-size:var(--t-sm);letter-spacing:.3em;color:var(--fg)}
+.strip h1{font-size:var(--t-2xl);margin-top:var(--s3);max-width:16ch}
+.strip h1 i{font-style:normal;background:var(--k);color:var(--onk);padding:0 var(--s2)}
+.bench{margin-top:var(--s7);display:grid;grid-template-columns:minmax(0,42%) minmax(0,1fr);
+  gap:var(--s7);align-items:start}
+.bench>*{min-width:0}
+
+/* 게이트 — 이 지면에서 가장 큰 물건. 한 칸 높이 = 폭 ÷ 1.38 */
+.gate{position:relative;aspect-ratio:1/1.377;max-width:520px;overflow:hidden;
+  outline:4px solid var(--fg);outline-offset:-4px;background:#000}
+  /* 테두리로 두면 aspect-ratio 가 테두리 상자에 걸려 칸 수가 1.9 가 아니라 1.93 이 된다 —
+     창이 늘 한 칸보다 커서 정지 상태에서 두 칸의 반씩을 비췄다. outline 은 레이아웃을 안 먹는다 */
+.reel{display:flex;flex-direction:column}
+.js .reel{animation:run 1s linear infinite}
+@keyframes run{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+.cell{position:relative;width:100%;aspect-ratio:138/100;border-bottom:2px solid #1c1c22}
+.cell svg{display:block;width:100%;height:100%}
+.cell .gr{stroke:#3a3a44;stroke-width:2;fill:none}
+.cell .fig{stroke:var(--fg);stroke-width:3.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cell .hd{fill:var(--fg)}
+.cell .fno{position:absolute;left:6px;top:6px;font-family:var(--mono);font-size:var(--t-xs);
+  color:var(--dim);font-weight:400}   /* #000 위 12.7:1 (실측) */
+/* 구멍 — 필름 양옆 퍼포레이션 */
+.gate::before,.gate::after{content:"";position:absolute;top:0;bottom:0;width:14px;z-index:2;
+  background:repeating-linear-gradient(to bottom,var(--bg) 0 10px,transparent 10px 24px)}
+.gate::before{left:0}.gate::after{right:0}
+/* 게이트 창 — 지금 비추고 있는 한 칸 */
+.aperture{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);z-index:3;
+  height:calc(100%/1.9);border-top:4px solid var(--k);border-bottom:4px solid var(--k);
+  pointer-events:none}
+.aperture b{position:absolute;right:0;top:100%;background:var(--k);color:var(--onk);
+  font-family:var(--mono);font-size:var(--t-xs);font-weight:700;padding:2px var(--s2);letter-spacing:.1em}
+
+/* 조작부 */
+.fps{font-family:var(--mono);font-size:var(--t-d);line-height:.78;font-weight:700;
+  letter-spacing:-.06em;color:var(--fg);display:block}
+.fps .dec{font-size:var(--t-4xl);letter-spacing:-.02em;color:var(--k)}
+.fps .u{display:block;font-family:var(--sans);font-size:var(--t-sm);font-weight:400;
+  letter-spacing:.2em;color:var(--dim);margin-top:var(--s3)}
+.scrub{margin-top:var(--s6);cursor:ew-resize;touch-action:pan-y;padding:var(--s3) 0}
+.scrub:focus-visible{outline:4px solid var(--k);outline-offset:6px}
+.track{position:relative;height:34px;border:4px solid var(--fg);background:var(--bg)}
+.fill{position:absolute;left:0;top:0;bottom:0;background:var(--k)}
+.knob{position:absolute;top:-8px;bottom:-8px;width:16px;background:var(--fg);
+  transform:translateX(-50%);pointer-events:none}
+.ticks{position:relative;height:32px;margin-top:var(--s2)}
+.ticks span{position:absolute;transform:translateX(-50%);font-family:var(--mono);
+  font-size:var(--t-xs);color:var(--dim);white-space:nowrap}
+.ticks span.hit{color:var(--k);font-weight:700}
+.ticks span.a{transform:none;left:0}
+.ticks span.z{transform:translateX(-100%)}
+.dials{margin-top:var(--s5);border-top:4px solid var(--fg)}
+.orow{display:grid;grid-template-columns:minmax(0,1fr) max-content;gap:var(--s4);
+  align-items:baseline;padding:var(--s3) 0;border-bottom:1px solid var(--edge)}
+.orow>*{min-width:0}
+.orow dt{font-size:var(--t-sm);color:var(--dim)}
+.orow dd{font-family:var(--mono);font-size:var(--t-lg);font-weight:700;white-space:nowrap}
+.orow.big dd{font-size:var(--t-2xl);color:var(--k)}
+.hint{font-size:var(--t-sm);color:var(--dim);margin-top:var(--s4);max-width:40ch}
+
+/* ═══ 2 · 남이 한 말 ═══ */
+.told{padding-top:var(--s9);padding-bottom:var(--s7)}
+.told .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s7)}
+.told .two>*{min-width:0}
+.told blockquote p{font-size:var(--t-lg);font-weight:800;letter-spacing:-.03em;line-height:1.28}
+.told figcaption{font-family:var(--mono);font-size:var(--t-xs);color:var(--dim);margin-top:var(--s4);
+  border-top:2px solid var(--edge);padding-top:var(--s3)}
+.tally{margin-top:var(--s7);display:flex;flex-wrap:wrap;gap:var(--s7);
+  border-top:4px solid var(--fg);padding-top:var(--s5)}
+.tally div{min-width:0}
+.tally dt{font-family:var(--mono);font-size:var(--t-xs);color:var(--dim);letter-spacing:.1em}
+.tally dd{font-family:var(--mono);font-size:var(--t-2xl);font-weight:700;letter-spacing:-.04em;
+  margin-top:var(--s1);white-space:nowrap}
+
+/* ═══ 3 · 주장 ═══ */
+.claim{padding-top:var(--s8);padding-bottom:var(--s9);border-top:1px solid var(--edge)}
+.claim h2{font-size:var(--t-4xl);margin-top:var(--s3);max-width:14ch}
+.bars{margin-top:var(--s7);display:grid;gap:var(--s4)}
+.bar{display:grid;grid-template-columns:minmax(0,110px) minmax(0,1fr);gap:var(--s4);align-items:center}
+.bar>*{min-width:0}
+.bar .who{font-family:var(--mono);font-size:var(--t-sm);color:var(--dim);white-space:nowrap}
+.bar .len{height:44px;background:var(--edge);position:relative}
+/* D1 — 라벨을 채움 안에 넣어 배경을 확정한다. 채움 밖에 두면 100% 막대에서
+   글자가 자기 채움 위에 얹혀 1.00:1 이 된다(부모 배경만 보는 대비 검사는 이걸 못 본다). */
+.bar .len i{position:absolute;left:0;top:0;bottom:0;background:var(--fg);display:flex;
+  align-items:center;justify-content:flex-end;padding-right:var(--s3)}
+.bar.now .len i{background:var(--k)}
+.bar .len b{font-family:var(--mono);font-size:var(--t-sm);font-weight:700;
+  color:var(--bg);white-space:nowrap}   /* --fg 채움 위 17.03:1 · --k 채움 위 4.61:1 (실측) */
+.gap{margin-top:var(--s6);border-left:8px solid var(--k);padding-left:var(--s5);
+  font-size:var(--t-lg);font-weight:800;letter-spacing:-.03em;line-height:1.3;max-width:24ch}
+
+/* ═══ 4 · 원장 ═══ */
+.ledger{padding-top:var(--s6);padding-bottom:var(--s8)}
+.ledger caption{text-align:left;font-size:var(--t-sm);color:var(--dim);padding-bottom:var(--s4);
+  max-width:60ch}
+.ledger th,.ledger td{text-align:left;padding:var(--s3) var(--s4) var(--s3) 0;vertical-align:baseline;
+  border-bottom:1px solid var(--edge)}
+.ledger thead th{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;color:var(--dim);
+  border-bottom:4px solid var(--fg);font-weight:400}
+.ledger td{font-family:var(--mono);font-size:var(--t-sm)}
+.ledger td.r,.ledger th.r{text-align:right;padding-right:0;white-space:nowrap}
+.ledger tbody tr:last-child td,.ledger tbody tr:last-child th{border-bottom:4px solid var(--fg)}
+.ledger tfoot td{font-family:var(--mono);font-size:var(--t-sm);font-weight:700;border-bottom:0;
+  padding-top:var(--s4)}
+.tnote{font-size:var(--t-sm);color:var(--dim);margin-top:var(--s4);max-width:56ch}
+
+/* ═══ 5 · 복원 ═══ */
+.mend{padding-top:var(--s9);padding-bottom:var(--s6);border-top:1px solid var(--edge)}
+.mend h2{font-size:var(--t-2xl);margin-top:var(--s3);max-width:18ch}
+.steps{margin-top:var(--s7);display:grid;gap:var(--s5)}
+.steps li{display:grid;grid-template-columns:minmax(0,88px) minmax(0,1fr);gap:var(--s5);
+  border-top:2px solid var(--edge);padding-top:var(--s4)}
+.steps li>*{min-width:0}
+.steps .n{font-family:var(--mono);font-size:var(--t-lg);font-weight:700;color:var(--k)}
+.steps h3{font-size:var(--t-lg)}
+.steps p{font-size:var(--t-sm);color:var(--dim);margin-top:var(--s2);max-width:52ch}
+
+/* ═══ 6 · 정오표 (닫는 자리) ═══ */
+.errata{padding-top:var(--s10);padding-bottom:var(--s9);background:var(--k);color:var(--onk)}
+.errata .tag{color:var(--onk)}
+.errata h2{font-size:var(--t-2xl);margin-top:var(--s3);color:var(--onk);max-width:20ch}
+.errata .say{font-size:var(--t-base);margin-top:var(--s4);max-width:46ch;color:var(--onk)}
+.fix{margin-top:var(--s7);display:grid;gap:var(--s5)}
+.fix li{border-top:4px solid var(--onk);padding-top:var(--s4)}
+.fix .ed{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em}
+.fix li>b{display:block;font-size:var(--t-lg);font-weight:800;letter-spacing:-.03em;margin-top:var(--s2)}
+.fix p{font-size:var(--t-sm);margin-top:var(--s2);max-width:54ch}
+.fix code{font-family:var(--mono);font-weight:700}
+.sign{margin-top:var(--s8);border-top:4px solid var(--onk);padding-top:var(--s4);
+  font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em}
+
+/* D2 — 두 칸 구간에서 오른쪽 칸이 좁아 400px 숫자가 줄바꿈됐다(오버플로가 아니라 wrap 이라
+   probe 여덟 항목 어디에도 안 걸린다). 필요폭 = 1.085F + 88 ≤ 0.58·min(1240,vw−80) − 40 */
+@media (min-width:901px) and (max-width:1049px){ :root{--t-d:min(34vw,400px)} }
+@media (max-width:900px){
+  :root{--s5:16px;--s8:32px}
+  .hold  {padding-left:var(--s4);padding-right:var(--s6)}
+  .hold-n{padding-left:var(--s6);padding-right:var(--s4)}
+  .bench{grid-template-columns:minmax(0,1fr);gap:var(--s6)}
+  /* D3 — h1 을 가장 크게. 이전엔 h1 26px < h2 44px 로 위계가 뒤집혀 있었다 */
+  .strip h1{font-size:var(--t-2xl);max-width:none}
+  .claim h2,.mend h2,.errata h2{font-size:var(--t-lg)}
+  .told .two{grid-template-columns:minmax(0,1fr);gap:var(--s6)}
+  .steps li{grid-template-columns:minmax(0,1fr);gap:var(--s2)}
+  .bar{grid-template-columns:minmax(0,1fr);gap:var(--s2)}
+  /* 6열 표를 릴 카드로 접는다 (함정 12·13) */
+  .ledger table,.ledger thead,.ledger tbody,.ledger tfoot,.ledger tr,.ledger th,.ledger td{display:block}
+  .ledger caption{display:block}
+  .ledger thead{position:absolute;left:-9999px}
+  .ledger tbody tr{border:2px solid var(--edge);padding:var(--s4);margin-bottom:var(--s4)}
+  .ledger tbody th{border-bottom:2px solid var(--edge);padding:0 0 var(--s3);
+    font-family:var(--mono);font-size:var(--t-lg);font-weight:700}
+  .ledger tbody td{display:grid;grid-template-columns:minmax(0,96px) minmax(0,1fr);gap:var(--s3);
+    padding:var(--s2) 0;border-bottom:1px solid var(--edge);text-align:left}
+  .ledger tbody td::before{content:attr(data-l);color:var(--dim);font-family:var(--mono);
+    font-size:var(--t-xs)}
+  .ledger tbody td.r{text-align:left;white-space:normal}
+  .ledger tbody td span{white-space:nowrap}
+  /* (0,1,3) 기본 규칙을 같은 셀렉터로 되받는다 (함정 27) */
+  .ledger tbody tr:last-child td,.ledger tbody tr:last-child th{border-bottom:1px solid var(--edge)}
+  .ledger tbody tr td:last-child,.ledger tbody tr:last-child td:last-child{border-bottom:0}
+  .ledger tfoot td{border-top:4px solid var(--fg);padding-top:var(--s4)}
+}
+
+/* ── 폴백 ── 끄는 규칙과 같은 접두를 달고 소스 순서상 뒤에 둔다 ── */
+@media (prefers-reduced-motion:reduce){
+  .js .rise,.js .rise.vis{opacity:1;transform:none;transition:none}
+  .js .reel{animation:none}
+}
+.js.capture .rise,.js.capture .rise.vis{opacity:1;transform:none;transition:none}
+.js.capture .reel{animation:none}
+</style>
+<script>
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){var h=document.documentElement;h.className+=' js';
+ if(/[?&]capture=1/.test(location.search))h.className+=' capture';
+ var p=h.style.scrollBehavior;h.style.scrollBehavior='auto';scrollTo(0,0);
+ addEventListener('load',function(){scrollTo(0,0);setTimeout(function(){h.style.scrollBehavior=p},60)})})();
+</script>
+</head><body>
+
+<!-- ═══ 1 · 게이트 ═══ -->
+<section class="strip">
+  <div class="hold">
+    <p class="mark">걸음쇠</p>
+    <h1>이 영화를 <i>초당 몇 장</i>으로 트시겠습니까</h1>
+
+    <div class="bench">
+      <div class="gate" id="gate">
+        <div class="reel" id="reel">
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="33.0" r="6"/><path class="fig" d="M69 40.0L69 60.0M69 60.0L69.0 70.5L69.0 81.0M69 60.0L69.0 74.0L69.0 88.0M69 40.0L69.0 57.0M69 40.0L69.0 57.0"/></svg><b class="fno">01</b></div>
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="33.8" r="6"/><path class="fig" d="M69 40.8L69 60.8M69 60.8L70.2 71.4L73.2 81.7M69 60.8L67.5 74.6L63.5 88.0M69 40.8L66.5 57.6M69 40.8L71.5 57.6"/></svg><b class="fno">02</b></div>
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="34.4" r="6"/><path class="fig" d="M69 41.4L69 61.4M69 61.4L71.4 73.0L77.5 83.4M69 61.4L66.1 75.4L58.7 88.0M69 41.4L64.4 57.8M69 41.4L73.6 57.8"/></svg><b class="fno">03</b></div>
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="34.8" r="6"/><path class="fig" d="M69 41.8L69 61.8M69 61.8L72.5 74.8L81.5 85.6M69 61.8L65.1 76.1L55.3 88.0M69 41.8L63.1 57.8M69 41.8L74.9 57.8"/></svg><b class="fno">04</b></div>
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="35.0" r="6"/><path class="fig" d="M69 42.0L69 62.0M69 62.0L73.3 76.4L84.0 88.0M69 62.0L64.7 76.4L54.0 88.0M69 42.0L62.6 57.8M69 42.0L75.4 57.8"/></svg><b class="fno">05</b></div>
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="34.8" r="6"/><path class="fig" d="M69 41.8L69 61.8M69 61.8L72.9 76.1L82.7 88.0M69 61.8L65.5 74.8L56.5 85.6M69 41.8L63.1 57.8M69 41.8L74.9 57.8"/></svg><b class="fno">06</b></div>
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="34.4" r="6"/><path class="fig" d="M69 41.4L69 61.4M69 61.4L71.9 75.4L79.3 88.0M69 61.4L66.6 73.0L60.5 83.4M69 41.4L64.4 57.8M69 41.4L73.6 57.8"/></svg><b class="fno">07</b></div>
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="33.8" r="6"/><path class="fig" d="M69 40.8L69 60.8M69 60.8L70.5 74.6L74.5 88.0M69 60.8L67.8 71.4L64.8 81.7M69 40.8L66.5 57.6M69 40.8L71.5 57.6"/></svg><b class="fno">08</b></div>
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="33.0" r="6"/><path class="fig" d="M69 40.0L69 60.0M69 60.0L69.0 74.0L69.0 88.0M69 60.0L69.0 70.5L69.0 81.0M69 40.0L69.0 57.0M69 40.0L69.0 57.0"/></svg><b class="fno">09</b></div>
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="33.8" r="6"/><path class="fig" d="M69 40.8L69 60.8M69 60.8L67.5 74.6L63.5 88.0M69 60.8L70.2 71.4L73.2 81.7M69 40.8L71.5 57.6M69 40.8L66.5 57.6"/></svg><b class="fno">10</b></div>
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="34.4" r="6"/><path class="fig" d="M69 41.4L69 61.4M69 61.4L66.1 75.4L58.7 88.0M69 61.4L71.4 73.0L77.5 83.4M69 41.4L73.6 57.8M69 41.4L64.4 57.8"/></svg><b class="fno">11</b></div>
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="34.8" r="6"/><path class="fig" d="M69 41.8L69 61.8M69 61.8L65.1 76.1L55.3 88.0M69 61.8L72.5 74.8L81.5 85.6M69 41.8L74.9 57.8M69 41.8L63.1 57.8"/></svg><b class="fno">12</b></div>
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="35.0" r="6"/><path class="fig" d="M69 42.0L69 62.0M69 62.0L64.7 76.4L54.0 88.0M69 62.0L73.3 76.4L84.0 88.0M69 42.0L75.4 57.8M69 42.0L62.6 57.8"/></svg><b class="fno">13</b></div>
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="34.8" r="6"/><path class="fig" d="M69 41.8L69 61.8M69 61.8L65.5 74.8L56.5 85.6M69 61.8L72.9 76.1L82.7 88.0M69 41.8L74.9 57.8M69 41.8L63.1 57.8"/></svg><b class="fno">14</b></div>
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="34.4" r="6"/><path class="fig" d="M69 41.4L69 61.4M69 61.4L66.6 73.0L60.5 83.4M69 61.4L71.9 75.4L79.3 88.0M69 41.4L73.6 57.8M69 41.4L64.4 57.8"/></svg><b class="fno">15</b></div>
+        <div class="cell"><svg viewBox="0 0 138 100" aria-hidden="true"><path class="gr" d="M8 88L130 88"/><circle class="hd" cx="69" cy="33.8" r="6"/><path class="fig" d="M69 40.8L69 60.8M69 60.8L67.8 71.4L64.8 81.7M69 60.8L70.5 74.6L74.5 88.0M69 40.8L71.5 57.6M69 40.8L66.5 57.6"/></svg><b class="fno">16</b></div>
+        </div>
+        <div class="aperture" aria-hidden="true"><b>게이트</b></div>
+      </div>
+
+      <div>
+        <p class="fps" id="fps">16<span class="dec">.0</span><span class="u">장 / 초</span></p>
+
+        <div class="scrub" id="scrub" role="slider" tabindex="0" aria-label="상영 속도"
+             aria-valuemin="12" aria-valuemax="26" aria-valuenow="16"
+             aria-valuetext="초당 16.0장 — 상영 96분 36초, 걸음 1.000배">
+          <div class="track"><div class="fill" id="fill" style="width:28.571%"></div><div class="knob" id="knob" style="left:28.571%"></div></div>
+          <div class="ticks" aria-hidden="true">
+            <span class="a">12</span>
+            <span class="hit" style="left:28.571%">16 촬영</span>
+            <span style="left:42.857%">18</span>
+            <span style="left:85.714%">24 표준</span>
+            <span class="z" style="left:100%">26</span>
+          </div>
+        </div>
+
+        <dl class="dials" id="dials">
+          <div class="orow big"><dt>상영 시간</dt><dd data-o="time">96분 36초</dd></div>
+          <div class="orow"><dt>배우의 걸음</dt><dd data-o="rate">1.000배</dd></div>
+          <div class="orow"><dt>초당 지나는 필름</dt><dd data-o="metre">0.304 m</dd></div>
+          <div class="orow"><dt>한 칸이 게이트에 머무는 시간</dt><dd data-o="dwell">62.5 ms</dd></div>
+        </dl>
+        <p class="hint">막대를 끌거나 ← → 키로 움직입니다. 필름은 실제로 그 속도로 게이트를 지나갑니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2 · 남이 한 말 ═══ -->
+<section class="told">
+  <div class="hold-n">
+    <div class="two">
+      <figure class="rise">
+        <blockquote><p>“24로 돌린 판본만 보던 관객이 16으로 튼 상영에서 처음으로 웃지 않았습니다. 그 장면은 원래 코미디가 아니었습니다.”</p></blockquote>
+        <figcaption>채문경 · 복원 감수 · 동아시아무성영화연구회 · 2026-05-11 상영 후 대담록 12쪽</figcaption>
+      </figure>
+      <figure class="rise">
+        <blockquote><p>“영사기 속도를 바꾸면 소리도 같이 바꿔야 합니다. 반주 악단이 있는 상영에서는 필름이 아니라 악보가 기준이 됩니다.”</p></blockquote>
+        <figcaption>서동재 · 영사기사 20년 · 대흥극장 · 2026-06-02 서면 회신</figcaption>
+      </figure>
+    </div>
+    <dl class="tally rise">
+      <div><dt>복원 후 상영</dt><dd>11회</dd></div>
+      <div><dt>누적 관객</dt><dd>2,840명</dd></div>
+      <div><dt>보존 등급 판정</dt><dd>B+ (2026)</dd></div>
+      <div><dt>공개된 스캔 원본</dt><dd>6릴 전부</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ═══ 3 · 주장 ═══ -->
+<section class="claim">
+  <div class="hold">
+    <p class="tag">주장</p>
+    <h2>사라진 32분은 배우의 다리 속으로 들어갔다</h2>
+    <p class="lead">필름의 길이는 변하지 않습니다. 변하는 것은 그 길이를 몇 초에 통과시키느냐입니다. 초당 8장을 더 먹이면 32분이 없어지는 게 아니라, 그 32분만큼 모두가 빨리 걷습니다.</p>
+
+    <div class="bars rise" id="bars">
+      <div class="bar"><span class="who">12 장/초</span><span class="len"><i style="width:100.000%"><b>128분 48초</b></i></span></div>
+      <div class="bar now"><span class="who">16 장/초 · 촬영</span><span class="len"><i style="width:75.000%"><b>96분 36초</b></i></span></div>
+      <div class="bar"><span class="who">18 장/초</span><span class="len"><i style="width:66.667%"><b>85분 52초</b></i></span></div>
+      <div class="bar"><span class="who">24 장/초 · 표준</span><span class="len"><i style="width:50.000%"><b>64분 24초</b></i></span></div>
+    </div>
+    <p class="gap" id="gapline">지금이 <b>촬영 속도</b>입니다. 여기서 벗어난 만큼 배우의 걸음이 빨라지거나 느려집니다.</p>
+  </div>
+</section>
+
+<!-- ═══ 4 · 원장 ═══ -->
+<section class="ledger">
+  <div class="hold-n">
+    <table>
+      <caption>릴별 원장. 길이는 프레임당 19 mm, 피트는 16프레임 기준으로 환산했습니다. 초당 16장에서는 <b>1초에 정확히 1피트</b>가 지나가므로, 그 열의 숫자와 상영 초가 같은 값입니다.</caption>
+      <thead><tr>
+        <th scope="col">릴</th><th scope="col" class="r">프레임</th><th scope="col" class="r">길이</th>
+        <th scope="col" class="r">피트</th><th scope="col" class="r">16 장/초</th><th scope="col" class="r">24 장/초</th>
+      </tr></thead>
+      <tbody id="lbody">
+        <tr><th scope="row">1릴</th><td class="r" data-l="프레임"><span>15,984</span></td><td class="r" data-l="길이"><span>303.70 m</span></td><td class="r" data-l="피트"><span>999 ft</span></td><td class="r" data-l="16 장/초"><span>16분 39초</span></td><td class="r" data-l="24 장/초"><span>11분 06초</span></td></tr>
+        <tr><th scope="row">2릴</th><td class="r" data-l="프레임"><span>16,128</span></td><td class="r" data-l="길이"><span>306.43 m</span></td><td class="r" data-l="피트"><span>1,008 ft</span></td><td class="r" data-l="16 장/초"><span>16분 48초</span></td><td class="r" data-l="24 장/초"><span>11분 12초</span></td></tr>
+        <tr><th scope="row">3릴</th><td class="r" data-l="프레임"><span>15,360</span></td><td class="r" data-l="길이"><span>291.84 m</span></td><td class="r" data-l="피트"><span>960 ft</span></td><td class="r" data-l="16 장/초"><span>16분 00초</span></td><td class="r" data-l="24 장/초"><span>10분 40초</span></td></tr>
+        <tr><th scope="row">4릴</th><td class="r" data-l="프레임"><span>15,552</span></td><td class="r" data-l="길이"><span>295.49 m</span></td><td class="r" data-l="피트"><span>972 ft</span></td><td class="r" data-l="16 장/초"><span>16분 12초</span></td><td class="r" data-l="24 장/초"><span>10분 48초</span></td></tr>
+        <tr><th scope="row">5릴</th><td class="r" data-l="프레임"><span>14,976</span></td><td class="r" data-l="길이"><span>284.54 m</span></td><td class="r" data-l="피트"><span>936 ft</span></td><td class="r" data-l="16 장/초"><span>15분 36초</span></td><td class="r" data-l="24 장/초"><span>10분 24초</span></td></tr>
+        <tr><th scope="row">6릴</th><td class="r" data-l="프레임"><span>14,736</span></td><td class="r" data-l="길이"><span>279.98 m</span></td><td class="r" data-l="피트"><span>921 ft</span></td><td class="r" data-l="16 장/초"><span>15분 21초</span></td><td class="r" data-l="24 장/초"><span>10분 14초</span></td></tr>
+      </tbody>
+      <tfoot><tr><td colspan="6" id="lfoot">합계 92,736장 · 1,761.98 m · 5,796 ft · 96분 36초 · 64분 24초</td></tr></tfoot>
+    </table>
+    <p class="tnote">스캔은 2K 16bit 로그, 프레임 단위 정합. 릴 사이 이음매 6곳은 원본 스플라이스를 그대로 두었습니다.</p>
+  </div>
+</section>
+
+<!-- ═══ 5 · 복원 ═══ -->
+<section class="mend">
+  <div class="hold">
+    <p class="tag">복원 공정</p>
+    <h2>필름을 고치는 순서는 정해져 있다</h2>
+    <p class="lead">순서를 바꾸면 앞 공정이 만든 정보가 뒤 공정에서 지워집니다. 아래 넷은 되돌릴 수 없는 순서입니다.</p>
+    <ol class="steps rise">
+      <li><span class="n">01</span><div><h3>계측</h3><p>수축률을 먼저 잽니다. 이 필름은 가로 0.6% · 세로 0.9%로 줄어 있었고, 스캐너 게이트를 그만큼 넓혀 잡았습니다. 재기 전에 돌리면 구멍이 찢어집니다.</p></div></li>
+      <li><span class="n">02</span><div><h3>세척</h3><p>초음파 대신 용제 습식. 유제면 곰팡이 자국은 지우지 않고 기록으로 남깁니다 — 지운 자리는 나중에 원본이었는지 손댄 자리였는지 알 수 없게 됩니다.</p></div></li>
+      <li><span class="n">03</span><div><h3>스캔</h3><p>프레임 단위 정합으로 6릴 92,736장. 구멍을 기준점으로 잡아 흔들림(게이트 위빙)을 뺐습니다. 뺀 값은 별도 파일로 같이 배포합니다.</p></div></li>
+      <li><span class="n">04</span><div><h3>속도 결정</h3><p>여기서 처음으로 <b>사람이 정합니다.</b> 촬영 속도는 필름에 적혀 있지 않습니다. 이 판본은 감독 조수의 1928년 촬영 일지에 적힌 「분당 60피트」를 근거로 16장/초로 두었습니다.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ═══ 6 · 정오표 ═══ -->
+<section class="errata">
+  <div class="hold-n">
+    <p class="tag">정오표</p>
+    <h2>이 지면이 틀렸던 것과 고친 근거</h2>
+    <p class="say">앞선 판에서 잘못 적은 것을 지우지 않고 남깁니다. 무엇을 고쳤는지 모르면 이 지면을 검산할 수 없습니다.</p>
+    <ol class="fix">
+      <li>
+        <span class="ed">1판 → 2판</span>
+        <b>총 길이 1,764.72 m → 1,761.98 m</b>
+        <p>총 프레임을 <code>92,880</code>으로 세었습니다. 릴별 합은 <code>15,984 + 16,128 + 15,360 + 15,552 + 14,976 + 14,736 = 92,736</code>입니다. 144장을 더 세었고, 그만큼(<code>144 × 19 mm = 2.736 m</code>) 길이가 길어져 있었습니다.</p>
+      </li>
+      <li>
+        <span class="ed">2판 → 3판</span>
+        <b>24 장/초 상영 64분 30초 → 64분 24초</b>
+        <p>위의 92,880으로 계산한 값을 그대로 두었던 탓입니다. <code>92,736 ÷ 24 = 3,864초 = 64분 24초</code>입니다. 6초 차이지만, 이 지면의 주장이 「32분이 어디로 갔는가」이므로 그 32분을 잘못 적으면 주장이 무너집니다.</p>
+      </li>
+      <li>
+        <span class="ed">3판 → 4판</span>
+        <b>「1초에 1피트」를 모든 속도에 적용했던 것</b>
+        <p>그 관계는 <code>16 장/초</code>에서만 성립합니다. 1피트가 16프레임이기 때문입니다. 24로 틀면 초당 <code>1.5</code>피트가 지나갑니다. 위 원장의 피트 열은 <b>16 장/초 열과만</b> 숫자가 같습니다.</p>
+      </li>
+    </ol>
+    <p class="sign">걸음쇠 · 4판 2026-08-09 · 다음 판에서 고칠 것이 생기면 이 자리에 덧붙입니다</p>
+  </div>
+</section>
+
+<script>
+(function(){
+  var CAPTURE=/[?&]capture=1/.test(location.search);
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches||CAPTURE;
+
+  /* ── 리빌 ── */
+  var els=[].slice.call(document.querySelectorAll('.rise'));
+  if(reduce||!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('vis')});}
+  else{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})},{rootMargin:'0px 0px -6% 0px'});
+    els.forEach(function(e){io.observe(e)});
+    addEventListener('load',function(){els.forEach(function(e){
+      var r=e.getBoundingClientRect(); if(r.top<innerHeight&&r.bottom>0)e.classList.add('vis')})});
+  }
+
+  /* ══ 선언 ══ 이 넷만 적는다. 지면의 나머지 수치는 전부 여기서 나온다. ══ */
+  var REELS=[15984,16128,15360,15552,14976,14736];  // 릴별 프레임
+  var SHOT=16;      // 촬영 속도 (장/초)
+  var MM=19;        // 프레임당 필름 길이 (mm)
+  var FPF=16;       // 1피트당 프레임
+
+  var N=REELS.reduce(function(a,b){return a+b},0);
+  var LO=12, HI=26, STEP=0.5;
+
+  var n1=function(v){return v.toFixed(1)}, n3=function(v){return v.toFixed(3)};
+  var comma=function(v){return v.toLocaleString('en-US')};
+  function mmss(sec){
+    var m=Math.floor(sec/60), s=sec-m*60;
+    return m+'분 '+(Math.round(s*10)/10===Math.round(s)?String(Math.round(s)).padStart(2,'0'):s.toFixed(1).padStart(4,'0'))+'초';
+  }
+  function metres(frames){return frames*MM/1000}
+  function feet(frames){return frames/FPF}
+
+  /* ── 걸음 ── 한 걸음 = 16프레임. 정적 마크업의 16칸과 같은 함수여야 한다. ── */
+  var TAU=Math.PI*2, RAD=Math.PI/180, STRIDE=16;
+  function walk(i){
+    var p=(i%STRIDE)/STRIDE, t=TAU*p;
+    var hy=60+2*Math.abs(Math.sin(t)), sy=hy-20;
+    var la=30*Math.sin(t)*RAD, lb=-30*Math.sin(t)*RAD;
+    var aa=-22*Math.sin(t)*RAD, ab=22*Math.sin(t)*RAD;
+    // 딛는 발은 지면선(88)에 못 박고, 내딛는 발만 들어 올린다 —
+    // 스쳐 지나는 자세(i=0·8)에서 두 다리가 겹쳐 「머리 달린 막대」가 되던 것을 없앤다
+    var liftA=7*Math.max(0,Math.cos(t)), liftB=7*Math.max(0,-Math.cos(t));
+    var n=function(v){return (Math.round(v*10)/10).toFixed(1)};
+    function leg(a,lift){
+      var L=(88-hy)/Math.cos(a)-lift;
+      return 'M69 '+n(hy)+'L'+n(69+L*0.5*Math.sin(a*0.55))+' '+n(hy+L*0.5*Math.cos(a*0.55))
+            +'L'+n(69+L*Math.sin(a))+' '+n(hy+L*Math.cos(a));
+    }
+    function arm(a){return 'M69 '+n(sy)+'L'+n(69+17*Math.sin(a))+' '+n(sy+17*Math.cos(a))}
+    return 'M69 '+n(sy)+'L69 '+n(hy)+leg(la,liftA)+leg(lb,liftB)+arm(aa)+arm(ab);
+  }
+
+  /* ── 원장 ── 표는 JS 가 쓴다. 손으로 적으면 틀려도 모른다. ── */
+  var lbody=document.getElementById('lbody');
+  function rowHTML(fr,i){
+    return '<tr><th scope="row">'+(i+1)+'릴</th>'
+      +'<td class="r" data-l="프레임"><span>'+comma(fr)+'</span></td>'
+      +'<td class="r" data-l="길이"><span>'+metres(fr).toFixed(2)+' m</span></td>'
+      +'<td class="r" data-l="피트"><span>'+comma(feet(fr))+' ft</span></td>'
+      +'<td class="r" data-l="16 장/초"><span>'+mmss(fr/16)+'</span></td>'
+      +'<td class="r" data-l="24 장/초"><span>'+mmss(fr/24)+'</span></td></tr>';
+  }
+  var lfootWant='합계 '+comma(N)+'장 · '+metres(N).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' m · '+comma(feet(N))+' ft · '
+    +mmss(N/16)+' · '+mmss(N/24);
+
+  var reel=document.getElementById('reel'),
+      scrub=document.getElementById('scrub'), track=null,
+      fill=document.getElementById('fill'), knob=document.getElementById('knob'),
+      fpsEl=document.getElementById('fps'), gapEl=document.getElementById('gapline'),
+      dialsEl=document.getElementById('dials'), outs={}, f=SHOT, dragging=false;
+  track=scrub.querySelector('.track');
+  [].slice.call(dialsEl.querySelectorAll('[data-o]')).forEach(function(n){
+    outs[n.getAttribute('data-o')]=n});
+
+  function gapText(v){
+    var d=N/SHOT-N/v;
+    if(Math.abs(d)<0.05) return '지금이 <b>촬영 속도</b>입니다. 여기서 벗어난 만큼 배우의 걸음이 빨라지거나 느려집니다.';
+    return d>0 ? '촬영 속도보다 <b>'+mmss(d)+'</b> 짧아졌습니다. 같은 '+comma(N)+'장을 <b>'+n3(v/SHOT)+'배</b> 빨리 먹인 결과입니다.'
+               : '촬영 속도보다 <b>'+mmss(-d)+'</b> 길어졌습니다. 같은 '+comma(N)+'장을 <b>'+n3(v/SHOT)+'배</b> 느리게 먹인 결과입니다.';
+  }
+
+  /* ── 자기검사 ── 정적 텍스트와 계산값을 대조해 콘솔로 던진다 ── */
+  var bad=[];
+  (function(){
+    var lf=document.getElementById('lfoot');
+    if(lf.textContent.trim()!==lfootWant) bad.push('합계행 「'+lf.textContent.trim()+'」 ≠ 「'+lfootWant+'」');
+    lf.textContent=lfootWant;
+
+    var trs=[].slice.call(lbody.querySelectorAll('tr'));
+    if(trs.length!==REELS.length) bad.push('정적 원장 '+trs.length+'행 ≠ '+REELS.length);
+    trs.forEach(function(tr,i){
+      var want=rowHTML(REELS[i],i), got=tr.outerHTML.replace(/\s+/g,' ').trim();
+      if(got!==want.replace(/\s+/g,' ').trim()) bad.push((i+1)+'릴 행이 계산과 다름');
+    });
+
+    var cells=[].slice.call(document.querySelectorAll('#reel .cell'));
+    if(cells.length!==STRIDE) bad.push('정적 칸 '+cells.length+'개 ≠ '+STRIDE);
+    cells.forEach(function(c,i){
+      var d=c.querySelector('.fig').getAttribute('d');
+      if(d!==walk(i)) bad.push((i+1)+'번 칸 걸음 경로가 계산과 다름');
+    });
+
+    // 막대 4개는 상영 시간에서 파생된다
+    var want=[12,16,18,24].map(function(f){return {f:f,t:N/f}});
+    var maxT=N/12;
+    [].slice.call(document.querySelectorAll('#bars .bar')).forEach(function(b,i){
+      var w=(want[i].t/maxT*100).toFixed(3)+'%';
+      var got=b.querySelector('.len i').getAttribute('style')||'';
+      if(got.indexOf(w)<0) bad.push((want[i].f)+'장/초 막대 폭 「'+got+'」 ≠ 「width:'+w+'」');
+      var lbl=b.querySelector('.len b');
+      if(lbl.textContent.trim()!==mmss(want[i].t))
+        bad.push(want[i].f+'장/초 라벨 「'+lbl.textContent.trim()+'」 ≠ 「'+mmss(want[i].t)+'」');
+    });
+
+    /* 「16장/초에서 초당 1피트」 — feet(fr) 와 fr/16 을 비교하면 둘 다 fr/FPF 라
+       대수적으로 항상 참이다. 그건 검산이 아니라 항등식이다.
+       이 주장이 참인 조건은 「피트당 프레임 수 == 촬영 속도」 하나뿐이므로 그것을 본다 —
+       SHOT 을 18 로 바꾸면 이 검사가 실제로 발화한다. */
+    if(FPF!==SHOT) bad.push('caption 주장 불성립: 피트당 '+FPF+'프레임인데 촬영은 '+SHOT+'장/초');
+
+    // 정오표가 주장하는 산술
+    if(92880-N!==144) bad.push('정오표 1항: 92,880 − '+N+' ≠ 144');
+    if(Math.abs(144*MM/1000-2.736)>1e-9) bad.push('정오표 1항: 144 × 19mm ≠ 2.736 m');
+    if(mmss(N/24)!=='64분 24초') bad.push('정오표 2항: 92,736 ÷ 24 ≠ 64분 24초');
+
+    // 초기 상태(f=SHOT)로 그려 둔 조작부 값 전부 — 이 자리가 검사 밖이었다
+    var pct0=((SHOT-LO)/(HI-LO)*100).toFixed(3)+'%';
+    if((fill.getAttribute('style')||'').indexOf(pct0)<0) bad.push('채움 초기값 ≠ '+pct0);
+    if((knob.getAttribute('style')||'').indexOf(pct0)<0) bad.push('손잡이 초기값 ≠ '+pct0);
+    [[16,'16 촬영'],[18,'18'],[24,'24 표준']].forEach(function(t){
+      var el=[].slice.call(document.querySelectorAll('.ticks span')).filter(function(x){
+        return x.textContent.trim()===t[1]})[0];
+      if(!el){bad.push('눈금 「'+t[1]+'」 없음');return}
+      var w=((t[0]-LO)/(HI-LO)*100).toFixed(3)+'%';
+      if((el.getAttribute('style')||'').indexOf(w)<0) bad.push('눈금 '+t[1]+' 위치 ≠ '+w);
+    });
+    [['time',mmss(N/SHOT)],['rate',n3(1)+'배'],['metre',n3(SHOT*MM/1000)+' m'],
+     ['dwell',n1(1000/SHOT)+' ms']].forEach(function(o){
+      if(outs[o[0]].textContent.trim()!==o[1])
+        bad.push('리드아웃 '+o[0]+' 「'+outs[o[0]].textContent.trim()+'」 ≠ 「'+o[1]+'」');
+    });
+    var vt0='초당 '+n1(SHOT)+'장 — 상영 '+mmss(N/SHOT)+', 걸음 '+n3(1)+'배';
+    if(scrub.getAttribute('aria-valuetext')!==vt0) bad.push('aria-valuetext 초기값 ≠ 「'+vt0+'」');
+    if(gapEl.textContent.trim()!==gapText(SHOT).replace(/<[^>]+>/g,''))
+      bad.push('정적 gap 문장이 f='+SHOT+' 상태와 다름');
+    // 정오표가 인용한 「틀렸던 값」도 파생이어야 한다
+    if((92880*MM/1000).toFixed(2)!=='1764.72') bad.push('정오표 1항 1,764.72 m 불일치');
+    if(mmss(92880/24)!=='64분 30초') bad.push('정오표 2항 64분 30초 불일치');
+
+    if(bad.length) console.error('[걸음쇠] 정적↔계산 불일치 '+bad.length+'건:\n'+bad.join('\n'));
+    else console.log('[걸음쇠] 정적↔계산 대조 통과 — 원장 36칸+합계 · 걸음 16칸 · 막대 8값 · '
+      +'조작부 초기 12값 · 정오표 산술 5건');
+  })();
+
+  /* ── 스크럽 ── 연속값. 필름이 실제로 그 속도로 게이트를 지나간다. ── */
+  // 이음매 없는 순환을 위해 한 걸음을 한 벌 더 붙인다 (정적 16칸을 검사한 뒤에)
+  reel.innerHTML+=reel.innerHTML;
+
+  function render(){
+    var pct=(f-LO)/(HI-LO)*100;
+    fill.style.width=pct.toFixed(3)+'%';
+    knob.style.left=pct.toFixed(3)+'%';
+    var whole=Math.floor(f), dec=(f-whole).toFixed(1).slice(1);
+    fpsEl.innerHTML=whole+'<span class="dec">'+dec+'</span><span class="u">장 / 초</span>';
+    outs.time.textContent=mmss(N/f);
+    outs.rate.textContent=n3(f/SHOT)+'배';
+    outs.metre.textContent=n3(f*MM/1000)+' m';
+    outs.dwell.textContent=n1(1000/f)+' ms';
+    reel.style.animationDuration=(STRIDE/f).toFixed(4)+'s';
+    scrub.setAttribute('aria-valuenow',n1(f));
+    scrub.setAttribute('aria-valuetext','초당 '+n1(f)+'장 — 상영 '+mmss(N/f)+', 걸음 '+n3(f/SHOT)+'배');
+    gapEl.innerHTML=gapText(f);
+    [].slice.call(document.querySelectorAll('.ticks span')).forEach(function(s){
+      var v=parseFloat(s.textContent); s.classList.toggle('hit', Math.abs(v-f)<0.25);
+    });
+  }
+  function setFromX(x){
+    var r=track.getBoundingClientRect();
+    var v=LO+(x-r.left)/r.width*(HI-LO);
+    f=Math.max(LO,Math.min(HI,Math.round(v/STEP)*STEP));
+    render();
+  }
+  scrub.addEventListener('pointerdown',function(e){
+    dragging=true; scrub.setPointerCapture(e.pointerId); setFromX(e.clientX); e.preventDefault();
+  });
+  scrub.addEventListener('pointermove',function(e){if(dragging)setFromX(e.clientX)});
+  scrub.addEventListener('pointerup',function(){dragging=false});
+  scrub.addEventListener('pointercancel',function(){dragging=false});
+  scrub.addEventListener('keydown',function(e){
+    var big=(e.key==='PageUp'||e.key==='PageDown'), st=big?2:STEP, moved=true;
+    if(e.key==='ArrowRight'||e.key==='ArrowUp'||e.key==='PageUp')f=Math.min(HI,f+st);
+    else if(e.key==='ArrowLeft'||e.key==='ArrowDown'||e.key==='PageDown')f=Math.max(LO,f-st);
+    else if(e.key==='Home')f=LO; else if(e.key==='End')f=HI; else moved=false;
+    if(moved){render();e.preventDefault()}
+  });
+  /* D7 — 움직임을 줄이는 설정에서는 필름이 멈춘다. 그런데 힌트는 「실제로 그 속도로
+     지나갑니다」라고 말하고 있었다. 그 모드에서는 문장을 상태에 맞게 바꾼다. */
+  if(reduce) document.querySelector('.hint').textContent=
+    '막대를 끌거나 ← → 키로 움직입니다. 움직임을 줄이는 설정이라 필름은 멈춰 있고, '
+    +'게이트 아래 숫자만 바뀝니다 — 한 칸이 머무는 시간이 그 속도입니다.';
+  render();
+  if(CAPTURE){f=24;render()}
+})();
+</script>
+</body></html>
