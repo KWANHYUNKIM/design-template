@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- 뼈대·좌표 출처: refs/daangn-survey.md (2026-08-10 실측) · 토큰 출처: refs/daangn.md
+     브랜드·업종·카피·수치·이미지는 전부 발명. 원본 로고·사진·문장은 쓰지 않는다 -->
+<title>손길 — 동네 생활수리 요청</title>
+<meta name="description" content="보일러·누수·방충망. 무엇을 고쳐야 하는지만 적으면 동네 기사님이 견적을 보냅니다. 동네 생활수리 요청.">
+<style>
+:root{
+  /* 서체 — 원본은 웹폰트를 로드하지 않는다. 시스템 폰트 그대로 간다 */
+  --sans:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+
+  /* 색 — 원본 실측 팔레트.
+     다만 최다 사용 회색(#868b94)은 종이 위 3.11:1 로 AA 미달이라 텍스트에 쓰지 않는다.
+     원본의 두 번째 회색을 본문 주력으로 올리고, 연회색은 선·아이콘 등 비텍스트에만 남긴다 */
+  /* ★ 페이지 바탕은 흰색이고 연회색은 「자리」에만 쓴다 — 원본 배경 분포가 그렇다
+     (#f3f4f5 ×13 는 전부 타일·썸네일 같은 작은 자리고, 1340 컨테이너는 흰색이다).
+     1차 대조에서 이걸 반대로 깔았다가 배경 분포가 통째로 뒤집혔다 */
+  --paper:#f3f4f5;  /* 바탕이 아니라 자리 색 — 타일·썸네일·호버 */
+  --card:#ffffff;
+  --ink:#1a1c20;    /* on --card = 17.06:1 (실측) */
+  --body:#555d6d;   /* on --card = 6.62:1 (실측) — 원본 2번 회색 */
+  --mut:#4b5462;    /* on --card = 7.65:1 (실측) */
+  --hair:#868b94;   /* on --card = 3.42:1 (실측) — 텍스트 금지, 선·아이콘 전용 */
+  --line:#e3e5e8;
+  --edge:#dcdee3;   /* 검색바 테두리 실측값 */
+  --dark:#2a3038;
+  --veil:rgba(0,0,0,.455);   /* 바텀시트 딤 실측값 */
+
+  /* 포인트색 — 원본은 평상시 UI에 안 쓰고 「선택된 하나」에만 쓴다(바텀시트 선택 항목).
+     그 규칙만 가져오고 색은 발명한다 */
+  --mark:#8f3b1f;   /* on --card = 7.46:1 (실측) */
+  --tint:#f4ece8;
+
+  /* 타입 — 원본은 다섯 크기뿐이고 모듈러가 아니다 (14 → 16 → 24 → 38) */
+  --t-14:14px; --t-16:16px; --t-24:24px; --t-38:38px;
+  /* 같은 14px에 행간 세 종. 크기가 아니라 행간으로 역할을 가른다 */
+  --lh-a:19px; --lh-b:24px; --lh-c:27px;
+  --lh-16:22px; --lh-24:32px;
+  --lh-38:38px;              /* ★ 헤드라인 행간 = 크기와 동일(1.00). 워드 슬롯 칸 높이와 맞물린다 */
+
+  /* 간격 — 원본 주력은 8·2·4. 큰 값은 거의 안 쓴다 */
+  --s2:2px; --s4:4px; --s8:8px; --s10:10px; --s12:12px; --s16:16px;
+  --s22:22px; --s24:24px; --s32:32px; --s48:48px; --s64:64px; --s84:84px; --s120:120px; --s128:128px;
+
+  --r6:6px; --r16:16px; --r20:20px; --rfull:9999px;
+  --w:1340px;
+  --dur:.15s; --roll:.42s; --ease:cubic-bezier(.35,0,.35,1);
+}
+*{box-sizing:border-box}
+html{background:var(--card);-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--card); color:var(--ink);
+  font-family:var(--sans); font-size:var(--t-14); line-height:var(--lh-a);
+  word-break:keep-all; overflow-wrap:anywhere;
+}
+h1,h2,h3,p,ul,ol,li{margin:0;padding:0;list-style:none}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--mark);outline-offset:2px;border-radius:var(--r6)}
+
+.wrap{width:100%;max-width:var(--w);margin:0 auto;padding-left:var(--s16);padding-right:var(--s16)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;
+    font-size:var(--t-16);line-height:var(--lh-b);font-weight:400}
+
+/* ── 헤더 — 원본은 로고 하나뿐이다. GNB도 로그인도 없다 (h64 · sticky · 배경 투명) */
+.top{position:sticky;top:0;z-index:40;height:var(--s64);display:flex;align-items:center;
+     background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(6px)}
+.skip{position:absolute;left:var(--s12);top:0;transform:translateY(-120%);
+      background:var(--dark);color:#fff;padding:var(--s4) var(--s16);
+      border-radius:0 0 var(--s4) var(--s4);font-weight:600;line-height:var(--lh-b);
+      transition:transform var(--dur) var(--ease)}
+.skip:focus{transform:translateY(0)}
+.logo{display:inline-flex;align-items:center;gap:var(--s4)}
+.logo b{font-size:var(--t-16);line-height:var(--lh-16)}
+.logo svg{display:block}
+
+#main{scroll-margin-top:var(--s64)}
+
+/* ── 히어로 — 헤드라인 한 줄. 원본은 헤더와 히어로 사이가 128px 비어 있다 */
+.hero{padding-top:var(--s128);text-align:center}
+.head{font-size:var(--t-38);font-weight:700;line-height:var(--lh-38);
+      display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0 var(--s4)}
+.pin{display:inline-flex;width:var(--s32);height:var(--s32);align-items:center;justify-content:center;flex:0 0 auto}
+.pin svg{display:block}
+
+/* ★ 워드 롤링 — 이 페이지의 유일한 자동 모션.
+   칸 높이 = 헤드라인 행간 38px. 슬롯 폭이 단어마다 바뀌므로 width도 함께 움직인다 */
+/* width는 auto로 둔다 — 0으로 두면 스크립트가 죽었을 때 단어가 통째로 잘린다.
+   JS가 뜨는 즉시 현재 단어 폭(px)으로 덮는다 */
+.roll{display:inline-flex;overflow:hidden;height:var(--lh-38);width:auto;
+      transition:width var(--roll) var(--ease);vertical-align:bottom}
+.rollTrack{display:flex;flex-direction:column;transition:transform var(--roll) var(--ease)}
+.rollW{height:var(--lh-38);line-height:var(--lh-38);white-space:nowrap;opacity:0;
+       transition:opacity var(--roll) var(--ease)}
+.rollW[data-on]{opacity:1}
+
+/* ── 검색 — 폼 754px. 원본은 섹션마다 폭이 다르다 (754 → 900 → 960 → 1308) */
+.find{margin-top:var(--s64);display:flex;justify-content:center}
+.bar{width:754px;max-width:100%;height:var(--s48);display:flex;align-items:center;
+     border:1px solid var(--edge);border-radius:var(--rfull);padding-left:20px;background:var(--card)}
+.scope{display:inline-flex;align-items:center;gap:var(--s4);font-weight:700;line-height:var(--lh-a);
+       white-space:nowrap;flex:0 0 auto}
+.scope i{width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;
+         border-top:5px solid var(--hair);display:block}
+.bar input{flex:1 1 auto;min-width:0;border:0;background:none;padding:var(--s12) var(--s12) var(--s12) var(--s12);
+           line-height:var(--lh-b);font-size:var(--t-16)}
+.bar input::placeholder{color:var(--hair)}
+.go{flex:0 0 auto;width:28px;height:28px;margin-right:10px;border-radius:var(--rfull);
+    background:var(--dark);display:inline-flex;align-items:center;justify-content:center}
+
+/* 인기 검색어 — 배경도 테두리도 없는 맨 텍스트 링크다. 칩 모양이 아니다 */
+.hot{margin-top:var(--s22);display:flex;flex-wrap:wrap;justify-content:center;
+     max-width:997px;margin-left:auto;margin-right:auto}
+.hot li{margin-right:var(--s12);line-height:var(--lh-a)}
+.hot .lab{font-weight:700;color:var(--body)}
+/* 원본 실측: 배경도 테두리도 없는데 border-radius 16 이 걸려 있다 — 16이 이 시스템의 기본 라운드다 */
+.hot a{color:var(--body);border-radius:var(--r16)}
+.hot a:hover{color:var(--ink)}
+
+/* ── 프로모션 배너 900×150 (비율 6.00) — 원본은 이미지 한 장, 여기선 CSS 도형 */
+.promo{margin-top:var(--s48);display:flex;justify-content:center}
+.promoIn{position:relative;width:900px;max-width:100%;height:150px;border-radius:var(--r16);
+         overflow:hidden;background:linear-gradient(180deg,#eef3ec,#e4ece1);display:block}
+.promoTx{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+         justify-content:center;gap:var(--s4);z-index:2}
+.promoTx .k{font-weight:700;color:var(--mark);line-height:var(--lh-a)}
+.promoTx .t{font-size:var(--t-24);font-weight:700;line-height:var(--lh-24)}
+/* 지붕은 아래 블록의 폭과 정확히 같아야 집으로 읽힌다 —
+   폭이 어긋나면 화살표로 보인다(1차 캡처에서 그렇게 나왔다) */
+.roof{position:absolute;width:0;height:0;border-bottom:30px solid #cfdcc8}
+.blk{position:absolute;bottom:0;border-radius:var(--r6) var(--r6) 0 0}
+.b1{left:56px;width:88px;height:70px;background:#d9c3ab}
+.b2{left:152px;width:64px;height:96px;background:#c9d7c2}
+.b3{right:56px;width:76px;height:84px;background:#c6d2dd}
+.b4{right:144px;width:56px;height:58px;background:#dcd0c0}
+.r1{left:56px;bottom:70px;border-left:44px solid transparent;border-right:44px solid transparent}
+.r2{right:56px;bottom:84px;border-left:38px solid transparent;border-right:38px solid transparent;
+    border-bottom-color:#bcccdb}
+.b2::after,.b3::after{content:'';position:absolute;left:50%;top:14px;transform:translateX(-50%);
+    width:18px;height:18px;border-radius:var(--r6);background:rgba(255,255,255,.55)}
+
+/* ── 카테고리 8칸 — ul 754px · 각 칸 64px · space-between */
+.cats{margin-top:var(--s32);display:flex;justify-content:center}
+.cats ul{width:754px;max-width:100%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--s16) 0}
+.cats li{width:64px}
+.cats a{display:flex;flex-direction:column;align-items:center;gap:var(--s8);text-align:center}
+.tile{width:48px;height:48px;border-radius:var(--r16);display:inline-flex;align-items:center;
+      justify-content:center;background:var(--paper);transition:transform var(--dur) var(--ease)}
+.cats a:hover .tile{transform:translateY(-2px)}
+.cats span{line-height:var(--lh-a);color:var(--mut)}
+
+/* ── 동네 이야기 — 제목 960 · OL grid 456+456 · gap 24/48 · 9칸 */
+.talk{margin-top:var(--s84);display:flex;justify-content:center}
+.talkIn{width:960px;max-width:100%}
+.talkH{display:flex;align-items:center;gap:var(--s8);height:var(--lh-24)}
+.talkH span{font-size:var(--t-24);font-weight:700;line-height:var(--lh-24)}
+.list{margin-top:var(--s32);display:grid;grid-template-columns:456px 456px;gap:var(--s24) var(--s48);
+      justify-content:space-between}
+.list>li{min-width:0}
+.item{display:flex;gap:var(--s8);min-height:108px;min-width:0}
+.no{flex:0 0 24px;color:var(--body);line-height:var(--lh-a);padding-top:var(--s2)}
+.txt{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:var(--s4)}
+.ti{font-size:var(--t-16);font-weight:700;line-height:var(--lh-16);
+    overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;line-clamp:1;-webkit-box-orient:vertical}
+.ex{color:var(--body);line-height:var(--lh-a);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.meta{color:var(--body);line-height:var(--lh-c)}
+.cnt{display:flex;gap:var(--s8);color:var(--ink);line-height:var(--lh-a);margin-top:var(--s2)}
+.cnt b{font-weight:400;color:var(--ink)}
+.cnt em{font-style:normal;display:inline-flex;align-items:center;gap:var(--s4)}
+.ic{width:13px;height:13px;flex:0 0 auto;color:var(--hair)}
+.shot{flex:0 0 108px;width:108px;height:108px;border-radius:var(--r6);background:var(--paper)}
+.s1{background:linear-gradient(140deg,#dfe3e0,#c8d1c6)}
+.s2{background:linear-gradient(140deg,#e6ded6,#d2c3b4)}
+.s3{background:linear-gradient(140deg,#dde2e8,#c3ccd7)}
+.s4{background:linear-gradient(140deg,#e8e2e0,#d3c4c0)}
+.s5{background:linear-gradient(140deg,#e0e5df,#c6cfc2)}
+.item:hover .ti{text-decoration:underline}
+
+/* ── 결과·상세 뷰 — 원본은 페이지 이동이다. 한 파일이라 뷰 스위칭으로 축약했다 */
+.view{display:none}
+body[data-view="home"] .v-home,
+body[data-view="result"] .v-result,
+body[data-view="detail"] .v-detail{display:block}
+.back{margin-top:var(--s32);display:flex;justify-content:center}
+.backIn{width:960px;max-width:100%}
+.backBtn{display:inline-flex;align-items:center;gap:var(--s4);color:var(--body);line-height:var(--lh-a)}
+.backBtn:hover{color:var(--ink)}
+.vhead{margin-top:var(--s24);font-size:var(--t-24);font-weight:700;line-height:var(--lh-24)}
+.vsub{margin-top:var(--s8);color:var(--body);line-height:var(--lh-c)}
+.body p{color:var(--mut);line-height:var(--lh-c);margin-top:var(--s16)}
+.chipRow{margin-top:var(--s16);display:flex;flex-wrap:wrap;gap:var(--s8)}
+.chipRow button{border:1px solid var(--edge);border-radius:var(--rfull);padding:var(--s4) var(--s12);
+                color:var(--body);line-height:var(--lh-a);background:var(--card)}
+.chipRow button[aria-pressed="true"]{border-color:var(--mark);color:var(--mark);font-weight:700}
+.panel{margin-top:var(--s24);background:var(--paper);border-radius:var(--r16);padding:var(--s24)}
+.empty{padding:var(--s48) 0;text-align:center;color:var(--body);line-height:var(--lh-c)}
+
+/* ── 검색 범위 바텀시트 — 데스크톱인데 바텀시트다. 딤 + 전폭 시트 + 46px 행 */
+.dim{position:fixed;inset:0;background:var(--veil);opacity:0;pointer-events:none;z-index:50;
+     transition:opacity var(--dur) var(--ease)}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--card);
+       border-radius:var(--r20) var(--r20) 0 0;transform:translateY(100%);
+       transition:transform var(--roll) var(--ease);padding:var(--s10) 0}
+body[data-sheet="on"] .dim{opacity:1;pointer-events:auto}
+body[data-sheet="on"] .sheet{transform:translateY(0)}
+.sheet button{display:flex;width:100%;align-items:center;justify-content:space-between;
+              min-height:46px;padding:var(--s12) var(--s16);
+              font-size:var(--t-16);line-height:var(--lh-b);text-align:left}
+.sheet button[aria-checked="true"]{font-weight:700;color:var(--mark)}
+.sheet button svg{opacity:0}
+.sheet button[aria-checked="true"] svg{opacity:1}
+.sheet button:hover{background:var(--paper)}
+
+/* ── 푸터 — 좌 620(로고+소셜) / 우 grid 160×4 gap16 · 아래 사업자 정보 · 약관 */
+.foot{margin-top:var(--s120);background:var(--card);padding-top:var(--s64);padding-bottom:var(--s48)}
+.footTop{display:flex;gap:var(--s32);align-items:flex-start;flex-wrap:wrap}
+.footL{width:620px;max-width:100%;display:flex;flex-direction:column;gap:var(--s48)}
+.soc{display:flex;gap:var(--s12)}
+.soc a{width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;
+       color:var(--mut);transition:color var(--dur) var(--ease)}
+.soc a:hover{color:var(--ink)}
+.footR{flex:1 1 688px;min-width:0;display:grid;grid-template-columns:repeat(4,160px);gap:var(--s16);
+       justify-content:start}
+/* 원본 최빈 gap 이 2px 다 — 리스트가 매우 조밀하다. 1차 대조에서 0건이라 지적됐다 */
+.col{min-width:0;display:flex;flex-direction:column;gap:var(--s2)}
+.col h3{font-size:var(--t-16);font-weight:700;line-height:var(--lh-16);margin-bottom:var(--s12)}
+.col a{color:var(--body);line-height:var(--lh-b)}
+.col a:hover{color:var(--ink)}
+.rule{margin-top:var(--s48);border-top:1px solid var(--line)}
+.biz{margin-top:var(--s24);display:flex;flex-wrap:wrap;gap:var(--s2) var(--s16);max-width:640px;
+     color:var(--ink);line-height:var(--lh-a)}
+.biz span{display:inline-flex;gap:var(--s4)}
+.biz b{color:var(--mut);font-weight:700;line-height:var(--lh-a)}
+.legal{margin-top:var(--s24);display:flex;flex-wrap:wrap;gap:var(--s16)}
+.legal a{color:var(--body);line-height:var(--lh-b)}
+.legal a:hover{color:var(--ink)}
+
+/* ── 900px 이하 — 2열 그리드를 1열로, 좁은 폼을 전폭으로 */
+@media (max-width:900px){
+  :root{--t-38:28px;--lh-38:30px;--t-24:20px;--lh-24:27px;--s128:64px;--s120:64px;--s84:48px}
+  .hero{padding-top:var(--s64)}
+  .list{grid-template-columns:1fr;gap:var(--s24)}
+  .cats ul{width:100%;justify-content:flex-start;gap:var(--s16) var(--s24)}
+  .footR{grid-template-columns:repeat(2,1fr);width:100%}
+  .footL{gap:var(--s24)}
+  .foot{padding-top:var(--s48)}
+  .hot{margin-top:var(--s16)}
+  /* 배너 도형은 900px 기준 절대좌표다 — 좁아지면 글자와 겹치므로 바탕만 남긴다 */
+  .blk,.roof{display:none}
+  .ti{-webkit-line-clamp:2;line-clamp:2}
+}
+@media (max-width:520px){
+  .cats ul{justify-content:space-between;gap:var(--s16) 0}
+  .cats li{width:calc(25% - 6px)}
+  .footR{grid-template-columns:1fr 1fr}
+}
+
+/* ── 모션 접근성 — 자동 롤링을 세우고 첫 단어만 남긴다 */
+@media (prefers-reduced-motion:reduce){
+  .roll,.rollTrack,.rollW,.sheet,.dim,.tile,.skip,.soc a{transition:none}
+}
+/* ?capture=1 — 리빌·자동 모션을 끄고 펼친 정적 스냅샷 (디자인 툴 반출용) */
+body[data-capture] .roll,body[data-capture] .rollTrack,body[data-capture] .rollW,
+body[data-capture] .sheet,body[data-capture] .dim{transition:none}
+</style>
+</head>
+<body data-view="home">
+<svg class="sr" aria-hidden="true">
+  <symbol id="ic-up" viewBox="0 0 14 14"><path fill="currentColor" d="M4 6.2 6.6 1.5c.6-.3 1.4.1 1.4.8v2.4h2.9c.8 0 1.4.8 1.2 1.5l-1 3.9c-.1.6-.7 1-1.3 1H4zM1.4 6.2h1.4v5H1.4z"/></symbol>
+  <symbol id="ic-re" viewBox="0 0 14 14"><path fill="currentColor" d="M2.4 1.8h9.2c.7 0 1.2.6 1.2 1.3v5.3c0 .7-.5 1.3-1.2 1.3H6.3L3.4 12.3V9.7h-1c-.7 0-1.2-.6-1.2-1.3V3.1c0-.7.5-1.3 1.2-1.3z"/></symbol>
+</svg>
+<a class="skip" href="#main">본문 바로가기</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#main" aria-label="손길 홈">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="8" fill="#8f3b1f"/>
+        <path d="M8 17.5c0-3 2.2-5 4.6-5 1.6 0 2.6.7 2.6 1.8 0 1-.8 1.6-2 1.6H12" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        <circle cx="17" cy="9.5" r="2.3" fill="#fff"/>
+      </svg>
+      <b>손길</b>
+    </a>
+  </div>
+</header>
+
+<main id="main">
+  <h1 class="sr">손길 — 동네 생활수리 요청</h1>
+
+  <!-- ══ 홈 ══ -->
+  <div class="view v-home">
+    <section class="hero">
+      <div class="wrap">
+        <h2 class="head">
+          <span class="pin" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 32 32">
+              <path d="M16 4c-4.2 0-7.5 3.3-7.5 7.4 0 5.4 6.6 11.9 6.9 12.2.3.3.9.3 1.2 0 .3-.3 6.9-6.8 6.9-12.2C23.5 7.3 20.2 4 16 4z" fill="#1a1c20"/>
+              <circle cx="16" cy="11.4" r="2.8" fill="#fff"/>
+            </svg>
+          </span>
+          <span>우리 집</span>
+          <span class="roll" id="roll"><span class="rollTrack" id="rollTrack">
+            <span class="rollW" data-on>보일러</span><span class="rollW">방충망</span><span class="rollW">싱크대</span><span class="rollW">줄눈</span><span class="rollW">도어락</span><span class="rollW">세탁기</span><span class="rollW">문틀</span><span class="rollW">타일</span><span class="rollW">형광등</span>
+          </span></span>
+          <span>고치고 계신가요?</span>
+        </h2>
+      </div>
+    </section>
+
+    <section class="find" aria-label="수리 검색">
+      <form class="bar" id="findForm" role="search">
+        <button type="button" class="scope" id="scopeBtn" aria-haspopup="dialog" aria-expanded="false">
+          <span id="scopeLab">집수리</span><i aria-hidden="true"></i>
+        </button>
+        <label class="sr" for="q">고칠 곳을 입력하세요</label>
+        <input id="q" name="q" type="search" placeholder="고칠 곳을 입력해주세요" autocomplete="off">
+        <button type="submit" class="go" aria-label="검색">
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+            <path d="M2 7h9M7.5 3.5 11 7l-3.5 3.5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </form>
+    </section>
+
+    <ul class="hot wrap" aria-label="인기 검색어">
+      <li class="lab">인기 검색어</li>
+      <li><a href="#main" data-q="보일러">보일러</a></li>
+      <li><a href="#main" data-q="누수">누수</a></li>
+      <li><a href="#main" data-q="방충망">방충망</a></li>
+      <li><a href="#main" data-q="실리콘">실리콘</a></li>
+      <li><a href="#main" data-q="줄눈시공">줄눈시공</a></li>
+      <li><a href="#main" data-q="변기막힘">변기막힘</a></li>
+      <li><a href="#main" data-q="형광등">형광등</a></li>
+      <li><a href="#main" data-q="도어락">도어락</a></li>
+      <li><a href="#main" data-q="곰팡이">곰팡이</a></li>
+      <li><a href="#main" data-q="문짝수리">문짝수리</a></li>
+      <li><a href="#main" data-q="타일">타일</a></li>
+      <li><a href="#main" data-q="배수구">배수구</a></li>
+      <li><a href="#main" data-q="콘센트">콘센트</a></li>
+      <li><a href="#main" data-q="창틀">창틀</a></li>
+      <li><a href="#main" data-q="페인트">페인트</a></li>
+      <li><a href="#main" data-q="방수">방수</a></li>
+    </ul>
+
+    <section class="promo" aria-label="견적 안내">
+      <a class="promoIn" href="#main">
+        <span class="blk b1" aria-hidden="true"></span><span class="roof r1" aria-hidden="true"></span>
+        <span class="blk b2" aria-hidden="true"></span>
+        <span class="blk b3" aria-hidden="true"></span><span class="roof r2" aria-hidden="true"></span>
+        <span class="blk b4" aria-hidden="true"></span>
+        <span class="promoTx">
+          <span class="k">동네 평균 견적</span>
+          <span class="t">우리 집 수리비, 미리 알아보세요</span>
+        </span>
+      </a>
+    </section>
+
+    <section class="cats" aria-label="서비스 둘러보기">
+      <h2 class="sr">손길 서비스 둘러보기</h2>
+      <ul>
+        <li><a href="#main"><span class="tile"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z" fill="none" stroke="#8f3b1f" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span>집수리</span></a></li>
+        <li><a href="#main"><span class="tile"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3" fill="none" stroke="#8f3b1f" stroke-width="1.7"/><circle cx="12" cy="13" r="3.6" fill="none" stroke="#8f3b1f" stroke-width="1.7"/></svg></span><span>가전수리</span></a></li>
+        <li><a href="#main"><span class="tile"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h6v4h4v4h4" fill="none" stroke="#8f3b1f" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="5" cy="8" r="1.8" fill="#8f3b1f"/></svg></span><span>설비배관</span></a></li>
+        <li><a href="#main"><span class="tile"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3 6 13h5l-1 8 7-10h-5z" fill="none" stroke="#8f3b1f" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span>전기공사</span></a></li>
+        <li><a href="#main"><span class="tile"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="#8f3b1f" stroke-width="1.7"/><path d="M4 10h16M10 4v16" stroke="#8f3b1f" stroke-width="1.7"/></svg></span><span>도배장판</span></a></li>
+        <li><a href="#main"><span class="tile"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6v6H9z" fill="none" stroke="#8f3b1f" stroke-width="1.7"/><path d="M12 10v5m-3 5h6l-1-5h-4z" fill="none" stroke="#8f3b1f" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span>입주청소</span></a></li>
+        <li><a href="#main"><span class="tile"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="9" width="12" height="9" rx="1.5" fill="none" stroke="#8f3b1f" stroke-width="1.7"/><path d="M15 12h3l3 3v3h-6z" fill="none" stroke="#8f3b1f" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span>이사정리</span></a></li>
+        <li><a href="#main"><span class="tile"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20v-6m0 0c-4 0-6-2.5-6-6 4 0 6 2.5 6 6zm0 0c3.4 0 5-2 5-5-3.4 0-5 2-5 5z" fill="none" stroke="#8f3b1f" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span>조경관리</span></a></li>
+      </ul>
+    </section>
+
+    <section class="talk" aria-label="지금 뜨는 수리 이야기">
+      <div class="talkIn">
+        <div class="talkH">
+          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 3.5 5.5 5.5 5.5 9a5.5 5.5 0 1 1-11 0c0-2 1-3.5 2.5-5 .3 1.2 1 2 2 2.3C10.5 7 11 5 12 3z" fill="#8f3b1f"/></svg>
+          <span>지금 뜨는 수리 이야기</span>
+        </div>
+        <!-- 목록은 정적 HTML 이다. 스크립트로 그리면 JS 없이 내용이 사라진다 (shoot --nojs 로 잡았다) -->
+        <ol class="list" id="storyList">
+          <li><a class="item" href="#main" data-story="0"><span class="no">1</span><span class="txt"><span class="ti">보일러 배관 누수, 30분 만에 잡았어요</span><span class="ex">세탁실 바닥이 계속 젖길래 불렀더니 배관 이음새가 헐거워진 거였습니다</span><span><span class="meta">성산동 · 설비배관 · 6일 전</span><span class="cnt"><em><svg class="ic" aria-hidden="true"><use href="#ic-up"/></svg><b>121</b></em><em><svg class="ic" aria-hidden="true"><use href="#ic-re"/></svg><b>13</b></em></span></span></span><span class="shot s1" aria-hidden="true"></span></a></li>
+          <li><a class="item" href="#main" data-story="1"><span class="no">2</span><span class="txt"><span class="ti">우리 아파트 정화조 청소 언제 하나요</span><span class="ex">작년에는 5월에 했던 것 같은데 올해는 소식이 없어서 관리실에 물어봤습니다</span><span><span class="meta">행신동 · 생활 · 8일 전</span><span class="cnt"><em><svg class="ic" aria-hidden="true"><use href="#ic-up"/></svg><b>44</b></em><em><svg class="ic" aria-hidden="true"><use href="#ic-re"/></svg><b>10</b></em></span></span></span></a></li>
+          <li><a class="item" href="#main" data-story="2"><span class="no">3</span><span class="txt"><span class="ti">베란다 곰팡이 셀프로 잡다가 결국 불렀습니다</span><span class="ex">락스만으로는 안 되더라고요. 결로 원인부터 봐야 한다는 말을 그때 이해했습니다</span><span><span class="meta">망포동 · 집수리 · 7일 전</span><span class="cnt"><em><svg class="ic" aria-hidden="true"><use href="#ic-up"/></svg><b>41</b></em><em><svg class="ic" aria-hidden="true"><use href="#ic-re"/></svg><b>15</b></em></span></span></span></a></li>
+          <li><a class="item" href="#main" data-story="3"><span class="no">4</span><span class="txt"><span class="ti">현관 도어락 배터리 갈다가 문이 잠겼어요</span><span class="ex">건전지를 빼둔 채로 문을 닫아버렸습니다. 비상 개폐 방법을 미리 알아두세요</span><span><span class="meta">판교동 · 집수리 · 7일 전</span><span class="cnt"><em><svg class="ic" aria-hidden="true"><use href="#ic-up"/></svg><b>9</b></em><em><svg class="ic" aria-hidden="true"><use href="#ic-re"/></svg><b>17</b></em></span></span></span><span class="shot s2" aria-hidden="true"></span></a></li>
+          <li><a class="item" href="#main" data-story="4"><span class="no">5</span><span class="txt"><span class="ti">싱크대 배수구 냄새 원인 찾았습니다</span><span class="ex">트랩에 물이 마르면 냄새가 올라온다는 걸 몰랐어요. 이번에 배웠습니다</span><span><span class="meta">광적면 · 설비배관 · 6일 전</span><span class="cnt"><em><svg class="ic" aria-hidden="true"><use href="#ic-up"/></svg><b>18</b></em><em><svg class="ic" aria-hidden="true"><use href="#ic-re"/></svg><b>17</b></em></span></span></span><span class="shot s3" aria-hidden="true"></span></a></li>
+          <li><a class="item" href="#main" data-story="5"><span class="no">6</span><span class="txt"><span class="ti">옥상 방수 견적 세 군데 받아본 후기</span><span class="ex">평당 단가만 보면 안 되고 몇 겹을 올리는지, 보증이 몇 년인지를 봐야 했습니다</span><span><span class="meta">태전동 · 집수리 · 6일 전</span><span class="cnt"><em><svg class="ic" aria-hidden="true"><use href="#ic-up"/></svg><b>14</b></em><em><svg class="ic" aria-hidden="true"><use href="#ic-re"/></svg><b>31</b></em></span></span></span><span class="shot s4" aria-hidden="true"></span></a></li>
+          <li><a class="item" href="#main" data-story="6"><span class="no">7</span><span class="txt"><span class="ti">형광등을 LED로 바꿨더니 전기요금이</span><span class="ex">거실 하나만 바꿨는데도 체감이 됩니다. 안정기 제거를 같이 해야 한다더군요</span><span><span class="meta">무슨동 · 전기공사 · 8일 전</span><span class="cnt"><em><svg class="ic" aria-hidden="true"><use href="#ic-up"/></svg><b>2</b></em><em><svg class="ic" aria-hidden="true"><use href="#ic-re"/></svg><b>24</b></em></span></span></span><span class="shot s5" aria-hidden="true"></span></a></li>
+          <li><a class="item" href="#main" data-story="7"><span class="no">8</span><span class="txt"><span class="ti">창틀 실리콘 곰팡이 제거 이렇게 했어요</span><span class="ex">제거제를 랩으로 덮어두는 방법이 제일 확실했습니다. 세 시간이면 충분해요</span><span><span class="meta">염창동 · 집수리 · 8일 전</span><span class="cnt"><em><svg class="ic" aria-hidden="true"><use href="#ic-up"/></svg><b>8</b></em><em><svg class="ic" aria-hidden="true"><use href="#ic-re"/></svg><b>12</b></em></span></span></span></a></li>
+          <li><a class="item" href="#main" data-story="8"><span class="no">9</span><span class="txt"><span class="ti">줄눈 시공 셀프 3일차 기록</span><span class="ex">생각보다 오래 걸립니다. 기존 줄눈 제거가 전체 시간의 절반이었어요</span><span><span class="meta">거제동 · 집수리 · 7일 전</span><span class="cnt"><em><svg class="ic" aria-hidden="true"><use href="#ic-up"/></svg><b>11</b></em><em><svg class="ic" aria-hidden="true"><use href="#ic-re"/></svg><b>15</b></em></span></span></span></a></li>
+        </ol>
+      </div>
+    </section>
+  </div>
+
+  <!-- ══ 검색 결과 (원본은 페이지 이동) ══ -->
+  <div class="view v-result">
+    <div class="back"><div class="backIn">
+      <button class="backBtn" type="button" data-go="home">← 홈으로</button>
+      <h2 class="vhead" id="resHead">검색 결과</h2>
+      <p class="vsub" id="resSub">동네 기사님이 보낸 견적입니다.</p>
+      <div class="chipRow" id="resFilter" role="group" aria-label="정렬">
+        <button type="button" aria-pressed="true" data-sort="near">가까운 순</button>
+        <button type="button" aria-pressed="false" data-sort="cheap">견적 낮은 순</button>
+        <button type="button" aria-pressed="false" data-sort="fast">빠른 방문 순</button>
+      </div>
+      <ol class="list" id="resList" style="margin-top:var(--s24)"></ol>
+      <p class="empty" id="resEmpty" hidden>아직 이 동네에 등록된 기사님이 없어요. 범위를 넓혀보세요.</p>
+    </div></div>
+  </div>
+
+  <!-- ══ 이야기 상세 (원본은 페이지 이동) ══ -->
+  <div class="view v-detail">
+    <div class="back"><div class="backIn">
+      <button class="backBtn" type="button" data-go="home">← 목록으로</button>
+      <h2 class="vhead" id="detTitle">이야기</h2>
+      <p class="vsub" id="detMeta"></p>
+      <div class="panel body" id="detBody"></div>
+    </div></div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="footTop">
+      <div class="footL">
+        <a class="logo" href="#main" aria-label="손길 홈">
+          <svg width="22" height="22" viewBox="0 0 26 26" aria-hidden="true">
+            <rect x="1" y="1" width="24" height="24" rx="8" fill="#8f3b1f"/>
+            <path d="M8 17.5c0-3 2.2-5 4.6-5 1.6 0 2.6.7 2.6 1.8 0 1-.8 1.6-2 1.6H12" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+            <circle cx="17" cy="9.5" r="2.3" fill="#fff"/>
+          </svg>
+          <b>손길</b>
+        </a>
+        <div class="soc">
+          <a href="#main" aria-label="소식"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="16" height="16" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="10" r="3.6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a>
+          <a href="#main" aria-label="영상"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="4" width="16" height="12" rx="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 7.5 13 10l-4.5 2.5z" fill="currentColor"/></svg></a>
+          <a href="#main" aria-label="블로그"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="14" height="14" rx="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6.5 13V7.5h3a2 2 0 1 1 0 4h-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></a>
+        </div>
+      </div>
+
+      <nav class="footR" aria-label="푸터">
+        <div class="col">
+          <h3>회사</h3>
+          <a href="#main">손길 소개</a><a href="#main">기사님 지원</a><a href="#main">채용</a>
+        </div>
+        <div class="col">
+          <h3>탐색</h3>
+          <a href="#main">집수리</a><a href="#main">가전수리</a><a href="#main">설비배관</a>
+          <a href="#main">전기공사</a><a href="#main">도배장판</a><a href="#main">입주청소</a>
+          <a href="#main">이사정리</a><a href="#main">조경관리</a><a href="#main">견적 문의</a>
+        </div>
+        <div class="col">
+          <h3>비즈니스</h3>
+          <a href="#main">사업자 등록</a><a href="#main">제휴 문의</a><a href="#main">광고 문의</a>
+        </div>
+        <div class="col">
+          <h3>지역</h3>
+          <a href="#main">수도권 ↗</a><a href="#main">충청 ↗</a><a href="#main">영남 ↗</a>
+        </div>
+        <div class="col">
+          <h3>문의</h3>
+          <a href="#main">보도자료</a><a href="#main">투자</a><a href="#main">고객센터</a>
+        </div>
+      </nav>
+    </div>
+
+    <div class="rule"></div>
+
+    <div class="biz">
+      <span><b>(주) 손길생활</b></span>
+      <span><b>대표</b> 문서린, 하윤재</span>
+      <span><b>사업자번호</b> 000-00-00000</span>
+      <span><b>통신판매업 신고번호</b> 0000-서울강북-0000</span>
+      <span><b>주소</b> 서울특별시 강북구 도봉로 000, 4층</span>
+      <span><b>전화</b> 0000-0000</span>
+      <span><b>고객문의</b> help@example.com</span>
+    </div>
+
+    <div class="legal">
+      <a href="#main">이용약관</a><a href="#main">개인정보처리방침</a><a href="#main">운영정책</a>
+      <a href="#main">위치기반서비스 이용약관</a><a href="#main">청소년보호정책</a>
+    </div>
+  </div>
+</footer>
+
+<!-- 검색 범위 바텀시트 — 원본은 데스크톱에서도 바텀시트로 연다 -->
+<div class="dim" id="dim" hidden></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="검색 범위 선택" hidden>
+  <div id="sheetList">
+    <button type="button" role="menuitemradio" aria-checked="true" data-scope="0"><span>집수리</span><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 9.5 7.5 13 14 5.5" stroke="#8f3b1f" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button type="button" role="menuitemradio" aria-checked="false" data-scope="1"><span>가전수리</span><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 9.5 7.5 13 14 5.5" stroke="#8f3b1f" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button type="button" role="menuitemradio" aria-checked="false" data-scope="2"><span>설비·배관</span><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 9.5 7.5 13 14 5.5" stroke="#8f3b1f" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button type="button" role="menuitemradio" aria-checked="false" data-scope="3"><span>전기</span><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 9.5 7.5 13 14 5.5" stroke="#8f3b1f" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button type="button" role="menuitemradio" aria-checked="false" data-scope="4"><span>도배·장판</span><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 9.5 7.5 13 14 5.5" stroke="#8f3b1f" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button type="button" role="menuitemradio" aria-checked="false" data-scope="5"><span>청소</span><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 9.5 7.5 13 14 5.5" stroke="#8f3b1f" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button type="button" role="menuitemradio" aria-checked="false" data-scope="6"><span>이사정리</span><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 9.5 7.5 13 14 5.5" stroke="#8f3b1f" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</div>
+
+<script>
+/* 재방문 시 페이지 중간에서 열리는 것을 막는다 */
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+addEventListener('load', () => { if (!location.hash) scrollTo(0, 0) });
+
+const CAPTURE = new URLSearchParams(location.search).get('capture') === '1';
+if (CAPTURE) document.body.setAttribute('data-capture', '');
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ── 워드 롤링 ─────────────────────────────────────────
+   원본 뼈대: overflow:hidden 슬롯 안에 단어를 세로로 쌓고 translateY 로 민다.
+   슬롯 폭이 단어마다 달라서 width 도 함께 움직인다.
+   ⚠ 전환 간격·이징은 실측하지 못했다 (측정 탭이 background 라 rAF 가 멈췄다).
+      체류 2.2s · 전환 0.42s 는 가정값이다 — refs/daangn-survey.md 참조 */
+(() => {
+  const roll = document.getElementById('roll');
+  const track = document.getElementById('rollTrack');
+  const words = [...track.children];
+  const H = () => words[0].getBoundingClientRect().height;
+  let i = 0;
+
+  const paint = n => {
+    words.forEach((w, k) => k === n ? w.setAttribute('data-on', '') : w.removeAttribute('data-on'));
+    track.style.transform = `translateY(${-n * H()}px)`;
+    roll.style.width = Math.ceil(words[n].getBoundingClientRect().width) + 'px';
+  };
+  paint(0);
+  addEventListener('resize', () => paint(i));
+
+  if (CAPTURE || REDUCED) return;              // 정적 스냅샷·모션 축소에서는 첫 단어로 고정
+  setInterval(() => { i = (i + 1) % words.length; paint(i) }, 2200);
+})();
+
+/* ── 데이터 (전부 발명) ───────────────────────────────── */
+const STORIES = [
+  { t:'보일러 배관 누수, 30분 만에 잡았어요', e:'세탁실 바닥이 계속 젖길래 불렀더니 배관 이음새가 헐거워진 거였습니다', m:'성산동 · 설비배관 · 6일 전', up:'121', re:'13', s:1,
+    b:['세탁실 바닥이 사흘째 젖어 있었습니다. 처음엔 세탁기 호스인 줄 알고 두 번이나 갈아 끼웠는데 소용이 없었어요.','기사님이 오시자마자 벽을 짚어보더니 보일러 배관 이음새를 지목하셨습니다. 실리콘을 걷어내고 테이프를 다시 감는 데 30분이 걸렸고, 그동안 물이 어디로 흘러 들어갔는지도 같이 봐주셨습니다.','비용은 출장비 포함 4만 원대였습니다. 혼자 이틀 헤맨 걸 생각하면 진작 부를 걸 그랬어요.'] },
+  { t:'우리 아파트 정화조 청소 언제 하나요', e:'작년에는 5월에 했던 것 같은데 올해는 소식이 없어서 관리실에 물어봤습니다', m:'행신동 · 생활 · 8일 전', up:'44', re:'10', s:0,
+    b:['관리실에 물어보니 올해는 예산 편성이 늦어져 7월로 밀렸다고 합니다.','냄새가 올라오는 세대는 개별로 요청하면 우선 순위를 준다고 하니 참고하세요.'] },
+  { t:'베란다 곰팡이 셀프로 잡다가 결국 불렀습니다', e:'락스만으로는 안 되더라고요. 결로 원인부터 봐야 한다는 말을 그때 이해했습니다', m:'망포동 · 집수리 · 7일 전', up:'41', re:'15', s:0,
+    b:['주말마다 락스를 뿌렸는데 2주면 다시 올라왔습니다.','기사님 말로는 곰팡이는 결과고 원인은 결로라고 하시더군요. 단열재가 끊긴 자리를 찾아 보강하고 나서야 멈췄습니다.','같은 자리에 계속 생긴다면 표면만 닦는 건 시간 낭비였습니다.'] },
+  { t:'현관 도어락 배터리 갈다가 문이 잠겼어요', e:'건전지를 빼둔 채로 문을 닫아버렸습니다. 비상 개폐 방법을 미리 알아두세요', m:'판교동 · 집수리 · 7일 전', up:'9', re:'17', s:2,
+    b:['건전지를 빼놓고 잠깐 재활용을 버리러 나갔다가 문이 닫혔습니다.','9V 건전지를 외부 단자에 대면 임시로 전원이 들어온다는 걸 그날 처음 알았어요. 편의점에서 사와 해결했습니다.','기사님을 부르면 출장비만 5만 원부터라고 하니, 이 방법은 알아두면 좋습니다.'] },
+  { t:'싱크대 배수구 냄새 원인 찾았습니다', e:'트랩에 물이 마르면 냄새가 올라온다는 걸 몰랐어요. 이번에 배웠습니다', m:'광적면 · 설비배관 · 6일 전', up:'18', re:'17', s:3,
+    b:['일주일 집을 비웠다 돌아오니 부엌 전체에 냄새가 찼습니다.','배수 트랩에 고여 있어야 할 물이 증발해서 하수 냄새가 그대로 올라온 것이었습니다. 물을 한 바가지 부으니 30분 만에 사라졌어요.','오래 비울 때는 배수구에 기름을 한 스푼 넣어두면 증발이 느려진다고 합니다.'] },
+  { t:'옥상 방수 견적 세 군데 받아본 후기', e:'평당 단가만 보면 안 되고 몇 겹을 올리는지, 보증이 몇 년인지를 봐야 했습니다', m:'태전동 · 집수리 · 6일 전', up:'14', re:'31', s:4,
+    b:['같은 면적인데 견적이 두 배 넘게 차이가 났습니다.','싼 곳은 우레탄 2회, 비싼 곳은 프라이머 포함 4회에 5년 보증이었습니다. 겹수와 보증을 빼고 단가만 비교하면 의미가 없더군요.','중간 가격에 3년 보증인 곳으로 정했고, 시공 사진을 단계별로 받기로 했습니다.'] },
+  { t:'형광등을 LED로 바꿨더니 전기요금이', e:'거실 하나만 바꿨는데도 체감이 됩니다. 안정기 제거를 같이 해야 한다더군요', m:'무슨동 · 전기공사 · 8일 전', up:'2', re:'24', s:0,
+    b:['거실 등 하나를 LED로 교체했습니다.','기존 안정기를 그대로 두면 수명이 줄어든다고 해서 제거까지 함께 했습니다. 공임 포함 8만 원대였어요.','한 달 요금이 눈에 띄게 줄지는 않았지만, 켜자마자 밝아지는 게 더 만족스럽습니다.'] },
+  { t:'창틀 실리콘 곰팡이 제거 이렇게 했어요', e:'제거제를 랩으로 덮어두는 방법이 제일 확실했습니다. 세 시간이면 충분해요', m:'염창동 · 집수리 · 8일 전', up:'8', re:'12', s:0,
+    b:['젤 타입 제거제를 바르고 랩으로 덮어 세 시간을 뒀습니다.','랩을 씌우는 게 핵심이었습니다. 그냥 바르면 금방 말라서 효과가 반도 안 나옵니다.','그래도 안 지워지는 자리는 실리콘을 걷어내고 다시 쏘는 수밖에 없었습니다.'] },
+  { t:'줄눈 시공 셀프 3일차 기록', e:'생각보다 오래 걸립니다. 기존 줄눈 제거가 전체 시간의 절반이었어요', m:'거제동 · 집수리 · 7일 전', up:'11', re:'15', s:0,
+    b:['욕실 줄눈을 직접 해보기로 했습니다.','1일차는 기존 줄눈 긁어내기만 하다 끝났습니다. 전동 공구를 빌리길 잘했어요.','2일차 시공, 3일차 양생. 재료비는 3만 원대였지만 주말을 통째로 썼습니다. 다음엔 부를 것 같아요.'] },
+];
+
+const SHOTS = ['', 's1', 's2', 's3', 's4', 's5'];
+
+/* ── 이야기 카드 — 홈 목록은 정적 HTML 이고, 이 함수는 검색 결과에만 쓴다 */
+const cardHTML = (d, n) => `
+  <li><a class="item" href="#main" data-story="${n}">
+    <span class="no">${n + 1}</span>
+    <span class="txt">
+      <span class="ti">${d.t}</span>
+      <span class="ex">${d.e}</span>
+      <span>
+        <span class="meta">${d.m}</span>
+        <span class="cnt">
+          <em><svg class="ic" aria-hidden="true"><use href="#ic-up"/></svg><b>${d.up}</b></em>
+          <em><svg class="ic" aria-hidden="true"><use href="#ic-re"/></svg><b>${d.re}</b></em>
+        </span>
+      </span>
+    </span>
+    ${d.s ? `<span class="shot ${SHOTS[d.s]}" aria-hidden="true"></span>` : ''}
+  </a></li>`;
+
+/* ── 뷰 스위칭 (원본은 페이지 이동) ─────────────────────── */
+const go = v => { document.body.setAttribute('data-view', v); scrollTo(0, 0) };
+document.addEventListener('click', e => {
+  const back = e.target.closest('[data-go]');
+  if (back) { go(back.dataset.go); return }
+
+  const story = e.target.closest('[data-story]');
+  if (story) {
+    e.preventDefault();
+    const d = STORIES[+story.dataset.story];
+    document.getElementById('detTitle').textContent = d.t;
+    document.getElementById('detMeta').textContent = d.m;
+    document.getElementById('detBody').innerHTML = d.b.map(p => `<p>${p}</p>`).join('');
+    go('detail');
+    return;
+  }
+
+  const chip = e.target.closest('[data-q]');
+  if (chip) { e.preventDefault(); search(chip.dataset.q) }
+});
+
+/* ── 검색 결과 ────────────────────────────────────────── */
+const resList = document.getElementById('resList');
+const resEmpty = document.getElementById('resEmpty');
+function search(q) {
+  const term = (q || '').trim();
+  document.getElementById('q').value = term;
+  document.getElementById('resHead').textContent = term ? `‘${term}’ 검색 결과` : '검색 결과';
+  const scope = document.getElementById('scopeLab').textContent;
+  const hits = STORIES.filter(d => !term || (d.t + d.e + d.m).includes(term));
+  document.getElementById('resSub').textContent =
+    `${scope} · ${hits.length}건 — 동네 기사님이 보낸 견적입니다.`;
+  resList.innerHTML = hits.map((d, i) => cardHTML(d, STORIES.indexOf(d))).join('');
+  resEmpty.hidden = hits.length > 0;
+  go('result');
+}
+document.getElementById('findForm').addEventListener('submit', e => {
+  e.preventDefault();
+  search(document.getElementById('q').value);
+});
+document.getElementById('resFilter').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  [...e.currentTarget.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+});
+
+/* ── 검색 범위 바텀시트 ────────────────────────────────
+   실측: 딤 rgba(0,0,0,.455) · 전폭 시트 radius 20/20/0/0 · 행 46px · 선택 항목만 포인트색 */
+const SCOPES = ['집수리', '가전수리', '설비·배관', '전기', '도배·장판', '청소', '이사정리'];
+const sheet = document.getElementById('sheet');
+const dim = document.getElementById('dim');
+const scopeBtn = document.getElementById('scopeBtn');
+const scopeLab = document.getElementById('scopeLab');
+let picked = 0;
+
+const openSheet = () => {
+  sheet.hidden = false; dim.hidden = false;
+  requestAnimationFrame(() => document.body.setAttribute('data-sheet', 'on'));
+  scopeBtn.setAttribute('aria-expanded', 'true');
+  sheet.querySelector('button').focus();
+};
+const closeSheet = () => {
+  document.body.removeAttribute('data-sheet');
+  scopeBtn.setAttribute('aria-expanded', 'false');
+  scopeBtn.focus();
+  setTimeout(() => { sheet.hidden = true; dim.hidden = true }, REDUCED ? 0 : 420);
+};
+scopeBtn.addEventListener('click', openSheet);
+dim.addEventListener('click', closeSheet);
+addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.dataset.sheet) closeSheet() });
+sheet.addEventListener('click', e => {
+  const b = e.target.closest('[data-scope]'); if (!b) return;
+  picked = +b.dataset.scope;
+  [...sheet.querySelectorAll('[data-scope]')].forEach((x, i) =>
+    x.setAttribute('aria-checked', String(i === picked)));
+  scopeLab.textContent = SCOPES[picked];
+  closeSheet();
+});
+</script>
+</body></html>
